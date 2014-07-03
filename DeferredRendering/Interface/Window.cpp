@@ -4,7 +4,7 @@
 #include "../Windows/WindowsWindow.h"
 
 
-Window::Window(const Size& size) :
+Window::Window(const Vector2i& size) :
 	mSize(size)
 {
 
@@ -15,12 +15,12 @@ Window::~Window(void)
 {
 }
 
-Size Window::GetSize() const
+Vector2i Window::GetSize() const
 {
 	return mSize;
 }
 
-Auto<Window> Window::Create(const Size& size)
+Auto<Window> Window::Create(const Vector2i& size)
 {
 #ifdef _WIN32
 	return Auto<WindowsWindow>(new WindowsWindow(size));

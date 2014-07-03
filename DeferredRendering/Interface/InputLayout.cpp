@@ -2,20 +2,18 @@
 #include "InputLayout.h"
 
 
-Attribute::Attribute(const std::string& name, Type type, size_t count) :
+Attribute::Attribute(const std::string& name, const DataFormat& format) :
 		mName(name),
-		mType(type),
-		mCount(count),
+		mFormat(format),
 		mIndex(0)
 {
 
 }
 
 
-Attribute::Attribute(const std::string& name, Type type, size_t count, size_t index) :
+Attribute::Attribute(const std::string& name, const DataFormat& format, size_t index) :
 		mName(name),
-		mType(type),
-		mCount(count),
+		mFormat(format),
 		mIndex(index)
 {
 
@@ -31,24 +29,15 @@ const std::string& Attribute::GetName() const
 	return mName;
 }
 
-Attribute::Type Attribute::GetType() const
-{
-	return mType;
-}
 
-size_t Attribute::GetCount() const
+const DataFormat& Attribute::GetFormat() const
 {
-	return mCount;
+	return mFormat;
 }
 
 size_t Attribute::GetIndex() const
 {
 	return mIndex;
-}
-
-size_t Attribute::GetSize() const
-{
-	return mCount * TypeSize[mType];
 }
 
 size_t Attribute::TypeSize[] = {sizeof(float), sizeof(unsigned char)};
@@ -68,15 +57,15 @@ InputLayout::~InputLayout(void)
 void InputLayout::AddAttribute(const Attribute& value)
 {
 	mAttributes.push_back(value);
-	mStride += value.GetSize();
+	mStride += value.GetFormat().GetSize();
 
 	mSignature.Update(value.GetName().c_str(), value.GetName().length());
 
-	size_t sizeTmp = value.GetCount();
+	size_t sizeTmp = value.GetFormat().count;
 	mSignature.Update(&sizeTmp, sizeof(size_t));
-	sizeTmp = value.GetSize();
+	sizeTmp = value.GetFormat().GetSize();
 	mSignature.Update(&sizeTmp, sizeof(size_t));
-	Attribute::Type type = value.GetType();
+	DataFormat::Type type = value.GetFormat().type;
 	mSignature.Update(&type, sizeof(type));
 }
 

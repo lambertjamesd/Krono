@@ -8,9 +8,9 @@ public:
 	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
 	Vector3(void) : x(T()), y(T()) {}
 	~Vector3(void) {}
-
+	
 	template <typename R>
-	Vector3<R> CastTo() const
+	operator Vector3<R>() const
 	{
 		return Vector3<R>((R)x, (R)y, (R)z);
 	}

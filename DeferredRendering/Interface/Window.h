@@ -15,17 +15,17 @@ class Window
 public:
 	virtual ~Window(void);
 
-	Size GetSize() const;
+	Vector2i GetSize() const;
 
 	virtual void Show() =  0;
 	virtual void Update(bool async = true) = 0;
 	virtual bool IsClosed() const = 0;
 	virtual WindowHandle GetWindowHandle() const = 0;
 
-	static Auto<Window> Create(const Size& size);
+	static Auto<Window> Create(const Vector2i& size);
 protected:
-	Window(const Size& size);
-	Size mSize;
+	Window(const Vector2i& size);
+	Vector2i mSize;
 private:
 	Window(const Window& other);
 	Window& operator=(const Window& other);

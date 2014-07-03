@@ -4,11 +4,8 @@
 class OpenGLTexture2D : public Texture2D
 {
 public:
-	OpenGLTexture2D(const Size& size, Format format);
+	OpenGLTexture2D(const Size& size, DataFormat format);
 	virtual ~OpenGLTexture2D();
-
-	virtual void BindToSlot(int slotIndex);
-	virtual void Resize(const Size& size);
 
 	GLuint GetGLTexture() const;
 protected:

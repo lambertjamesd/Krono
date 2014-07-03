@@ -38,6 +38,11 @@ void OpenGLWindowRenderTarget::GetRenderTargetInternal(void* target) const
 	*((GLuint*)target) = 0;
 }
 
+Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
+{
+	return Auto<Texture2D>(NULL);
+}
+
 void OpenGLWindowRenderTarget::Clear(const Colorf& color)
 {
 	MakeActive();

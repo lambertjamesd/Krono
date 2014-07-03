@@ -3,25 +3,30 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "OpenGLVertexBuffer.h"
+#include <sstream>
+#include "OpenGLGraphics.h"
 
 using namespace std;
 
-ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count) :
+ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index) :
 		mName(name),
 		mWidth(size),
 		mHeight(1),
 		mType(type),
-		mCount(count)
+		mCount(count),
+		mIndex(index)
 {
 
 }
 
-ShaderVariable::ShaderVariable(const std::string& name, short width, short height, Type type, int count) :
+ShaderVariable::ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint index) :
 		mName(name),
 		mWidth(width),
 		mHeight(height),
 		mType(type),
-		mCount(count)
+		mCount(count),
+		mIndex(index)
 {
 
 }
@@ -49,6 +54,92 @@ ShaderVariable::Type ShaderVariable::GetType() const
 int ShaderVariable::GetCount() const
 {
 	return mCount;
+}
+
+GLenum OpenGLVertexLayoutData::gTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};
+
+OpenGLVertexLayoutData::OpenGLVertexLayoutData(void) :
+	mIsActive(false),
+	mSize(0),
+	mType(0),
+	mByteSize(0),
+	mOffset(0)
+{
+
+}
+
+OpenGLVertexLayoutData::OpenGLVertexLayoutData(const Attribute& attribute, GLsizei offset) :
+	mIsActive(true),
+	mSize(attribute.GetFormat().GetSize()),
+	mType(OpenGLGraphics::GetGLType(attribute.GetFormat().type)),
+	mByteSize(attribute.GetFormat().GetSize()),
+	mOffset(offset)
+{
+
+}
+
+OpenGLVertexLayoutData::~OpenGLVertexLayoutData(void)
+{
+
+}
+
+bool OpenGLVertexLayoutData::GetIsActive() const
+{
+	return mIsActive;
+}
+
+GLuint OpenGLVertexLayoutData::GetSize() const
+{
+	return mSize;
+}
+
+GLenum OpenGLVertexLayoutData::GetType() const
+{
+	return mType;
+}
+
+GLsizei OpenGLVertexLayoutData::GetByteSize() const
+{
+	return mByteSize;
+}
+
+GLsizei OpenGLVertexLayoutData::GetOffset() const
+{
+	return mOffset;
+}
+
+OpenGLVertexLayout::OpenGLVertexLayout(void) :
+	mStride(0)
+{
+
+}
+
+OpenGLVertexLayout::~OpenGLVertexLayout(void)
+{
+
+}
+
+void OpenGLVertexLayout::AddVertexData(const OpenGLVertexLayoutData& value)
+{
+	mLayoutData.push_back(value);
+	mStride += value.GetByteSize();
+}
+
+void OpenGLVertexLayout::Use() const
+{
+	GLuint index = 0;
+	for (auto it = mLayoutData.cbegin(); it != mLayoutData.cend(); ++it, ++index)
+	{
+		if (it->GetIsActive())
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, it->GetSize(), it->GetType(), GL_FALSE, mStride, (GLvoid*)it->GetOffset());
+		}
+		else
+		{
+			glDisableVertexAttribArray(index);
+		}
+	}
 }
 
 OpenGLShaderProgram::OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader)
@@ -80,9 +171,52 @@ void OpenGLShaderProgram::Use()
 	glUseProgram(mProgram);
 }
 
-void OpenGLShaderProgram::BindVertexBuffer(VertexBuffer& vertexBuffer)
+const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayout& inputLayout)
 {
-	// TODO implement
+	auto existingLayout = mLayoutMapping.find(inputLayout.GetSignature());
+
+	if (existingLayout == mLayoutMapping.end())
+	{
+		OpenGLVertexLayout layoutMapping;
+
+		for (auto shaderVar = mAttributes.begin(); shaderVar != mAttributes.end(); ++shaderVar)
+		{
+			bool foundAttrib = false;
+			GLsizei offset = 0;
+
+			for (size_t i = 0; i < inputLayout.GetAttributeCount(); ++i)
+			{
+				const Attribute& attrib = inputLayout.GetAttribute(i);
+
+				std::ostringstream attrName;
+
+				attrName << "attr" << attrib.GetName() << attrib.GetIndex();
+
+				if (attrName.str() == shaderVar->GetName())
+				{
+					foundAttrib = true;
+					layoutMapping.AddVertexData(OpenGLVertexLayoutData(attrib, offset));
+					break;
+				}
+				else
+				{
+					offset += attrib.GetFormat().GetSize();
+				}
+			}
+
+			if (!foundAttrib)
+			{
+				layoutMapping.AddVertexData(OpenGLVertexLayoutData());
+			}
+		}
+
+		mLayoutMapping[inputLayout.GetSignature()] = layoutMapping;
+		return mLayoutMapping[inputLayout.GetSignature()];
+	}
+	else
+	{
+		return existingLayout->second;
+	}
 }
 
 void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target, GLenum type)
@@ -105,7 +239,7 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 		glGetProgramResourceName(mProgram, type, i, nameData.size(), NULL, &nameData[0]);
 		std::string name((char*)&nameData[0], nameData.size() - 1);
 
-		target.push_back(VariableFromGLType(name, values[1], values[2]));
+		target.push_back(VariableFromGLType(name, values[1], values[2], i));
 	}
 }
 
@@ -159,7 +293,7 @@ GLuint OpenGLShaderProgram::LinkProgram(const std::vector<GLuint>& shaders)
 	return result;
 }
 
-ShaderVariable OpenGLShaderProgram::VariableFromGLType(const std::string& name, GLenum glType, int count)
+ShaderVariable OpenGLShaderProgram::VariableFromGLType(const std::string& name, GLenum glType, int count, GLuint index)
 {
 	short width = 0;
 	short height = 0;
@@ -192,12 +326,7 @@ ShaderVariable OpenGLShaderProgram::VariableFromGLType(const std::string& name, 
 	
 	}
 
-	return ShaderVariable(name, width, height, type, count);
-}
-
-const std::vector<ShaderVariable>& OpenGLShaderProgram::GetAttributes() const
-{
-	return mAttributes;
+	return ShaderVariable(name, width, height, type, count, index);
 }
 
 const std::vector<ShaderVariable>& OpenGLShaderProgram::GetUniforms() const

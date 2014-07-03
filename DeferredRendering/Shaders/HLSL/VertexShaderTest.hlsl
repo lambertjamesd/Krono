@@ -1,5 +1,10 @@
 
-float4 main( float4 pos : POSITION ) : SV_POSITION
+#include "DataPassStructures.hlsli"
+
+ColorVertex main( float4 pos : POSITION, float4 color : COLOR)
 {
-	return pos;
+	ColorVertex result;
+	result.position = pos;
+	result.color = color;
+	return result;
 }

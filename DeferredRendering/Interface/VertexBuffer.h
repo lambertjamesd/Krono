@@ -1,14 +1,13 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "ShaderProgram.h"
 #include "InputLayout.h"
 
-class VertexBufferIterator
+class DataIterator
 {
 public:
-	VertexBufferIterator(void* dataPointer, void* dataEnd);
-	~VertexBufferIterator();
+	DataIterator(void* dataPointer, void* dataEnd);
+	~DataIterator();
 
 	template <typename T>
 	void Write(const T& value)
@@ -37,9 +36,8 @@ class VertexBuffer
 public:
 	virtual ~VertexBuffer(void);
 
-	virtual VertexBufferIterator Lock(size_t vertexCount) = 0;
+	virtual DataIterator Lock(size_t vertexCount) = 0;
 	virtual void Unlock() = 0;
-	virtual void Use() = 0;
 
 	const InputLayout& GetInputLayout();
 protected:

@@ -26,3 +26,5 @@ Auto<Graphics> Graphics::CreateGraphics(Graphics::API api)
 		throw InvalidEnumException("Invalid Graphics API");
 	}
 }
+
+GLenum Graphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};

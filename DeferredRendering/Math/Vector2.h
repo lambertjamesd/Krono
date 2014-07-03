@@ -10,11 +10,10 @@ public:
 	~Vector2(void) {}
 
 	template <typename R>
-	Vector2<R> CastTo() const
+	operator Vector2<R>() const
 	{
 		return Vector2<R>((R)x, (R)y);
 	}
-
 	T x, y;
 };
 

@@ -1,3 +1,4 @@
+#pragma once
 
 template <typename T>
 class DX11SmartPtr
@@ -55,12 +56,32 @@ public:
 		return *mValue;
 	}
 
+	T** operator&()
+	{
+		return &mValue;
+	}
+
+	const T** operator&() const
+	{
+		return &mValue;
+	}
+
 	T* Get()
 	{
 		return mValue;
 	}
 
 	const T* Get() const
+	{
+		return mValue;
+	}
+
+	T* operator->()
+	{
+		return mValue;
+	}
+
+	const T* operator->() const
 	{
 		return mValue;
 	}

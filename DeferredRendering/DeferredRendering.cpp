@@ -15,6 +15,7 @@
 #include "Interface\Window.h"
 #include "Core\Exception.h"
 #include "Core\Hash.h"
+#include "Math\Vector2.h"
 #include "Math\Vector3.h"
 #include "Interface\Graphics.h"
 
@@ -66,28 +67,28 @@ int main(int argc, char** argv)
 
 	*/
 
-	Graphics::API api = Graphics::OpenGL;
+	Graphics::API api = Graphics::DirectX11;
 
 	Auto<Graphics> graphics;
 	Auto<VertexBuffer> vertexBuffer;
-	Auto<Window> windowTest = Window::Create(Size(800, 600));
-	Auto<ShaderProgram> shaderProgram;
+	Auto<Window> window = Window::Create(Vector2i(800, 600));
+	Auto<VertexShader> vertexShader;
+	Auto<FragmentShader> fragmentShader;
 
-	windowTest->Show();
+	window->Show();
 	
 	Auto<WindowRenderTarget> windowRenderTarget;
+	Auto<RenderTarget> offscreenTest;
+
+	Auto<VertexBuffer> screenCoverQuad;
 
 	try
 	{
 		graphics = Graphics::CreateGraphics(api);
-		windowRenderTarget = graphics->CreateWindowRenderTarget(*windowTest);
-
-		InputLayout bufferInputLayout;
-		bufferInputLayout.AddAttribute(Attribute("POSITION", Attribute::Float, 3));
+		windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
 
 
-		Auto<VertexShader> vertexShader;
-		Auto<FragmentShader> fragmentShader;
+		offscreenTest = graphics->CreateOffscreenRenderTarget(window->GetSize(), DataFormat(DataFormat::UInt8, 4));
 
 		if (api == Graphics::DirectX11)
 		{
@@ -100,37 +101,66 @@ int main(int argc, char** argv)
 			fragmentShader = graphics->CreateFragmentShader(ReadFileContents("Shaders\\GLSL\\PixelShaderTest.frag"));
 		}
 		
-		shaderProgram = graphics->CreateShaderProgram(vertexShader, fragmentShader);
-		shaderProgram->Use();
-
+		InputLayout bufferInputLayout;
+		bufferInputLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
+		bufferInputLayout.AddAttribute(Attribute("COLOR", DataFormat(DataFormat::Float, 4)));
 		vertexBuffer = graphics->CreateVertexBuffer(bufferInputLayout);
 
-		VertexBufferIterator bufferWriter = vertexBuffer->Lock(3);
+		DataIterator bufferWriter = vertexBuffer->Lock(3);
 		bufferWriter.Write<Vector3f>(Vector3f(0.0f, 0.5f, 0.0f));
-		bufferWriter.Write<Vector3f>(Vector3f(0.45f, -0.5, 0.0f));
+		bufferWriter.Write<Colorf>(Colorf(1.0f, 0.0f, 1.0f, 1.0f));
+
+		bufferWriter.Write<Vector3f>(Vector3f(0.45f, -0.5f, 0.0f));
+		bufferWriter.Write<Colorf>(Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+
 		bufferWriter.Write<Vector3f>(Vector3f(-0.45f, -0.5f, 0.0f));
+		bufferWriter.Write<Colorf>(Colorf(0.0f, 1.0f, 1.0f, 1.0f));
 		vertexBuffer->Unlock();
+
+		InputLayout screenCoverLayout;
+		screenCoverLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
+		screenCoverLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
+		screenCoverQuad = graphics->CreateVertexBuffer(screenCoverLayout);
+
+		DataIterator screenIterator = screenCoverQuad->Lock(4);
+		screenIterator.Write<Vector3f>(Vector3f(-1.0f, 1.0f, 0.0f));
+		screenIterator.Write<Vector2f>(Vector2f(0.0f, 0.0f));
+		screenIterator.Write<Vector3f>(Vector3f(1.0f, 1.0f, 0.0f));
+		screenIterator.Write<Vector2f>(Vector2f(1.0f, 0.0f));
+		screenIterator.Write<Vector3f>(Vector3f(1.0f, -1.0f, 0.0f));
+		screenIterator.Write<Vector2f>(Vector2f(1.0f, 1.0f));
+		screenIterator.Write<Vector3f>(Vector3f(-1.0f, -1.0f, 0.0f));
+		screenIterator.Write<Vector2f>(Vector2f(0.0f, 1.0f));
+		screenCoverQuad->Unlock();
+
 	}
 	catch (Exception& exception)
 	{
 		std::cerr << exception.what();
 	}
 
-	while (!windowTest->IsClosed())
+	while (!window->IsClosed())
 	{
-		RenderTarget *renderTargetPointer = windowRenderTarget.get();
-		graphics->BindRenderTargets(1, &renderTargetPointer, NULL);
-		graphics->SetViewport(Rectf(Vector2f(), windowTest->GetSize().CastTo<float>()), Rangef(0.0f, 1.0f));
-		windowRenderTarget->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
+		vector<Auto<RenderTarget>> renderTargetArray;
+		renderTargetArray.push_back(offscreenTest);
+		graphics->SetRenderTargets(renderTargetArray, Auto<DepthBuffer>(NULL));
+		graphics->SetViewport(Rectf(Vector2f(), window->GetSize()), Rangef(0.0f, 1.0f));
+		offscreenTest->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
 
-		shaderProgram->BindVertexBuffer(*vertexBuffer);
-		vertexBuffer->Use();
+		graphics->SetVertexShader(vertexShader);
+		graphics->SetFragmentShader(fragmentShader);
+		graphics->SetVertexBuffer(vertexBuffer);
 
 		graphics->Draw(3, 0);
 
+		renderTargetArray[0] = windowRenderTarget;
+		graphics->SetRenderTargets(renderTargetArray, Auto<DepthBuffer>(NULL));
+		
+		graphics->SetVertexBuffer(screenCoverQuad);
+
 		windowRenderTarget->Present();
 
-		windowTest->Update(false);
+		window->Update(false);
 	}
 
 	return 0;

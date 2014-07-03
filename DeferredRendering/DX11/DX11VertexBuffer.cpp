@@ -53,7 +53,7 @@ void DX11VertexBuffer::RebuildBuffer(size_t vertexCount)
 	mCurrentVertexCount = vertexCount;
 }
 
-VertexBufferIterator DX11VertexBuffer::Lock(size_t vertexCount)
+DataIterator DX11VertexBuffer::Lock(size_t vertexCount)
 {
 	size_t bufferSize = vertexCount * mInputLayout.GetStride();
 
@@ -73,7 +73,7 @@ VertexBufferIterator DX11VertexBuffer::Lock(size_t vertexCount)
 		throw HResultException(result, "Could not lock vertex buffer");
 	}
 
-	return VertexBufferIterator(mappedResource.pData, (char*)mappedResource.pData + bufferSize);
+	return DataIterator(mappedResource.pData, (char*)mappedResource.pData + bufferSize);
 }
 
 void DX11VertexBuffer::Unlock()

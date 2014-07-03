@@ -4,6 +4,7 @@
 #include "HResultException.h"
 #include "..\Interface\UnsupportedFormatException.h"
 #include <vector>
+#include "DX11Graphics.h"
 
 using namespace std;
 
@@ -35,11 +36,25 @@ bool DX11VertexShader::IsValid() const
 	return mVertexShader != NULL;
 }
 
-DXGI_FORMAT DX11VertexShader::gFormatMapping[][4] =
+ID3D11InputLayout* DX11VertexShader::GetInputLayout(const InputLayout& inputLayout)
 {
-	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT},
-	{DXGI_FORMAT_R8_UNORM, DXGI_FORMAT_R8G8_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM},
-};
+	auto existing = mInputLayouts.find(inputLayout.GetSignature());
+
+	ID3D11InputLayout* result;
+
+	if (existing == mInputLayouts.end())
+	{
+		result = CreateInputLayout(inputLayout);
+		mInputLayouts[inputLayout.GetSignature()] = result;
+		result->Release();
+	}
+	else
+	{
+		result = existing->second.Get();
+	}
+
+	return result;
+}
 
 ID3D11InputLayout* DX11VertexShader::CreateInputLayout(const InputLayout& inputLayout) const
 {
@@ -53,7 +68,7 @@ ID3D11InputLayout* DX11VertexShader::CreateInputLayout(const InputLayout& inputL
 		D3D11_INPUT_ELEMENT_DESC inputElement;
 		ZeroMemory(&inputElement, sizeof(D3D11_INPUT_ELEMENT_DESC));
 
-		DXGI_FORMAT format = gFormatMapping[attribute.GetType()][attribute.GetCount() - 1];
+		DXGI_FORMAT format = DX11Graphics::GetDXFormat(attribute.GetFormat());
 
 		if (format == DXGI_FORMAT_UNKNOWN)
 		{
@@ -70,7 +85,7 @@ ID3D11InputLayout* DX11VertexShader::CreateInputLayout(const InputLayout& inputL
 
 		inputElements.push_back(inputElement);
 
-		offset += attribute.GetSize();
+		offset += attribute.GetFormat().GetSize();
 
 	}
 

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "..\Interface\ShaderProgram.h"
+#include "..\Interface\InputLayout.h"
 #include "OpenGLShader.h"
+#include <map>
 
 class ShaderVariable
 {
@@ -22,8 +23,8 @@ public:
 		TextureCube,
 	};
 
-	ShaderVariable(const std::string& name, int size, Type type, int count);
-	ShaderVariable(const std::string& name, short width, short height, Type type, int count);
+	ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index);
+	ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint index);
 
 	const std::string& GetName() const;
 	short GetWidth() const;
@@ -31,24 +32,60 @@ public:
 
 	Type GetType() const;
 	int GetCount() const;
+	int GetIndex() const;
 private:
 	std::string mName;
 	short mWidth;
 	short mHeight;
 	Type mType;
 	int mCount;
+	GLuint mIndex;
 };
 
-class OpenGLShaderProgram : public ShaderProgram
+class OpenGLVertexLayoutData
+{
+public:
+	OpenGLVertexLayoutData(void);
+	OpenGLVertexLayoutData(const Attribute& attribute, GLsizei offset);
+	~OpenGLVertexLayoutData(void);
+
+	bool GetIsActive() const;
+	GLuint GetSize() const;
+	GLenum GetType() const;
+	GLsizei GetByteSize() const;
+	GLsizei GetOffset() const;
+private:
+	static GLenum gTypeMapping[];
+
+	bool mIsActive;
+	GLuint mSize;
+	GLenum mType;
+	GLsizei mByteSize; 
+	GLsizei mOffset;
+};
+
+class OpenGLVertexLayout
+{
+public:
+	OpenGLVertexLayout(void);
+	~OpenGLVertexLayout(void);
+
+	void AddVertexData(const OpenGLVertexLayoutData& value);
+
+	void Use() const;
+private:
+	std::vector<OpenGLVertexLayoutData> mLayoutData;
+	GLsizei mStride;
+};
+
+class OpenGLShaderProgram
 {
 public:
 	OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader);
 	virtual ~OpenGLShaderProgram();
 	
 	virtual void Use();
-	virtual void BindVertexBuffer(VertexBuffer& vertexBuffer);
-	
-	const std::vector<ShaderVariable>& GetAttributes() const;
+
 	const std::vector<ShaderVariable>& GetUniforms() const;
 	const std::vector<ShaderVariable>& GetOutputs() const;
 protected:
@@ -62,11 +99,15 @@ private:
 	void PopulateOutputs();
 	void PopulateVariables(std::vector<ShaderVariable>& target, GLenum type);
 
+	const OpenGLVertexLayout& GetLayoutMapping(const InputLayout& inputLayout);
+
 	static GLuint LinkProgram(const std::vector<GLuint>& shaders);
 	
-	static ShaderVariable VariableFromGLType(const std::string& name, GLenum glType, int count);
+	static ShaderVariable VariableFromGLType(const std::string& name, GLenum glType, int count, GLuint index);
 
 	GLuint mProgram;
+
+	std::map<UINT32, OpenGLVertexLayout> mLayoutMapping;
 	
 	std::vector<ShaderVariable> mAttributes;
 	std::vector<ShaderVariable> mUniforms;

@@ -85,7 +85,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DX11\DX11ShaderProgram.h" />
+    <ClInclude Include="DX11\DX11IndexBuffer.h" />
+    <ClInclude Include="DX11\DX11Texture2D.h" />
+    <ClInclude Include="DX11\IDX11Resource.h" />
+    <ClInclude Include="Interface\IndexBuffer.h" />
+    <ClInclude Include="Interface\DataFormat.h" />
+    <ClInclude Include="DX11\DX11OffscreenRenderTarget.h" />
     <ClInclude Include="DX11\DX11Shader.h" />
     <ClInclude Include="DX11\DX11SmartPtr.h" />
     <ClInclude Include="DX11\DX11VertexBuffer.h" />
@@ -94,7 +99,7 @@
     <ClInclude Include="Interface\Color.h" />
     <ClInclude Include="Core\Memory.h" />
     <ClInclude Include="Interface\DepthBuffer.h" />
-    <ClInclude Include="DX11\DX11WindowRenderBuffer.h" />
+    <ClInclude Include="DX11\DX11WindowRenderTarget.h" />
     <ClInclude Include="DX11\DX11Graphics.h" />
     <ClInclude Include="Core\Exception.h" />
     <ClInclude Include="DX11\HResultException.h" />
@@ -104,7 +109,7 @@
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Core\Object.h" />
-    <ClInclude Include="OpenGLRenderBufferMapping.h" />
+    <ClInclude Include="OpenGL\OpenGLRenderBufferMapping.h" />
     <ClInclude Include="OpenGL\OpenGLWindowRenderTarget.h" />
     <ClInclude Include="OpenGL\OpenGLGraphics.h" />
     <ClInclude Include="OpenGL\OpenGLShader.h" />
@@ -113,7 +118,6 @@
     <ClInclude Include="OpenGL\OpenGLVertexBuffer.h" />
     <ClInclude Include="Interface\RenderTarget.h" />
     <ClInclude Include="Interface\Shader.h" />
-    <ClInclude Include="Interface\ShaderProgram.h" />
     <ClInclude Include="Math\Range.h" />
     <ClInclude Include="Math\Rect.h" />
     <ClInclude Include="stdafx.h" />
@@ -126,21 +130,26 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DX11\DX11IndexBuffer.cpp" />
+    <ClCompile Include="DX11\DX11Texture2D.cpp" />
+    <ClCompile Include="DX11\IDX11Resource.cpp" />
+    <ClCompile Include="Interface\IndexBuffer.cpp" />
+    <ClCompile Include="Interface\DataFormat.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
-    <ClCompile Include="DX11\DX11ShaderProgram.cpp" />
+    <ClCompile Include="DX11\DX11OffscreenRenderTarget.cpp" />
     <ClCompile Include="DX11\DX11Shader.cpp" />
     <ClCompile Include="DX11\DX11VertexBuffer.cpp" />
     <ClCompile Include="Core\Hash.cpp" />
     <ClCompile Include="Interface\InputLayout.cpp" />
     <ClCompile Include="Interface\DepthBuffer.cpp" />
-    <ClCompile Include="DX11\DX11WindowRenderBuffer.cpp" />
+    <ClCompile Include="DX11\DX11WindowRenderTarget.cpp" />
     <ClCompile Include="DX11\DX11Graphics.cpp" />
     <ClCompile Include="Core\Exception.cpp" />
     <ClCompile Include="DX11\HResultException.cpp" />
     <ClCompile Include="Interface\Graphics.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Interface\InvalidEnumException.cpp" />
-    <ClCompile Include="OpenGLRenderBufferMapping.cpp" />
+    <ClCompile Include="OpenGL\OpenGLRenderBufferMapping.cpp" />
     <ClCompile Include="OpenGL\OpenGLWindowRenderTarget.cpp" />
     <ClCompile Include="OpenGL\OpenGLGraphics.cpp" />
     <ClCompile Include="OpenGL\OpenGLShader.cpp" />
@@ -149,7 +158,6 @@
     <ClCompile Include="OpenGL\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="Interface\RenderTarget.cpp" />
     <ClCompile Include="Interface\Shader.cpp" />
-    <ClCompile Include="Interface\ShaderProgram.cpp" />
     <ClCompile Include="Math\Range.cpp" />
     <ClCompile Include="Math\Rect.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -182,6 +190,7 @@
   <ItemGroup>
     <None Include="Shaders\GLSL\PixelShaderTest.frag" />
     <None Include="Shaders\GLSL\VertexShaderTest.vert" />
+    <None Include="Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

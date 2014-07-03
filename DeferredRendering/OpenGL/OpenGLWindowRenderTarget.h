@@ -14,6 +14,7 @@ public:
 	~OpenGLWindowRenderTarget(void);
 	
 	virtual void GetRenderTargetInternal(void* target) const;
+	virtual Auto<Texture2D> GetTexture() const;
 	virtual void Clear(const Colorf& color);
 	
 	virtual void Present(void);

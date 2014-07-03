@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "VertexBuffer.h"
 
-VertexBufferIterator::VertexBufferIterator(void* dataPointer, void* dataEnd) :
+DataIterator::DataIterator(void* dataPointer, void* dataEnd) :
 	mDataStart(dataPointer),
 	mDataPointer(dataPointer),
 	mDataEnd(dataEnd)
@@ -9,12 +9,12 @@ VertexBufferIterator::VertexBufferIterator(void* dataPointer, void* dataEnd) :
 
 }
 
-VertexBufferIterator::~VertexBufferIterator()
+DataIterator::~DataIterator()
 {
 
 }
 
-bool VertexBufferIterator::IsFull() const
+bool DataIterator::IsFull() const
 {
 	return mDataPointer >= mDataEnd;
 }

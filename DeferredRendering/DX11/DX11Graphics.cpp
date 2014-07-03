@@ -1,10 +1,12 @@
 #include "stdafx.h"
+#include "..\stdafx.h"
 #include "DX11Graphics.h"
 #include "HResultException.h"
-#include "DX11WindowRenderBuffer.h"
+#include "DX11WindowRenderTarget.h"
+#include "DX11OffscreenRenderTarget.h"
+#include "DX11IndexBuffer.h"
 #include "DX11VertexBuffer.h"
 #include "DX11Shader.h"
-#include "DX11ShaderProgram.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -13,7 +15,8 @@
 
 using namespace std;
 
-DX11Graphics::DX11Graphics(void)
+DX11Graphics::DX11Graphics(void) :
+	mNeedNewInputMapping(false)
 {
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_11_0,
@@ -58,6 +61,11 @@ DX11Graphics::~DX11Graphics(void)
 	mDeviceContext->Release();
 }
 
+Auto<IndexBuffer> DX11Graphics::CreateIndexBuffer(IndexBuffer::Format format)
+{
+	return Auto<IndexBuffer>(new DX11IndexBuffer(mDevice, format));
+}
+
 Auto<VertexBuffer> DX11Graphics::CreateVertexBuffer(const InputLayout& inputLayout)
 {
 	return Auto<VertexBuffer>(new DX11VertexBuffer(mDevice, inputLayout));
@@ -73,14 +81,14 @@ Auto<FragmentShader> DX11Graphics::CreateFragmentShader(const std::string& sourc
 	return Auto<FragmentShader>(new DX11FragmentShader(mDevice, source));
 }
 
-Auto<ShaderProgram> DX11Graphics::CreateShaderProgram(const Auto<VertexShader>& vertexShader, const Auto<FragmentShader>& fragmentShader)
-{
-	return Auto<ShaderProgram>(new DX11ShaderProgram(mDevice, std::dynamic_pointer_cast<DX11VertexShader>(vertexShader), std::dynamic_pointer_cast<DX11FragmentShader>(fragmentShader)));
-}
-
 Auto<WindowRenderTarget> DX11Graphics::CreateWindowRenderTarget(Window& targetWindow)
 {
-	return Auto<WindowRenderTarget>(new DX11WindowRenderBuffer(*this, targetWindow));
+	return Auto<WindowRenderTarget>(new DX11WindowRenderTarget(*this, targetWindow));
+}
+
+Auto<RenderTarget> DX11Graphics::CreateOffscreenRenderTarget(Vector2i size, DataFormat format)
+{
+	return Auto<RenderTarget>(new DX11OffscreenRenderTarget(mDevice, size, format));
 }
 
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
@@ -97,9 +105,16 @@ void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 	mDeviceContext->RSSetViewports(1, &dxViewport);
 }
 
-void DX11Graphics::BindRenderTargets(int count, RenderTarget *const* renderTargets, const DepthBuffer* depthBuffer)
+void DX11Graphics::Draw(size_t count, size_t offset)
 {
-	vector<ID3D11RenderTargetView*> dxRenderTargets(count);
+	UpdatePendingChanges();
+	mDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mDeviceContext->Draw(count, offset);
+}
+
+void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
+{
+	vector<ID3D11RenderTargetView*> dxRenderTargets(renderTargets.size());
 	ID3D11DepthStencilView* depthBufferView;
 
 	if (depthBuffer != NULL)
@@ -112,13 +127,62 @@ void DX11Graphics::BindRenderTargets(int count, RenderTarget *const* renderTarge
 	}
 
 	ID3D11RenderTargetView** dxRenderTargetPointer = &(dxRenderTargets.front());
-	for (int i = 0; i < count; ++i, ++dxRenderTargetPointer)
+	for (int i = 0; i < renderTargets.size(); ++i, ++dxRenderTargetPointer)
 	{
 		renderTargets[i]->GetRenderTargetInternal(dxRenderTargetPointer);
 	}
 
-	mDeviceContext->OMSetRenderTargets(count, &(dxRenderTargets.front()), depthBufferView);
+	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
 }
+
+void DX11Graphics::SetTexture(Auto<Texture> &value, size_t slot)
+{
+	IDX11Resource* resource = dynamic_cast<IDX11Resource*>(value.get());
+
+	if (resource != NULL)
+	{
+		ID3D11ShaderResourceView *resourceView = resource->GetResource();
+
+		mDeviceContext->PSSetShaderResources(slot, 1, &resourceView);
+		mDeviceContext->VSSetShaderResources(slot, 1, &resourceView);
+	}
+}
+
+void DX11Graphics::SetVertexShader(Auto<VertexShader> &vertexShader)
+{
+	mNeedNewInputMapping = true;
+	mCurrentVertexShader = std::dynamic_pointer_cast<DX11VertexShader>(vertexShader);
+	mCurrentVertexShader->Use();
+}
+
+void DX11Graphics::SetFragmentShader(Auto<FragmentShader> &fragmentShader)
+{
+	std::dynamic_pointer_cast<DX11FragmentShader>(fragmentShader)->Use();
+}
+
+void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+{
+	mNeedNewInputMapping = mNeedNewInputMapping || 
+		mCurrentVertexBuffer == NULL ||
+		mCurrentVertexBuffer->GetInputLayout().GetSignature() != vertexBuffer->GetInputLayout().GetSignature();
+
+	mCurrentVertexBuffer = std::dynamic_pointer_cast<DX11VertexBuffer>(vertexBuffer);
+	mCurrentVertexBuffer->Use();
+}
+
+void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
+{
+	if (indexBuffer == NULL)
+	{
+		mDeviceContext->IASetIndexBuffer(NULL, DXGI_FORMAT_R16_UINT, 0);
+	}
+	else
+	{
+		DX11IndexBuffer *dxIndexBuffer = dynamic_cast<DX11IndexBuffer*>(indexBuffer.get());
+		mDeviceContext->IASetIndexBuffer(dxIndexBuffer->GetBuffer(), dxIndexBuffer->GetDXFormat(), 0);
+	}
+}
+
 
 ID3D11Device* DX11Graphics::GetDevice()
 {
@@ -135,8 +199,23 @@ IDXGIFactory* DX11Graphics::GetDXGIFactory()
 	return mDXGIFactory;
 }
 
-void DX11Graphics::Draw(size_t count, size_t offset)
+DXGI_FORMAT DX11Graphics::gFormatMapping[][4] =
 {
-	mDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	mDeviceContext->Draw(count, offset);
+	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT},
+	{DXGI_FORMAT_R8_UNORM, DXGI_FORMAT_R8G8_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM},
+};
+
+DXGI_FORMAT DX11Graphics::GetDXFormat(const DataFormat& dataFormat)
+{
+	static_assert((sizeof(gFormatMapping) / sizeof(*gFormatMapping)) == DataFormat::TypeCount, "Missing elements in gFormatMapping");
+	return gFormatMapping[dataFormat.type][dataFormat.count - 1];
+}
+
+void DX11Graphics::UpdatePendingChanges()
+{
+	if (mNeedNewInputMapping && mCurrentVertexShader != NULL && mCurrentVertexBuffer != NULL)
+	{
+		mDeviceContext->IASetInputLayout(mCurrentVertexShader->GetInputLayout(mCurrentVertexBuffer->GetInputLayout()));
+		mNeedNewInputMapping = false;
+	}
 }

@@ -5,7 +5,7 @@ class WindowsWindow :
 	public Window
 {
 public:
-	WindowsWindow(Size size);
+	WindowsWindow(const Vector2i& size);
 	virtual ~WindowsWindow(void);
 	
 	virtual void Show();

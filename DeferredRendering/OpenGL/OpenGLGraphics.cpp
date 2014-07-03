@@ -18,6 +18,11 @@ OpenGLGraphics::~OpenGLGraphics(void)
 {
 }
 
+Auto<IndexBuffer> OpenGLGraphics::CreateIndexBuffer(IndexBuffer::Format format)
+{
+	return Auto<IndexBuffer>(NULL);
+}
+
 Auto<VertexBuffer> OpenGLGraphics::CreateVertexBuffer(const InputLayout& inputLayout)
 {
 	return Auto<VertexBuffer>(new OpenGLVertexBuffer(inputLayout));
@@ -31,13 +36,6 @@ Auto<VertexShader> OpenGLGraphics::CreateVertexShader(const std::string& source)
 Auto<FragmentShader> OpenGLGraphics::CreateFragmentShader(const std::string& source)
 {
 	return Auto<FragmentShader>(new OpenGLFragmentShader(source));
-}
-
-Auto<ShaderProgram> OpenGLGraphics::CreateShaderProgram(const Auto<VertexShader>& vertexShader, const Auto<FragmentShader>& fragmentShader)
-{
-	return Auto<ShaderProgram>(new OpenGLShaderProgram(
-		dynamic_cast<OpenGLVertexShader&>(*vertexShader), 
-		dynamic_cast<OpenGLFragmentShader&>(*fragmentShader)));
 }
 
 Auto<WindowRenderTarget> OpenGLGraphics::CreateWindowRenderTarget(Window& targetWindow)
@@ -59,6 +57,12 @@ Auto<WindowRenderTarget> OpenGLGraphics::CreateWindowRenderTarget(Window& target
 	return result;
 }
 
+
+Auto<RenderTarget> OpenGLGraphics::CreateOffscreenRenderTarget(Vector2i size, DataFormat format)
+{
+	return Auto<WindowRenderTarget>(NULL);
+}
+
 void OpenGLGraphics::Draw(size_t count, size_t offset)
 {
 	glDrawArrays(GL_TRIANGLES, offset, count);
@@ -66,11 +70,44 @@ void OpenGLGraphics::Draw(size_t count, size_t offset)
 
 void OpenGLGraphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
-	glViewport(viewport.topLeft.x, viewport.topLeft.y - viewport.size.y, viewport.size.x, viewport.size.y);
+	glViewport(viewport.topLeft.x, viewport.topLeft.y, viewport.size.x, viewport.size.y);
 	glDepthRange(depthRange.start, depthRange.start + depthRange.length);
 }
 
-void OpenGLGraphics::BindRenderTargets(int count, RenderTarget *const* renderTargets, const DepthBuffer* depthBuffer)
+void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
 {
 
+}
+
+void OpenGLGraphics::SetTexture(Auto<Texture> &value, size_t slot)
+{
+
+}
+
+void OpenGLGraphics::SetVertexShader(Auto<VertexShader> &vertexShader)
+{
+
+}
+
+void OpenGLGraphics::SetFragmentShader(Auto<FragmentShader> &fragmentShader)
+{
+
+}
+
+void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+{
+
+}
+
+void OpenGLGraphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
+{
+
+}
+
+GLenum OpenGLGraphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};
+
+GLenum OpenGLGraphics::GetGLType(DataFormat::Type type)
+{
+	static_assert((sizeof(gGLTypeMapping) / sizeof(gGLTypeMapping[0])) == DataFormat::TypeCount, "Missing elements in gTypeMapping");
+	return gGLTypeMapping[type];
 }

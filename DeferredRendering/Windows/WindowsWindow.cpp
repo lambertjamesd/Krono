@@ -2,12 +2,11 @@
 #include "..\stdafx.h"
 #include "WindowsWindow.h"
 
-
 WNDCLASS WindowsWindow::gWindowClass = {};
 bool WindowsWindow::gWindowClassInitialized = false;
 const wchar_t WindowsWindow::gWindowClassName[] = L"Game Window";
 
-WindowsWindow::WindowsWindow(Size size) : Window(size)
+WindowsWindow::WindowsWindow(const Vector2i& size) : Window(size)
 {
 	InitializeClass();
 	RECT windowRect = {0, 0, size.x, size.y};

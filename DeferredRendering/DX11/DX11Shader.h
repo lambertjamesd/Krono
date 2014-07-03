@@ -2,6 +2,8 @@
 #include "..\Interface\Shader.h"
 #include <string>
 #include "DX11VertexBuffer.h"
+#include <map>
+#include "DX11SmartPtr.h"
 
 class DX11VertexShader : public VertexShader
 {
@@ -10,15 +12,18 @@ public:
 	virtual ~DX11VertexShader(void);
 	virtual bool IsValid() const;
 	
-	ID3D11InputLayout* CreateInputLayout(const InputLayout& inputLayout) const;
+	ID3D11InputLayout* GetInputLayout(const InputLayout& inputLayout);
 
 	void Use();
 private:
-	static DXGI_FORMAT gFormatMapping[][4];
+	
+	ID3D11InputLayout* CreateInputLayout(const InputLayout& inputLayout) const;
 
 	std::string mBytecode;
 	ID3D11VertexShader *mVertexShader;
 	ID3D11Device *mDevice;
+	
+	std::map<UINT32, DX11SmartPtr<ID3D11InputLayout> > mInputLayouts;
 };
 
 class DX11FragmentShader : public FragmentShader

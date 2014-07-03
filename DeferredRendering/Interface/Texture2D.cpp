@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Texture2D.h"
 
-Texture2D::Texture2D(const Size& size, Format format) :
+Texture2D::Texture2D(const Size& size, DataFormat format) :
 	mSize(size),
 	mFormat(format)
 {
@@ -18,7 +18,7 @@ Size Texture2D::GetSize() const
 	return mSize;
 }
 
-Texture2D::Format Texture2D::GetFormat() const
+DataFormat Texture2D::GetFormat() const
 {
 	return mFormat;
 }

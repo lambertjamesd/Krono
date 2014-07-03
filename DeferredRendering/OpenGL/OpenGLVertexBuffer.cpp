@@ -12,13 +12,13 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer()
 
 }
 	
-VertexBufferIterator OpenGLVertexBuffer::Lock(size_t vertexCount)
+DataIterator OpenGLVertexBuffer::Lock(size_t vertexCount)
 {
 	size_t bufferSize = vertexCount * mInputLayout.GetStride();
 	mBuffer.resize(bufferSize);
 	char* rawPointer = &mBuffer.front();
 
-	return VertexBufferIterator(rawPointer, rawPointer + bufferSize);
+	return DataIterator(rawPointer, rawPointer + bufferSize);
 }
 
 void OpenGLVertexBuffer::Unlock()
@@ -30,7 +30,7 @@ void OpenGLVertexBuffer::Unlock()
 
 void OpenGLVertexBuffer::Use()
 {
-
+	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 }
 
 GLenum OpenGLVertexBuffer::GLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};

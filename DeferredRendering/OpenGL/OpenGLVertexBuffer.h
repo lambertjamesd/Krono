@@ -8,10 +8,10 @@ public:
 	OpenGLVertexBuffer(const InputLayout& inputLayout);
 	virtual ~OpenGLVertexBuffer();
 	
-	virtual VertexBufferIterator Lock(size_t vertexCount);
+	virtual DataIterator Lock(size_t vertexCount);
 	virtual void Unlock();
 	
-	virtual void Use();
+	void Use();
 private:
 
 	static GLenum GLTypeMapping[]; 
