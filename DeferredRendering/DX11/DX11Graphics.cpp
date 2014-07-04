@@ -16,7 +16,8 @@
 using namespace std;
 
 DX11Graphics::DX11Graphics(void) :
-	mNeedNewInputMapping(false)
+	mNeedNewInputMapping(false),
+	mHasIndexBuffer(false)
 {
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_11_0,
@@ -108,8 +109,16 @@ void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 void DX11Graphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
-	mDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	mDeviceContext->Draw(count, offset);
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	if (mHasIndexBuffer)
+	{
+		mDeviceContext->DrawIndexed(count, offset, 0);
+	}
+	else
+	{	
+		mDeviceContext->Draw(count, offset);
+	}
 }
 
 void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
@@ -175,11 +184,13 @@ void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
 	if (indexBuffer == NULL)
 	{
 		mDeviceContext->IASetIndexBuffer(NULL, DXGI_FORMAT_R16_UINT, 0);
+		mHasIndexBuffer = false;
 	}
 	else
 	{
 		DX11IndexBuffer *dxIndexBuffer = dynamic_cast<DX11IndexBuffer*>(indexBuffer.get());
 		mDeviceContext->IASetIndexBuffer(dxIndexBuffer->GetBuffer(), dxIndexBuffer->GetDXFormat(), 0);
+		mHasIndexBuffer = true;
 	}
 }
 

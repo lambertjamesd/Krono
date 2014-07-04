@@ -147,6 +147,9 @@
     <ClInclude Include="DX11\DX11IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Interface\ConstantBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -260,10 +263,15 @@
     <ClCompile Include="DX11\DX11IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Interface\ConstantBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\HLSL\VertexShaderTest.hlsl" />
     <FxCompile Include="Shaders\HLSL\PixelShaderTest.hlsl" />
+    <FxCompile Include="Shaders\HLSL\ScreenCopyVert.hlsl" />
+    <FxCompile Include="Shaders\HLSL\ScreenCopyPix.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\GLSL\PixelShaderTest.frag" />

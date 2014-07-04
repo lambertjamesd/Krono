@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VertexBuffer.h"
+#include "..\Core\Memory.h"
 
 class IndexBuffer
 {
@@ -20,6 +21,8 @@ public:
 
 	size_t GetStrideSize() const;
 	static size_t GetFormatSize(Format format);
+
+	static Auto<IndexBuffer> Null;
 protected:
 	IndexBuffer(Format format);
 private:

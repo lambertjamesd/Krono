@@ -74,6 +74,9 @@ int main(int argc, char** argv)
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
 	Auto<VertexShader> vertexShader;
 	Auto<FragmentShader> fragmentShader;
+	
+	Auto<VertexShader> copyVertex;
+	Auto<FragmentShader> copyFragment;
 
 	window->Show();
 	
@@ -81,19 +84,24 @@ int main(int argc, char** argv)
 	Auto<RenderTarget> offscreenTest;
 
 	Auto<VertexBuffer> screenCoverQuad;
+	Auto<IndexBuffer> screenCoverIndex;
+	Auto<Texture> offscreenTexture;
 
 	try
 	{
 		graphics = Graphics::CreateGraphics(api);
 		windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
 
-
-		offscreenTest = graphics->CreateOffscreenRenderTarget(window->GetSize(), DataFormat(DataFormat::UInt8, 4));
+		offscreenTest = graphics->CreateOffscreenRenderTarget(window->GetSize(), DataFormat(DataFormat::Float, 4));
+		offscreenTexture = offscreenTest->GetTexture();
 
 		if (api == Graphics::DirectX11)
 		{
 			vertexShader = graphics->CreateVertexShader(ReadFileContents("Shaders\\HLSL\\VertexShaderTest.cso"));
 			fragmentShader = graphics->CreateFragmentShader(ReadFileContents("Shaders\\HLSL\\PixelShaderTest.cso"));
+			
+			copyVertex = graphics->CreateVertexShader(ReadFileContents("Shaders\\HLSL\\ScreenCopyVert.cso"));
+			copyFragment = graphics->CreateFragmentShader(ReadFileContents("Shaders\\HLSL\\ScreenCopyPix.cso"));
 		}
 		else
 		{
@@ -108,13 +116,13 @@ int main(int argc, char** argv)
 
 		DataIterator bufferWriter = vertexBuffer->Lock(3);
 		bufferWriter.Write<Vector3f>(Vector3f(0.0f, 0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(1.0f, 0.0f, 1.0f, 1.0f));
+		bufferWriter.Write<Colorf>(Colorf(8.0f, 0.0f, 0.0f, 1.0f));
 
 		bufferWriter.Write<Vector3f>(Vector3f(0.45f, -0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+		bufferWriter.Write<Colorf>(Colorf(0.0f, 1.0f, 0.0f, 1.0f));
 
 		bufferWriter.Write<Vector3f>(Vector3f(-0.45f, -0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(0.0f, 1.0f, 1.0f, 1.0f));
+		bufferWriter.Write<Colorf>(Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 		vertexBuffer->Unlock();
 
 		InputLayout screenCoverLayout;
@@ -133,6 +141,17 @@ int main(int argc, char** argv)
 		screenIterator.Write<Vector2f>(Vector2f(0.0f, 1.0f));
 		screenCoverQuad->Unlock();
 
+		screenCoverIndex = graphics->CreateIndexBuffer(IndexBuffer::UInt16);
+		DataIterator indexInterator = screenCoverIndex->Lock(6);
+		indexInterator.Write<short>(0);
+		indexInterator.Write<short>(1);
+		indexInterator.Write<short>(2);
+		
+		indexInterator.Write<short>(2);
+		indexInterator.Write<short>(3);
+		indexInterator.Write<short>(0);
+		screenCoverIndex->Unlock();
+
 	}
 	catch (Exception& exception)
 	{
@@ -150,13 +169,21 @@ int main(int argc, char** argv)
 		graphics->SetVertexShader(vertexShader);
 		graphics->SetFragmentShader(fragmentShader);
 		graphics->SetVertexBuffer(vertexBuffer);
+		graphics->SetIndexBuffer(IndexBuffer::Null);
 
 		graphics->Draw(3, 0);
 
 		renderTargetArray[0] = windowRenderTarget;
 		graphics->SetRenderTargets(renderTargetArray, Auto<DepthBuffer>(NULL));
 		
+		graphics->SetVertexShader(copyVertex);
+		graphics->SetFragmentShader(copyFragment);
 		graphics->SetVertexBuffer(screenCoverQuad);
+		graphics->SetIndexBuffer(screenCoverIndex);
+
+		graphics->SetTexture(offscreenTexture, 0);
+		
+		graphics->Draw(6, 0);
 
 		windowRenderTarget->Present();
 

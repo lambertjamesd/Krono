@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "IndexBuffer.h"
 
-
 IndexBuffer::IndexBuffer(IndexBuffer::Format format) :
 	mFormat(format)
 {
@@ -20,6 +19,8 @@ IndexBuffer::Format IndexBuffer::GetFormat() const
 {
 	return mFormat;
 }
+
+Auto<IndexBuffer> IndexBuffer::Null(NULL);
 
 size_t IndexBuffer::gFormatSize[] = {sizeof(short), sizeof(long)};
 

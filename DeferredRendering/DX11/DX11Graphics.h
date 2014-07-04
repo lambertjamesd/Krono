@@ -53,5 +53,6 @@ private:
 	Auto<DX11VertexBuffer> mCurrentVertexBuffer;
 
 	bool mNeedNewInputMapping;
+	bool mHasIndexBuffer;
 };
 

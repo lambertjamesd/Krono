@@ -11,6 +11,14 @@
 #include "Texture.h"
 #include "IndexBuffer.h"
 
+namespace Topology
+{
+	enum Type
+	{
+		Triangles
+	};
+};
+
 class Graphics
 {
 public:
