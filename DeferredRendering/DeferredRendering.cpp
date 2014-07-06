@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
 	*/
 
-	Graphics::API api = Graphics::DirectX11;
+	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
 	Auto<VertexBuffer> vertexBuffer;
@@ -107,6 +107,9 @@ int main(int argc, char** argv)
 		{
 			vertexShader = graphics->CreateVertexShader(ReadFileContents("Shaders\\GLSL\\VertexShaderTest.vert"));
 			fragmentShader = graphics->CreateFragmentShader(ReadFileContents("Shaders\\GLSL\\PixelShaderTest.frag"));
+			
+			copyVertex = graphics->CreateVertexShader(ReadFileContents("Shaders\\GLSL\\ScreenCopy.vert"));
+			copyFragment = graphics->CreateFragmentShader(ReadFileContents("Shaders\\GLSL\\ScreenCopy.frag"));
 		}
 		
 		InputLayout bufferInputLayout;
@@ -183,7 +186,7 @@ int main(int argc, char** argv)
 
 		graphics->SetTexture(offscreenTexture, 0);
 		
-		graphics->Draw(6, 0);
+		graphics->DrawIndexed(6, 0);
 
 		windowRenderTarget->Present();
 

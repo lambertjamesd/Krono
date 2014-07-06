@@ -52,9 +52,9 @@ DX11OffscreenRenderTarget::~DX11OffscreenRenderTarget(void)
 	mRenderTargetView->Release();
 }
 
-void DX11OffscreenRenderTarget::GetRenderTargetInternal(void* target) const
+ID3D11RenderTargetView* DX11OffscreenRenderTarget::GetTargetView()
 {
-	*((ID3D11RenderTargetView**)target) = mRenderTargetView;
+	return mRenderTargetView;
 }
 
 Auto<Texture2D> DX11OffscreenRenderTarget::GetTexture() const

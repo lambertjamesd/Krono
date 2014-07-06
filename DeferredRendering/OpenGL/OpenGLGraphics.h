@@ -1,6 +1,13 @@
 #pragma once
 
 #include "..\Interface\Graphics.h"
+#include "OpenGLShaderDatabase.h"
+#include "OpenGLFBODatabase.h"
+
+class OpenGLVertexBuffer;
+class OpenGLVertexShader;
+class OpenGLFragmentShader;
+class OpenGLIndexBuffer;
 
 class OpenGLGraphics : public Graphics
 {
@@ -16,6 +23,7 @@ public:
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format);
 
 	virtual void Draw(size_t count, size_t offset);
+	virtual void DrawIndexed(size_t count, size_t offset);
 
 	virtual void SetViewport(const Rectf& viewport, const Rangef& depthRange);
 
@@ -31,11 +39,27 @@ public:
 	static GLenum GetGLType(DataFormat::Type type);
 private:
 	OpenGLGraphics(void);
+	
+	void UpdatePendingChanges();
 
 	friend class Graphics;
 
 	static GLenum gGLTypeMapping[];
 
+	OpenGLShaderDatabase mShaderDatabase;
+	OpenGLFBODatabase mFBODatabase;
+
 	bool mHasGlewInitialized;
+
+	Auto<OpenGLVertexShader> mCurrentVertexShader;
+	Auto<OpenGLFragmentShader> mCurrentFragmentShader;
+	Auto<OpenGLShaderProgram> mCurrentShaderProgram;
+
+	Auto<OpenGLVertexBuffer> mCurrentVertexBuffer;
+	Auto<OpenGLIndexBuffer> mCurrentIndexBuffer;
+
+	bool mNeedNewProgram;
+	
+	bool mNeedVertexRebind;
 };
 

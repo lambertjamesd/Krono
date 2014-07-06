@@ -85,6 +85,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DX11\DX11RenderTarget.h" />
     <ClInclude Include="Interface\ConstantBuffer.h" />
     <ClInclude Include="DX11\DX11IndexBuffer.h" />
     <ClInclude Include="DX11\DX11Texture2D.h" />
@@ -110,7 +111,14 @@
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Core\Object.h" />
-    <ClInclude Include="OpenGL\OpenGLRenderBufferMapping.h" />
+    <ClInclude Include="OpenGL\OpenGLOffscreenRenderTarget.h" />
+    <ClInclude Include="OpenGL\OpenGLObjectID.h" />
+    <ClInclude Include="OpenGL\OpenGLRenderTarget.h" />
+    <ClInclude Include="OpenGL\OpenGLFBODatabase.h" />
+    <ClInclude Include="OpenGL\OpenGLFramebuffer.h" />
+    <ClInclude Include="OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="OpenGL\OpenGLIndexBuffer.h" />
+    <ClInclude Include="OpenGL\OpenGLShaderDatabase.h" />
     <ClInclude Include="OpenGL\OpenGLWindowRenderTarget.h" />
     <ClInclude Include="OpenGL\OpenGLGraphics.h" />
     <ClInclude Include="OpenGL\OpenGLShader.h" />
@@ -131,6 +139,7 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DX11\DX11RenderTarget.cpp" />
     <ClCompile Include="Interface\ConstantBuffer.cpp" />
     <ClCompile Include="DX11\DX11IndexBuffer.cpp" />
     <ClCompile Include="DX11\DX11Texture2D.cpp" />
@@ -151,7 +160,14 @@
     <ClCompile Include="Interface\Graphics.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Interface\InvalidEnumException.cpp" />
-    <ClCompile Include="OpenGL\OpenGLRenderBufferMapping.cpp" />
+    <ClCompile Include="OpenGL\OpenGLOffscreenRenderTarget.cpp" />
+    <ClCompile Include="OpenGL\OpenGLObjectID.cpp" />
+    <ClCompile Include="OpenGL\OpenGLRenderTarget.cpp" />
+    <ClCompile Include="OpenGL\OpenGLFBODatabase.cpp" />
+    <ClCompile Include="OpenGL\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="OpenGL\OpenGLIndexBuffer.cpp" />
+    <ClCompile Include="OpenGL\OpenGLShaderDatabase.cpp" />
     <ClCompile Include="OpenGL\OpenGLWindowRenderTarget.cpp" />
     <ClCompile Include="OpenGL\OpenGLGraphics.cpp" />
     <ClCompile Include="OpenGL\OpenGLShader.cpp" />
@@ -203,6 +219,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\GLSL\PixelShaderTest.frag" />
+    <None Include="Shaders\GLSL\ScreenCopy.frag" />
+    <None Include="Shaders\GLSL\ScreenCopy.vert" />
     <None Include="Shaders\GLSL\VertexShaderTest.vert" />
     <None Include="Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>

@@ -14,7 +14,6 @@ struct RenderTargetFormat
 class RenderTarget
 {
 public:
-	virtual void GetRenderTargetInternal(void* target) const = 0;
 	virtual Auto<Texture2D> GetTexture() const = 0;
 	virtual void Clear(const Colorf& color) = 0;
 

@@ -70,7 +70,7 @@ OpenGLVertexLayoutData::OpenGLVertexLayoutData(void) :
 
 OpenGLVertexLayoutData::OpenGLVertexLayoutData(const Attribute& attribute, GLsizei offset) :
 	mIsActive(true),
-	mSize(attribute.GetFormat().GetSize()),
+	mSize(attribute.GetFormat().count),
 	mType(OpenGLGraphics::GetGLType(attribute.GetFormat().type)),
 	mByteSize(attribute.GetFormat().GetSize()),
 	mOffset(offset)
@@ -169,6 +169,11 @@ OpenGLShaderProgram::~OpenGLShaderProgram()
 void OpenGLShaderProgram::Use()
 {
 	glUseProgram(mProgram);
+}
+
+void OpenGLShaderProgram::BindVertexBuffer(OpenGLVertexBuffer& buffer)
+{
+	GetLayoutMapping(buffer.GetInputLayout()).Use();
 }
 
 const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayout& inputLayout)

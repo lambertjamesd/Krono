@@ -41,6 +41,7 @@ public:
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format) = 0;
 
 	virtual void Draw(size_t count, size_t offset) = 0;
+	virtual void DrawIndexed(size_t count, size_t offset) = 0;
 
 	virtual void SetViewport(const Rectf& viewport, const Rangef& depthRange) = 0;
 

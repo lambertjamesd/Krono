@@ -25,8 +25,9 @@ public:
 	static Auto<IndexBuffer> Null;
 protected:
 	IndexBuffer(Format format);
-private:
+	
 	Format mFormat;
+private:
 
 	static size_t gFormatSize[];
 };

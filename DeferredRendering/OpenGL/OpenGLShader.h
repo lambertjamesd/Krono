@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\Interface\Shader.h"
+#include "OpenGLObjectID.h"
 
 class OpenGLVertexShader : public VertexShader
 {
@@ -12,11 +13,15 @@ public:
 
 	GLuint GetGLShader() const;
 	virtual bool IsValid() const;
+
+	OpenGLObjectID GetObjectID() const;
 private:
 	OpenGLVertexShader(const OpenGLVertexShader& other);
 	OpenGLVertexShader& operator=(const OpenGLVertexShader& other);
 
 	GLuint mShader;
+
+	OpenGLObjectID mObjectID;
 };
 
 class OpenGLFragmentShader : public FragmentShader
@@ -27,9 +32,13 @@ public:
 	
 	GLuint GetGLShader() const;
 	virtual bool IsValid() const;
+
+	OpenGLObjectID GetObjectID() const;
 private:
 	OpenGLFragmentShader(const OpenGLFragmentShader& other);
 	OpenGLFragmentShader& operator=(const OpenGLFragmentShader& other);
 
 	GLuint mShader;
+
+	OpenGLObjectID mObjectID;
 };

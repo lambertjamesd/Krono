@@ -5,5 +5,6 @@ class Object
 public:
 	Object(void);
 	~Object(void);
+private:
 };
 

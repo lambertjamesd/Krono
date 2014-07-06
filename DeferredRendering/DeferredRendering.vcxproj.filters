@@ -132,9 +132,6 @@
     <ClInclude Include="Interface\DataFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OpenGL\OpenGLRenderBufferMapping.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DX11\DX11Texture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -148,6 +145,33 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Interface\ConstantBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLShaderDatabase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLIndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLFBODatabase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLFramebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLObjectID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLOffscreenRenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11\DX11RenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLRenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -248,9 +272,6 @@
     <ClCompile Include="Interface\DataFormat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OpenGL\OpenGLRenderBufferMapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DX11\DX11Texture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -266,6 +287,33 @@
     <ClCompile Include="Interface\ConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLShaderDatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLIndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLFBODatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLObjectID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLOffscreenRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11\DX11RenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\HLSL\VertexShaderTest.hlsl" />
@@ -277,5 +325,7 @@
     <None Include="Shaders\GLSL\PixelShaderTest.frag" />
     <None Include="Shaders\GLSL\VertexShaderTest.vert" />
     <None Include="Shaders\HLSL\DataPassStructures.hlsli" />
+    <None Include="Shaders\GLSL\ScreenCopy.vert" />
+    <None Include="Shaders\GLSL\ScreenCopy.frag" />
   </ItemGroup>
 </Project>

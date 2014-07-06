@@ -66,9 +66,9 @@ void DX11WindowRenderTarget::Present(void)
 	mSwapChain->Present(1, 0);
 }
 
-void DX11WindowRenderTarget::GetRenderTargetInternal(void* target) const
+ID3D11RenderTargetView* DX11WindowRenderTarget::GetTargetView()
 {
-	*((ID3D11RenderTargetView**)target) = mRenderTargetView;
+	return mRenderTargetView;
 }
 
 Auto<Texture2D> DX11WindowRenderTarget::GetTexture() const

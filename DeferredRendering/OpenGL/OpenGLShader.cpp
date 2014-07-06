@@ -4,7 +4,8 @@
 #include <string>
 #include <iostream>
 
-OpenGLVertexShader::OpenGLVertexShader(const std::string& source)
+OpenGLVertexShader::OpenGLVertexShader(const std::string& source) :
+	mObjectID(OpenGLObjectIDGenerator::GetNextID())
 {
 	mShader = CompileShader(GL_VERTEX_SHADER, source);
 }
@@ -51,7 +52,13 @@ GLuint OpenGLVertexShader::CompileShader(GLenum type, const std::string& source)
 	return result;
 }
 
-OpenGLFragmentShader::OpenGLFragmentShader(const std::string& source)
+OpenGLObjectID OpenGLVertexShader::GetObjectID() const
+{
+	return mObjectID;
+}
+
+OpenGLFragmentShader::OpenGLFragmentShader(const std::string& source) :
+	mObjectID(OpenGLObjectIDGenerator::GetNextID())
 {
 	mShader = OpenGLVertexShader::CompileShader(GL_FRAGMENT_SHADER, source);
 }
@@ -69,4 +76,9 @@ GLuint OpenGLFragmentShader::GetGLShader() const
 bool OpenGLFragmentShader::IsValid() const
 {
 	return mShader != 0;
+}
+
+OpenGLObjectID OpenGLFragmentShader::GetObjectID() const
+{
+	return mObjectID;
 }

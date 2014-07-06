@@ -23,9 +23,11 @@ DataIterator OpenGLVertexBuffer::Lock(size_t vertexCount)
 
 void OpenGLVertexBuffer::Unlock()
 {
+	GLuint previousArrayBuffer;
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&previousArrayBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, mBuffer.size(), &mBuffer.front(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, previousArrayBuffer);
 }
 
 void OpenGLVertexBuffer::Use()

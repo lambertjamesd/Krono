@@ -3,6 +3,7 @@
 #include "..\Interface\InputLayout.h"
 #include "OpenGLShader.h"
 #include <map>
+#include "OpenGLVertexBuffer.h"
 
 class ShaderVariable
 {
@@ -88,6 +89,8 @@ public:
 
 	const std::vector<ShaderVariable>& GetUniforms() const;
 	const std::vector<ShaderVariable>& GetOutputs() const;
+
+	void BindVertexBuffer(OpenGLVertexBuffer& buffer);
 protected:
 	
 private:

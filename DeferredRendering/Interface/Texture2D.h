@@ -8,12 +8,12 @@ class Texture2D : public Texture
 public:
 	virtual ~Texture2D(void);
 
-	Size GetSize() const;
+	Vector2i GetSize() const;
 	DataFormat GetFormat() const;
 
 protected:
-	Texture2D(const Size& size, DataFormat format);
+	Texture2D(const Vector2i& size, DataFormat format);
 
-	Size mSize;
+	Vector2i mSize;
 	DataFormat mFormat;
 };

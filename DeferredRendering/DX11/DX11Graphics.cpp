@@ -110,15 +110,14 @@ void DX11Graphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mDeviceContext->Draw(count, offset);
+}
 
-	if (mHasIndexBuffer)
-	{
-		mDeviceContext->DrawIndexed(count, offset, 0);
-	}
-	else
-	{	
-		mDeviceContext->Draw(count, offset);
-	}
+void DX11Graphics::DrawIndexed(size_t count, size_t offset)
+{
+	UpdatePendingChanges();
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mDeviceContext->DrawIndexed(count, offset, 0);
 }
 
 void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
@@ -138,7 +137,8 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 	ID3D11RenderTargetView** dxRenderTargetPointer = &(dxRenderTargets.front());
 	for (int i = 0; i < renderTargets.size(); ++i, ++dxRenderTargetPointer)
 	{
-		renderTargets[i]->GetRenderTargetInternal(dxRenderTargetPointer);
+		DX11RenderTarget *dxRenderTarget = dynamic_cast<DX11RenderTarget*>(renderTargets[i].get());
+		dxRenderTargetPointer[i] = dxRenderTarget->GetTargetView();
 	}
 
 	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
