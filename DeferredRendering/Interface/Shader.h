@@ -11,12 +11,12 @@ protected:
 private:
 };
 
-class FragmentShader
+class PixelShader
 {
 public:
-	virtual ~FragmentShader(void);
+	virtual ~PixelShader(void);
 	virtual bool IsValid() const = 0;
 protected:
-	FragmentShader(void);
+	PixelShader(void);
 private:
 };

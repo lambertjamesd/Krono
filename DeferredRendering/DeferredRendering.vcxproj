@@ -85,7 +85,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Math\BoundingBox.h" />
+    <ClInclude Include="DX11\DX11ConstantBuffer.h" />
+    <ClInclude Include="DX11\DX11DepthBuffer.h" />
     <ClInclude Include="DX11\DX11RenderTarget.h" />
+    <ClInclude Include="Math\Plane.h" />
+    <ClInclude Include="Resource\MeshLoader.h" />
+    <ClInclude Include="Resource\ResourceManager.h" />
+    <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Resource\ResourceLoader.h" />
+    <ClInclude Include="Resource\MeshGroup.h" />
+    <ClInclude Include="Resource\ObjMeshGroupLoader.h" />
+    <ClInclude Include="Resource\MeshGroupLoader.h" />
+    <ClInclude Include="Scene\SceneIndexArray.h" />
+    <ClInclude Include="Scene\SceneIndex.h" />
+    <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="Interface\ConstantBuffer.h" />
     <ClInclude Include="DX11\DX11IndexBuffer.h" />
     <ClInclude Include="DX11\DX11Texture2D.h" />
@@ -107,10 +121,14 @@
     <ClInclude Include="DX11\HResultException.h" />
     <ClInclude Include="Interface\Graphics.h" />
     <ClInclude Include="Interface\InvalidEnumException.h" />
+    <ClInclude Include="Resource\Material.h" />
     <ClInclude Include="Math\Matrix.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Resource\Mesh.h" />
+    <ClInclude Include="OpenGL\OpenGLConstantBuffer.h" />
+    <ClInclude Include="OpenGL\OpenGLDepthBuffer.h" />
     <ClInclude Include="OpenGL\OpenGLOffscreenRenderTarget.h" />
     <ClInclude Include="OpenGL\OpenGLObjectID.h" />
     <ClInclude Include="OpenGL\OpenGLRenderTarget.h" />
@@ -129,17 +147,34 @@
     <ClInclude Include="Interface\Shader.h" />
     <ClInclude Include="Math\Range.h" />
     <ClInclude Include="Math\Rect.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Resource\SubMesh.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Interface\Texture.h" />
     <ClInclude Include="Interface\Texture2D.h" />
     <ClInclude Include="Interface\VertexBuffer.h" />
     <ClInclude Include="Interface\Window.h" />
     <ClInclude Include="Interface\UnsupportedFormatException.h" />
+    <ClInclude Include="Resource\Technique.h" />
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Math\BoundingBox.cpp" />
+    <ClCompile Include="DX11\DX11ConstantBuffer.cpp" />
+    <ClCompile Include="DX11\DX11DepthBuffer.cpp" />
     <ClCompile Include="DX11\DX11RenderTarget.cpp" />
+    <ClCompile Include="Math\Plane.cpp" />
+    <ClCompile Include="Resource\MeshLoader.cpp" />
+    <ClCompile Include="Resource\ResourceManager.cpp" />
+    <ClCompile Include="Resource\Resource.cpp" />
+    <ClCompile Include="Resource\ResourceLoader.cpp" />
+    <ClCompile Include="Resource\MeshGroup.cpp" />
+    <ClCompile Include="Resource\ObjMeshGroupLoader.cpp" />
+    <ClCompile Include="Resource\MeshGroupLoader.cpp" />
+    <ClCompile Include="Scene\SceneIndexArray.cpp" />
+    <ClCompile Include="Scene\SceneIndex.cpp" />
+    <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="Interface\ConstantBuffer.cpp" />
     <ClCompile Include="DX11\DX11IndexBuffer.cpp" />
     <ClCompile Include="DX11\DX11Texture2D.cpp" />
@@ -160,6 +195,11 @@
     <ClCompile Include="Interface\Graphics.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Interface\InvalidEnumException.cpp" />
+    <ClCompile Include="Resource\Material.cpp" />
+    <ClCompile Include="Math\Matrix.cpp" />
+    <ClCompile Include="Resource\Mesh.cpp" />
+    <ClCompile Include="OpenGL\OpenGLConstantBuffer.cpp" />
+    <ClCompile Include="OpenGL\OpenGLDepthBuffer.cpp" />
     <ClCompile Include="OpenGL\OpenGLOffscreenRenderTarget.cpp" />
     <ClCompile Include="OpenGL\OpenGLObjectID.cpp" />
     <ClCompile Include="OpenGL\OpenGLRenderTarget.cpp" />
@@ -178,6 +218,7 @@
     <ClCompile Include="Interface\Shader.cpp" />
     <ClCompile Include="Math\Range.cpp" />
     <ClCompile Include="Math\Rect.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -187,29 +228,31 @@
     <ClCompile Include="Interface\VertexBuffer.cpp" />
     <ClCompile Include="Interface\Window.cpp" />
     <ClCompile Include="Interface\UnsupportedFormatException.cpp" />
+    <ClCompile Include="Resource\SubMesh.cpp" />
+    <ClCompile Include="Resource\Technique.cpp" />
     <ClCompile Include="Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\HLSL\PixelShaderTest.hlsl">
+    <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Shaders\HLSL\ScreenCopyPix.hlsl">
+    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Shaders\HLSL\ScreenCopyVert.hlsl">
+    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Shaders\HLSL\VertexShaderTest.hlsl">
+    <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -218,11 +261,11 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Shaders\GLSL\ScreenCopy.frag" />
-    <None Include="Shaders\GLSL\ScreenCopy.vert" />
-    <None Include="Shaders\GLSL\VertexShaderTest.vert" />
-    <None Include="Shaders\HLSL\DataPassStructures.hlsli" />
+    <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
+    <None Include="Media\Shaders\GLSL\ScreenCopy.frag" />
+    <None Include="Media\Shaders\GLSL\ScreenCopy.vert" />
+    <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
+    <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

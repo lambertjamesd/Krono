@@ -8,6 +8,7 @@
 
 
 OpenGLWindowRenderTarget::OpenGLWindowRenderTarget(Window& window) :
+	WindowRenderTarget(window.GetSize()),
 	mHDC(GetDC(window.GetWindowHandle()))
 {
 	PIXELFORMATDESCRIPTOR pfd;
@@ -17,7 +18,7 @@ OpenGLWindowRenderTarget::OpenGLWindowRenderTarget(Window& window) :
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
-	pfd.cDepthBits = 32;
+	pfd.cDepthBits = 0;
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int iFormat = ChoosePixelFormat( mHDC, &pfd );
 	SetPixelFormat( mHDC, iFormat, &pfd );
@@ -41,9 +42,14 @@ Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
 void OpenGLWindowRenderTarget::Clear(const Colorf& color)
 {
 	MakeActive();
+	GLuint existingBuffer;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&existingBuffer);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(color.r, color.g, color.b, color.a);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, existingBuffer);
 }
 	
 void OpenGLWindowRenderTarget::Present(void)

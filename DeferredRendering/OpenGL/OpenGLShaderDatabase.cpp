@@ -11,7 +11,7 @@ OpenGLShaderDatabase::~OpenGLShaderDatabase(void)
 {
 }
 
-Auto<OpenGLShaderProgram> OpenGLShaderDatabase::GetProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader)
+Auto<OpenGLShaderProgram> OpenGLShaderDatabase::GetProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader)
 {
 	HashUInt32 hash;
 	OpenGLObjectID vertexID = vertexShader.GetObjectID();

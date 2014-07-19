@@ -11,11 +11,25 @@ public:
 	virtual DataIterator Lock(size_t vertexCount);
 	virtual void Unlock();
 	
+	virtual size_t GetVertexCount() const;
+	
 	void Use();
 private:
+	template <typename T, int one>
+	void FlipValue(size_t offset, size_t stride)
+	{
+		char* rawPointer = &mBuffer.front() + offset;
 
-	static GLenum GLTypeMapping[]; 
+		for (size_t i = 0; i < mCurrentVertexCount; ++i)
+		{
+			*((T*)rawPointer) = one - *((T*)rawPointer);
+			rawPointer += stride;
+		}
+	}
+
+	void FlipYUV();
 
 	std::vector<char> mBuffer;
 	GLuint mVertexBuffer;
+	size_t mCurrentVertexCount;
 };

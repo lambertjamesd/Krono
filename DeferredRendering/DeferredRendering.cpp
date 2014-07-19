@@ -19,6 +19,11 @@
 #include "Math\Vector3.h"
 #include "Interface\Graphics.h"
 
+#include "Math\Matrix.h"
+
+#include "Resource\ResourceManager.h"
+#include "Resource\Mesh.h"
+
 using namespace std;
 
 std::string ReadFileContents(const char *filename)
@@ -37,6 +42,12 @@ std::string ReadFileContents(const char *filename)
 
 	throw(errno);
 }
+
+struct MatrixStructure
+{
+	Matrix4f projection;
+	Matrix4f modelView;
+};
 
 int main(int argc, char** argv)
 {
@@ -67,65 +78,99 @@ int main(int argc, char** argv)
 
 	*/
 
-	Graphics::API api = Graphics::OpenGL;
+	Graphics::API api = Graphics::DirectX11;
 
 	Auto<Graphics> graphics;
 	Auto<VertexBuffer> vertexBuffer;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
 	Auto<VertexShader> vertexShader;
-	Auto<FragmentShader> fragmentShader;
+	Auto<PixelShader> fragmentShader;
+
+	Auto<ResourceManager> resourceManager;
 	
 	Auto<VertexShader> copyVertex;
-	Auto<FragmentShader> copyFragment;
+	Auto<PixelShader> copyPixel;
 
 	window->Show();
 	
 	Auto<WindowRenderTarget> windowRenderTarget;
 	Auto<RenderTarget> offscreenTest;
+	Auto<DepthBuffer> depthTest;
 
 	Auto<VertexBuffer> screenCoverQuad;
 	Auto<IndexBuffer> screenCoverIndex;
 	Auto<Texture> offscreenTexture;
+	Auto<Texture> depthTexture;
+
+	Auto<ConstantBuffer> constantBuffer;
+
+	Auto<Mesh> meshTest;
+
+	MatrixStructure matrices;
+
+	matrices.projection = Matrix4f::Identity();
+	matrices.modelView = Matrix4f::Identity();
+	
+	matrices.projection.At(0, 0) = 0.25f;
+	matrices.projection.At(1, 1) = 0.25f;
+	matrices.projection.At(2, 2) = 0.25f;
+
+	matrices.projection.At(0, 3) = 0.5f;
+	matrices.projection.At(1, 3) = 0.5f;
+	matrices.projection.At(2, 3) = 0.5f;
 
 	try
 	{
 		graphics = Graphics::CreateGraphics(api);
+		resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
 		windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
 
 		offscreenTest = graphics->CreateOffscreenRenderTarget(window->GetSize(), DataFormat(DataFormat::Float, 4));
 		offscreenTexture = offscreenTest->GetTexture();
 
+		depthTest = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24S8);
+		depthTexture = depthTest->GetTexture();
+
 		if (api == Graphics::DirectX11)
 		{
-			vertexShader = graphics->CreateVertexShader(ReadFileContents("Shaders\\HLSL\\VertexShaderTest.cso"));
-			fragmentShader = graphics->CreateFragmentShader(ReadFileContents("Shaders\\HLSL\\PixelShaderTest.cso"));
+			vertexShader = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\HLSL\\VertexShaderTest.cso"));
+			fragmentShader = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\HLSL\\PixelShaderTest.cso"));
 			
-			copyVertex = graphics->CreateVertexShader(ReadFileContents("Shaders\\HLSL\\ScreenCopyVert.cso"));
-			copyFragment = graphics->CreateFragmentShader(ReadFileContents("Shaders\\HLSL\\ScreenCopyPix.cso"));
+			copyVertex = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\HLSL\\ScreenCopyVert.cso"));
+			copyPixel = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\HLSL\\ScreenCopyPix.cso"));
 		}
 		else
 		{
-			vertexShader = graphics->CreateVertexShader(ReadFileContents("Shaders\\GLSL\\VertexShaderTest.vert"));
-			fragmentShader = graphics->CreateFragmentShader(ReadFileContents("Shaders\\GLSL\\PixelShaderTest.frag"));
+			vertexShader = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\GLSL\\VertexShaderTest.vert"));
+			fragmentShader = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\GLSL\\PixelShaderTest.frag"));
 			
-			copyVertex = graphics->CreateVertexShader(ReadFileContents("Shaders\\GLSL\\ScreenCopy.vert"));
-			copyFragment = graphics->CreateFragmentShader(ReadFileContents("Shaders\\GLSL\\ScreenCopy.frag"));
+			copyVertex = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\GLSL\\ScreenCopy.vert"));
+			copyPixel = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\GLSL\\ScreenCopy.frag"));
 		}
 		
 		InputLayout bufferInputLayout;
 		bufferInputLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
-		bufferInputLayout.AddAttribute(Attribute("COLOR", DataFormat(DataFormat::Float, 4)));
+		bufferInputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
 		vertexBuffer = graphics->CreateVertexBuffer(bufferInputLayout);
 
-		DataIterator bufferWriter = vertexBuffer->Lock(3);
-		bufferWriter.Write<Vector3f>(Vector3f(0.0f, 0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(8.0f, 0.0f, 0.0f, 1.0f));
+		DataIterator bufferWriter = vertexBuffer->Lock(6);
+		bufferWriter.Write<Vector3f>(Vector3f(0.0f, 0.5f, 0.5f));
+		bufferWriter.Write<Vector2f>(Vector2f(1.0f, 0.0f));
 
 		bufferWriter.Write<Vector3f>(Vector3f(0.45f, -0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(0.0f, 1.0f, 0.0f, 1.0f));
+		bufferWriter.Write<Vector2f>(Vector2f(1.0f, 1.0f));
+
+		bufferWriter.Write<Vector3f>(Vector3f(-0.45f, -0.5f, 1.0f));
+		bufferWriter.Write<Vector2f>(Vector2f(0.0f, 1.0f));
+		
+		bufferWriter.Write<Vector3f>(Vector3f(0.0f, 0.5f, 0.5f));
+		bufferWriter.Write<Vector2f>(Vector2f(1.0f, 0.0f));
+
+		bufferWriter.Write<Vector3f>(Vector3f(0.45f, -0.5f, 1.0f));
+		bufferWriter.Write<Vector2f>(Vector2f(1.0f, 1.0f));
 
 		bufferWriter.Write<Vector3f>(Vector3f(-0.45f, -0.5f, 0.0f));
-		bufferWriter.Write<Colorf>(Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+		bufferWriter.Write<Vector2f>(Vector2f(0.0f, 1.0f));
 		vertexBuffer->Unlock();
 
 		InputLayout screenCoverLayout;
@@ -155,6 +200,12 @@ int main(int argc, char** argv)
 		indexInterator.Write<short>(0);
 		screenCoverIndex->Unlock();
 
+		ConstantBufferLayout bufferLayout;
+		bufferLayout.MarkProjectionMatrix(offsetof(MatrixStructure, projection));
+
+		constantBuffer = graphics->CreateConstantBuffer(bufferLayout);
+
+		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 	}
 	catch (Exception& exception)
 	{
@@ -163,28 +214,35 @@ int main(int argc, char** argv)
 
 	while (!window->IsClosed())
 	{
+		constantBuffer->Set<MatrixStructure>(matrices);
+		graphics->SetConstantBuffer(constantBuffer, 0);
+
 		vector<Auto<RenderTarget>> renderTargetArray;
 		renderTargetArray.push_back(offscreenTest);
-		graphics->SetRenderTargets(renderTargetArray, Auto<DepthBuffer>(NULL));
+		graphics->SetRenderTargets(renderTargetArray, depthTest);
 		graphics->SetViewport(Rectf(Vector2f(), window->GetSize()), Rangef(0.0f, 1.0f));
 		offscreenTest->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
+		depthTest->Clear(1.0f);
 
 		graphics->SetVertexShader(vertexShader);
-		graphics->SetFragmentShader(fragmentShader);
+		graphics->SetPixelShader(fragmentShader);
 		graphics->SetVertexBuffer(vertexBuffer);
 		graphics->SetIndexBuffer(IndexBuffer::Null);
 
-		graphics->Draw(3, 0);
+		graphics->Draw(6, 0);
+
+		meshTest->GetSubMesh(0)->Render(*graphics);
 
 		renderTargetArray[0] = windowRenderTarget;
-		graphics->SetRenderTargets(renderTargetArray, Auto<DepthBuffer>(NULL));
+		graphics->SetRenderTargets(renderTargetArray, DepthBuffer::Null);
 		
 		graphics->SetVertexShader(copyVertex);
-		graphics->SetFragmentShader(copyFragment);
+		graphics->SetPixelShader(copyPixel);
 		graphics->SetVertexBuffer(screenCoverQuad);
 		graphics->SetIndexBuffer(screenCoverIndex);
 
 		graphics->SetTexture(offscreenTexture, 0);
+		graphics->SetTexture(depthTexture, 1);
 		
 		graphics->DrawIndexed(6, 0);
 

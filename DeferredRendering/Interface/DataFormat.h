@@ -5,7 +5,14 @@ struct DataFormat
 	enum Type
 	{
 		Float,
-		UInt8,
+		Int8UNorm,
+
+		Depth16,
+		Depth24,
+		Depth32F,
+		Depth24S8,
+		Depth32FS8,
+
 		TypeCount
 	};
 

@@ -84,6 +84,11 @@ void DX11VertexBuffer::Unlock()
 	context->Unmap(mBuffer, 0);
 }
 
+size_t DX11VertexBuffer::GetVertexCount() const
+{
+	return mCurrentVertexCount;
+}
+
 void DX11VertexBuffer::Use()
 {
 	ID3D11DeviceContext *context;

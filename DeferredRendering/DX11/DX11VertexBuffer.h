@@ -11,6 +11,8 @@ public:
 	virtual DataIterator Lock(size_t indexCount);
 	virtual void Unlock(); 
 	
+	virtual size_t GetVertexCount() const;
+	
 	void Use();
 private:
 	void CleanUp();

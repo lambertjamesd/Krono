@@ -3,11 +3,13 @@
 #include "OpenGLShader.h"
 #include "OpenGLShaderProgram.h"
 #include "OpenGLVertexBuffer.h"
+#include "OpenGLConstantBuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLOffscreenRenderTarget.h"
 #include "OpenGLWindowRenderTarget.h"
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLTexture2D.h"
+#include "OpenGLDepthBuffer.h"
 #include <iostream>
 
 using namespace std;
@@ -35,14 +37,20 @@ Auto<VertexBuffer> OpenGLGraphics::CreateVertexBuffer(const InputLayout& inputLa
 	return Auto<VertexBuffer>(new OpenGLVertexBuffer(inputLayout));
 }
 
+Auto<ConstantBuffer> OpenGLGraphics::CreateConstantBuffer(const ConstantBufferLayout& layout)
+{
+	return Auto<ConstantBuffer>(new OpenGLConstantBuffer(layout));
+}
+
+
 Auto<VertexShader> OpenGLGraphics::CreateVertexShader(const std::string& source)
 {
 	return Auto<VertexShader>(new OpenGLVertexShader(source));
 }
 
-Auto<FragmentShader> OpenGLGraphics::CreateFragmentShader(const std::string& source)
+Auto<PixelShader> OpenGLGraphics::CreatePixelShader(const std::string& source)
 {
-	return Auto<FragmentShader>(new OpenGLFragmentShader(source));
+	return Auto<PixelShader>(new OpenGLPixelShader(source));
 }
 
 Auto<WindowRenderTarget> OpenGLGraphics::CreateWindowRenderTarget(Window& targetWindow)
@@ -70,6 +78,11 @@ Auto<RenderTarget> OpenGLGraphics::CreateOffscreenRenderTarget(Vector2i size, Da
 	return Auto<RenderTarget>(new OpenGLOffscreenRenderTarget(size, format));
 }
 
+Auto<DepthBuffer> OpenGLGraphics::CreateDepthBuffer(Vector2i size, DataFormat::Type format)
+{
+	return Auto<DepthBuffer>(new OpenGLDepthBuffer(size, format));
+}
+
 void OpenGLGraphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
@@ -80,13 +93,15 @@ void OpenGLGraphics::DrawIndexed(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
 	GLenum glFormat = OpenGLIndexBuffer::GetGLFormat(mCurrentIndexBuffer->GetFormat());
-	glDrawElements(GL_TRIANGLES, count, glFormat, 0);
+	size_t byteOffset = offset * mCurrentIndexBuffer->GetStrideSize();
+	glDrawElementsBaseVertex(GL_TRIANGLES, count, glFormat, (void*)byteOffset, 0);
 }
 
 void OpenGLGraphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
-	glViewport(viewport.topLeft.x, viewport.topLeft.y, viewport.size.x, viewport.size.y);
-	glDepthRange(depthRange.start, depthRange.start + depthRange.length);
+	mViewport = viewport;
+	mNeedViewportUpdate = true;
+	glDepthRange(depthRange.start, depthRange.end);
 }
 
 void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
@@ -98,7 +113,31 @@ void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTa
 		renderBuffers.push_back(std::dynamic_pointer_cast<OpenGLRenderTarget>(*it));
 	}
 
-	mFBODatabase.GetFrameBuffer(renderBuffers).Use();
+	mFBODatabase.GetFrameBuffer(renderBuffers, dynamic_cast<OpenGLDepthBuffer*>(depthBuffer.get())).Use();
+
+	if (depthBuffer == NULL)
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	if (renderTargets.size() > 0)
+	{
+		mRenderBufferSize = renderTargets[0]->GetSize();
+	}
+	else if (depthBuffer != NULL)
+	{
+		mRenderBufferSize = depthBuffer->GetSize();
+	}
+	else
+	{
+		mRenderBufferSize = Vector2i();
+	}
+
+	mNeedViewportUpdate = true;
 }
 
 void OpenGLGraphics::SetTexture(Auto<Texture> &value, size_t slot)
@@ -115,17 +154,10 @@ void OpenGLGraphics::SetVertexShader(Auto<VertexShader> &vertexShader)
 	mNeedNewProgram = true;
 }
 
-void OpenGLGraphics::SetFragmentShader(Auto<FragmentShader> &fragmentShader)
+void OpenGLGraphics::SetPixelShader(Auto<PixelShader> &fragmentShader)
 {
-	mCurrentFragmentShader = std::dynamic_pointer_cast<OpenGLFragmentShader>(fragmentShader);
+	mCurrentPixelShader = std::dynamic_pointer_cast<OpenGLPixelShader>(fragmentShader);
 	mNeedNewProgram = true;
-}
-
-void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
-{
-	mCurrentVertexBuffer = std::dynamic_pointer_cast<OpenGLVertexBuffer>(vertexBuffer);
-	mCurrentVertexBuffer->Use();
-	mNeedVertexRebind = true;
 }
 
 void OpenGLGraphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
@@ -142,7 +174,25 @@ void OpenGLGraphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
 	}
 }
 
-GLenum OpenGLGraphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};
+void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+{
+	mCurrentVertexBuffer = std::dynamic_pointer_cast<OpenGLVertexBuffer>(vertexBuffer);
+	mCurrentVertexBuffer->Use();
+	mNeedVertexRebind = true;
+}
+
+void OpenGLGraphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
+{
+	OpenGLConstantBuffer* glBuffer = dynamic_cast<OpenGLConstantBuffer*>(constantBuffer.get());
+	glBindBufferBase(GL_UNIFORM_BUFFER, slot, glBuffer->GetBuffer());
+}
+
+bool OpenGLGraphics::FlipImageOriginY() const
+{
+	return true;
+}
+
+GLenum OpenGLGraphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE, GL_SHORT, 0, GL_FLOAT, 0, 0};
 
 GLenum OpenGLGraphics::GetGLType(DataFormat::Type type)
 {
@@ -154,10 +204,10 @@ void OpenGLGraphics::UpdatePendingChanges()
 {
 	if (mNeedNewProgram && 
 		mCurrentVertexShader != NULL &&
-		mCurrentFragmentShader != NULL &&
+		mCurrentPixelShader != NULL &&
 		mCurrentVertexBuffer != NULL)
 	{
-		mCurrentShaderProgram = mShaderDatabase.GetProgram(*mCurrentVertexShader, *mCurrentFragmentShader);
+		mCurrentShaderProgram = mShaderDatabase.GetProgram(*mCurrentVertexShader, *mCurrentPixelShader);
 		mCurrentShaderProgram->Use();
 		mNeedNewProgram = false;
 
@@ -169,5 +219,13 @@ void OpenGLGraphics::UpdatePendingChanges()
 		mCurrentVertexBuffer != NULL)
 	{
 		mCurrentShaderProgram->BindVertexBuffer(*mCurrentVertexBuffer);
+	}
+
+	if (mNeedViewportUpdate)
+	{
+		float bottom = mRenderBufferSize.y - (mViewport.topLeft.y + mViewport.size.y);
+
+		glViewport(mViewport.topLeft.x, bottom, mViewport.size.x, mViewport.size.y);
+		mNeedViewportUpdate = false;
 	}
 }

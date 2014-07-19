@@ -10,6 +10,8 @@
 #include "..\Math\Range.h"
 #include "Texture.h"
 #include "IndexBuffer.h"
+#include "DepthBuffer.h"
+#include "ConstantBuffer.h"
 
 namespace Topology
 {
@@ -34,11 +36,13 @@ public:
 
 	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format) = 0;
 	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout) = 0;
+	virtual Auto<ConstantBuffer> CreateConstantBuffer(const ConstantBufferLayout& layout) = 0;
 	virtual Auto<VertexShader> CreateVertexShader(const std::string& source) = 0;
-	virtual Auto<FragmentShader> CreateFragmentShader(const std::string& source) = 0;
+	virtual Auto<PixelShader> CreatePixelShader(const std::string& source) = 0;
 
 	virtual Auto<WindowRenderTarget> CreateWindowRenderTarget(Window& targetWindow) = 0;
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format) = 0;
+	virtual Auto<DepthBuffer> CreateDepthBuffer(Vector2i size, DataFormat::Type format) = 0;
 
 	virtual void Draw(size_t count, size_t offset) = 0;
 	virtual void DrawIndexed(size_t count, size_t offset) = 0;
@@ -50,16 +54,15 @@ public:
 	virtual void SetTexture(Auto<Texture> &value, size_t slot) = 0;
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader) = 0;
-	virtual void SetFragmentShader(Auto<FragmentShader> &fragmentShader) = 0;
-	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer) = 0;
+	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader) = 0;
 	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer) = 0;
+	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer) = 0;
+	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot) = 0;
 
-	static GLenum GetGLType(DataFormat::Type type);
+	virtual bool FlipImageOriginY() const = 0;
 
 protected:
 	Graphics(void);
 private:
-
-	static GLenum gGLTypeMapping[];
 };
 

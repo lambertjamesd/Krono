@@ -108,8 +108,14 @@ GLsizei OpenGLVertexLayoutData::GetOffset() const
 	return mOffset;
 }
 
-OpenGLVertexLayout::OpenGLVertexLayout(void) :
+OpenGLVertexLayout::OpenGLVertexLayout() :
 	mStride(0)
+{
+
+}
+
+OpenGLVertexLayout::OpenGLVertexLayout(GLsizei stride) :
+	mStride(stride)
 {
 
 }
@@ -122,7 +128,6 @@ OpenGLVertexLayout::~OpenGLVertexLayout(void)
 void OpenGLVertexLayout::AddVertexData(const OpenGLVertexLayoutData& value)
 {
 	mLayoutData.push_back(value);
-	mStride += value.GetByteSize();
 }
 
 void OpenGLVertexLayout::Use() const
@@ -142,7 +147,7 @@ void OpenGLVertexLayout::Use() const
 	}
 }
 
-OpenGLShaderProgram::OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader)
+OpenGLShaderProgram::OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader)
 {
 	if (vertexShader.IsValid() && fragmentShader.IsValid())
 	{
@@ -182,7 +187,7 @@ const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayou
 
 	if (existingLayout == mLayoutMapping.end())
 	{
-		OpenGLVertexLayout layoutMapping;
+		OpenGLVertexLayout layoutMapping(inputLayout.GetStride());
 
 		for (auto shaderVar = mAttributes.begin(); shaderVar != mAttributes.end(); ++shaderVar)
 		{

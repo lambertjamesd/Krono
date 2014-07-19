@@ -24,19 +24,19 @@ private:
 	OpenGLObjectID mObjectID;
 };
 
-class OpenGLFragmentShader : public FragmentShader
+class OpenGLPixelShader : public PixelShader
 {
 public:
-	OpenGLFragmentShader(const std::string& source);
-	virtual ~OpenGLFragmentShader();
+	OpenGLPixelShader(const std::string& source);
+	virtual ~OpenGLPixelShader();
 	
 	GLuint GetGLShader() const;
 	virtual bool IsValid() const;
 
 	OpenGLObjectID GetObjectID() const;
 private:
-	OpenGLFragmentShader(const OpenGLFragmentShader& other);
-	OpenGLFragmentShader& operator=(const OpenGLFragmentShader& other);
+	OpenGLPixelShader(const OpenGLPixelShader& other);
+	OpenGLPixelShader& operator=(const OpenGLPixelShader& other);
 
 	GLuint mShader;
 

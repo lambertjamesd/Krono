@@ -17,17 +17,23 @@ public:
 	virtual Auto<Texture2D> GetTexture() const = 0;
 	virtual void Clear(const Colorf& color) = 0;
 
-	RenderTarget(void);
 	virtual ~RenderTarget(void);
+
+	Vector2i GetSize() const;
+protected:
+	RenderTarget(const Vector2i& size);
+private:
+	Vector2i mSize;
 };
 
 class WindowRenderTarget : public RenderTarget
 {
 public:
-	WindowRenderTarget(void);
 	virtual ~WindowRenderTarget(void);
 
 	virtual void Present(void) = 0;
+protected:
+	WindowRenderTarget(const Vector2i& size);
 private:
 
 };

@@ -2,7 +2,8 @@
 #include "RenderTarget.h"
 
 
-RenderTarget::RenderTarget(void)
+RenderTarget::RenderTarget(const Vector2i& size) :
+	mSize(size)
 {
 }
 
@@ -11,8 +12,13 @@ RenderTarget::~RenderTarget(void)
 {
 }
 
+Vector2i RenderTarget::GetSize() const
+{
+	return mSize;
+}
 
-WindowRenderTarget::WindowRenderTarget(void)
+WindowRenderTarget::WindowRenderTarget(const Vector2i& size) :
+	RenderTarget(size)
 {
 
 }

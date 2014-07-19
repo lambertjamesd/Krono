@@ -4,6 +4,7 @@
 #include "HResultException.h"
 
 DX11WindowRenderTarget::DX11WindowRenderTarget(DX11Graphics& graphics, Window& window) :
+	WindowRenderTarget(window.GetSize()),
 	mDeviceContext(graphics.GetContext())
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;

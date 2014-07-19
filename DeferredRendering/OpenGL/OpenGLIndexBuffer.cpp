@@ -20,6 +20,7 @@ void OpenGLIndexBuffer::Use()
 
 DataIterator OpenGLIndexBuffer::Lock(size_t indexCount)
 {
+	mCurrentIndexBuffer = indexCount;
 	mBuffer.resize(GetFormatSize(mFormat) * indexCount);
 	return DataIterator(&mBuffer.front(), &mBuffer.front() + mBuffer.size());
 }
@@ -31,6 +32,11 @@ void OpenGLIndexBuffer::Unlock()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mBuffer.size(), &mBuffer.front(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, previousIndexBuffer);
+}
+
+size_t OpenGLIndexBuffer::GetIndexCount() const
+{
+	return mCurrentIndexBuffer;
 }
 
 GLuint OpenGLIndexBuffer::GetIndexBuffer() const

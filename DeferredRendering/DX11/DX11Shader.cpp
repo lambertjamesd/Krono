@@ -108,7 +108,7 @@ void DX11VertexShader::Use()
 	context->VSSetShader(mVertexShader, NULL, 0);
 }
 
-DX11FragmentShader::DX11FragmentShader(ID3D11Device* device, const std::string& compiledData) :
+DX11PixelShader::DX11PixelShader(ID3D11Device* device, const std::string& compiledData) :
 		mPixelShader(NULL),
 		mDevice(device)
 {
@@ -120,7 +120,7 @@ DX11FragmentShader::DX11FragmentShader(ID3D11Device* device, const std::string& 
 	}
 }
 
-DX11FragmentShader::~DX11FragmentShader(void)
+DX11PixelShader::~DX11PixelShader(void)
 {
 	if (mPixelShader != NULL)
 	{
@@ -129,12 +129,12 @@ DX11FragmentShader::~DX11FragmentShader(void)
 	}
 }
 
-bool DX11FragmentShader::IsValid() const
+bool DX11PixelShader::IsValid() const
 {
 	return mPixelShader != NULL;
 }
 
-void DX11FragmentShader::Use()
+void DX11PixelShader::Use()
 {
 	ID3D11DeviceContext *context;
 	mDevice->GetImmediateContext(&context);

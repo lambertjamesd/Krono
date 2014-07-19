@@ -18,6 +18,13 @@ public:
 	}
 
 	template <typename T>
+	void Write(const T* data, size_t count)
+	{
+		memcpy(mDataPointer, data, sizeof(T) * count);
+		mDataPointer = (void*)((char*)mDataPointer + sizeof(T) * count);
+	}
+
+	template <typename T>
 	void Skip()
 	{
 		mDataPointer = (void*)((T*)mDataPointer + 1);
@@ -40,6 +47,8 @@ public:
 	virtual void Unlock() = 0;
 
 	const InputLayout& GetInputLayout();
+	
+	virtual size_t GetVertexCount() const = 0;
 protected:
 	VertexBuffer(const InputLayout& inputLayout);
 	InputLayout mInputLayout;

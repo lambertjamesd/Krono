@@ -11,7 +11,7 @@ public:
 	OpenGLShaderDatabase(void);
 	~OpenGLShaderDatabase(void);
 
-	Auto<OpenGLShaderProgram> GetProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader);
+	Auto<OpenGLShaderProgram> GetProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader);
 private:
 	std::map<UINT32, Auto<OpenGLShaderProgram> > mSavedShaders;
 };

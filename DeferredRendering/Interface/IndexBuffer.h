@@ -19,6 +19,8 @@ public:
 	virtual DataIterator Lock(size_t indexCount) = 0;
 	virtual void Unlock() = 0;
 
+	virtual size_t GetIndexCount() const = 0;
+
 	size_t GetStrideSize() const;
 	static size_t GetFormatSize(Format format);
 

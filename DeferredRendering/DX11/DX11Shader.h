@@ -26,11 +26,11 @@ private:
 	std::map<UINT32, DX11SmartPtr<ID3D11InputLayout> > mInputLayouts;
 };
 
-class DX11FragmentShader : public FragmentShader
+class DX11PixelShader : public PixelShader
 {
 public:
-	DX11FragmentShader(ID3D11Device* device, const std::string& compiledData);
-	virtual ~DX11FragmentShader(void);
+	DX11PixelShader(ID3D11Device* device, const std::string& compiledData);
+	virtual ~DX11PixelShader(void);
 	virtual bool IsValid() const;
 	
 	void Use();

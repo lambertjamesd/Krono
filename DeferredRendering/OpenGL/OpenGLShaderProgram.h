@@ -68,7 +68,8 @@ private:
 class OpenGLVertexLayout
 {
 public:
-	OpenGLVertexLayout(void);
+	OpenGLVertexLayout();
+	OpenGLVertexLayout(GLsizei stride);
 	~OpenGLVertexLayout(void);
 
 	void AddVertexData(const OpenGLVertexLayoutData& value);
@@ -82,7 +83,7 @@ private:
 class OpenGLShaderProgram
 {
 public:
-	OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLFragmentShader& fragmentShader);
+	OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader);
 	virtual ~OpenGLShaderProgram();
 	
 	virtual void Use();

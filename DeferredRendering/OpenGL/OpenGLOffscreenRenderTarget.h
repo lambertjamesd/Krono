@@ -16,6 +16,7 @@ public:
 	virtual OpenGLRenderTarget::Type GetType() const;
 	virtual GLuint GetGLObject() const;
 private:
+	GLuint mClearFBO;
 	GLuint mGLTexture;
 	Auto<OpenGLTexture2D> mTextureTarget;
 };

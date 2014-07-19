@@ -57,28 +57,28 @@ OpenGLObjectID OpenGLVertexShader::GetObjectID() const
 	return mObjectID;
 }
 
-OpenGLFragmentShader::OpenGLFragmentShader(const std::string& source) :
+OpenGLPixelShader::OpenGLPixelShader(const std::string& source) :
 	mObjectID(OpenGLObjectIDGenerator::GetNextID())
 {
 	mShader = OpenGLVertexShader::CompileShader(GL_FRAGMENT_SHADER, source);
 }
 
-OpenGLFragmentShader::~OpenGLFragmentShader()
+OpenGLPixelShader::~OpenGLPixelShader()
 {
 	glDeleteShader(mShader);
 }
 
-GLuint OpenGLFragmentShader::GetGLShader() const
+GLuint OpenGLPixelShader::GetGLShader() const
 {
 	return mShader;
 }
 
-bool OpenGLFragmentShader::IsValid() const
+bool OpenGLPixelShader::IsValid() const
 {
 	return mShader != 0;
 }
 
-OpenGLObjectID OpenGLFragmentShader::GetObjectID() const
+OpenGLObjectID OpenGLPixelShader::GetObjectID() const
 {
 	return mObjectID;
 }

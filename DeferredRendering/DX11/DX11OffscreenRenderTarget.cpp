@@ -5,6 +5,7 @@
 #include "DX11Texture2D.h"
 
 DX11OffscreenRenderTarget::DX11OffscreenRenderTarget(ID3D11Device* device, Vector2i size, DataFormat format) :
+	RenderTarget(size),
 	mDevice(device)
 {
 	D3D11_TEXTURE2D_DESC textureDescription;

@@ -8,9 +8,9 @@ OpenGLFramebuffer::OpenGLFramebuffer(void) :
 	mBuffers.push_back(GL_BACK_LEFT);
 }
 
-OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> > &renderBuffers)
+OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> > &renderBuffers, const OpenGLDepthBuffer* depthBuffer)
 {
-	if (renderBuffers.size() == 0 || renderBuffers.size() == 1 && renderBuffers[0]->GetType() == OpenGLRenderTarget::TypeWindow)
+	if (renderBuffers.size() == 1 && renderBuffers[0]->GetType() == OpenGLRenderTarget::TypeWindow && depthBuffer == NULL)
 	{
 		mFrameBuffer = 0;
 		mBuffers.push_back(GL_BACK_LEFT);
@@ -18,7 +18,6 @@ OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> 
 	else
 	{
 		GLuint existingBuffer;
-
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&existingBuffer);
 
 		glGenFramebuffers(1, &mFrameBuffer);
@@ -30,7 +29,11 @@ OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> 
 		{
 			const OpenGLRenderTarget* currentBuffer = it->get();
 
-			if (currentBuffer->GetType() == OpenGLRenderTarget::TypeWindow)
+			if (currentBuffer == NULL)
+			{
+				mBuffers.push_back(GL_NONE);
+			}
+			else if (currentBuffer->GetType() == OpenGLRenderTarget::TypeWindow)
 			{
 				mBuffers.push_back(GL_BACK_LEFT);
 			}
@@ -39,6 +42,16 @@ OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> 
 				BindBuffer(currentBuffer, currentAttachment);
 				mBuffers.push_back(currentAttachment);
 				++currentAttachment;
+			}
+		}
+
+		if (depthBuffer != NULL)
+		{
+			BindBuffer(depthBuffer, GL_DEPTH_ATTACHMENT);
+
+			if (renderBuffers.size() ==  0)
+			{
+				mBuffers.push_back(GL_NONE);
 			}
 		}
 

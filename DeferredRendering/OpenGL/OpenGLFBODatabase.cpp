@@ -12,7 +12,7 @@ OpenGLFBODatabase::~OpenGLFBODatabase(void)
 
 }
 
-OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<OpenGLRenderTarget> > &renderBuffers)
+OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<OpenGLRenderTarget> > &renderBuffers, const OpenGLDepthBuffer* depthBuffer)
 {
 	HashUInt32 signatureHash;
 
@@ -28,7 +28,7 @@ OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<Open
 
 	if (findResult == mExistingBuffers.end())
 	{
-		Auto<OpenGLFramebuffer> result(new OpenGLFramebuffer(renderBuffers));
+		Auto<OpenGLFramebuffer> result(new OpenGLFramebuffer(renderBuffers, depthBuffer));
 		mExistingBuffers[signature] = result;
 		return *result;
 	}

@@ -13,6 +13,4 @@ public:
 	virtual GLuint GetGLTexture() const;
 protected:
 	GLuint mTexture;
-
-	static GLint glFormatMap[];
 };

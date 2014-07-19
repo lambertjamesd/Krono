@@ -47,6 +47,11 @@ void DX11IndexBuffer::Unlock()
 	context->Unmap(mBuffer.Get(), 0);
 }
 
+size_t DX11IndexBuffer::GetIndexCount() const
+{
+	return mCurrentIndexCount;
+}
+
 DXGI_FORMAT DX11IndexBuffer::gFormatMapping[] = {
 	DXGI_FORMAT_R16_UINT,
 	DXGI_FORMAT_R32_UINT
@@ -77,7 +82,7 @@ void DX11IndexBuffer::RebuildBuffer(size_t indexCount)
 	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	bufferDesc.ByteWidth = GetStrideSize() * indexCount;
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bufferDesc.StructureByteStride = GetStrideSize();
+	bufferDesc.StructureByteStride = 0;
 	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	ID3D11Buffer *newBuffer;

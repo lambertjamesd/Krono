@@ -4,9 +4,11 @@
 #include "HResultException.h"
 #include "DX11WindowRenderTarget.h"
 #include "DX11OffscreenRenderTarget.h"
+#include "DX11DepthBuffer.h"
 #include "DX11IndexBuffer.h"
 #include "DX11VertexBuffer.h"
 #include "DX11Shader.h"
+#include "DX11ConstantBuffer.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -72,14 +74,19 @@ Auto<VertexBuffer> DX11Graphics::CreateVertexBuffer(const InputLayout& inputLayo
 	return Auto<VertexBuffer>(new DX11VertexBuffer(mDevice, inputLayout));
 }
 
+Auto<ConstantBuffer> DX11Graphics::CreateConstantBuffer(const ConstantBufferLayout& layout)
+{
+	return Auto<ConstantBuffer>(new DX11ConstantBuffer(mDevice, layout));
+}
+
 Auto<VertexShader> DX11Graphics::CreateVertexShader(const std::string& source)
 {
 	return Auto<VertexShader>(new DX11VertexShader(mDevice, source));
 }
 
-Auto<FragmentShader> DX11Graphics::CreateFragmentShader(const std::string& source)
+Auto<PixelShader> DX11Graphics::CreatePixelShader(const std::string& source)
 {
-	return Auto<FragmentShader>(new DX11FragmentShader(mDevice, source));
+	return Auto<PixelShader>(new DX11PixelShader(mDevice, source));
 }
 
 Auto<WindowRenderTarget> DX11Graphics::CreateWindowRenderTarget(Window& targetWindow)
@@ -92,6 +99,11 @@ Auto<RenderTarget> DX11Graphics::CreateOffscreenRenderTarget(Vector2i size, Data
 	return Auto<RenderTarget>(new DX11OffscreenRenderTarget(mDevice, size, format));
 }
 
+Auto<DepthBuffer> DX11Graphics::CreateDepthBuffer(Vector2i size, DataFormat::Type format)
+{
+	return Auto<DepthBuffer>(new DX11DepthBuffer(mDevice, size, format));
+}
+
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
 	D3D11_VIEWPORT dxViewport;
@@ -101,7 +113,7 @@ void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 	dxViewport.Width = viewport.size.x;
 	dxViewport.Height = viewport.size.y;
 	dxViewport.MinDepth = depthRange.start;
-	dxViewport.MaxDepth  = depthRange.start + depthRange.length;
+	dxViewport.MaxDepth  = depthRange.end;
 
 	mDeviceContext->RSSetViewports(1, &dxViewport);
 }
@@ -127,7 +139,7 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 
 	if (depthBuffer != NULL)
 	{
-		depthBuffer->GetRenderTargetInternal(&depthBufferView);
+		depthBufferView = dynamic_cast<DX11DepthBuffer*>(depthBuffer.get())->GetDepthView();
 	}
 	else
 	{
@@ -164,19 +176,9 @@ void DX11Graphics::SetVertexShader(Auto<VertexShader> &vertexShader)
 	mCurrentVertexShader->Use();
 }
 
-void DX11Graphics::SetFragmentShader(Auto<FragmentShader> &fragmentShader)
+void DX11Graphics::SetPixelShader(Auto<PixelShader> &fragmentShader)
 {
-	std::dynamic_pointer_cast<DX11FragmentShader>(fragmentShader)->Use();
-}
-
-void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
-{
-	mNeedNewInputMapping = mNeedNewInputMapping || 
-		mCurrentVertexBuffer == NULL ||
-		mCurrentVertexBuffer->GetInputLayout().GetSignature() != vertexBuffer->GetInputLayout().GetSignature();
-
-	mCurrentVertexBuffer = std::dynamic_pointer_cast<DX11VertexBuffer>(vertexBuffer);
-	mCurrentVertexBuffer->Use();
+	std::dynamic_pointer_cast<DX11PixelShader>(fragmentShader)->Use();
 }
 
 void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
@@ -192,6 +194,29 @@ void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
 		mDeviceContext->IASetIndexBuffer(dxIndexBuffer->GetBuffer(), dxIndexBuffer->GetDXFormat(), 0);
 		mHasIndexBuffer = true;
 	}
+}
+
+void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+{
+	mNeedNewInputMapping = mNeedNewInputMapping || 
+		mCurrentVertexBuffer == NULL ||
+		mCurrentVertexBuffer->GetInputLayout().GetSignature() != vertexBuffer->GetInputLayout().GetSignature();
+
+	mCurrentVertexBuffer = std::dynamic_pointer_cast<DX11VertexBuffer>(vertexBuffer);
+	mCurrentVertexBuffer->Use();
+}
+
+void DX11Graphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
+{
+	DX11ConstantBuffer *dxContantBuffer = dynamic_cast<DX11ConstantBuffer*>(constantBuffer.get());
+	ID3D11Buffer *dxBuffer = dxContantBuffer->GetBuffer();
+	mDeviceContext->VSSetConstantBuffers(slot, 1, &dxBuffer);
+	mDeviceContext->PSSetConstantBuffers(slot, 1, &dxBuffer);
+}
+
+bool DX11Graphics::FlipImageOriginY() const
+{
+	return false;
 }
 
 
@@ -214,6 +239,11 @@ DXGI_FORMAT DX11Graphics::gFormatMapping[][4] =
 {
 	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT},
 	{DXGI_FORMAT_R8_UNORM, DXGI_FORMAT_R8G8_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM},
+	{DXGI_FORMAT_R16_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
+	{DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
+	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
+	{DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
+	{DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
 };
 
 DXGI_FORMAT DX11Graphics::GetDXFormat(const DataFormat& dataFormat)

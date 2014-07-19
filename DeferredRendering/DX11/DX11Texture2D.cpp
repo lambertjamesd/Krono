@@ -7,7 +7,6 @@ DX11Texture2D::DX11Texture2D(ID3D11Device* device, ID3D11Texture2D *texture, con
 	Texture2D(size, format),
 	mDevice(device),
 	mTexture(texture)
-
 {
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceDescription;
 	shaderResourceDescription.Format = DX11Graphics::GetDXFormat(format);

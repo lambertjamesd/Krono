@@ -14,12 +14,12 @@ VertexShader::~VertexShader(void)
 }
 
 
-FragmentShader::FragmentShader(void)
+PixelShader::PixelShader(void)
 {
 
 }
 
-FragmentShader::~FragmentShader(void)
+PixelShader::~PixelShader(void)
 {
 
 }
