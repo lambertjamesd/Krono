@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include "Vector4.h"
 
 template <size_t Rows, size_t Columns, typename T = float> 
 class Matrix
@@ -70,6 +71,12 @@ public:
 		return result;
 	}
 
+	Matrix Inverse() const
+	{
+		static_assert(Rows == Columns, "Can only take inverse of a square matrix");
+		return Matrix();
+	}
+
 	static Matrix Identity()
 	{
 		Matrix result;
@@ -94,3 +101,6 @@ typedef Matrix<2, 2, float> Matrix2f;
 
 Matrix4f ScaleMatrix(const Vector3f& vector);
 Matrix4f TranslationMatrix(const Vector3f& vector);
+
+Vector4f operator*(const Matrix4f& lhs, const Vector4f& rhs);
+Vector4f operator*(const Vector4f& lhs, const Matrix4f& rhs);

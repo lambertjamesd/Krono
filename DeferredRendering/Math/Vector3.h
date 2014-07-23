@@ -6,7 +6,7 @@ class Vector3
 {
 public:
 	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
-	Vector3(void) : x(T()), y(T()) {}
+	Vector3(void) : x(T()), y(T()), z(T()) {}
 	~Vector3(void) {}
 	
 	template <typename R>

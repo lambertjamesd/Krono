@@ -207,12 +207,6 @@
     <ClInclude Include="Scene\SceneIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\BoundingBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Plane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneIndexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -237,12 +231,24 @@
     <ClInclude Include="Resource\MeshLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Collide\Frustrum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collide\BoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collide\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredRendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Object.cpp">
@@ -413,12 +419,6 @@
     <ClCompile Include="Scene\SceneIndex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math\BoundingBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\Plane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\SceneIndexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -441,6 +441,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resource\MeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRendering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collide\Frustrum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collide\BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collide\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

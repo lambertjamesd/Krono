@@ -16,6 +16,7 @@ private:
 	void ModifyProjectionMatrices();
 
 	static Matrix4f gProjectionMatrixConversion;
+	static Matrix4f gInvProjectionMatrixConversion;
 
 	std::vector<char> mBufferCopy;
 	GLuint mBuffer;

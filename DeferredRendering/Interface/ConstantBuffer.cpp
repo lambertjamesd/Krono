@@ -11,14 +11,14 @@ ConstantBufferLayout::~ConstantBufferLayout(void)
 
 }
 
-void ConstantBufferLayout::MarkProjectionMatrix(size_t offset)
+void ConstantBufferLayout::MarkSpecialType(ConstantBufferLayout::Type type, size_t offset)
 {
-	mProjectionMatrixPositions.push_back(offset);
+	mSpecialTypes.push_back(std::make_pair(type, offset));
 }
 
-const std::vector<size_t> ConstantBufferLayout::GetProjectionMatrixPositions() const
+const std::vector<std::pair<ConstantBufferLayout::Type, size_t> >& ConstantBufferLayout::GetSpecialTypes() const
 {
-	return mProjectionMatrixPositions;
+	return mSpecialTypes;
 }
 
 ConstantBuffer::ConstantBuffer(const ConstantBufferLayout& layout) :

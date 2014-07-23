@@ -184,7 +184,15 @@ void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 void OpenGLGraphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
 {
 	OpenGLConstantBuffer* glBuffer = dynamic_cast<OpenGLConstantBuffer*>(constantBuffer.get());
-	glBindBufferBase(GL_UNIFORM_BUFFER, slot, glBuffer->GetBuffer());
+
+	if (glBuffer == NULL)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, slot, 0);
+	}
+	else
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, slot, glBuffer->GetBuffer());
+	}
 }
 
 bool OpenGLGraphics::FlipImageOriginY() const

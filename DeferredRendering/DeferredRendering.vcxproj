@@ -85,11 +85,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Math\BoundingBox.h" />
+    <ClInclude Include="Collide\Frustrum.h" />
+    <ClInclude Include="Math\Vector4.h" />
+    <ClInclude Include="Scene\SceneView.h" />
+    <ClInclude Include="Collide\BoundingBox.h" />
     <ClInclude Include="DX11\DX11ConstantBuffer.h" />
     <ClInclude Include="DX11\DX11DepthBuffer.h" />
     <ClInclude Include="DX11\DX11RenderTarget.h" />
-    <ClInclude Include="Math\Plane.h" />
+    <ClInclude Include="Collide\Plane.h" />
     <ClInclude Include="Resource\MeshLoader.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Resource\Resource.h" />
@@ -160,11 +163,13 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Math\BoundingBox.cpp" />
+    <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Scene\SceneView.cpp" />
+    <ClCompile Include="Collide\BoundingBox.cpp" />
     <ClCompile Include="DX11\DX11ConstantBuffer.cpp" />
     <ClCompile Include="DX11\DX11DepthBuffer.cpp" />
     <ClCompile Include="DX11\DX11RenderTarget.cpp" />
-    <ClCompile Include="Math\Plane.cpp" />
+    <ClCompile Include="Collide\Plane.cpp" />
     <ClCompile Include="Resource\MeshLoader.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />

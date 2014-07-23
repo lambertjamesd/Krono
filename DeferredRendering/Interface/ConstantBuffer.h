@@ -1,18 +1,25 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 
 class ConstantBufferLayout
 {
 public:
+	enum Type
+	{
+		TypeProjectionMatrix,
+		TypeInvProjectionMatrix,
+	};
+
 	ConstantBufferLayout(void);
 	~ConstantBufferLayout(void);
 
-	void MarkProjectionMatrix(size_t offset);
+	void MarkSpecialType(Type type, size_t offset);
 
-	const std::vector<size_t> GetProjectionMatrixPositions() const;
+	const std::vector<std::pair<Type, size_t> >& GetSpecialTypes() const;
 private:
-	std::vector<size_t> mProjectionMatrixPositions;
+	std::vector<std::pair<Type, size_t> > mSpecialTypes;
 };
 
 class ConstantBuffer
