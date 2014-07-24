@@ -62,5 +62,5 @@ void OpenGLConstantBuffer::ModifyProjectionMatrices()
 }
 
 
-Matrix4f OpenGLConstantBuffer::gProjectionMatrixConversion(ScaleMatrix(Vector3f(-1.0f, 1.0f, 2.0f)) * TranslationMatrix(Vector3f(0.0f, 0.0f, -0.5f)));
-Matrix4f OpenGLConstantBuffer::gInvProjectionMatrixConversion(TranslationMatrix(Vector3f(0.0f, 0.0f, 0.5f)) * ScaleMatrix(Vector3f(-1.0f, 1.0f, 0.5f)));
+Matrix4f OpenGLConstantBuffer::gProjectionMatrixConversion(TranslationMatrix(Vector3f(0.0f, 0.0f, -1.0f)) * ScaleMatrix(Vector3f(1.0f, 1.0f, 2.0f)));
+Matrix4f OpenGLConstantBuffer::gInvProjectionMatrixConversion(ScaleMatrix(Vector3f(1.0f, 1.0f, 0.5f)) * TranslationMatrix(Vector3f(0.0f, 0.0f, 1.0f)));

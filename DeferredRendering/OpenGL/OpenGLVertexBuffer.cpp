@@ -15,7 +15,7 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	
 DataIterator OpenGLVertexBuffer::Lock(size_t vertexCount)
 {
-	FlipYUV();
+	//FlipYUV();
 
 	mCurrentVertexCount = vertexCount;
 	size_t bufferSize = vertexCount * mInputLayout.GetStride();
@@ -27,7 +27,7 @@ DataIterator OpenGLVertexBuffer::Lock(size_t vertexCount)
 
 void OpenGLVertexBuffer::Unlock()
 {
-	FlipYUV();
+	//FlipYUV();
 
 	GLuint previousArrayBuffer;
 	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint*)&previousArrayBuffer);

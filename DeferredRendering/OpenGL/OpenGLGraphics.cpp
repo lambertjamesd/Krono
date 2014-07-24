@@ -66,6 +66,10 @@ Auto<WindowRenderTarget> OpenGLGraphics::CreateWindowRenderTarget(Window& target
 			std::cerr << "Could not initialize glew Error: " << glewGetErrorString(err) << std::endl;
 		}
 
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CW);
+
 		mHasGlewInitialized = true;
 	}
 

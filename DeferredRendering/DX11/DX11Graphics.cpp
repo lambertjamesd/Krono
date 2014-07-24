@@ -209,9 +209,13 @@ void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 void DX11Graphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
 {
 	DX11ConstantBuffer *dxContantBuffer = dynamic_cast<DX11ConstantBuffer*>(constantBuffer.get());
-	ID3D11Buffer *dxBuffer = dxContantBuffer->GetBuffer();
-	mDeviceContext->VSSetConstantBuffers(slot, 1, &dxBuffer);
-	mDeviceContext->PSSetConstantBuffers(slot, 1, &dxBuffer);
+
+	if (dxContantBuffer != NULL)
+	{
+		ID3D11Buffer *dxBuffer = dxContantBuffer->GetBuffer();
+		mDeviceContext->VSSetConstantBuffers(slot, 1, &dxBuffer);
+		mDeviceContext->PSSetConstantBuffers(slot, 1, &dxBuffer);
+	}
 }
 
 bool DX11Graphics::FlipImageOriginY() const

@@ -71,10 +71,88 @@ public:
 		return result;
 	}
 
+	T SubDeterminant(size_t rowSkip, size_t colSkip) const
+	{
+		static_assert(Rows == Columns, "Can only take determinat of a square matrix");
+
+		T result = 0;
+		
+		for (size_t col = 0; col < Columns - 1; ++col)
+		{
+			T positiveSlant = 1;
+			T negativeSlant = 1;
+
+			for (size_t i = 0; i < Columns - 1; ++i)
+			{
+				size_t actualColumn = (col + i) % (Columns - 1);
+				size_t actualRow = i;
+				size_t negativeRow = Columns - 2 - i;
+
+				if (actualColumn >= colSkip)
+				{
+					++actualColumn;
+				}
+
+				if (actualRow >= rowSkip)
+				{
+					++actualRow;
+				}
+
+				if (negativeRow >= rowSkip)
+				{
+					++negativeRow;
+				}
+
+				positiveSlant *= mElements[actualColumn][actualRow];
+				negativeSlant *= mElements[actualColumn][negativeRow];
+			}
+
+			result += positiveSlant - negativeSlant;
+		}
+
+		return result;
+	}
+
+	T Determinant() const
+	{
+		static_assert(Rows == Columns, "Can only take determinat of a square matrix");
+
+		T result = 0;
+
+		for (size_t col = 0; col < Columns; ++col)
+		{
+			T positiveSlant = 1;
+			T negativeSlant = 1;
+
+			for (size_t i = 0; i < Columns; ++i)
+			{
+				positiveSlant *= mElements[(col + i) % Columns][i];
+				negativeSlant *= mElements[(col + i) % Columns][(Columns - 1) - i];
+			}
+
+			result += positiveSlant - negativeSlant;
+		}
+
+		return result;
+	};
+
 	Matrix Inverse() const
 	{
 		static_assert(Rows == Columns, "Can only take inverse of a square matrix");
-		return Matrix();
+
+		Matrix result;
+
+		T determinantInv = 1 / Determinant();
+		
+		for (size_t col = 0; col < Columns; ++col)
+		{
+			for (size_t row = 0; row < Rows; ++row)
+			{
+				result.mElements[col][row] = SubDeterminant(col, row) * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
+			}
+		}
+
+		return result;
 	}
 
 	static Matrix Identity()

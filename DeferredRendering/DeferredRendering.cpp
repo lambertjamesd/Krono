@@ -86,17 +86,22 @@ int main(int argc, char** argv)
 	window->Show();
 	
 	Auto<WindowRenderTarget> windowRenderTarget;
+	Auto<DepthBuffer> depthBuffer;
 
 	Auto<Mesh> meshTest;
 
 	Scene sceneTest;
 	SceneView sceneView(sceneTest);
 
+	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.0f)) * ScaleMatrix(Vector3f(0.25f, 0.25f, 0.25f)));
+
 	try
 	{
 		graphics = Graphics::CreateGraphics(api);
 		resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
 		windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
+
+		depthBuffer = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24);
 
 		if (api == Graphics::DirectX11)
 		{
