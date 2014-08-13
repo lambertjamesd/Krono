@@ -87,6 +87,11 @@ Auto<DepthBuffer> OpenGLGraphics::CreateDepthBuffer(Vector2i size, DataFormat::T
 	return Auto<DepthBuffer>(new OpenGLDepthBuffer(size, format));
 }
 
+Auto<Texture2D> OpenGLGraphics::CreateTexture2D(Vector2i size, DataFormat format)
+{
+	return Auto<Texture2D>(new OpenGLTexture2D(size, format));
+}
+
 void OpenGLGraphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
@@ -144,7 +149,7 @@ void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTa
 	mNeedViewportUpdate = true;
 }
 
-void OpenGLGraphics::SetTexture(Auto<Texture> &value, size_t slot)
+void OpenGLGraphics::SetTexture(Auto<Texture> value, size_t slot)
 {
 	OpenGLTexture *texture = dynamic_cast<OpenGLTexture*>(value.get());
 

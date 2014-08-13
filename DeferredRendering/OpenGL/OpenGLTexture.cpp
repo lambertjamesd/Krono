@@ -26,3 +26,15 @@ GLenum OpenGLTexture::GetTextureFormat(DataFormat format)
 	static_assert(sizeof(gTextureFormatMapping) / sizeof(*gTextureFormatMapping) == DataFormat::TypeCount, "gTextureFormatMapping doesn't match");
 	return gTextureFormatMapping[format.type][format.count - 1];
 }
+
+GLenum OpenGLTexture::gTextureChannelMapping[] = {
+	GL_R,
+	GL_RG,
+	GL_RGB,
+	GL_RGBA
+};
+
+GLenum OpenGLTexture::GetTextureChannelType(size_t channelCount)
+{
+	return gTextureChannelMapping[channelCount - 1];
+}

@@ -1,7 +1,10 @@
 
 #include "DataPassStructures.hlsli"
 
-float4 main(ColorVertex input) : SV_TARGET
+Texture2D textureTest : register( t0 );
+SamplerState samLinear : register( s0 );
+
+float4 main(TexCoordVertex input) : SV_TARGET
 {
-	return input.color;
+	return float4(textureTest.Sample(samLinear, input.texCoord).rgb, 1.0);
 }

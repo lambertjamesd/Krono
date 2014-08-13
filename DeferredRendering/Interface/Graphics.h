@@ -44,6 +44,8 @@ public:
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format) = 0;
 	virtual Auto<DepthBuffer> CreateDepthBuffer(Vector2i size, DataFormat::Type format) = 0;
 
+	virtual Auto<Texture2D> CreateTexture2D(Vector2i size, DataFormat format) = 0;
+
 	virtual void Draw(size_t count, size_t offset) = 0;
 	virtual void DrawIndexed(size_t count, size_t offset) = 0;
 
@@ -51,7 +53,7 @@ public:
 
 	virtual void SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer) = 0;
 
-	virtual void SetTexture(Auto<Texture> &value, size_t slot) = 0;
+	virtual void SetTexture(Auto<Texture> value, size_t slot) = 0;
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader) = 0;
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader) = 0;

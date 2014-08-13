@@ -11,6 +11,8 @@ public:
 	
 	virtual GLenum GetTextureType() const;
 	virtual GLuint GetGLTexture() const;
+	
+	virtual void LoadMemory(void* source);
 protected:
 	GLuint mTexture;
 };

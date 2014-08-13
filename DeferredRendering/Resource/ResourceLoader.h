@@ -10,7 +10,7 @@ class ResourceLoader
 {
 public:
 	ResourceLoader(void);
-	~ResourceLoader(void);
+	virtual ~ResourceLoader(void);
 
 	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName) = 0;
 private:

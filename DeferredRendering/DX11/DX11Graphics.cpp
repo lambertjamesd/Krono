@@ -9,6 +9,7 @@
 #include "DX11VertexBuffer.h"
 #include "DX11Shader.h"
 #include "DX11ConstantBuffer.h"
+#include "DX11Texture2D.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -104,6 +105,11 @@ Auto<DepthBuffer> DX11Graphics::CreateDepthBuffer(Vector2i size, DataFormat::Typ
 	return Auto<DepthBuffer>(new DX11DepthBuffer(mDevice, size, format));
 }
 
+Auto<Texture2D> DX11Graphics::CreateTexture2D(Vector2i size, DataFormat format)
+{
+	return Auto<Texture2D>(new DX11Texture2D(mDevice, size, format));
+}
+
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
 	D3D11_VIEWPORT dxViewport;
@@ -156,7 +162,7 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
 }
 
-void DX11Graphics::SetTexture(Auto<Texture> &value, size_t slot)
+void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot)
 {
 	IDX11Resource* resource = dynamic_cast<IDX11Resource*>(value.get());
 

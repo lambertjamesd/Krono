@@ -60,7 +60,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glut32.lib;glew32.lib;glew32s.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;glew32.lib;glew32s.lib;d3d11.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glut32.lib;glew32.lib;glew32s.lib;d3d11.lib;d3dx11.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;glew32.lib;glew32s.lib;d3d11.lib;FreeImage.lib;d3dx11.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -86,6 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collide\Frustrum.h" />
+    <ClInclude Include="Resource\LoadException.h" />
+    <ClInclude Include="Resource\FormatException.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Scene\SceneView.h" />
     <ClInclude Include="Collide\BoundingBox.h" />
@@ -160,10 +162,13 @@
     <ClInclude Include="Interface\Window.h" />
     <ClInclude Include="Interface\UnsupportedFormatException.h" />
     <ClInclude Include="Resource\Technique.h" />
+    <ClInclude Include="Resource\Texture2DLoader.h" />
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Resource\LoadException.cpp" />
+    <ClCompile Include="Resource\FormatException.cpp" />
     <ClCompile Include="Scene\SceneView.cpp" />
     <ClCompile Include="Collide\BoundingBox.cpp" />
     <ClCompile Include="DX11\DX11ConstantBuffer.cpp" />
@@ -235,6 +240,7 @@
     <ClCompile Include="Interface\UnsupportedFormatException.cpp" />
     <ClCompile Include="Resource\SubMesh.cpp" />
     <ClCompile Include="Resource\Technique.cpp" />
+    <ClCompile Include="Resource\Texture2DLoader.cpp" />
     <ClCompile Include="Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>

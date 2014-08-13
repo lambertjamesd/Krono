@@ -90,10 +90,12 @@ int main(int argc, char** argv)
 
 	Auto<Mesh> meshTest;
 
+	Auto<Texture2D> textureTest;
+
 	Scene sceneTest;
 	SceneView sceneView(sceneTest);
 
-	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.0f)) * ScaleMatrix(Vector3f(0.25f, 0.25f, 0.25f)));
+	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.5f)) * ScaleMatrix(Vector3f(0.25f, 0.25f, 0.25f)));
 
 	try
 	{
@@ -116,6 +118,8 @@ int main(int argc, char** argv)
 
 		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 
+		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
+
 		Entity* entityTest = sceneTest.CreateEntity();
 		entityTest->SetMesh(meshTest);
 
@@ -126,7 +130,11 @@ int main(int argc, char** argv)
 	catch (Exception& exception)
 	{
 		std::cerr << exception.what();
+		std::cin.get();
+		exit(1);
 	}
+
+	graphics->SetTexture(textureTest, 0);
 
 	while (!window->IsClosed())
 	{

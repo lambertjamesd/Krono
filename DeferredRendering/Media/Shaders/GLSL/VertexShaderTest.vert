@@ -2,7 +2,7 @@
 attribute vec3 attrPOSITION0;
 attribute vec2 attrTEXCOORD0;
 
-varying vec4 color;
+varying vec2 texCoord;
 
 layout(binding = 0) uniform SceneViewData
 {
@@ -19,5 +19,5 @@ layout(binding = 1) uniform EntityData
 void main()
 {
 	gl_Position = projectionViewMatrix * modelMatrix * vec4(attrPOSITION0, 1);
-	color = vec4(attrTEXCOORD0, 0.0, 1.0);
+	texCoord = attrTEXCOORD0;
 }
