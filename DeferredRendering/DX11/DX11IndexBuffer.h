@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\IndexBuffer.h"
+#include "DX11Common.h"
+
+#include "Interface\IndexBuffer.h"
 #include "DX11SmartPtr.h"
 
 class DX11IndexBuffer : public IndexBuffer

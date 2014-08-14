@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "OpenGLVertexBuffer.h"
 
 OpenGLVertexBuffer::OpenGLVertexBuffer(const InputLayout& inputLayout) :

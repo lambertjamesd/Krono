@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DX11WindowRenderTarget.h"
 #include "DX11Graphics.h"
 #include "HResultException.h"

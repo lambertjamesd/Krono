@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MeshGroup.h"
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 #include "ResourceLoader.h"
 #include <iostream>
 #include <string>

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "../Core/Hash.h"
+#include "Core/Hash.h"
 #include "DataFormat.h"
 
 class Attribute
@@ -37,7 +37,7 @@ public:
 
 	size_t GetStride() const;
 
-	UINT32 GetSignature() const;
+	UInt32 GetSignature() const;
 private:
 	std::vector<Attribute> mAttributes;
 	size_t mStride;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Interface\DepthBuffer.h"
+#include "Interface\DepthBuffer.h"
 #include "DX11Texture2D.h"
 
 class DX11DepthBuffer : public DepthBuffer

@@ -17,13 +17,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -41,20 +41,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\lib\include;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSDK_IncludePath);$(ProjectDir);C:\lib\include;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\lib\lib;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\lib\include;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSDK_IncludePath);$(ProjectDir);C:\lib\include;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\lib\lib;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -66,11 +66,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -86,6 +86,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collide\Frustrum.h" />
+    <ClInclude Include="Core\Types.h" />
+    <ClInclude Include="DX11\DX11Common.h" />
+    <ClInclude Include="Krono.h" />
+    <ClInclude Include="OpenGL\OpenGLCommon.h" />
     <ClInclude Include="Resource\LoadException.h" />
     <ClInclude Include="Resource\FormatException.h" />
     <ClInclude Include="Math\Vector4.h" />
@@ -153,7 +157,6 @@
     <ClInclude Include="Math\Range.h" />
     <ClInclude Include="Math\Rect.h" />
     <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Resource\SubMesh.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Interface\Texture.h" />
@@ -191,7 +194,6 @@
     <ClCompile Include="DX11\IDX11Resource.cpp" />
     <ClCompile Include="Interface\IndexBuffer.cpp" />
     <ClCompile Include="Interface\DataFormat.cpp" />
-    <ClCompile Include="DeferredRendering.cpp" />
     <ClCompile Include="DX11\DX11OffscreenRenderTarget.cpp" />
     <ClCompile Include="DX11\DX11Shader.cpp" />
     <ClCompile Include="DX11\DX11VertexBuffer.cpp" />
@@ -229,10 +231,6 @@
     <ClCompile Include="Math\Range.cpp" />
     <ClCompile Include="Math\Rect.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Interface\Texture.cpp" />
     <ClCompile Include="Interface\Texture2D.cpp" />
     <ClCompile Include="Interface\VertexBuffer.cpp" />
@@ -242,41 +240,6 @@
     <ClCompile Include="Resource\Technique.cpp" />
     <ClCompile Include="Resource\Texture2DLoader.cpp" />
     <ClCompile Include="Windows\WindowsWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.vert" />
-    <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
-    <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

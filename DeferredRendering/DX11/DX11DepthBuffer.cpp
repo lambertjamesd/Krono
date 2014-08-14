@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DX11DepthBuffer.h"
 #include "HResultException.h"
 #include "DX11Graphics.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DX11IndexBuffer.h"
 #include "HResultException.h"
 

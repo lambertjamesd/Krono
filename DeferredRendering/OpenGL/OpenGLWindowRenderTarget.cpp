@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "OpenGLWindowRenderTarget.h"
 #include <GL/glew.h>
 

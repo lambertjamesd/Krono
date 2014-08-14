@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Texture2D.h"
 
 Texture2D::Texture2D(const Vector2i& size, DataFormat format) :

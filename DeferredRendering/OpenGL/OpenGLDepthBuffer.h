@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Interface\DepthBuffer.h"
+#include "Interface\DepthBuffer.h"
 #include "OpenGLObjectID.h"
 #include "OpenGLTexture2D.h"
 #include "OpenGLRenderTarget.h"

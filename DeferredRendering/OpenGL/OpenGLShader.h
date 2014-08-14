@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\Shader.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\Shader.h"
 #include "OpenGLObjectID.h"
 
 class OpenGLVertexShader : public VertexShader

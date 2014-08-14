@@ -2,6 +2,7 @@
 
 #include "OpenGLFramebuffer.h"
 #include <map>
+#include "Core/Types.h"
 
 class OpenGLFBODatabase
 {
@@ -11,6 +12,6 @@ public:
 
 	OpenGLFramebuffer& GetFrameBuffer(const std::vector<Auto<OpenGLRenderTarget> > &renderBuffers, const OpenGLDepthBuffer* depthBuffer);
 private:
-	std::map<UINT32, Auto<OpenGLFramebuffer> > mExistingBuffers;
+	std::map<UInt32, Auto<OpenGLFramebuffer> > mExistingBuffers;
 };
 

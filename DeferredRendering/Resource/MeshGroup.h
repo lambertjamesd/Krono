@@ -2,7 +2,7 @@
 #include "Mesh.h"
 #include <map>
 #include <string>
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 #include "Resource.h"
 
 class MeshGroup : public Resource

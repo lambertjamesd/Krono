@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Texture2DLoader.h"
 #include "FormatException.h"
 #include "ResourceManager.h"

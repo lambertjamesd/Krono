@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Core\Exception.h"
+#include "Core\Exception.h"
 #include <string>
 
 class UnsupportedFormatException :

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "HResultException.h"
 #include <comdef.h>
 #include <DxErr.h>

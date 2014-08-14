@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 #include <vector>
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 #include "SceneIndex.h"
 
 class SceneIndexArray : public SceneIndex

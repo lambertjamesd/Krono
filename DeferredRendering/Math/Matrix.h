@@ -163,7 +163,7 @@ public:
 		{
 			for (size_t row = 0; row < Rows; ++row)
 			{
-				result.mElements[col][row] = (row == col) ? 1 : 0;
+				result.mElements[col][row] = (row == col) ? (T)1 : (T)0;
 			}
 		}
 

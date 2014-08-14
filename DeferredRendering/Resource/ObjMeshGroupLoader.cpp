@@ -1,8 +1,8 @@
-#include "stdafx.h"
+
 #include "ObjMeshGroupLoader.h"
 #include <string>
 #include <ctype.h>
-#include "..\Core\Hash.h"
+#include "Core\Hash.h"
 #include "ResourceManager.h"
 
 using namespace std;
@@ -44,7 +44,7 @@ void ObjMeshVertexData::AddNormal(const Vector3f& normal)
 
 UINT16 ObjMeshVertexData::GetVertexBufferIndex(UINT16 vertexIndex, UINT16 texCoordIndex, UINT16 normalIndex)
 {
-	UINT64 digest = (vertexIndex & 0x3FFFFF) | ((texCoordIndex & 0x1FFFFF) << 22) | ((normalIndex & 0x1FFFFF) << 43);
+	UINT64 digest = ((UINT64)vertexIndex & 0x3FFFFF) | (((UINT64)texCoordIndex & 0x1FFFFF) << 22) | (((UINT64)normalIndex & 0x1FFFFF) << 43);
 	auto existingIndex = mIndexMap.find(digest);
 
 	if (existingIndex == mIndexMap.end())
@@ -105,15 +105,15 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 		{
 			if (tokens[0] == "v")
 			{
-				vertexData.AddPosition(Vector3f(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str())));
+				vertexData.AddPosition(Vector3f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str()), (float)atof(tokens[3].c_str())));
 			}
 			else if (tokens[0] == "vn")
 			{
-				vertexData.AddNormal(Vector3f(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str())));
+				vertexData.AddNormal(Vector3f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str()), (float)atof(tokens[3].c_str())));
 			}
 			else if (tokens[0] == "vt")
 			{
-				vertexData.AddTexCoord(Vector2f(atof(tokens[1].c_str()), atof(tokens[2].c_str())));
+				vertexData.AddTexCoord(Vector2f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str())));
 			}
 			else if (tokens[0] == "o")
 			{
@@ -173,7 +173,7 @@ void ObjMeshGroupLoader::SplitIndices(const std::string& input, size_t indices[3
 	
 	while (currentIndex < 3 && stringIndex != string::npos)
 	{
-		size_t stringEnd = input.find('\/', stringIndex);
+		size_t stringEnd = input.find('/', stringIndex);
 
 		if (stringEnd == string::npos)
 		{

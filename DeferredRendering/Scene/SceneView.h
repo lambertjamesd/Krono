@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Scene.h"
-#include "../Math/Matrix.h"
-#include "../Core/Memory.h"
-#include "../Interface/Graphics.h"
-#include "../Interface/ConstantBuffer.h"
+#include "Math/Matrix.h"
+#include "Core/Memory.h"
+#include "Interface/Graphics.h"
+#include "Interface/ConstantBuffer.h"
 
 struct SceneViewData
 {

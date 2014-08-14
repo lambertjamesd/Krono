@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "MeshLoader.h"
 #include "MeshGroup.h"
 #include "ResourceManager.h"

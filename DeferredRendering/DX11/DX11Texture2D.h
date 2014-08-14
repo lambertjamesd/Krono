@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Interface\Texture2D.h"
+#include "Interface\Texture2D.h"
 #include "DX11SmartPtr.h"
 #include "IDX11Resource.h"
 

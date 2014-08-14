@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Collide/Frustrum.h"
+#include "Collide/Frustrum.h"
 #include "Entity.h"
 #include <functional>
 

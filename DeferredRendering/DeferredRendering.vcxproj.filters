@@ -18,9 +18,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -255,11 +252,20 @@
     <ClInclude Include="Resource\LoadException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11\DX11Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Krono.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -452,9 +458,6 @@
     <ClCompile Include="Resource\MeshLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredRendering.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Collide\Frustrum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -476,18 +479,5 @@
     <ClCompile Include="Resource\LoadException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.vert" />
-    <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
-    <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>
 </Project>

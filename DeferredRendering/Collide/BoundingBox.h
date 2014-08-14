@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Math/Vector3.h"
+#include "Math/Vector3.h"
 
 template <typename T>
 class BoundingBox

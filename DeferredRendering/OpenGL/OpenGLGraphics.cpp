@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "OpenGLGraphics.h"
 #include "OpenGLShader.h"
 #include "OpenGLShaderProgram.h"
@@ -242,7 +242,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 	{
 		float bottom = mRenderBufferSize.y - (mViewport.topLeft.y + mViewport.size.y);
 
-		glViewport(mViewport.topLeft.x, bottom, mViewport.size.x, mViewport.size.y);
+		glViewport((GLint)mViewport.topLeft.x, (GLint)bottom, (GLsizei)mViewport.size.x, (GLsizei)mViewport.size.y);
 		mNeedViewportUpdate = false;
 	}
 }

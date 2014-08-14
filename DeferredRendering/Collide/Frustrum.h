@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Math/Matrix.h"
-#include "../Math/Vector3.h"
+#include "Math/Matrix.h"
+#include "Math/Vector3.h"
 #include "Plane.h"
 #include "BoundingBox.h"
 

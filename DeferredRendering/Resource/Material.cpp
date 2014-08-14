@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Material.h"
 
 Material::Material(void)
@@ -10,7 +10,7 @@ Material::~Material(void)
 {
 }
 
-void Material::AddTechnique(UINT32 id, const Technique& technique)
+void Material::AddTechnique(UInt32 id, const Technique& technique)
 {
 	mTechniques[id] = technique;
 }
@@ -32,5 +32,6 @@ bool Material::Use(Graphics& graphics, size_t technique)
 	{
 		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX);
 		foundTechnique->second.Use(graphics);
+		return true;
 	}
 }

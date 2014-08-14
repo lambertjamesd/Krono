@@ -1,5 +1,7 @@
 #pragma once
-#include "..\Interface\Graphics.h"
+#include "Interface\Graphics.h"
+
+#include "DX11Common.h"
 
 class DX11VertexBuffer;
 class DX11VertexShader;

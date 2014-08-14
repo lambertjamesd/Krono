@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "SceneView.h"
 
 SceneViewData::SceneViewData() :

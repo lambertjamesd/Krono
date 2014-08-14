@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "ConstantBuffer.h"
 
 ConstantBufferLayout::ConstantBufferLayout(void)

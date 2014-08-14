@@ -1,7 +1,7 @@
-#include "stdafx.h"
+
 #include "SubMesh.h"
 
-#include "../Interface/Graphics.h"
+#include "Interface/Graphics.h"
 
 SubMesh::SubMesh(void)
 {

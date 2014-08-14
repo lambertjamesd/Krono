@@ -1,6 +1,6 @@
-#include "stdafx.h"
+
 #include "Entity.h"
-#include "../Interface/Graphics.h"
+#include "Interface/Graphics.h"
 #include "SceneIndex.h"
 #include <assert.h>
 

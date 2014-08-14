@@ -1,7 +1,9 @@
 #pragma once
 
-#include "..\Interface\ConstantBuffer.h"
-#include "..\Math\Matrix.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\ConstantBuffer.h"
+#include "Math\Matrix.h"
 
 class OpenGLConstantBuffer : public ConstantBuffer
 {

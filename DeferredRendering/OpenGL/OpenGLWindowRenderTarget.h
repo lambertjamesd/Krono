@@ -1,7 +1,9 @@
 #pragma once
 
-#include "..\Interface\Window.h"
-#include "../Interface/RenderTarget.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\Window.h"
+#include "Interface/RenderTarget.h"
 #include "OpenGLRenderTarget.h"
 
 #ifdef _WIN32

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DX11Common.h"
+
 class IDX11Resource
 {
 public:

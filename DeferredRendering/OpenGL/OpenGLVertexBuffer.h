@@ -1,6 +1,10 @@
 #pragma once
 
-#include "..\Interface\VertexBuffer.h"
+#include "OpenGLCommon.h"
+
+#include "OpenGLCommon.h"
+
+#include "Interface\VertexBuffer.h"
 
 class OpenGLVertexBuffer : public VertexBuffer
 {

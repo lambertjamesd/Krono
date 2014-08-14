@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "..\stdafx.h"
+
+
 #include "DX11Graphics.h"
 #include "HResultException.h"
 #include "DX11WindowRenderTarget.h"
@@ -153,7 +153,7 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 	}
 
 	ID3D11RenderTargetView** dxRenderTargetPointer = &(dxRenderTargets.front());
-	for (int i = 0; i < renderTargets.size(); ++i, ++dxRenderTargetPointer)
+	for (size_t i = 0; i < renderTargets.size(); ++i, ++dxRenderTargetPointer)
 	{
 		DX11RenderTarget *dxRenderTarget = dynamic_cast<DX11RenderTarget*>(renderTargets[i].get());
 		dxRenderTargetPointer[i] = dxRenderTarget->GetTargetView();

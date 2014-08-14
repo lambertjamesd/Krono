@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DX11Texture2D.h"
 #include "DX11Graphics.h"
 #include "HResultException.h"

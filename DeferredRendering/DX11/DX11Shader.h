@@ -1,5 +1,8 @@
 #pragma once
-#include "..\Interface\Shader.h"
+
+#include "DX11Common.h"
+
+#include "Interface\Shader.h"
 #include <string>
 #include "DX11VertexBuffer.h"
 #include <map>
@@ -23,7 +26,7 @@ private:
 	ID3D11VertexShader *mVertexShader;
 	ID3D11Device *mDevice;
 	
-	std::map<UINT32, DX11SmartPtr<ID3D11InputLayout> > mInputLayouts;
+	std::map<UInt32, DX11SmartPtr<ID3D11InputLayout> > mInputLayouts;
 };
 
 class DX11PixelShader : public PixelShader

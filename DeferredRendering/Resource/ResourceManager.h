@@ -2,7 +2,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 #include "ResourceLoader.h"
 #include <fstream>
 #include "LoadException.h"

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\Interface\Shader.h"
-#include "..\Core\Memory.h"
-#include "../Interface/Graphics.h"
+#include "Interface\Shader.h"
+#include "Core\Memory.h"
+#include "Interface/Graphics.h"
 
 class Technique
 {

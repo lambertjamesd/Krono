@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Collide\BoundingBox.h"
+#include "Collide\BoundingBox.h"
 #include "SubMesh.h"
 #include <vector>
 #include "Resource.h"

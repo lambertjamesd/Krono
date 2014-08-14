@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VertexBuffer.h"
-#include "..\Core\Memory.h"
+#include "Core\Memory.h"
 
 class IndexBuffer
 {

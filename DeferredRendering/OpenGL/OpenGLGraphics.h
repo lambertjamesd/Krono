@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\Graphics.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\Graphics.h"
 #include "OpenGLShaderDatabase.h"
 #include "OpenGLFBODatabase.h"
 

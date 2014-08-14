@@ -1,5 +1,7 @@
 #pragma once
 
+#include "OpenGLCommon.h"
+
 #include "OpenGLObjectID.h"
 
 class OpenGLRenderTarget

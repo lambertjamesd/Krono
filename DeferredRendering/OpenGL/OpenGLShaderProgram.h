@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\InputLayout.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\InputLayout.h"
 #include "OpenGLShader.h"
 #include <map>
 #include "OpenGLVertexBuffer.h"
@@ -111,7 +113,7 @@ private:
 
 	GLuint mProgram;
 
-	std::map<UINT32, OpenGLVertexLayout> mLayoutMapping;
+	std::map<UInt32, OpenGLVertexLayout> mLayoutMapping;
 	
 	std::vector<ShaderVariable> mAttributes;
 	std::vector<ShaderVariable> mUniforms;

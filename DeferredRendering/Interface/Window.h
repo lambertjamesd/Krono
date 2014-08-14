@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\Math\Vector2.h"
+#include "Math\Vector2.h"
 #include "RenderTarget.h"
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 
 #ifdef _WIN32
 #include <Windows.h>

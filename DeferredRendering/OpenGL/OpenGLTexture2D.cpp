@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "..\stdafx.h"
+
+
 #include "OpenGLGraphics.h"
 
 #include "OpenGLTexture2D.h"

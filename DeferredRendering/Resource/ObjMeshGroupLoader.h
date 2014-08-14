@@ -1,11 +1,11 @@
 #pragma once
 
 #include "MeshGroupLoader.h"
-#include "../Interface/Graphics.h"
+#include "Interface/Graphics.h"
 #include <vector>
 #include <unordered_map>
-#include "../Math/Vector3.h"
-#include "../Math/Vector2.h"
+#include "Math/Vector3.h"
+#include "Math/Vector2.h"
 
 struct ObjMeshVertex
 {

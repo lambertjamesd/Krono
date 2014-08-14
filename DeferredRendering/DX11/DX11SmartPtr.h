@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdlib>
+
 template <typename T>
 class DX11SmartPtr
 {

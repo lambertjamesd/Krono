@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\DataFormat.h"
+#include "OpenGLCommon.h"
+
+#include "Interface\DataFormat.h"
 
 class OpenGLTexture
 {
