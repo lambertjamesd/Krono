@@ -1,7 +1,7 @@
 
 #include "DX11VertexBuffer.h"
 #include "HResultException.h"
-#include "Core\Hash.h"
+#include "Core/Hash.h"
 
 DX11VertexBuffer::DX11VertexBuffer(ID3D11Device *device, const InputLayout& inputLayout) : 
 	VertexBuffer(inputLayout),

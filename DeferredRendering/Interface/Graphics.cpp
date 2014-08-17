@@ -2,12 +2,12 @@
 #include "Graphics.h"
 
 #ifdef USE_DX11
-#include "DX11\DX11Graphics.h"
+#include "DX11/DX11Graphics.h"
 #pragma message("Compiling With DirectX 11")
 #endif
 
 #ifdef USE_OPENGL4_4
-#include "OpenGL\OpenGLGraphics.h"
+#include "OpenGL/OpenGLGraphics.h"
 #pragma message("Compiling With OpenGL 4.4 11")
 #endif
 

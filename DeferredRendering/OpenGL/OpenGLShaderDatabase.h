@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core\Memory.h"
+#include "Core/Memory.h"
 
 #include "OpenGLShaderProgram.h"
 #include <map>

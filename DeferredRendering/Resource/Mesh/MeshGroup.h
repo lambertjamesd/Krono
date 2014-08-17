@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include "Core/Memory.h"
-#include "Resource.h"
+#include "Resource/Resource.h"
 
 class MeshGroup : public Resource
 {

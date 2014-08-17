@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MeshGroupLoader.h"
+#include "Mesh/MeshGroupLoader.h"
 #include "Interface/Graphics.h"
 #include <vector>
 #include <unordered_map>
@@ -45,7 +45,7 @@ public:
 	ObjMeshGroupLoader();
 	~ObjMeshGroupLoader(void);
 	
-	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 private:
 	static void SplitIndices(const std::string& input, size_t indices[3]);
 	static void ParseLine(std::istream& inputStream, std::vector<std::string>& tokens);

@@ -96,3 +96,10 @@ void DX11Texture2D::LoadMemory(void* source)
 
 	context->Unmap(mTexture.Get(), 0);
 }
+
+void DX11Texture2D::GenerateMipmaps()
+{
+	ID3D11DeviceContext *context;
+	mDevice->GetImmediateContext(&context);
+	context->GenerateMips(mShaderResourceView.Get());
+}

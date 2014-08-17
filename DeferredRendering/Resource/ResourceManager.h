@@ -19,7 +19,6 @@ public:
 		mLoaders[typeid(T).hash_code()] = loader;
 	}
 	
-	
 	template <typename T>
 	Auto<T> LoadResource(const std::string& filename)
 	{

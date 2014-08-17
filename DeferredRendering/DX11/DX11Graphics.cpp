@@ -10,6 +10,7 @@
 #include "DX11Shader.h"
 #include "DX11ConstantBuffer.h"
 #include "DX11Texture2D.h"
+#include "DX11Sampler.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -110,6 +111,11 @@ Auto<Texture2D> DX11Graphics::CreateTexture2D(Vector2i size, DataFormat format)
 	return Auto<Texture2D>(new DX11Texture2D(mDevice, size, format));
 }
 
+Auto<Sampler> DX11Graphics::CreateSampler(const SamplerDescription& description)
+{
+	return Auto<Sampler>(new DX11Sampler(mDevice, description));
+}
+
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
 	D3D11_VIEWPORT dxViewport;
@@ -162,7 +168,7 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
 }
 
-void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot)
+void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage)
 {
 	IDX11Resource* resource = dynamic_cast<IDX11Resource*>(value.get());
 
@@ -170,8 +176,59 @@ void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot)
 	{
 		ID3D11ShaderResourceView *resourceView = resource->GetResource();
 
-		mDeviceContext->PSSetShaderResources(slot, 1, &resourceView);
-		mDeviceContext->VSSetShaderResources(slot, 1, &resourceView);
+		switch (stage)
+		{
+		case ShaderStage::PixelShader:
+			mDeviceContext->PSSetShaderResources(slot, 1, &resourceView);
+			break;
+		case ShaderStage::HullShader:
+			mDeviceContext->HSSetShaderResources(slot, 1, &resourceView);
+			break;
+		case ShaderStage::DomainShader:
+			mDeviceContext->DSSetShaderResources(slot, 1, &resourceView);
+			break;
+		case ShaderStage::GeometryShader:
+			mDeviceContext->GSSetShaderResources(slot, 1, &resourceView);
+			break;
+		case ShaderStage::VertexShader:
+			mDeviceContext->VSSetShaderResources(slot, 1, &resourceView);
+			break;
+		case ShaderStage::ComputeShader:
+			mDeviceContext->CSSetShaderResources(slot, 1, &resourceView);
+			break;
+		}
+	}
+}
+
+void DX11Graphics::SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage)
+{
+	DX11Sampler *sampler = dynamic_cast<DX11Sampler*>(value.get());
+
+	if (sampler != NULL)
+	{
+		ID3D11SamplerState *samplerState = sampler->GetSamplerState();
+
+		switch (stage)
+		{
+		case ShaderStage::PixelShader:
+			mDeviceContext->PSSetSamplers(slot, 1, &samplerState);
+			break;
+		case ShaderStage::HullShader:
+			mDeviceContext->HSSetSamplers(slot, 1, &samplerState);
+			break;
+		case ShaderStage::DomainShader:
+			mDeviceContext->DSSetSamplers(slot, 1, &samplerState);
+			break;
+		case ShaderStage::GeometryShader:
+			mDeviceContext->GSSetSamplers(slot, 1, &samplerState);
+			break;
+		case ShaderStage::VertexShader:
+			mDeviceContext->VSSetSamplers(slot, 1, &samplerState);
+			break;
+		case ShaderStage::ComputeShader:
+			mDeviceContext->CSSetSamplers(slot, 1, &samplerState);
+			break;
+		}
 	}
 }
 
@@ -229,6 +286,10 @@ bool DX11Graphics::FlipImageOriginY() const
 	return false;
 }
 
+Graphics::ShaderLanguage DX11Graphics::ExpectedShaderLanguage() const
+{
+	return Graphics::HLSL;
+}
 
 ID3D11Device* DX11Graphics::GetDevice()
 {

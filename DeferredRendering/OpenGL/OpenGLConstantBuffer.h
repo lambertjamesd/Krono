@@ -2,8 +2,8 @@
 
 #include "OpenGLCommon.h"
 
-#include "Interface\ConstantBuffer.h"
-#include "Math\Matrix.h"
+#include "Interface/ConstantBuffer.h"
+#include "Math/Matrix.h"
 
 class OpenGLConstantBuffer : public ConstantBuffer
 {

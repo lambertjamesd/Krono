@@ -1,6 +1,6 @@
 #pragma once
-#include "Interface\RenderTarget.h"
-#include "Interface\DataFormat.h"
+#include "Interface/RenderTarget.h"
+#include "Interface/DataFormat.h"
 #include "DX11Texture2D.h"
 #include "DX11RenderTarget.h"
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Interface\VertexBuffer.h"
-#include "Interface\IndexBuffer.h"
-#include "Math\Vector2.h"
-#include "Math\Vector3.h"
+#include "Interface/VertexBuffer.h"
+#include "Interface/IndexBuffer.h"
+#include "Math/Vector2.h"
+#include "Math/Vector3.h"
 
-#include "Material.h"
+#include "Resource/Material.h"
 
 class Graphics;
 

@@ -1,6 +1,6 @@
 
 #include "OpenGLShaderDatabase.h"
-#include "Core\Hash.h"
+#include "Core/Hash.h"
 
 OpenGLShaderDatabase::OpenGLShaderDatabase(void)
 {

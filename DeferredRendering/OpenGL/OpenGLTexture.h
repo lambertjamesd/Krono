@@ -2,7 +2,7 @@
 
 #include "OpenGLCommon.h"
 
-#include "Interface\DataFormat.h"
+#include "Interface/DataFormat.h"
 
 class OpenGLTexture
 {

@@ -3,7 +3,7 @@
 #include "Interface/Graphics.h"
 
 #include "Resource/ResourceManager.h"
-#include "Resource/Mesh.h"
+#include "Resource/Mesh/Mesh.h"
 
 #include "Core/Exception.h"
 #include "Core/Hash.h"

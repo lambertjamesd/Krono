@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interface\Texture2D.h"
+#include "Interface/Texture2D.h"
 #include "DX11SmartPtr.h"
 #include "IDX11Resource.h"
 
@@ -15,6 +15,8 @@ public:
 	virtual ID3D11ShaderResourceView *GetResource();
 	
 	virtual void LoadMemory(void* source);
+	
+	virtual void GenerateMipmaps();
 private:
 	ID3D11Device *mDevice;
 	DX11SmartPtr<ID3D11Texture2D> mTexture;

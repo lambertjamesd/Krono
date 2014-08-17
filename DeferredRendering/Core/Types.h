@@ -1,4 +1,6 @@
 
+#include <cstdlib>
+
 typedef unsigned long long UInt64;
 typedef unsigned long UInt32;
 typedef unsigned short UInt16;

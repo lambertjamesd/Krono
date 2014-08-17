@@ -2,7 +2,7 @@
 #include "ObjMeshGroupLoader.h"
 #include <string>
 #include <ctype.h>
-#include "Core\Hash.h"
+#include "Core/Hash.h"
 #include "ResourceManager.h"
 
 using namespace std;
@@ -77,7 +77,7 @@ ObjMeshGroupLoader::~ObjMeshGroupLoader(void)
 
 }
 
-Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	ObjMeshVertexData vertexData;
 

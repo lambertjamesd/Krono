@@ -1,8 +1,8 @@
 #pragma once
 #include "Color.h"
-#include "Math\Vector2.h"
+#include "Math/Vector2.h"
 #include "Texture2D.h"
-#include "Core\Memory.h"
+#include "Core/Memory.h"
 
 struct RenderTargetFormat
 {

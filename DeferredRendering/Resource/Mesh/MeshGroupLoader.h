@@ -2,7 +2,7 @@
 
 #include "MeshGroup.h"
 #include "Core/Memory.h"
-#include "ResourceLoader.h"
+#include "Resource/ResourceLoader.h"
 #include <iostream>
 #include <string>
 
@@ -12,7 +12,7 @@ public:
 	MeshGroupLoader(void);
 	virtual ~MeshGroupLoader(void);
 	
-	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName) = 0;
+	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName) = 0;
 private:
 };
 

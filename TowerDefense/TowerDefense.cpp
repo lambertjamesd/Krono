@@ -57,11 +57,14 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	Auto<Mesh> meshTest;
 
 	Auto<Texture2D> textureTest;
+	
+	Auto<Sampler> linearSampler;
+	Auto<Sampler> pointSampler;
 
 	Scene sceneTest;
 	SceneView sceneView(sceneTest);
 
-	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.5f)) * ScaleMatrix(Vector3f(0.25f, 0.25f, 0.25f)));
+	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.5f)) * ScaleMatrix(Vector3f(0.5f, 0.5f, 0.5f)));
 
 	try
 	{
@@ -85,6 +88,17 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 
 		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
+		textureTest->GenerateMipmaps();
+
+		SamplerDescription samplerDesc;
+
+		linearSampler = graphics->CreateSampler(samplerDesc);
+
+		samplerDesc.minFilter = InterpolationMode::Point;
+		samplerDesc.magFilter = InterpolationMode::Point;
+		samplerDesc.mipFilter = InterpolationMode::Point;
+
+		pointSampler = graphics->CreateSampler(samplerDesc);
 
 		Entity* entityTest = sceneTest.CreateEntity();
 		entityTest->SetMesh(meshTest);
@@ -100,7 +114,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		exit(1);
 	}
 
-	graphics->SetTexture(textureTest, 0);
+	graphics->SetTexture(textureTest, 0, ShaderStage::PixelShader);
+	graphics->SetSampler(pointSampler, 0, ShaderStage::PixelShader);
+	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
 
 	while (!window->IsClosed())
 	{

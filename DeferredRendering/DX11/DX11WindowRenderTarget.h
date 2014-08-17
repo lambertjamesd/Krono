@@ -2,8 +2,8 @@
 
 #include "DX11Common.h"
 
-#include "Interface\Window.h"
-#include "Interface\RenderTarget.h"
+#include "Interface/Window.h"
+#include "Interface/RenderTarget.h"
 #include "DX11RenderTarget.h"
 
 class DX11Graphics;

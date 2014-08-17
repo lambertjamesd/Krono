@@ -6,6 +6,7 @@
 #include "OpenGLVertexBuffer.h"
 #include <sstream>
 #include "OpenGLGraphics.h"
+#include <cassert>
 
 using namespace std;
 
@@ -55,6 +56,13 @@ int ShaderVariable::GetCount() const
 {
 	return mCount;
 }
+
+bool ShaderVariable::IsTexture() const
+{
+	return mType >= Texture1D && mType <= TextureCube;
+}
+
+////////////////////////////////////////////////
 
 GLenum OpenGLVertexLayoutData::gTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};
 
@@ -108,6 +116,8 @@ GLsizei OpenGLVertexLayoutData::GetOffset() const
 	return mOffset;
 }
 
+//////////////////////////////////////////////////
+
 OpenGLVertexLayout::OpenGLVertexLayout() :
 	mStride(0)
 {
@@ -147,6 +157,8 @@ void OpenGLVertexLayout::Use() const
 	}
 }
 
+/////////////////////////////////////////////
+
 OpenGLShaderProgram::OpenGLShaderProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader)
 {
 	if (vertexShader.IsValid() && fragmentShader.IsValid())
@@ -179,6 +191,11 @@ void OpenGLShaderProgram::Use()
 void OpenGLShaderProgram::BindVertexBuffer(OpenGLVertexBuffer& buffer)
 {
 	GetLayoutMapping(buffer.GetInputLayout()).Use();
+}
+
+void OpenGLShaderProgram::MapTextures(OpenGLTextureStorage& texureStorage) const
+{
+	texureStorage.UseMapping(mTextureMapping);
 }
 
 const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayout& inputLayout)
@@ -261,11 +278,85 @@ void OpenGLShaderProgram::PopulateAttributes()
 void OpenGLShaderProgram::PopulateUniforms()
 {
 	PopulateVariables(mUniforms, GL_UNIFORM);
+	PopulateTextureMapping();
 }
 
 void OpenGLShaderProgram::PopulateOutputs()
 {
 	PopulateVariables(mOutputs, GL_PROGRAM_OUTPUT);
+}
+
+void OpenGLShaderProgram::PopulateTextureMapping()
+{	
+	GLenum properties[] = {
+		GL_REFERENCED_BY_VERTEX_SHADER, 
+		GL_REFERENCED_BY_TESS_CONTROL_SHADER, 
+		GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+		GL_REFERENCED_BY_GEOMETRY_SHADER,
+		GL_REFERENCED_BY_FRAGMENT_SHADER,
+		GL_REFERENCED_BY_COMPUTE_SHADER
+
+	};
+
+	GLint values[ShaderStage::TypeCount];
+
+	static_assert(sizeof(properties) / sizeof(properties[0]) == ShaderStage::TypeCount, "Shader type mismatch");
+
+	size_t textureUnitIndex = 0;
+
+	GLuint previousProgram;
+	glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&previousProgram);
+	glUseProgram(mProgram);
+
+	for (size_t uniform = 0; uniform < mUniforms.size(); ++uniform)
+	{
+		if (mUniforms[uniform].IsTexture())
+		{
+			GLsizei actualAmountRead;
+			glGetProgramResourceiv(mProgram, GL_UNIFORM, uniform, 
+				ShaderStage::TypeCount, properties, 
+				ShaderStage::TypeCount, &actualAmountRead, values);
+
+			ShaderStage::Type shaderStage = ShaderStage::TypeCount;
+			
+			for (size_t stage = 0; stage < ShaderStage::TypeCount; ++stage)
+			{
+				if (values[stage])
+				{
+					shaderStage = (ShaderStage::Type)stage;
+					break;
+				}
+			}
+
+			if (shaderStage != ShaderStage::TypeCount)
+			{
+				GLuint previousBinding;
+				glGetUniformuiv(mProgram, uniform, &previousBinding);
+				mTextureMapping.AddTextureUnit(shaderStage, previousBinding, GetSamplerIndex(mUniforms[uniform].GetName()));
+
+				glUniform1ui(uniform, textureUnitIndex);
+				++textureUnitIndex;
+			}
+		}
+	}
+
+	glUseProgram(previousProgram);
+}
+
+size_t OpenGLShaderProgram::GetSamplerIndex(const std::string& uniformName)
+{
+	size_t lastUnderscore = uniformName.rfind('_');
+
+	if (lastUnderscore != string::npos && lastUnderscore < uniformName.length() - MIN_SAMPLER_SUFFIX_LENGTH)
+	{
+		if (tolower(uniformName[lastUnderscore + 1]) == SAMPLER_SUFFIX_CHAR)
+		{
+			// Need to skip two characters, the underscore and the SAMPLER_SUFFIX_CHAR to get to the number
+			return atoi(uniformName.c_str() + lastUnderscore + 2);
+		}
+	}
+
+	return 0;
 }
 
 GLuint OpenGLShaderProgram::LinkProgram(const std::vector<GLuint>& shaders)

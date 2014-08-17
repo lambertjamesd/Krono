@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Math\Matrix.h"
-#include "Resource\Mesh.h"
-#include "Resource\Material.h"
-#include "Collide\Frustrum.h"
+#include "Math/Matrix.h"
+#include "Resource/Mesh/Mesh.h"
+#include "Resource/Material.h"
+#include "Collide/Frustrum.h"
 
 #include <vector>
 

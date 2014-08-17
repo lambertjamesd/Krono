@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core\Exception.h"
+#include "Core/Exception.h"
 
 class InvalidEnumException :
 	public Exception

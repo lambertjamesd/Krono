@@ -2,7 +2,7 @@
 
 #include "OpenGLCommon.h"
 
-#include "Interface\IndexBuffer.h"
+#include "Interface/IndexBuffer.h"
 
 class OpenGLIndexBuffer : public IndexBuffer
 {

@@ -2,7 +2,7 @@
 
 #include "DX11Common.h"
 
-#include "Interface\VertexBuffer.h"
+#include "Interface/VertexBuffer.h"
 
 class DX11VertexBuffer :
 	public VertexBuffer

@@ -94,9 +94,8 @@ void Entity::Render(Graphics& graphics, size_t technique)
 
 		for (size_t i = 0; i < mMesh->GetSubMeshCount() && i < mMaterials.size(); ++i)
 		{
-			if (mMaterials[i] != NULL)
+			if (mMaterials[i] != NULL && mMaterials[i]->Use(graphics, technique))
 			{
-				mMaterials[i]->Use(graphics, technique);
 				mMesh->GetSubMesh(i)->Render(graphics);
 			}
 		}

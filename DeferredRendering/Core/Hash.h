@@ -20,6 +20,12 @@ public:
 	}
 
 	~Hash(void) {}
+	
+	template <typename T>
+	void Update(const T& data)
+	{
+		Update(&data, sizeof(T));
+	}
 
 	void Update(const void* data, size_t length)
 	{
@@ -72,6 +78,12 @@ public:
 	HashUInt32(UInt32 initialDigest);
 	HashUInt32();
 	~HashUInt32();
+	
+	template <typename T>
+	void Update(const T& data)
+	{
+		Hash::Update<T>(data);
+	}
 
 	void Update(const void* data, size_t length);
 	UInt32 GetDigest() const;

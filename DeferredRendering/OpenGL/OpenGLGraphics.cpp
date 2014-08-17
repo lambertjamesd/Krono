@@ -10,6 +10,7 @@
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLTexture2D.h"
 #include "OpenGLDepthBuffer.h"
+#include "OpenGLSampler.h"
 #include <iostream>
 
 using namespace std;
@@ -92,6 +93,11 @@ Auto<Texture2D> OpenGLGraphics::CreateTexture2D(Vector2i size, DataFormat format
 	return Auto<Texture2D>(new OpenGLTexture2D(size, format));
 }
 
+Auto<Sampler> OpenGLGraphics::CreateSampler(const SamplerDescription& description)
+{
+	return Auto<Sampler>(new OpenGLSampler(description));
+}
+
 void OpenGLGraphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
@@ -149,12 +155,15 @@ void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTa
 	mNeedViewportUpdate = true;
 }
 
-void OpenGLGraphics::SetTexture(Auto<Texture> value, size_t slot)
+void OpenGLGraphics::SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage)
 {
-	OpenGLTexture *texture = dynamic_cast<OpenGLTexture*>(value.get());
+	mTextureStorage.SetTexture(std::dynamic_pointer_cast<OpenGLTexture>(value), slot, stage);
+}
 
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(texture->GetTextureType(), texture->GetGLTexture());
+
+void OpenGLGraphics::SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage)
+{
+	mTextureStorage.SetSampler(std::dynamic_pointer_cast<OpenGLSampler>(value), slot, stage);
 }
 
 void OpenGLGraphics::SetVertexShader(Auto<VertexShader> &vertexShader)
@@ -209,6 +218,11 @@ bool OpenGLGraphics::FlipImageOriginY() const
 	return true;
 }
 
+Graphics::ShaderLanguage OpenGLGraphics::ExpectedShaderLanguage() const
+{
+	return Graphics::GLSL;
+}
+
 GLenum OpenGLGraphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE, GL_SHORT, 0, GL_FLOAT, 0, 0};
 
 GLenum OpenGLGraphics::GetGLType(DataFormat::Type type)
@@ -229,6 +243,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 		mNeedNewProgram = false;
 
 		mNeedVertexRebind = true;
+		mCurrentShaderProgram->MapTextures(mTextureStorage);
 	}
 
 	if (mNeedVertexRebind &&
@@ -245,4 +260,6 @@ void OpenGLGraphics::UpdatePendingChanges()
 		glViewport((GLint)mViewport.topLeft.x, (GLint)bottom, (GLsizei)mViewport.size.x, (GLsizei)mViewport.size.y);
 		mNeedViewportUpdate = false;
 	}
+
+	mTextureStorage.UpdateBindings();
 }

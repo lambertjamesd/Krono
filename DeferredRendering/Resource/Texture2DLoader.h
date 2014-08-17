@@ -9,7 +9,7 @@ public:
 	Texture2DLoader(void);
 	~Texture2DLoader(void);
 	
-	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 private:
 
 	template <typename T>

@@ -47,3 +47,13 @@ void OpenGLTexture2D::LoadMemory(void* source)
 
 	glBindTexture(GL_TEXTURE_2D, existingTexture);
 }
+
+void OpenGLTexture2D::GenerateMipmaps()
+{
+	GLint existingTexture;
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, &existingTexture);
+
+	glBindTexture(GL_TEXTURE_2D, mTexture);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, existingTexture);
+}
