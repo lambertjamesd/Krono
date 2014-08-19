@@ -288,19 +288,16 @@ void OpenGLShaderProgram::PopulateOutputs()
 
 void OpenGLShaderProgram::PopulateTextureMapping()
 {	
-	GLenum properties[] = {
+	GLenum properties[ShaderStage::TypeCount] = {
 		GL_REFERENCED_BY_VERTEX_SHADER, 
 		GL_REFERENCED_BY_TESS_CONTROL_SHADER, 
 		GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
 		GL_REFERENCED_BY_GEOMETRY_SHADER,
 		GL_REFERENCED_BY_FRAGMENT_SHADER,
 		GL_REFERENCED_BY_COMPUTE_SHADER
-
 	};
 
 	GLint values[ShaderStage::TypeCount];
-
-	static_assert(sizeof(properties) / sizeof(properties[0]) == ShaderStage::TypeCount, "Shader type mismatch");
 
 	size_t textureUnitIndex = 0;
 

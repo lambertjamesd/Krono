@@ -27,14 +27,18 @@ class Graphics
 public:
 	enum ShaderLanguage
 	{
-		HLSL,
-		GLSL
+		HLSL_5,
+		GLSL_4_4,
+
+		LanguageCount
 	};
 
 	enum API
 	{
 		DirectX11,
-		OpenGL
+		OpenGL,
+
+		APICount
 	};
 
 	static Auto<Graphics> CreateGraphics(API api);

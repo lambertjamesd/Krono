@@ -288,7 +288,7 @@ bool DX11Graphics::FlipImageOriginY() const
 
 Graphics::ShaderLanguage DX11Graphics::ExpectedShaderLanguage() const
 {
-	return Graphics::HLSL;
+	return Graphics::HLSL_5;
 }
 
 ID3D11Device* DX11Graphics::GetDevice()
@@ -306,7 +306,7 @@ IDXGIFactory* DX11Graphics::GetDXGIFactory()
 	return mDXGIFactory;
 }
 
-DXGI_FORMAT DX11Graphics::gFormatMapping[][4] =
+DXGI_FORMAT DX11Graphics::gFormatMapping[DataFormat::TypeCount][4] =
 {
 	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT},
 	{DXGI_FORMAT_R8_UNORM, DXGI_FORMAT_R8G8_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM},
@@ -319,7 +319,6 @@ DXGI_FORMAT DX11Graphics::gFormatMapping[][4] =
 
 DXGI_FORMAT DX11Graphics::GetDXFormat(const DataFormat& dataFormat)
 {
-	static_assert((sizeof(gFormatMapping) / sizeof(*gFormatMapping)) == DataFormat::TypeCount, "Missing elements in gFormatMapping");
 	return gFormatMapping[dataFormat.type][dataFormat.count - 1];
 }
 

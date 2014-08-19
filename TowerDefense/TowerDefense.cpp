@@ -17,6 +17,8 @@
 #include <Krono.h>
 using namespace std;
 
+#include "GameObject/GameObject.h"
+
 std::string ReadFileContents(const char *filename)
 {
 	std::ifstream in(filename, std::ios::in | std::ios::binary);
@@ -40,12 +42,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
 
-	Graphics::API api = Graphics::DirectX11;
+	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
 	Auto<VertexShader> vertexShader;
-	Auto<PixelShader> fragmentShader;
+	Auto<PixelShader> pixelShader;
 
 	Auto<ResourceManager> resourceManager;
 
@@ -64,7 +66,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	Scene sceneTest;
 	SceneView sceneView(sceneTest);
 
-	sceneView.SetViewMatrix(TranslationMatrix(Vector3f(0.5f, 0.5f, 0.5f)) * ScaleMatrix(Vector3f(0.5f, 0.5f, 0.5f)));
+	sceneView.SetViewMatrix(Matrix4f::Translation(Vector3f(0.5f, 0.5f, 0.5f)) * Matrix4f::Scale(Vector3f(0.5f, 0.5f, 0.5f)));
 
 	try
 	{
@@ -74,17 +76,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 		depthBuffer = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24);
 
-		if (api == Graphics::DirectX11)
-		{
-			vertexShader = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\HLSL\\VertexShaderTest.cso"));
-			fragmentShader = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\HLSL\\PixelShaderTest.cso"));
-		}
-		else
-		{
-			vertexShader = graphics->CreateVertexShader(ReadFileContents("Media\\Shaders\\GLSL\\VertexShaderTest.vert"));
-			fragmentShader = graphics->CreatePixelShader(ReadFileContents("Media\\Shaders\\GLSL\\PixelShaderTest.frag"));
-		}
-
+		vertexShader = resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/VertexShaderTest.shader");
+		pixelShader = resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/PixelShaderTest.shader");
+		
 		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 
 		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
@@ -104,12 +98,13 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		entityTest->SetMesh(meshTest);
 
 		Auto<Material> materialTest(new Material());
-		materialTest->AddTechnique(0, Technique(vertexShader, fragmentShader));
+		materialTest->AddTechnique(0, Technique(vertexShader, pixelShader));
 		entityTest->SetMaterial(materialTest, 0);
 	}
 	catch (Exception& exception)
 	{
-		std::cerr << exception.what();
+		const char* what = exception.what();
+		std::cerr << what;
 		std::cin.get();
 		exit(1);
 	}

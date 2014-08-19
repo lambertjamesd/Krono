@@ -3,7 +3,7 @@
 #include "HResultException.h"
 #include "DX11Graphics.h"
 
-DXGI_FORMAT DX11DepthBuffer::gTextureFormatMapping[] =
+DXGI_FORMAT DX11DepthBuffer::gTextureFormatMapping[DataFormat::TypeCount] =
 {
 	DXGI_FORMAT_UNKNOWN,
 	DXGI_FORMAT_UNKNOWN,
@@ -15,7 +15,7 @@ DXGI_FORMAT DX11DepthBuffer::gTextureFormatMapping[] =
 	DXGI_FORMAT_R32G8X24_TYPELESS
 };
 
-DXGI_FORMAT DX11DepthBuffer::gDepthViewFormatmapping[] =
+DXGI_FORMAT DX11DepthBuffer::gDepthViewFormatmapping[DataFormat::TypeCount] =
 {
 	DXGI_FORMAT_UNKNOWN,
 	DXGI_FORMAT_UNKNOWN,
@@ -31,9 +31,6 @@ DX11DepthBuffer::DX11DepthBuffer(ID3D11Device *device, Vector2i size, DataFormat
 	DepthBuffer(size, format),
 	mDevice(device)
 {
-	static_assert(sizeof(gTextureFormatMapping) / sizeof(*gTextureFormatMapping) == DataFormat::TypeCount, "gTextureFormatMapping size doesn't match");
-	static_assert(sizeof(gDepthViewFormatmapping) / sizeof(*gDepthViewFormatmapping) == DataFormat::TypeCount, "gDepthViewFormatmapping size doesn't match");
-
 	DataFormat dataFormat(format, 1);
 
 	D3D11_TEXTURE2D_DESC textureDescription;

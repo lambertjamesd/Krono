@@ -85,11 +85,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Math\Angle.h" />
     <ClInclude Include="Collide\Frustrum.h" />
     <ClInclude Include="Core\Types.h" />
     <ClInclude Include="DX11\DX11Sampler.h" />
     <ClInclude Include="DX11\DX11Common.h" />
     <ClInclude Include="Math\Quaternion.h" />
+    <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Resource\NotFoundException.h" />
     <ClInclude Include="OpenGL\OpenGLSampler.h" />
     <ClInclude Include="OpenGL\OpenGLTextureStorage.h" />
     <ClInclude Include="Resource\JSON\JsonDocumentLoader.h" />
@@ -180,6 +183,7 @@
   <ItemGroup>
     <ClCompile Include="Collide\Frustrum.cpp" />
     <ClCompile Include="DX11\DX11Sampler.cpp" />
+    <ClCompile Include="Resource\NotFoundException.cpp" />
     <ClCompile Include="OpenGL\OpenGLSampler.cpp" />
     <ClCompile Include="OpenGL\OpenGLTextureStorage.cpp" />
     <ClCompile Include="Resource\JSON\JsonDocumentLoader.cpp" />

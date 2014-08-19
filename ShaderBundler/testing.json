@@ -1,0 +1,8 @@
+{
+	"type" : "vertex",
+
+	"sources" : {
+		"HLSL 5" : "Testing.hlsl",
+		"GLSL 4.4" : "Testing.vert"
+	}
+}

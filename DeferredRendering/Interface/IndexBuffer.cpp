@@ -22,10 +22,9 @@ IndexBuffer::Format IndexBuffer::GetFormat() const
 
 Auto<IndexBuffer> IndexBuffer::Null(NULL);
 
-size_t IndexBuffer::gFormatSize[] = {sizeof(short), sizeof(long)};
+size_t IndexBuffer::gFormatSize[IndexBuffer::FormatCount] = {sizeof(short), sizeof(long)};
 
 size_t IndexBuffer::GetFormatSize(IndexBuffer::Format format)
 {
-	static_assert(sizeof(gFormatSize) / sizeof(*gFormatSize) == IndexBuffer::FormatCount, "Missing elements in gFormatSize");
 	return gFormatSize[format];
 }

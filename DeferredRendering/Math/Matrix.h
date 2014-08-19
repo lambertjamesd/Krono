@@ -2,12 +2,15 @@
 
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Math.h"
+#include "Quaternion.h"
+#include <cstring>
 
 template <size_t Rows, size_t Columns, typename T = float> 
 class Matrix
 {
 public:
-	Matrix(T *rowMajorData)
+	Matrix(const T *rowMajorData)
 	{
 		memcpy(mElements, rowMajorData, sizeof(T) * Rows * Columns);
 	}
@@ -121,8 +124,8 @@ public:
 
 		for (size_t col = 0; col < Columns; ++col)
 		{
-			T positiveSlant = 1;
-			T negativeSlant = 1;
+			T positiveSlant = Constant<T>::One;
+			T negativeSlant = Constant<T>::One;
 
 			for (size_t i = 0; i < Columns; ++i)
 			{
@@ -142,13 +145,28 @@ public:
 
 		Matrix result;
 
-		T determinantInv = 1 / Determinant();
+		T determinantInv = Constant<T>::One / Determinant();
 		
 		for (size_t col = 0; col < Columns; ++col)
 		{
 			for (size_t row = 0; row < Rows; ++row)
 			{
 				result.mElements[col][row] = SubDeterminant(col, row) * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
+			}
+		}
+
+		return result;
+	}
+
+	Matrix<Columns, Rows, T> Transpose() const
+	{
+		Matrix<Columns, Rows, T> result;
+
+		for (size_t col = 0; col < Columns; ++col)
+		{
+			for (size_t row = 0; row < Rows; ++row)
+			{
+				result.mElements[row][col] = mElements[col][row];
 			}
 		}
 
@@ -163,7 +181,7 @@ public:
 		{
 			for (size_t row = 0; row < Rows; ++row)
 			{
-				result.mElements[col][row] = (row == col) ? (T)1 : (T)0;
+				result.mElements[col][row] = (row == col) ? Constant<T>::One : Constant<T>::Zero;
 			}
 		}
 
@@ -173,12 +191,44 @@ protected:
 	T mElements[Columns][Rows];
 };
 
-typedef Matrix<4, 4, float> Matrix4f;
+template <typename T = float>
+class Matrix4 : public Matrix<4, 4, T>
+{
+public:
+	Matrix4(const Matrix<4, 4, T>& other) :
+		Matrix(reinterpret_cast<const T*>(&other))
+	{
+
+	}
+
+	static Matrix4 Scale(const Vector3<T>& vector)
+	{
+		Matrix4 result = Matrix4::Identity();
+		result.At(0, 0) = vector.x;
+		result.At(1, 1) = vector.y;
+		result.At(2, 2) = vector.z;
+		return result;
+	}
+
+	static Matrix4 Translation(const Vector3<T>& vector)
+	{
+		Matrix4 result = Matrix4::Identity();
+		result.At(0, 3) = vector.x;
+		result.At(1, 3) = vector.y;
+		result.At(2, 3) = vector.z;
+		return result;
+	}
+
+	static Matrix4 Rotation(const Quaternion<T>& quaternion)
+	{
+
+	}
+private:
+};
+
+typedef Matrix4<float> Matrix4f;
 typedef Matrix<3, 3, float> Matrix3f;
 typedef Matrix<2, 2, float> Matrix2f;
-
-Matrix4f ScaleMatrix(const Vector3f& vector);
-Matrix4f TranslationMatrix(const Vector3f& vector);
 
 Vector4f operator*(const Matrix4f& lhs, const Vector4f& rhs);
 Vector4f operator*(const Vector4f& lhs, const Matrix4f& rhs);

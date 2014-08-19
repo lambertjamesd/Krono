@@ -31,6 +31,6 @@ protected:
 	Format mFormat;
 private:
 
-	static size_t gFormatSize[];
+	static size_t gFormatSize[IndexBuffer::FormatCount];
 };
 

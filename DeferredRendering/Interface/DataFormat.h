@@ -25,6 +25,6 @@ struct DataFormat
 	size_t GetSize() const;
 
 private:
-	static size_t gTypeSize[];
+	static size_t gTypeSize[DataFormat::TypeCount];
 };
 

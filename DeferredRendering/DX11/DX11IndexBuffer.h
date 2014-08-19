@@ -27,6 +27,6 @@ public:
 	ID3D11Device *mDevice;
 	size_t mCurrentIndexCount;
 
-	static DXGI_FORMAT gFormatMapping[];
+	static DXGI_FORMAT gFormatMapping[IndexBuffer::FormatCount];
 };
 

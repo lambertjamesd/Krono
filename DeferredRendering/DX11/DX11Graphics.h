@@ -58,7 +58,7 @@ private:
 
 	friend class Graphics;
 	
-	static DXGI_FORMAT gFormatMapping[][4];
+	static DXGI_FORMAT gFormatMapping[DataFormat::TypeCount][4];
 
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;

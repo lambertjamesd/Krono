@@ -220,14 +220,13 @@ bool OpenGLGraphics::FlipImageOriginY() const
 
 Graphics::ShaderLanguage OpenGLGraphics::ExpectedShaderLanguage() const
 {
-	return Graphics::GLSL;
+	return Graphics::GLSL_4_4;
 }
 
-GLenum OpenGLGraphics::gGLTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE, GL_SHORT, 0, GL_FLOAT, 0, 0};
+GLenum OpenGLGraphics::gGLTypeMapping[DataFormat::TypeCount] = {GL_FLOAT, GL_UNSIGNED_BYTE, GL_SHORT, 0, GL_FLOAT, 0, 0};
 
 GLenum OpenGLGraphics::GetGLType(DataFormat::Type type)
 {
-	static_assert((sizeof(gGLTypeMapping) / sizeof(gGLTypeMapping[0])) == DataFormat::TypeCount, "Missing elements in gTypeMapping");
 	return gGLTypeMapping[type];
 }
 

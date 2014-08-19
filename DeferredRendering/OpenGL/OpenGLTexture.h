@@ -16,7 +16,7 @@ protected:
 	OpenGLTexture(void);
 	~OpenGLTexture(void);
 
-	static GLenum gTextureFormatMapping[][4];
+	static GLenum gTextureFormatMapping[DataFormat::TypeCount][4];
 	
 	static GLenum gTextureChannelMapping[];
 };

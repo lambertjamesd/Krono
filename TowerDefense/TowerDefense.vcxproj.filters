@@ -71,9 +71,12 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Media\Shaders\Bundle\VertexShaderTest.json" />
+  </ItemGroup>
+  <ItemGroup>
     <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl" />
+    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl" />
     <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl" />
     <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl" />
   </ItemGroup>
 </Project>

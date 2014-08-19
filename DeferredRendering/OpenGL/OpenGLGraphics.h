@@ -60,7 +60,7 @@ private:
 
 	friend class Graphics;
 
-	static GLenum gGLTypeMapping[];
+	static GLenum gGLTypeMapping[DataFormat::TypeCount];
 
 	OpenGLShaderDatabase mShaderDatabase;
 	OpenGLFBODatabase mFBODatabase;

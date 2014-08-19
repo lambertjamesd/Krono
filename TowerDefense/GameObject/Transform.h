@@ -6,7 +6,7 @@
 class Transform : public Component
 {
 public:
-	Transform(void);
+	Transform(GameObject* parentGameObject);
 	~Transform(void);
 private:
 };
