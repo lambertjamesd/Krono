@@ -8,7 +8,13 @@
 #include <Windows.h>
 
 typedef HWND WindowHandle;
+
+#else
+
+typedef void* WindowHandle;
+
 #endif
+
 
 class Window
 {

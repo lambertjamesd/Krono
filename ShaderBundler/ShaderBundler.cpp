@@ -4,10 +4,13 @@
 #include <string>
 #include <iostream>
 
-#include "Bundle\BundleDefinition.h"
-#include "Bundle\HLSLCompiler.h"
-#include "Bundle\GLSLBundler.h"
-#include "Bundle\Bundle.h"
+#include "Bundle/BundleDefinition.h"
+#include "Bundle/GLSLBundler.h"
+#include "Bundle/Bundle.h"
+
+#ifdef USE_DX11
+#include "Bundle/HLSLCompiler.h"
+#endif
 
 std::string GetOutputFilename(const std::string& inputFilename)
 {
@@ -24,29 +27,31 @@ void ProccessFile(const char* filename)
 
 	try
 	{
-		if (bundleDef.HasLanguage(BundleDefinition::HLSL_5))
+#ifdef USE_DX11
+		if (bundleDef.HasLanguage(ShaderLanguage::HLSL_5))
 		{
 			HLSLCompiler compiler;
-			bundle.AddShader(BundleDefinition::HLSL_5, compiler.Process(bundleDef));
+			bundle.AddShader(ShaderLanguage::HLSL_5, compiler.Process(bundleDef));
 		}
+#endif
 
-		if (bundleDef.HasLanguage(BundleDefinition::GLSL_4_4))
+		if (bundleDef.HasLanguage(ShaderLanguage::GLSL_4_4))
 		{
 			GLSLBundler bundler;
-			bundle.AddShader(BundleDefinition::GLSL_4_4, bundler.Process(bundleDef));
+			bundle.AddShader(ShaderLanguage::GLSL_4_4, bundler.Process(bundleDef));
 		}
 
 		std::string outputFilename = GetOutputFilename(filename);
 
 		std::cout << "Writing shader " << outputFilename << std::endl;
 
-		std::ofstream outputFile(outputFilename, std::ios::binary);
+		std::ofstream outputFile(outputFilename.c_str(), std::ios::binary);
 		bundle.Write(outputFile);
 		outputFile.close();
 	}
 	catch (std::exception& exception)
 	{
-		std::cerr << "Error processing shader: " << exception.what();
+		std::cerr << "Error processing shader: " << exception.what() << std::endl;
 	}
 }
 
@@ -56,8 +61,6 @@ int main(int argc, char* argv[])
 	{
 		ProccessFile(argv[i]);
 	}
-
-	std::cin.get();
 
 	return 0;
 }

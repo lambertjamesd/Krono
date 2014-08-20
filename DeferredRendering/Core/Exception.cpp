@@ -7,7 +7,7 @@ Exception::Exception(void)
 }
 
 
-Exception::~Exception(void)
+Exception::~Exception(void) throw()
 {
 }
 

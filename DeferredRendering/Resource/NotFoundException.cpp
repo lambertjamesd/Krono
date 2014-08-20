@@ -6,7 +6,7 @@ NotFoundException::NotFoundException(const char* message) :
 }
 
 
-NotFoundException::~NotFoundException(void)
+NotFoundException::~NotFoundException(void) throw ()
 {
 }
 

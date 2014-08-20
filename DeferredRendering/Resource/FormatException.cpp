@@ -8,7 +8,7 @@ FormatException::FormatException(const char* message) :
 }
 
 
-FormatException::~FormatException(void)
+FormatException::~FormatException(void) throw()
 {
 }
 

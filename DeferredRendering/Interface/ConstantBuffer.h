@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <utility>
+#include "Core/Types.h"
 
 class ConstantBufferLayout
 {

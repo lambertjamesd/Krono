@@ -1,11 +1,13 @@
 #include "HLSLCompiler.h"
+#include "FileHelper.h"
+#include "FileNotFoundException.h"
 
 #include <iostream>
 
 HLSLIncludeHandler::HLSLIncludeHandler(const std::string& systemPath, const std::string& filePath) :
 	mSystemPath(systemPath)
 {
-	mFileStack.push(RemoveLastPathElement(filePath));
+	mFileStack.push(FileHelper::RemoveLastPathElement(filePath));
 }
 
 HLSLIncludeHandler::~HLSLIncludeHandler(void)
@@ -30,12 +32,12 @@ HRESULT HLSLIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName,
 	{
 	case D3D_INCLUDE_LOCAL:
 		{
-			absolutePath = JoinPaths(mFileStack.top(), pFileName);
+			absolutePath = FileHelper::JoinPaths(mFileStack.top(), pFileName);
 		}
 		break;
 	case D3D_INCLUDE_SYSTEM:
 		{
-			absolutePath = JoinPaths(mSystemPath, pFileName);
+			absolutePath = FileHelper::JoinPaths(mSystemPath, pFileName);
 		}
 	}
 
@@ -55,69 +57,11 @@ HRESULT HLSLIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName,
 	*ppData = (LPCVOID)contents;
 	*pBytes = (UINT)fileSize;
 
-	mFileStack.push(RemoveLastPathElement(absolutePath));
+	mFileStack.push(FileHelper::RemoveLastPathElement(absolutePath));
 
 	return S_OK;
 
 	return STG_E_FILENOTFOUND;
-}
-
-size_t HLSLIncludeHandler::LastSlash(const std::string& path)
-{
-	size_t result = path.find_last_of('/');
-
-	if (result != std::string::npos)
-	{
-		return result;
-	}
-	else
-	{
-		return path.find_last_of('\\');
-	}
-}
-
-std::string HLSLIncludeHandler::RemoveLastPathElement(const std::string& filename)
-{
-	size_t slashPos = LastSlash(filename);
-
-	if (slashPos != std::string::npos)
-	{
-		return filename.substr(0, slashPos);
-	}
-	else
-	{
-		return "";
-	}
-}
-
-std::string HLSLIncludeHandler::JoinPaths(const std::string& basePath, const std::string& path)
-{
-	std::string modifiedBase = basePath;
-	std::string modifedPath = path;
-
-	while (modifiedBase.length() > 0 && modifedPath.length() > 0 && modifedPath[0] == '.')
-	{
-		if (modifedPath.length() > 1 && 
-			(modifedPath[1] == '/' || modifedPath[1] == '\\'))
-		{
-			modifedPath = modifedPath.substr(strlen("./"));
-		}
-		else if (modifedPath.length() > 2 && modifedPath[1] == '.' &&
-			(modifedPath[2] == '/' || modifedPath[2] == '\\'))
-		{
-			modifedPath = modifedPath.substr(strlen("../"));
-			modifiedBase = RemoveLastPathElement(modifiedBase);
-		}
-	}
-
-	if (modifiedBase.length() > 0)
-	{
-		return modifiedBase + '/' + modifedPath;
-	}
-	else
-	{
-		return modifedPath;
-	}
 }
 
 HLSLCompiler::HLSLCompiler(void)
@@ -140,9 +84,14 @@ const char* HLSLCompiler::gShaderTargets[ShaderType::Count] = {
 
 std::vector<char> HLSLCompiler::Process(const BundleDefinition& bundleDef) const
 {
-	std::string filename = bundleDef.GetFilename(BundleDefinition::HLSL_5);
+	std::string filename = bundleDef.GetFilename(ShaderLanguage::HLSL_5);
 
 	std::ifstream input(filename, std::ios::binary);
+
+	if (!input.is_open())
+	{
+		throw FileNotFoundException(std::string("Could not open file " + bundleDef.GetFilename(ShaderLanguage::HLSL_5)));
+	}
 
 	std::string contents;
 	input.seekg(0, std::ios::end);
@@ -158,7 +107,7 @@ std::vector<char> HLSLCompiler::Process(const BundleDefinition& bundleDef) const
 	HRESULT compileResult = D3DCompile(
 		&contents.front(),
 		contents.size(),
-		bundleDef.GetFilename(BundleDefinition::HLSL_5).c_str(),
+		bundleDef.GetFilename(ShaderLanguage::HLSL_5).c_str(),
 		NULL,
 		&includeHandler,
 		bundleDef.GetEntryPoint().c_str(),

@@ -5,6 +5,7 @@
 #include "Math.h"
 #include "Quaternion.h"
 #include <cstring>
+#include <algorithm>
 
 template <size_t Rows, size_t Columns, typename T = float> 
 class Matrix
@@ -63,9 +64,9 @@ public:
 	{
 		Matrix<NewRows, NewColumns, T> result = Matrix<NewRows, NewColumns, T>::Identity();
 
-		for (size_t col = 0; col < min(Columns, NewColumns); ++col)
+		for (size_t col = 0; col < std::min(Columns, NewColumns); ++col)
 		{
-			for (size_t row = 0; row < min(Rows, NewRows); ++row)
+			for (size_t row = 0; row < std::min(Rows, NewRows); ++row)
 			{
 				result.mElements[col][row] = mElements[col][row];
 			}
@@ -196,7 +197,7 @@ class Matrix4 : public Matrix<4, 4, T>
 {
 public:
 	Matrix4(const Matrix<4, 4, T>& other) :
-		Matrix(reinterpret_cast<const T*>(&other))
+		Matrix<4, 4, T>(reinterpret_cast<const T*>(&other))
 	{
 
 	}

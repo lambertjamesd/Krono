@@ -9,7 +9,7 @@ LoadException::LoadException(const std::string& filename, const std::string& mes
 
 }
 
-LoadException::~LoadException(void)
+LoadException::~LoadException(void) throw()
 {
 
 }

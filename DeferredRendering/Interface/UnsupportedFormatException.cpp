@@ -8,7 +8,7 @@ UnsupportedFormatException::UnsupportedFormatException(const char* message) :
 }
 
 
-UnsupportedFormatException::~UnsupportedFormatException(void)
+UnsupportedFormatException::~UnsupportedFormatException(void) throw()
 {
 }
 

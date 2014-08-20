@@ -14,7 +14,7 @@ public:
 	~ResourceManager(void);
 
 	template <typename T>
-	void AddLoader(Auto<ResourceLoader>& loader)
+	void AddLoader(Auto<ResourceLoader> loader)
 	{
 		mLoaders[typeid(T).hash_code()] = loader;
 	}

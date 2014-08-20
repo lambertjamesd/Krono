@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Types.h"
+
 typedef size_t OpenGLObjectID;
 
 class OpenGLObjectIDGenerator

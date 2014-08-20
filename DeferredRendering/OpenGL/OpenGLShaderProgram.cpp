@@ -148,7 +148,7 @@ void OpenGLVertexLayout::Use() const
 		if (it->GetIsActive())
 		{
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, it->GetSize(), it->GetType(), GL_FALSE, mStride, (GLvoid*)it->GetOffset());
+			glVertexAttribPointer(index, it->GetSize(), it->GetType(), GL_FALSE, mStride, reinterpret_cast<GLvoid*>(it->GetOffset()));
 		}
 		else
 		{

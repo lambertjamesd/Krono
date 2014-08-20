@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Types.h"
+
 struct DataFormat
 {
 	enum Type

@@ -1,8 +1,10 @@
 #include "BundleDefinition.h"
+#include "FileHelper.h"
 
 #include "JSON/json.h"
 
-BundleDefinition::BundleDefinition(const std::string& filename)
+BundleDefinition::BundleDefinition(const std::string& filename) :
+	mBaseFilename(FileHelper::RemoveLastPathElement(filename))
 {
 	std::ifstream file(filename, std::ios::binary);
 	ParseDefinition(file);
@@ -14,14 +16,14 @@ BundleDefinition::~BundleDefinition(void)
 
 }
 
-bool BundleDefinition::HasLanguage(BundleDefinition::ShaderLanguage language) const
+bool BundleDefinition::HasLanguage(ShaderLanguage::Type language) const
 {
 	return mSources.find(language) != mSources.end();
 }
 
-std::vector<BundleDefinition::ShaderLanguage> BundleDefinition::GetBoundLanguages() const
+std::vector<ShaderLanguage::Type> BundleDefinition::GetBoundLanguages() const
 {
-	std::vector<BundleDefinition::ShaderLanguage> result;
+	std::vector<ShaderLanguage::Type> result;
 
 	for (auto it = mSources.begin(); it != mSources.end(); ++it)
 	{
@@ -31,7 +33,7 @@ std::vector<BundleDefinition::ShaderLanguage> BundleDefinition::GetBoundLanguage
 	return result;
 }
 
-std::string BundleDefinition::GetFilename(ShaderLanguage langauge) const
+std::string BundleDefinition::GetFilename(ShaderLanguage::Type langauge) const
 {
 	auto result = mSources.find(langauge);
 
@@ -69,11 +71,11 @@ void BundleDefinition::ParseDefinition(std::istream& input)
 
 	for (auto it = source.begin(); it != source.end(); ++it)
 	{
-		ShaderLanguage langauge = LanguageNameToType(it->first);
+		ShaderLanguage::Type langauge = LanguageNameToType(it->first);
 
-		if (langauge != InvalidLanguage)
+		if (langauge != ShaderLanguage::Invalid)
 		{
-			mSources[langauge] = it->second.ToString();
+			mSources[langauge] = FileHelper::JoinPaths(mBaseFilename, it->second.ToString());
 		}
 	}
 
@@ -103,20 +105,20 @@ ShaderType::Type BundleDefinition::ShaderTypeNameToType(const std::string& name)
 	return ShaderType::Invalid;
 }
 
-const char* BundleDefinition::gShaderLanguageNames[BundleDefinition::ShaderLanguage::LanguageCount] = {
+const char* BundleDefinition::gShaderLanguageNames[ShaderLanguage::Count] = {
 	"HLSL 5",
 	"GLSL 4.4"
 };
 
-BundleDefinition::ShaderLanguage BundleDefinition::LanguageNameToType(const std::string& name)
+ShaderLanguage::Type BundleDefinition::LanguageNameToType(const std::string& name)
 {
-	for (size_t i = 0; i < BundleDefinition::ShaderLanguage::LanguageCount; ++i)
+	for (size_t i = 0; i < ShaderLanguage::Count; ++i)
 	{
 		if (name == gShaderLanguageNames[i])
 		{
-			return static_cast<BundleDefinition::ShaderLanguage>(i);
+			return static_cast<ShaderLanguage::Type>(i);
 		}
 	}
 
-	return BundleDefinition::InvalidLanguage;
+	return ShaderLanguage::Invalid;
 }

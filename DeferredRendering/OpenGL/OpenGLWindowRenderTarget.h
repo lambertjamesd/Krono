@@ -32,4 +32,21 @@ private:
 	HDC mHDC;
 };
 
+#else
+
+class OpenGLWindowRenderTarget : public WindowRenderTarget, public OpenGLRenderTarget
+{
+public:
+	OpenGLWindowRenderTarget(Window& window);
+	~OpenGLWindowRenderTarget(void);
+
+	virtual Auto<Texture2D> GetTexture() const;
+	virtual void Clear(const Colorf& color);
+	
+	virtual void Present(void);
+	
+	virtual OpenGLRenderTarget::Type GetType() const;
+	virtual GLuint GetGLObject() const;
+};
+
 #endif

@@ -1,8 +1,6 @@
 // TowerDefense.cpp : Defines the entry point for the application.
 //
 
-#include "stdafx.h"
-#include "TowerDefense.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -36,16 +34,27 @@ std::string ReadFileContents(const char *filename)
 	throw(errno);
 }
 
+#ifdef _WIN32
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPTSTR    lpCmdLine,
                      _In_ int       nCmdShow)
+#else
+int main(int argc, char* argv[])
+#endif
 {
 
 	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
+
+	if (window == NULL)
+	{
+		std::cerr << "Could not create window" << std::endl;
+		return 1;
+	}
+
 	Auto<VertexShader> vertexShader;
 	Auto<PixelShader> pixelShader;
 

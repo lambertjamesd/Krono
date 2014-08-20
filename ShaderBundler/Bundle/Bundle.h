@@ -10,16 +10,16 @@ public:
 	Bundle(const BundleDefinition& bundleDef);
 	~Bundle(void);
 
-	void AddShader(BundleDefinition::ShaderLanguage language, const std::vector<char>& data);
+	void AddShader(ShaderLanguage::Type language, const std::vector<char>& data);
 
 	void Write(std::ostream& output) const;
 private:
 	ShaderType::Type mType;
-	std::map<BundleDefinition::ShaderLanguage, std::vector<char> > mShaders;
+	std::map<ShaderLanguage::Type, std::vector<char> > mShaders;
 
 	static const std::string gFileHeader;
 
-	size_t GetShaderOffset(BundleDefinition::ShaderLanguage language) const;
+	size_t GetShaderOffset(ShaderLanguage::Type language) const;
 
 	template <typename T>
 	static void WriteInt(std::ostream& output, T value)

@@ -6,7 +6,7 @@ class Exception : public std::exception
 {
 public:
 	Exception(void);
-	virtual ~Exception(void);
+	virtual ~Exception(void) throw();
 
 	virtual const char* what() const throw();
 protected:

@@ -7,7 +7,7 @@ class NotFoundException :
 {
 public:
 	NotFoundException(const char* message);
-	~NotFoundException(void);
+	~NotFoundException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:

@@ -4,13 +4,6 @@
 #include "Texture2D.h"
 #include "Core/Memory.h"
 
-struct RenderTargetFormat
-{
-	enum 
-
-	Size size;
-};
-
 class RenderTarget
 {
 public:

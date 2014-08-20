@@ -7,7 +7,7 @@ class UnsupportedFormatException :
 {
 public:
 	UnsupportedFormatException(const char* message);
-	~UnsupportedFormatException(void);
+	~UnsupportedFormatException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:

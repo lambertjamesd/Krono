@@ -1,5 +1,6 @@
 
 #include "SceneView.h"
+#include <stddef.h>
 
 SceneViewData::SceneViewData() :
 	projectionMatrix(Matrix4f::Identity()),

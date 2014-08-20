@@ -7,7 +7,7 @@ class InvalidEnumException :
 {
 public:
 	InvalidEnumException(const char* message);
-	~InvalidEnumException(void);
+	~InvalidEnumException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:

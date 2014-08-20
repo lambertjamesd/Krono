@@ -6,7 +6,7 @@ InvalidEnumException::InvalidEnumException(const char *message) : mMessage(messa
 }
 
 
-InvalidEnumException::~InvalidEnumException(void)
+InvalidEnumException::~InvalidEnumException(void) throw()
 {
 }
 

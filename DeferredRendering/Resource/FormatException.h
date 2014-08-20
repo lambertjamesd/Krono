@@ -7,7 +7,7 @@ class FormatException :
 {
 public:
 	FormatException(const char* message);
-	~FormatException(void);
+	~FormatException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:

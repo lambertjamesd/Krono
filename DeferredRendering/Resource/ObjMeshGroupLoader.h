@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "Math/Vector3.h"
 #include "Math/Vector2.h"
+#include "Core/Types.h"
 
 struct ObjMeshVertex
 {
@@ -26,7 +27,7 @@ public:
 	void AddTexCoord(const Vector2f& texCoord);
 	void AddNormal(const Vector3f& normal);
 
-	UINT16 GetVertexBufferIndex(UINT16 vertexIndex, UINT16 texCoordIndex, UINT16 normalIndex); 
+	UInt16 GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoordIndex, UInt16 normalIndex); 
 
 	void PopulateVertexBuffer(VertexBuffer& vertexBuffer) const;
 private:
@@ -36,7 +37,7 @@ private:
 
 	std::vector<ObjMeshVertex> mVertexData;
 
-	std::unordered_map<UINT64, UINT16> mIndexMap;
+	std::unordered_map<UInt64, UInt16> mIndexMap;
 };
 
 class ObjMeshGroupLoader : public MeshGroupLoader

@@ -11,9 +11,9 @@ class Radians
 public:
 	Radians(const Degrees<T>& degrees) : mValue(degrees.mValue * Constant<T>::Deg2Rad) {}
 	Radians() : mValue(Constant<T>::Zero) {}
-	explicit Radians(const T& value) : mValue(value)
+	explicit Radians(const T& value) : mValue(value) {}
 
-	T operator T() const
+	operator T() const
 	{
 		return mValue;
 	}
@@ -29,9 +29,9 @@ class Degrees
 public:
 	Degrees(const Radians<T>& radians) : mValue(radians.mValue * Constant<T>::Rad2Deg) {}
 	Degrees() : mValue(Constant<T>::Zero) {}
-	explicit Degrees(const T& value) : mValue(value)
+	explicit Degrees(const T& value) : mValue(value) {}
 
-	T operator T() const
+	operator T() const
 	{
 		return mValue;
 	}

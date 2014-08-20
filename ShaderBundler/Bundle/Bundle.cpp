@@ -11,7 +11,7 @@ Bundle::~Bundle(void)
 {
 }
 
-void Bundle::AddShader(BundleDefinition::ShaderLanguage language, const std::vector<char>& data)
+void Bundle::AddShader(ShaderLanguage::Type language, const std::vector<char>& data)
 {
 	mShaders[language] = data;
 }
@@ -41,7 +41,7 @@ void Bundle::Write(std::ostream& output) const
 }
 
 
-size_t Bundle::GetShaderOffset(BundleDefinition::ShaderLanguage language) const
+size_t Bundle::GetShaderOffset(ShaderLanguage::Type language) const
 {
 	size_t result = 0;
 

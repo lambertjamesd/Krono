@@ -42,14 +42,14 @@ void ObjMeshVertexData::AddNormal(const Vector3f& normal)
 	mNormals.push_back(normal);
 }
 
-UINT16 ObjMeshVertexData::GetVertexBufferIndex(UINT16 vertexIndex, UINT16 texCoordIndex, UINT16 normalIndex)
+UInt16 ObjMeshVertexData::GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoordIndex, UInt16 normalIndex)
 {
-	UINT64 digest = ((UINT64)vertexIndex & 0x3FFFFF) | (((UINT64)texCoordIndex & 0x1FFFFF) << 22) | (((UINT64)normalIndex & 0x1FFFFF) << 43);
+	UInt64 digest = ((UInt64)vertexIndex & 0x3FFFFF) | (((UInt64)texCoordIndex & 0x1FFFFF) << 22) | (((UInt64)normalIndex & 0x1FFFFF) << 43);
 	auto existingIndex = mIndexMap.find(digest);
 
 	if (existingIndex == mIndexMap.end())
 	{
-		UINT16 result = (UINT16)mVertexData.size();
+		UInt16 result = (UInt16)mVertexData.size();
 		mIndexMap[digest] = result;
 		mVertexData.push_back(ObjMeshVertex(mPositions[vertexIndex], mTexCoords[texCoordIndex], mNormals[normalIndex]));
 		return result;
@@ -89,7 +89,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16));
 
 	size_t indexStart = 0;
-	vector<UINT16> indexData;
+	vector<UInt16> indexData;
 	Auto<Mesh> currentMesh;
 
 	Auto<MeshGroup> result(new MeshGroup());
@@ -126,7 +126,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 			}
 			else if (tokens[0] == "f")
 			{
-				vector<UINT16> indices(tokens.size() - 1);
+				vector<UInt16> indices(tokens.size() - 1);
 
 				for (size_t i = 0; i < indices.size(); ++i)
 				{
@@ -160,7 +160,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 	vertexData.PopulateVertexBuffer(*vertexBuffer);
 	
 	DataIterator it = currentIndexBuffer->Lock(indexData.size());
-	it.Write<UINT16>(&indexData.front(), indexData.size());
+	it.Write<UInt16>(&indexData.front(), indexData.size());
 	currentIndexBuffer->Unlock();
 
 	return result;
