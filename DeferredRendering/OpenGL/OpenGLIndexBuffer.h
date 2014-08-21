@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\IndexBuffer.h"
+#include "OpenGLCommon.h"
+
+#include "Interface/IndexBuffer.h"
 
 class OpenGLIndexBuffer : public IndexBuffer
 {
@@ -19,7 +21,7 @@ public:
 
 	static GLenum GetGLFormat(IndexBuffer::Format format);
 private:
-	static GLenum gFormatMapping[];
+	static GLenum gFormatMapping[IndexBuffer::FormatCount];
 
 	GLuint mIndexBuffer;
 	std::vector<char> mBuffer;

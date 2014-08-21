@@ -1,6 +1,6 @@
-#include "stdafx.h"
+
 #include "OpenGLFBODatabase.h"
-#include "..\Core\Hash.h"
+#include "Core/Hash.h"
 
 OpenGLFBODatabase::OpenGLFBODatabase(void)
 {
@@ -22,7 +22,7 @@ OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<Open
 		signatureHash.Update(&objectID, sizeof(objectID));
 	}
 
-	UINT32 signature = signatureHash.GetDigest();
+	UInt32 signature = signatureHash.GetDigest();
 
 	auto findResult = mExistingBuffers.find(signature);
 

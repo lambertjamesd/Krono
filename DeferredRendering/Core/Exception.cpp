@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Exception.h"
 
 
@@ -7,7 +7,7 @@ Exception::Exception(void)
 }
 
 
-Exception::~Exception(void)
+Exception::~Exception(void) throw()
 {
 }
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "OpenGLWindowRenderTarget.h"
 #include <GL/glew.h>
 
@@ -75,6 +75,48 @@ GLuint OpenGLWindowRenderTarget::GetGLObject() const
 
 #else
 
-#error OpenGL not current supported on platform
+OpenGLWindowRenderTarget::OpenGLWindowRenderTarget(Window& window) :
+	WindowRenderTarget(window.GetSize())
+{
+
+}
+
+
+OpenGLWindowRenderTarget::~OpenGLWindowRenderTarget(void)
+{
+
+}
+
+Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
+{
+	return Auto<Texture2D>(NULL);
+}
+
+void OpenGLWindowRenderTarget::Clear(const Colorf& color)
+{
+	GLuint existingBuffer;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&existingBuffer);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(color.r, color.g, color.b, color.a);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, existingBuffer);
+}
+	
+void OpenGLWindowRenderTarget::Present(void)
+{
+
+}
+
+OpenGLRenderTarget::Type OpenGLWindowRenderTarget::GetType() const
+{
+	return OpenGLRenderTarget::TypeWindow;
+}
+
+GLuint OpenGLWindowRenderTarget::GetGLObject() const
+{
+	return 0;
+}
 
 #endif

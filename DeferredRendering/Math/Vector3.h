@@ -1,13 +1,35 @@
 #pragma once
 #include <cmath>
+#include "Math.h"
 
 template <typename T>
 class Vector3
 {
 public:
 	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
-	Vector3(void) : x(T()), y(T()) {}
+	Vector3(void) : x(T()), y(T()), z(T()) {}
 	~Vector3(void) {}
+
+	Vector3 Normalized() const
+	{
+		Vector3 result(*this);
+		result.Normalize();
+		return result;
+	}
+
+	void Normalize()
+	{
+		T lengthSqrd = x * x + y * y + z * z;
+
+		if (lengthSqrd > Constant<T>::Zero)
+		{
+			T lengthInv = Constant<T>::One / Math<T>::Sqrt(lengthSqrd);
+
+			x = x * lengthInv;
+			y = y * lengthInv;
+			z = z * lengthInv;
+		}
+	}
 	
 	template <typename R>
 	operator Vector3<R>() const

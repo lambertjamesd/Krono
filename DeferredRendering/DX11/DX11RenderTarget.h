@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DX11Common.h"
+
 class DX11RenderTarget
 {
 public:

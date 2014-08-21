@@ -1,6 +1,8 @@
 #pragma once
 
-class Resource
+#include "Core/Object.h"
+
+class Resource : public Object
 {
 public:
 	Resource(void);

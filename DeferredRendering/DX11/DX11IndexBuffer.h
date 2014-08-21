@@ -1,6 +1,8 @@
 #pragma once
 
-#include "..\Interface\IndexBuffer.h"
+#include "DX11Common.h"
+
+#include "Interface/IndexBuffer.h"
 #include "DX11SmartPtr.h"
 
 class DX11IndexBuffer : public IndexBuffer
@@ -25,6 +27,6 @@ public:
 	ID3D11Device *mDevice;
 	size_t mCurrentIndexCount;
 
-	static DXGI_FORMAT gFormatMapping[];
+	static DXGI_FORMAT gFormatMapping[IndexBuffer::FormatCount];
 };
 

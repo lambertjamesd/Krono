@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "OpenGLIndexBuffer.h"
 
 
@@ -44,13 +44,12 @@ GLuint OpenGLIndexBuffer::GetIndexBuffer() const
 	return mIndexBuffer;
 }
 
-GLenum OpenGLIndexBuffer::gFormatMapping[] = {
+GLenum OpenGLIndexBuffer::gFormatMapping[IndexBuffer::FormatCount] = {
 	GL_UNSIGNED_SHORT,
 	GL_UNSIGNED_INT
 };
 
 GLenum OpenGLIndexBuffer::GetGLFormat(IndexBuffer::Format format)
 {
-	static_assert(sizeof(gFormatMapping) / sizeof(*gFormatMapping) == IndexBuffer::FormatCount, "gFormatMapping doesn't match IndexBuffer::Format");
 	return gFormatMapping[format];
 }

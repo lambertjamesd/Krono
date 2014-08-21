@@ -1,7 +1,9 @@
 #pragma once
 
-#include "..\Interface\ConstantBuffer.h"
-#include "..\Math\Matrix.h"
+#include "OpenGLCommon.h"
+
+#include "Interface/ConstantBuffer.h"
+#include "Math/Matrix.h"
 
 class OpenGLConstantBuffer : public ConstantBuffer
 {
@@ -16,6 +18,7 @@ private:
 	void ModifyProjectionMatrices();
 
 	static Matrix4f gProjectionMatrixConversion;
+	static Matrix4f gInvProjectionMatrixConversion;
 
 	std::vector<char> mBufferCopy;
 	GLuint mBuffer;

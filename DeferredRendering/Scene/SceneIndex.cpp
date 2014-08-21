@@ -1,5 +1,8 @@
-#include "stdafx.h"
+
 #include "SceneIndex.h"
+
+namespace krono
+{
 
 
 SceneIndex::SceneIndex(void)
@@ -9,4 +12,6 @@ SceneIndex::SceneIndex(void)
 
 SceneIndex::~SceneIndex(void)
 {
+}
+
 }

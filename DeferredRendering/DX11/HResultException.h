@@ -1,5 +1,8 @@
 #pragma once
-#include "..\Core\Exception.h"
+
+#include "DX11Common.h"
+
+#include "Core/Exception.h"
 #include <string>
 
 class HResultException :

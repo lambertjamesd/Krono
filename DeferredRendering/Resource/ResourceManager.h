@@ -2,9 +2,10 @@
 
 #include <string>
 #include <unordered_map>
-#include "../Core/Memory.h"
+#include "Core/Memory.h"
 #include "ResourceLoader.h"
 #include <fstream>
+#include "LoadException.h"
 
 class ResourceManager
 {
@@ -13,11 +14,10 @@ public:
 	~ResourceManager(void);
 
 	template <typename T>
-	void AddLoader(Auto<ResourceLoader>& loader)
+	void AddLoader(Auto<ResourceLoader> loader)
 	{
 		mLoaders[typeid(T).hash_code()] = loader;
 	}
-	
 	
 	template <typename T>
 	Auto<T> LoadResource(const std::string& filename)
@@ -37,8 +37,21 @@ public:
 			internalName = filename.substr(hashPosition + 1);
 		}
 
-		std::ifstream fileInput(path);
-		return LoadResource<T>(fileInput, internalName);
+		std::ifstream fileInput(path, std::ios::in | std::ios::binary);
+
+		if (!fileInput.is_open())
+		{
+			throw LoadException(filename, "Could not open file");
+		}
+
+		try
+		{
+			return LoadResource<T>(fileInput, internalName);
+		}
+		catch (Exception& e)
+		{
+			throw LoadException(filename, e.what());
+		}
 	}
 	
 	template <typename T>

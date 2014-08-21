@@ -1,8 +1,11 @@
 #pragma once
 
-#include "..\Interface\Graphics.h"
+#include "OpenGLCommon.h"
+
+#include "Interface/Graphics.h"
 #include "OpenGLShaderDatabase.h"
 #include "OpenGLFBODatabase.h"
+#include "OpenGLTextureStorage.h"
 
 class OpenGLVertexBuffer;
 class OpenGLVertexShader;
@@ -23,6 +26,10 @@ public:
 	virtual Auto<WindowRenderTarget> CreateWindowRenderTarget(Window& targetWindow);
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format);
 	virtual Auto<DepthBuffer> CreateDepthBuffer(Vector2i size, DataFormat::Type format);
+	
+	virtual Auto<Texture2D> CreateTexture2D(Vector2i size, DataFormat format);
+	
+	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description);
 
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
@@ -31,7 +38,9 @@ public:
 
 	virtual void SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer);
 
-	virtual void SetTexture(Auto<Texture> &value, size_t slot);
+	virtual void SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage);
+	
+	virtual void SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage);
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader);
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader);
@@ -40,6 +49,8 @@ public:
 	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot);
 	
 	virtual bool FlipImageOriginY() const;
+
+	virtual Graphics::ShaderLanguage ExpectedShaderLanguage() const;
 	
 	static GLenum GetGLType(DataFormat::Type type);
 private:
@@ -49,10 +60,11 @@ private:
 
 	friend class Graphics;
 
-	static GLenum gGLTypeMapping[];
+	static GLenum gGLTypeMapping[DataFormat::TypeCount];
 
 	OpenGLShaderDatabase mShaderDatabase;
 	OpenGLFBODatabase mFBODatabase;
+	OpenGLTextureStorage mTextureStorage;
 
 	bool mHasGlewInitialized;
 

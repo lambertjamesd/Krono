@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Interface\DepthBuffer.h"
+#include "Interface/DepthBuffer.h"
 #include "DX11Texture2D.h"
 
 class DX11DepthBuffer : public DepthBuffer
@@ -18,7 +18,7 @@ private:
 	ID3D11DepthStencilView *mDepthTargetView;
 	Auto<DX11Texture2D> mTexture;
 
-	static DXGI_FORMAT gTextureFormatMapping[];
-	static DXGI_FORMAT gDepthViewFormatmapping[];
+	static DXGI_FORMAT gTextureFormatMapping[DataFormat::TypeCount];
+	static DXGI_FORMAT gDepthViewFormatmapping[DataFormat::TypeCount];
 };
 

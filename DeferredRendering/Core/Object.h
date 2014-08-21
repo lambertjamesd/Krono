@@ -4,7 +4,7 @@ class Object
 {
 public:
 	Object(void);
-	~Object(void);
+	virtual ~Object(void);
 private:
 };
 

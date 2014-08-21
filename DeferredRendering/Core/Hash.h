@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Types.h"
+#include <string.h>
+
 template <size_t tDigestSize>
 class Hash
 {
@@ -17,6 +20,12 @@ public:
 	}
 
 	~Hash(void) {}
+	
+	template <typename T>
+	void Update(const T& data)
+	{
+		Update(&data, sizeof(T));
+	}
 
 	void Update(const void* data, size_t length)
 	{
@@ -66,11 +75,17 @@ private:
 class HashUInt32 : private Hash<4>
 {
 public:
-	HashUInt32(UINT32 initialDigest);
+	HashUInt32(UInt32 initialDigest);
 	HashUInt32();
 	~HashUInt32();
+	
+	template <typename T>
+	void Update(const T& data)
+	{
+		Hash::Update<T>(data);
+	}
 
 	void Update(const void* data, size_t length);
-	UINT32 GetDigest() const;
+	UInt32 GetDigest() const;
 private:
 };

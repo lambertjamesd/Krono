@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "../stdafx.h"
+
+
 #include "DX11Shader.h"
 #include "HResultException.h"
-#include "..\Interface\UnsupportedFormatException.h"
+#include "Interface/UnsupportedFormatException.h"
 #include <vector>
 #include "DX11Graphics.h"
 

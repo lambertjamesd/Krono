@@ -2,6 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredRendering", "DeferredRendering\DeferredRendering.vcxproj", "{23BDB535-420C-426C-B5BF-160E9FC19F01}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0DFA0A24-FB95-46DD-9BD9-63B312C9572C} = {0DFA0A24-FB95-46DD-9BD9-63B312C9572C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TowerDefense", "TowerDefense\TowerDefense.vcxproj", "{ED734449-AFD6-4CC2-B3EE-157425288365}"
+	ProjectSection(ProjectDependencies) = postProject
+		{23BDB535-420C-426C-B5BF-160E9FC19F01} = {23BDB535-420C-426C-B5BF-160E9FC19F01}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShaderBundler", "ShaderBundler\ShaderBundler.vcxproj", "{0DFA0A24-FB95-46DD-9BD9-63B312C9572C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +23,14 @@ Global
 		{23BDB535-420C-426C-B5BF-160E9FC19F01}.Debug|Win32.Build.0 = Debug|Win32
 		{23BDB535-420C-426C-B5BF-160E9FC19F01}.Release|Win32.ActiveCfg = Release|Win32
 		{23BDB535-420C-426C-B5BF-160E9FC19F01}.Release|Win32.Build.0 = Release|Win32
+		{ED734449-AFD6-4CC2-B3EE-157425288365}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED734449-AFD6-4CC2-B3EE-157425288365}.Debug|Win32.Build.0 = Debug|Win32
+		{ED734449-AFD6-4CC2-B3EE-157425288365}.Release|Win32.ActiveCfg = Release|Win32
+		{ED734449-AFD6-4CC2-B3EE-157425288365}.Release|Win32.Build.0 = Release|Win32
+		{0DFA0A24-FB95-46DD-9BD9-63B312C9572C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0DFA0A24-FB95-46DD-9BD9-63B312C9572C}.Debug|Win32.Build.0 = Debug|Win32
+		{0DFA0A24-FB95-46DD-9BD9-63B312C9572C}.Release|Win32.ActiveCfg = Release|Win32
+		{0DFA0A24-FB95-46DD-9BD9-63B312C9572C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

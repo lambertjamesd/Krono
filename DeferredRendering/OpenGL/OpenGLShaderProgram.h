@@ -1,9 +1,12 @@
 #pragma once
 
-#include "..\Interface\InputLayout.h"
+#include "OpenGLCommon.h"
+
+#include "Interface/InputLayout.h"
 #include "OpenGLShader.h"
 #include <map>
 #include "OpenGLVertexBuffer.h"
+#include "OpenGLTextureStorage.h"
 
 class ShaderVariable
 {
@@ -34,6 +37,8 @@ public:
 	Type GetType() const;
 	int GetCount() const;
 	int GetIndex() const;
+
+	bool IsTexture() const;
 private:
 	std::string mName;
 	short mWidth;
@@ -92,16 +97,22 @@ public:
 	const std::vector<ShaderVariable>& GetOutputs() const;
 
 	void BindVertexBuffer(OpenGLVertexBuffer& buffer);
+	void MapTextures(OpenGLTextureStorage& texureStorage) const;
 protected:
 	
 private:
 	OpenGLShaderProgram(const OpenGLShaderProgram& other);
 	OpenGLShaderProgram& operator=(const OpenGLShaderProgram& other);
-
+	
+	void PopulateVariables(std::vector<ShaderVariable>& target, GLenum type);
 	void PopulateAttributes();
 	void PopulateUniforms();
 	void PopulateOutputs();
-	void PopulateVariables(std::vector<ShaderVariable>& target, GLenum type);
+	void PopulateTextureMapping();
+
+	static const size_t MIN_SAMPLER_SUFFIX_LENGTH = 2;
+	static const char SAMPLER_SUFFIX_CHAR = 's';
+	static size_t GetSamplerIndex(const std::string& uniformName);
 
 	const OpenGLVertexLayout& GetLayoutMapping(const InputLayout& inputLayout);
 
@@ -111,9 +122,11 @@ private:
 
 	GLuint mProgram;
 
-	std::map<UINT32, OpenGLVertexLayout> mLayoutMapping;
+	std::map<UInt32, OpenGLVertexLayout> mLayoutMapping;
 	
 	std::vector<ShaderVariable> mAttributes;
 	std::vector<ShaderVariable> mUniforms;
 	std::vector<ShaderVariable> mOutputs;
+
+	OpenGLTextureMapping mTextureMapping;
 };

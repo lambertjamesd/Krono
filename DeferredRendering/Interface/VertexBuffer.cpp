@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "VertexBuffer.h"
 
 DataIterator::DataIterator(void* dataPointer, void* dataEnd) :

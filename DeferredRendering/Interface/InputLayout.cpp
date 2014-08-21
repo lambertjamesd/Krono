@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "InputLayout.h"
 
 
@@ -84,7 +84,7 @@ size_t InputLayout::GetStride() const
 	return mStride;
 }
 
-UINT32 InputLayout::GetSignature() const
+UInt32 InputLayout::GetSignature() const
 {
 	return mSignature.GetDigest();
 }

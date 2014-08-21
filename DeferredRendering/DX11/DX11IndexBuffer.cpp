@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "DX11IndexBuffer.h"
 #include "HResultException.h"
 
@@ -52,14 +52,13 @@ size_t DX11IndexBuffer::GetIndexCount() const
 	return mCurrentIndexCount;
 }
 
-DXGI_FORMAT DX11IndexBuffer::gFormatMapping[] = {
+DXGI_FORMAT DX11IndexBuffer::gFormatMapping[IndexBuffer::FormatCount] = {
 	DXGI_FORMAT_R16_UINT,
 	DXGI_FORMAT_R32_UINT
 };
 
 DXGI_FORMAT DX11IndexBuffer::GetDXFormat() const
 {
-	static_assert(sizeof(gFormatMapping) / sizeof(*gFormatMapping) == IndexBuffer::FormatCount, "gFormatMapping doesn't match");
 	return gFormatMapping[GetFormat()];
 }
 

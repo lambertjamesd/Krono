@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VertexBuffer.h"
-#include "..\Core\Memory.h"
+#include "Core/Memory.h"
 
 class IndexBuffer
 {
@@ -31,6 +31,6 @@ protected:
 	Format mFormat;
 private:
 
-	static size_t gFormatSize[];
+	static size_t gFormatSize[IndexBuffer::FormatCount];
 };
 

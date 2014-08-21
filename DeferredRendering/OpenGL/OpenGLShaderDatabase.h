@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Core\Memory.h"
+#include "Core/Memory.h"
 
 #include "OpenGLShaderProgram.h"
 #include <map>
@@ -13,6 +13,6 @@ public:
 
 	Auto<OpenGLShaderProgram> GetProgram(const OpenGLVertexShader& vertexShader, const OpenGLPixelShader& fragmentShader);
 private:
-	std::map<UINT32, Auto<OpenGLShaderProgram> > mSavedShaders;
+	std::map<UInt32, Auto<OpenGLShaderProgram> > mSavedShaders;
 };
 

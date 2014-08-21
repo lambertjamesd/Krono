@@ -1,7 +1,23 @@
 #pragma once
 #include <string>
 
-class VertexShader
+#include "Core/Object.h"
+
+namespace ShaderStage
+{
+	enum Type
+	{
+		VertexShader,
+		HullShader,
+		DomainShader,
+		GeometryShader,
+		PixelShader,
+		ComputeShader,
+		TypeCount
+	};
+}
+
+class VertexShader : public Object
 {
 public:
 	virtual ~VertexShader(void);
@@ -11,7 +27,7 @@ protected:
 private:
 };
 
-class PixelShader
+class PixelShader : public Object
 {
 public:
 	virtual ~PixelShader(void);

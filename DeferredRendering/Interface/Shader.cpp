@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Shader.h"
 #include <vector>
 #include <iostream>

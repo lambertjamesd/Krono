@@ -1,13 +1,13 @@
 #pragma once
 
-#include "..\Core\Exception.h"
+#include "Core/Exception.h"
 
 class InvalidEnumException :
 	public Exception
 {
 public:
 	InvalidEnumException(const char* message);
-	~InvalidEnumException(void);
+	~InvalidEnumException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:

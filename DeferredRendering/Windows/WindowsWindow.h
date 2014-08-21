@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Interface\Window.h"
+#include "Interface/Window.h"
 
 class WindowsWindow :
 	public Window

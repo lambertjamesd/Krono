@@ -1,6 +1,6 @@
 #pragma once
 #include "Texture.h"
-#include "..\Math\Vector2.h"
+#include "Math/Vector2.h"
 #include "DataFormat.h"
 
 class Texture2D : public Texture

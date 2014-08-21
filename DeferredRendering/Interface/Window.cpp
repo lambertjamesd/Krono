@@ -1,8 +1,9 @@
-#include "stdafx.h"
+
 #include "Window.h"
 
-#include "../Windows/WindowsWindow.h"
-
+#ifdef _WIN32
+#include "Windows/WindowsWindow.h"
+#endif
 
 Window::Window(const Vector2i& size) :
 	mSize(size)

@@ -1,0 +1,8 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "../HLSL/PixelShaderTest.hlsl",
+		"GLSL 4.4" : "../GLSL/PixelShaderTest.frag"
+	}
+}

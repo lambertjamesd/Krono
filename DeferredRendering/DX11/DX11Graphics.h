@@ -1,5 +1,7 @@
 #pragma once
-#include "..\Interface\Graphics.h"
+#include "Interface/Graphics.h"
+
+#include "DX11Common.h"
 
 class DX11VertexBuffer;
 class DX11VertexShader;
@@ -19,6 +21,10 @@ public:
 	virtual Auto<RenderTarget> CreateOffscreenRenderTarget(Vector2i size, DataFormat format);
 	virtual Auto<DepthBuffer> CreateDepthBuffer(Vector2i size, DataFormat::Type format);
 	
+	virtual Auto<Texture2D> CreateTexture2D(Vector2i size, DataFormat format);
+	
+	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description);
+	
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
 	
@@ -26,7 +32,9 @@ public:
 
 	virtual void SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer);
 
-	virtual void SetTexture(Auto<Texture> &value, size_t slot);
+	virtual void SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage);
+
+	virtual void SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage);
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader);
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader);
@@ -35,6 +43,8 @@ public:
 	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot);
 	
 	virtual bool FlipImageOriginY() const;
+
+	virtual Graphics::ShaderLanguage ExpectedShaderLanguage() const;
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
@@ -48,7 +58,7 @@ private:
 
 	friend class Graphics;
 	
-	static DXGI_FORMAT gFormatMapping[][4];
+	static DXGI_FORMAT gFormatMapping[DataFormat::TypeCount][4];
 
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;

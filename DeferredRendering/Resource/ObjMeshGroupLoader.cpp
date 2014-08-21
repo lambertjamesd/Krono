@@ -1,8 +1,8 @@
-#include "stdafx.h"
+
 #include "ObjMeshGroupLoader.h"
 #include <string>
 #include <ctype.h>
-#include "..\Core\Hash.h"
+#include "Core/Hash.h"
 #include "ResourceManager.h"
 
 using namespace std;
@@ -42,14 +42,14 @@ void ObjMeshVertexData::AddNormal(const Vector3f& normal)
 	mNormals.push_back(normal);
 }
 
-UINT16 ObjMeshVertexData::GetVertexBufferIndex(UINT16 vertexIndex, UINT16 texCoordIndex, UINT16 normalIndex)
+UInt16 ObjMeshVertexData::GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoordIndex, UInt16 normalIndex)
 {
-	UINT64 digest = (vertexIndex & 0x3FFFFF) | ((texCoordIndex & 0x1FFFFF) << 22) | ((normalIndex & 0x1FFFFF) << 43);
+	UInt64 digest = ((UInt64)vertexIndex & 0x3FFFFF) | (((UInt64)texCoordIndex & 0x1FFFFF) << 22) | (((UInt64)normalIndex & 0x1FFFFF) << 43);
 	auto existingIndex = mIndexMap.find(digest);
 
 	if (existingIndex == mIndexMap.end())
 	{
-		UINT16 result = (UINT16)mVertexData.size();
+		UInt16 result = (UInt16)mVertexData.size();
 		mIndexMap[digest] = result;
 		mVertexData.push_back(ObjMeshVertex(mPositions[vertexIndex], mTexCoords[texCoordIndex], mNormals[normalIndex]));
 		return result;
@@ -77,7 +77,7 @@ ObjMeshGroupLoader::~ObjMeshGroupLoader(void)
 
 }
 
-Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	ObjMeshVertexData vertexData;
 
@@ -89,7 +89,7 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16));
 
 	size_t indexStart = 0;
-	vector<UINT16> indexData;
+	vector<UInt16> indexData;
 	Auto<Mesh> currentMesh;
 
 	Auto<MeshGroup> result(new MeshGroup());
@@ -105,15 +105,15 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 		{
 			if (tokens[0] == "v")
 			{
-				vertexData.AddPosition(Vector3f(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str())));
+				vertexData.AddPosition(Vector3f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str()), (float)atof(tokens[3].c_str())));
 			}
 			else if (tokens[0] == "vn")
 			{
-				vertexData.AddNormal(Vector3f(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str())));
+				vertexData.AddNormal(Vector3f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str()), (float)atof(tokens[3].c_str())));
 			}
 			else if (tokens[0] == "vt")
 			{
-				vertexData.AddTexCoord(Vector2f(atof(tokens[1].c_str()), atof(tokens[2].c_str())));
+				vertexData.AddTexCoord(Vector2f((float)atof(tokens[1].c_str()), (float)atof(tokens[2].c_str())));
 			}
 			else if (tokens[0] == "o")
 			{
@@ -126,7 +126,7 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 			}
 			else if (tokens[0] == "f")
 			{
-				vector<UINT16> indices(tokens.size() - 1);
+				vector<UInt16> indices(tokens.size() - 1);
 
 				for (size_t i = 0; i < indices.size(); ++i)
 				{
@@ -160,7 +160,7 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 	vertexData.PopulateVertexBuffer(*vertexBuffer);
 	
 	DataIterator it = currentIndexBuffer->Lock(indexData.size());
-	it.Write<UINT16>(&indexData.front(), indexData.size());
+	it.Write<UInt16>(&indexData.front(), indexData.size());
 	currentIndexBuffer->Unlock();
 
 	return result;
@@ -173,7 +173,7 @@ void ObjMeshGroupLoader::SplitIndices(const std::string& input, size_t indices[3
 	
 	while (currentIndex < 3 && stringIndex != string::npos)
 	{
-		size_t stringEnd = input.find('\/', stringIndex);
+		size_t stringEnd = input.find('/', stringIndex);
 
 		if (stringEnd == string::npos)
 		{

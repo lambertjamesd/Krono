@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Core\Exception.h"
+#include "Core/Exception.h"
 #include <string>
 
 class UnsupportedFormatException :
@@ -7,7 +7,7 @@ class UnsupportedFormatException :
 {
 public:
 	UnsupportedFormatException(const char* message);
-	~UnsupportedFormatException(void);
+	~UnsupportedFormatException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:
