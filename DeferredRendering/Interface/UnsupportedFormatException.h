@@ -2,6 +2,9 @@
 #include "Core/Exception.h"
 #include <string>
 
+namespace krono
+{
+
 class UnsupportedFormatException :
 	public Exception
 {
@@ -13,3 +16,5 @@ protected:
 private:
 	const char* mMessage;
 };
+
+}

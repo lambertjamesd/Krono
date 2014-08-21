@@ -6,9 +6,21 @@
 #include "Interface/RenderTarget.h"
 #include "OpenGLRenderTarget.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 
 #include <wingdi.h>
+
+#elif defined(USE_XLIB)
+
+#include <GL/glx.h>
+
+#endif
+
+
+namespace krono
+{
+
+#if defined(_WIN32)
 
 class OpenGLWindowRenderTarget : public WindowRenderTarget, public OpenGLRenderTarget
 {
@@ -32,7 +44,7 @@ private:
 	HDC mHDC;
 };
 
-#else
+#elif defined(USE_XLIB)
 
 class OpenGLWindowRenderTarget : public WindowRenderTarget, public OpenGLRenderTarget
 {
@@ -47,6 +59,19 @@ public:
 	
 	virtual OpenGLRenderTarget::Type GetType() const;
 	virtual GLuint GetGLObject() const;
+
+private:
+	void MakeActive();
+
+	GLXContext mContext;
+	WindowHandle mWindowHandle;
+	Display *mWindowDisplay;
 };
 
+#else
+
+#error No window library specified
+
 #endif
+
+}

@@ -2,6 +2,10 @@
 
 #include "Core/Object.h"
 
+
+namespace krono
+{
+
 class Texture : public Object
 {
 public:
@@ -13,3 +17,4 @@ public:
 	virtual void GenerateMipmaps() = 0;
 };
 
+}

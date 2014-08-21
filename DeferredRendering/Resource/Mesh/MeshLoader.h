@@ -2,6 +2,9 @@
 
 #include "Resource/ResourceLoader.h"
 
+namespace krono
+{
+
 class MeshLoader : public ResourceLoader
 {
 public:
@@ -12,3 +15,4 @@ public:
 private:
 };
 
+}

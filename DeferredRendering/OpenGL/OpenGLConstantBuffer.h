@@ -5,6 +5,9 @@
 #include "Interface/ConstantBuffer.h"
 #include "Math/Matrix.h"
 
+namespace krono
+{
+
 class OpenGLConstantBuffer : public ConstantBuffer
 {
 public:
@@ -24,3 +27,4 @@ private:
 	GLuint mBuffer;
 };
 
+}

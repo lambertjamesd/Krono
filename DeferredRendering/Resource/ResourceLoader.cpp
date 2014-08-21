@@ -1,6 +1,8 @@
 
 #include "ResourceLoader.h"
 
+namespace krono
+{
 
 ResourceLoader::ResourceLoader(void)
 {
@@ -20,4 +22,6 @@ std::string ResourceLoader::StringFromIStream(std::istream& inputStream)
 	inputStream.read(&contents[0], contents.size());
 
 	return contents;
+}
+
 }

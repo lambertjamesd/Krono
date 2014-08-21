@@ -4,6 +4,9 @@
 #include <map>
 #include "Core/Types.h"
 
+namespace krono
+{
+
 class OpenGLFBODatabase
 {
 public:
@@ -15,3 +18,4 @@ private:
 	std::map<UInt32, Auto<OpenGLFramebuffer> > mExistingBuffers;
 };
 
+}

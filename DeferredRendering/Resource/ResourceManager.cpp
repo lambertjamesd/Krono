@@ -6,6 +6,9 @@
 #include "ShaderLoader.h"
 #include "JSON/JsonDocumentLoader.h"
 
+namespace krono
+{
+
 ResourceManager::ResourceManager(Graphics* graphics) :
 	mGraphics(graphics)
 {
@@ -30,4 +33,6 @@ void ResourceManager::AddDefaultLoaders()
 	AddLoader<VertexShader>(Auto<ResourceLoader>(new VertexShaderLoader()));
 	AddLoader<PixelShader>(Auto<ResourceLoader>(new PixelShaderLoader()));
 	AddLoader<JsonDocument>(Auto<ResourceLoader>(new JsonDocumentLoader()));
+}
+
 }

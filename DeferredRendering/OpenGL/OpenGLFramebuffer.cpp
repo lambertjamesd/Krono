@@ -2,6 +2,9 @@
 #include "OpenGLFramebuffer.h"
 #include <iostream>
 
+namespace krono
+{
+
 OpenGLFramebuffer::OpenGLFramebuffer(void) :
 	mFrameBuffer(0)
 {
@@ -85,4 +88,6 @@ void OpenGLFramebuffer::BindBuffer(const OpenGLRenderTarget* buffer, GLenum atta
 	{
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, buffer->GetGLObject());
 	}
+}
+
 }

@@ -5,6 +5,9 @@
 #include "OpenGLDepthBuffer.h"
 #include <vector>
 
+namespace krono
+{
+
 class OpenGLFramebuffer
 {
 public:
@@ -20,3 +23,4 @@ private:
 	std::vector<GLenum> mBuffers;
 };
 
+}

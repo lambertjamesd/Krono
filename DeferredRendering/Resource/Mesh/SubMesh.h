@@ -7,6 +7,9 @@
 
 #include "Resource/Material.h"
 
+namespace krono
+{
+
 class Graphics;
 
 class SubMesh
@@ -25,3 +28,4 @@ private:
 	size_t mVertexCount;
 };
 
+}

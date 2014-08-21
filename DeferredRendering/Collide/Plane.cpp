@@ -1,6 +1,9 @@
 
 #include "Plane.h"
 
+namespace krono
+{
+
 Plane::Plane(void) :
 	mDistance(0.0f)
 {
@@ -16,4 +19,6 @@ Plane::Plane(const Vector3f& normal, float distance) :
 
 Plane::~Plane(void)
 {
+}
+
 }

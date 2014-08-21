@@ -3,6 +3,9 @@
 #include "VertexBuffer.h"
 #include "Core/Memory.h"
 
+namespace krono
+{
+
 class IndexBuffer
 {
 public:
@@ -34,3 +37,4 @@ private:
 	static size_t gFormatSize[IndexBuffer::FormatCount];
 };
 
+}

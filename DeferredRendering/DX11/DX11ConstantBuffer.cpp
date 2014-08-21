@@ -2,6 +2,9 @@
 #include "DX11ConstantBuffer.h"
 #include "HResultException.h"
 
+namespace krono
+{
+
 DX11ConstantBuffer::DX11ConstantBuffer(ID3D11Device* device, const ConstantBufferLayout& layout) :
 	ConstantBuffer(layout),
 	mBuffer(NULL),
@@ -74,4 +77,6 @@ void DX11ConstantBuffer::Resize(size_t newSize)
 	
 	mBuffer = newBuffer;
 	mCurrentSize = newSize;
+}
+
 }

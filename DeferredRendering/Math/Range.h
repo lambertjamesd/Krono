@@ -1,6 +1,9 @@
 #pragma once
 
 
+namespace krono
+{
+
 template <typename T>
 class Range
 {
@@ -16,3 +19,5 @@ private:
 
 typedef Range<int> Rangei;
 typedef Range<float> Rangef;
+
+}

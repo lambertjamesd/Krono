@@ -5,6 +5,9 @@
 #include "Plane.h"
 #include "BoundingBox.h"
 
+namespace krono
+{
+
 class Frustrum
 {
 public:
@@ -34,3 +37,4 @@ private:
 	Vector3f mWorldPoints[CornerCount];
 };
 
+}

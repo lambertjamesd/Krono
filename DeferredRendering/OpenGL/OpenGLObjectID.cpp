@@ -2,6 +2,9 @@
 #include "OpenGLObjectID.h"
 
 
+namespace krono
+{
+
 OpenGLObjectIDGenerator::OpenGLObjectIDGenerator(void)
 {
 }
@@ -17,3 +20,5 @@ OpenGLObjectID OpenGLObjectIDGenerator::GetNextID()
 }
 
 OpenGLObjectID OpenGLObjectIDGenerator::gCurrentID = 0;
+
+}

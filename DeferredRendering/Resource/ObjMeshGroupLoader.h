@@ -8,6 +8,9 @@
 #include "Math/Vector2.h"
 #include "Core/Types.h"
 
+namespace krono
+{
+
 struct ObjMeshVertex
 {
 	ObjMeshVertex(const Vector3f& position, const Vector2f& texCoord, const Vector3f& normal);
@@ -53,4 +56,6 @@ private:
 
 	const static size_t MAX_LINE_LENGTH = 256;
 };
+
+}
 

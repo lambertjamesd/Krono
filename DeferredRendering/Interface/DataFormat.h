@@ -2,6 +2,9 @@
 
 #include "Core/Types.h"
 
+namespace krono
+{
+
 struct DataFormat
 {
 	enum Type
@@ -30,3 +33,4 @@ private:
 	static size_t gTypeSize[DataFormat::TypeCount];
 };
 
+}

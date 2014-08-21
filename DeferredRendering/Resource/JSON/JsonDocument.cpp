@@ -1,5 +1,7 @@
 #include "JsonDocument.h"
 
+namespace krono
+{
 
 JsonDocument::JsonDocument(const std::string& source) :
 	mRoot(json::Deserialize(source))
@@ -19,4 +21,6 @@ json::Value& JsonDocument::GetRoot()
 const json::Value& JsonDocument::GetRoot() const
 {
 	return mRoot;
+}
+
 }

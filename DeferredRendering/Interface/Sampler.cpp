@@ -1,6 +1,9 @@
 #include "Sampler.h"
 #include <limits>
 
+namespace krono
+{
+
 SamplerDescription::SamplerDescription() :
 	samplingMode(SamplingMode::Basic),
 	anisotropicEnabled(false),
@@ -31,4 +34,6 @@ Sampler::Sampler(void)
 
 Sampler::~Sampler(void)
 {
+}
+
 }

@@ -2,6 +2,9 @@
 
 #include "Core/Types.h"
 
+namespace krono
+{
+
 typedef size_t OpenGLObjectID;
 
 class OpenGLObjectIDGenerator
@@ -15,3 +18,4 @@ private:
 	static OpenGLObjectID gCurrentID;
 };
 
+}

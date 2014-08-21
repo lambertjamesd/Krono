@@ -9,6 +9,9 @@
 #include <vector>
 #include <utility>
 
+namespace krono
+{
+
 class Material : public Resource
 {
 public:
@@ -30,3 +33,4 @@ private:
 	static const size_t MATERIAL_DATA_INDEX = 2;
 };
 
+}

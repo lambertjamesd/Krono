@@ -14,6 +14,9 @@
 #include "ConstantBuffer.h"
 #include "Sampler.h"
 
+namespace krono
+{
+
 namespace Topology
 {
 	enum Type
@@ -84,4 +87,6 @@ protected:
 	Graphics(void);
 private:
 };
+
+}
 

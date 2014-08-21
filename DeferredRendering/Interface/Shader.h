@@ -3,6 +3,10 @@
 
 #include "Core/Object.h"
 
+
+namespace krono
+{
+
 namespace ShaderStage
 {
 	enum Type
@@ -36,3 +40,5 @@ protected:
 	PixelShader(void);
 private:
 };
+
+}

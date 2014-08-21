@@ -4,6 +4,9 @@
 #include "DX11Texture2D.h"
 #include "DX11RenderTarget.h"
 
+namespace krono
+{
+
 class DX11OffscreenRenderTarget : public RenderTarget, public DX11RenderTarget
 {
 public:
@@ -20,3 +23,4 @@ private:
 	Auto<DX11Texture2D> mTexture;
 };
 
+}

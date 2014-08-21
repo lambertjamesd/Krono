@@ -1,6 +1,8 @@
 
 #include "OpenGLIndexBuffer.h"
 
+namespace krono
+{
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(IndexBuffer::Format format) :
 	IndexBuffer(format)
@@ -52,4 +54,6 @@ GLenum OpenGLIndexBuffer::gFormatMapping[IndexBuffer::FormatCount] = {
 GLenum OpenGLIndexBuffer::GetGLFormat(IndexBuffer::Format format)
 {
 	return gFormatMapping[format];
+}
+
 }

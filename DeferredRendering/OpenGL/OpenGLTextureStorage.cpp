@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <cassert>
 
+namespace krono
+{
+
 void OpenGLTextureMapping::AddTextureUnit(ShaderStage::Type stage, size_t textureIndex, size_t samplerIndex)
 {
 	mElements.push_back(Element(stage, textureIndex, samplerIndex));
@@ -146,4 +149,6 @@ const OpenGLSampler* OpenGLTextureStorage::GetSampler(size_t slot, ShaderStage::
 	{
 		return NULL;
 	}
+}
+
 }

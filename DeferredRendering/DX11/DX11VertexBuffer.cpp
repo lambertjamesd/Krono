@@ -3,6 +3,9 @@
 #include "HResultException.h"
 #include "Core/Hash.h"
 
+namespace krono
+{
+
 DX11VertexBuffer::DX11VertexBuffer(ID3D11Device *device, const InputLayout& inputLayout) : 
 	VertexBuffer(inputLayout),
 	mBuffer(NULL),
@@ -97,4 +100,6 @@ void DX11VertexBuffer::Use()
 	UINT stride = mInputLayout.GetStride();
 	UINT offset = 0;
 	context->IASetVertexBuffers(0, 1, &mBuffer, &stride, &offset);
+}
+
 }

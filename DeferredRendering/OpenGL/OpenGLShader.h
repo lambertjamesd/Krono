@@ -5,6 +5,9 @@
 #include "Interface/Shader.h"
 #include "OpenGLObjectID.h"
 
+namespace krono
+{
+
 class OpenGLVertexShader : public VertexShader
 {
 public:
@@ -44,3 +47,5 @@ private:
 
 	OpenGLObjectID mObjectID;
 };
+
+}

@@ -2,6 +2,9 @@
 #include <cmath>
 #include "Math.h"
 
+namespace krono
+{
+
 template <typename T>
 class Vector3
 {
@@ -78,3 +81,5 @@ Vector3<T> operator* (const Vector3<T>& a, const T& b)
 
 typedef Vector3<int> Vector3i;
 typedef Vector3<float> Vector3f;
+
+}

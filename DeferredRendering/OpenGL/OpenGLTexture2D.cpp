@@ -4,6 +4,9 @@
 
 #include "OpenGLTexture2D.h"
 
+namespace krono
+{
+
 OpenGLTexture2D::OpenGLTexture2D(GLuint texture, const Vector2i& size, DataFormat format) :
 	Texture2D(size, format),
 	mTexture(texture)
@@ -56,4 +59,6 @@ void OpenGLTexture2D::GenerateMipmaps()
 	glBindTexture(GL_TEXTURE_2D, mTexture);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, existingTexture);
+}
+
 }

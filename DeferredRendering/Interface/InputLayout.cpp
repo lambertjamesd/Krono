@@ -2,6 +2,9 @@
 #include "InputLayout.h"
 
 
+namespace krono
+{
+
 Attribute::Attribute(const std::string& name, const DataFormat& format) :
 		mName(name),
 		mFormat(format),
@@ -87,4 +90,6 @@ size_t InputLayout::GetStride() const
 UInt32 InputLayout::GetSignature() const
 {
 	return mSignature.GetDigest();
+}
+
 }

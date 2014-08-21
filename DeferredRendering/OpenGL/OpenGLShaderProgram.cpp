@@ -10,6 +10,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index) :
 		mName(name),
 		mWidth(size),
@@ -435,4 +438,6 @@ const std::vector<ShaderVariable>& OpenGLShaderProgram::GetUniforms() const
 const std::vector<ShaderVariable>& OpenGLShaderProgram::GetOutputs() const
 {
 	return mOutputs;
+}
+
 }

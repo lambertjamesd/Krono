@@ -2,6 +2,9 @@
 
 #include "Matrix.h"
 
+namespace krono
+{
+
 Vector4f operator*(const Matrix4f& lhs, const Vector4f& rhs)
 {
 	return Vector4f(
@@ -20,4 +23,6 @@ Vector4f operator*(const Vector4f& lhs, const Matrix4f& rhs)
 		lhs.x * rhs.At(0, 2) + lhs.y * rhs.At(1, 2) + lhs.z * rhs.At(2, 2) + lhs.w * rhs.At(3, 2),
 		lhs.x * rhs.At(0, 3) + lhs.y * rhs.At(1, 3) + lhs.z * rhs.At(2, 3) + lhs.w * rhs.At(3, 3)
 		);
+}
+
 }

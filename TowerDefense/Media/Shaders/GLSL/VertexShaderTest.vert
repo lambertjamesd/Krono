@@ -1,8 +1,9 @@
+#version 440
 
 attribute vec3 attrPOSITION0;
 attribute vec2 attrTEXCOORD0;
 
-varying vec2 texCoord;
+out vec2 texCoord;
 
 layout(binding = 0) uniform SceneViewData
 {

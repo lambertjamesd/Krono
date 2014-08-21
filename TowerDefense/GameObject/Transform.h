@@ -12,19 +12,20 @@ public:
 	Transform(GameObject& parentGameObject);
 	~Transform(void);
 
-	const Quaternionf& GetLocalOrientation() const;
-	const Vector3f& GetLocalPosition() const;
-	const Vector3f& GetLocalScale() const;
+	const krono::Quaternionf& GetLocalOrientation() const;
+	const krono::Vector3f& GetLocalPosition() const;
+	const krono::Vector3f& GetLocalScale() const;
 
-	void SetLocalOrientation(const Quaternionf& value);
-	void SetLocalPosition(const Vector3f& value);
-	void SetLocalScale(const Vector3f& value);
+	void SetLocalOrientation(const krono::Quaternionf& value);
+	void SetLocalPosition(const krono::Vector3f& value);
+	void SetLocalScale(const krono::Vector3f& value);
 
+	void ClearParent();
 	void SetParent(const Transform::Ref& value);
 	const Transform::Ref& GetParent() const;
 
-	const Matrix4f& GetLocalTransform() const;
-	const Matrix4f& GetWorldTransform() const;
+	const krono::Matrix4f& GetLocalTransform() const;
+	const krono::Matrix4f& GetWorldTransform() const;
 private:
 	void RemoveChild(Transform* child);
 	void AddChild(Transform* child);
@@ -36,13 +37,13 @@ private:
 	Transform::Ref mParent;
 
 	bool mIsTransformDirty;
-	Matrix4f mTransform;
+	krono::Matrix4f mTransform;
 
 	bool mIsWorldTransformDirty;
-	Matrix4f mWolrdTransform;
+	krono::Matrix4f mWolrdTransform;
 
-	Quaternionf mOrientation;
-	Vector3f mPosition;
-	Vector3f mScale;
+	krono::Quaternionf mOrientation;
+	krono::Vector3f mPosition;
+	krono::Vector3f mScale;
 };
 

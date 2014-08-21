@@ -3,6 +3,9 @@
 
 #include "DX11Common.h"
 
+namespace krono
+{
+
 class DX11VertexBuffer;
 class DX11VertexShader;
 
@@ -71,4 +74,6 @@ private:
 	bool mNeedNewInputMapping;
 	bool mHasIndexBuffer;
 };
+
+}
 

@@ -1,6 +1,9 @@
 #pragma once
 #include "Vector2.h"
 
+namespace krono
+{
+
 template <typename T>
 class Rect
 {
@@ -16,3 +19,5 @@ private:
 
 typedef Rect<int> Recti;
 typedef Rect<float> Rectf;
+
+}

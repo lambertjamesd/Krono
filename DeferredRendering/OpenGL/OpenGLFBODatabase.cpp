@@ -2,6 +2,9 @@
 #include "OpenGLFBODatabase.h"
 #include "Core/Hash.h"
 
+namespace krono
+{
+
 OpenGLFBODatabase::OpenGLFBODatabase(void)
 {
 
@@ -36,4 +39,6 @@ OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<Open
 	{
 		return *findResult->second;
 	}
+}
+
 }

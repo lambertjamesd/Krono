@@ -2,6 +2,9 @@
 #include "OpenGLShaderDatabase.h"
 #include "Core/Hash.h"
 
+namespace krono
+{
+
 OpenGLShaderDatabase::OpenGLShaderDatabase(void)
 {
 }
@@ -37,4 +40,6 @@ Auto<OpenGLShaderProgram> OpenGLShaderDatabase::GetProgram(const OpenGLVertexSha
 	}
 
 	return result;
+}
+
 }

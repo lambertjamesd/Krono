@@ -3,6 +3,9 @@
 #include "Interface/DepthBuffer.h"
 #include "DX11Texture2D.h"
 
+namespace krono
+{
+
 class DX11DepthBuffer : public DepthBuffer
 {
 public:
@@ -22,3 +25,4 @@ private:
 	static DXGI_FORMAT gDepthViewFormatmapping[DataFormat::TypeCount];
 };
 
+}

@@ -1,6 +1,9 @@
 
 #include "Hash.h"
 
+namespace krono
+{
+
 HashUInt32::HashUInt32(UInt32 initialDigest) : Hash(&initialDigest)
 {
 
@@ -26,4 +29,6 @@ UInt32 HashUInt32::GetDigest() const
 	UInt32 result;
 	Hash::GetDigest(&result);
 	return result;
+}
+
 }

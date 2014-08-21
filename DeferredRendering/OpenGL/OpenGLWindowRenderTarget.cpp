@@ -1,6 +1,14 @@
 
 #include "OpenGLWindowRenderTarget.h"
-#include <GL/glew.h>
+
+#if defined(USE_XLIB)
+
+#include "Linux/XLibWindow.h"
+
+#endif
+
+namespace krono
+{
 
 #ifdef _WIN32
 
@@ -73,18 +81,25 @@ GLuint OpenGLWindowRenderTarget::GetGLObject() const
 	return 0;
 }
 
-#else
+#elif defined(USE_XLIB)
 
 OpenGLWindowRenderTarget::OpenGLWindowRenderTarget(Window& window) :
-	WindowRenderTarget(window.GetSize())
+	WindowRenderTarget(window.GetSize()),
+	mWindowHandle(window.GetWindowHandle())
 {
+	XLibWindow *xLibWindow = dynamic_cast<XLibWindow*>(&window);
+	mWindowDisplay = xLibWindow->GetDisplay();
 
+	mContext = glXCreateContext(mWindowDisplay, xLibWindow->GetVisualInfo(), NULL, GL_TRUE);
+
+	MakeActive();
 }
 
 
 OpenGLWindowRenderTarget::~OpenGLWindowRenderTarget(void)
 {
-
+	glXMakeCurrent(mWindowDisplay, None, NULL);
+	glXDestroyContext(mWindowDisplay, mContext);
 }
 
 Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
@@ -94,6 +109,8 @@ Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
 
 void OpenGLWindowRenderTarget::Clear(const Colorf& color)
 {
+	MakeActive();
+
 	GLuint existingBuffer;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&existingBuffer);
 
@@ -106,7 +123,7 @@ void OpenGLWindowRenderTarget::Clear(const Colorf& color)
 	
 void OpenGLWindowRenderTarget::Present(void)
 {
-
+	glXSwapBuffers(mWindowDisplay, mWindowHandle);
 }
 
 OpenGLRenderTarget::Type OpenGLWindowRenderTarget::GetType() const
@@ -119,4 +136,12 @@ GLuint OpenGLWindowRenderTarget::GetGLObject() const
 	return 0;
 }
 
+void OpenGLWindowRenderTarget::MakeActive()
+{
+	glXMakeCurrent(mWindowDisplay, mWindowHandle, mContext);
+}
+
+
 #endif
+
+}

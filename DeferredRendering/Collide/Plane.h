@@ -2,6 +2,9 @@
 
 #include "Math/Vector3.h"
 
+namespace krono
+{
+
 class Plane
 {
 public:
@@ -13,3 +16,4 @@ private:
 	float mDistance;
 };
 
+}

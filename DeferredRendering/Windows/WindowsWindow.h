@@ -1,6 +1,9 @@
 #pragma once
 #include "Interface/Window.h"
 
+namespace krono
+{
+
 class WindowsWindow :
 	public Window
 {
@@ -29,3 +32,4 @@ private:
 	static LRESULT CALLBACK  WindowsProcedure(HWND windowHandle, UINT message, WPARAM wParameter, LPARAM lParameter);
 };
 
+}

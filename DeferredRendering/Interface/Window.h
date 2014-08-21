@@ -4,14 +4,24 @@
 #include "RenderTarget.h"
 #include "Core/Memory.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <Windows.h>
+#endif
+
+namespace krono
+{
+
+#if defined(_WIN32)
 
 typedef HWND WindowHandle;
 
+#elif defined(USE_XLIB)
+
+typedef unsigned long WindowHandle;
+
 #else
 
-typedef void* WindowHandle;
+#error no window system found
 
 #endif
 
@@ -36,4 +46,6 @@ private:
 	Window(const Window& other);
 	Window& operator=(const Window& other);
 };
+
+}
 

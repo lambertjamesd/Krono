@@ -3,6 +3,9 @@
 #include "Interface/Sampler.h"
 #include "OpenGLCommon.h"
 
+namespace krono
+{
+
 class OpenGLSampler : public Sampler
 {
 public:
@@ -19,3 +22,4 @@ private:
 	static GLenum gEdgeSampleMapping[EdgeSampling::Count];
 };
 
+}

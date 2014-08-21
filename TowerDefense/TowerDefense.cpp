@@ -13,11 +13,13 @@
 #include <iomanip>
 
 #include <Krono.h>
-using namespace std;
 
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "GameObject/Renderer.h"
+
+using namespace std;
+using namespace krono;
 
 std::string ReadFileContents(const char *filename)
 {
@@ -39,7 +41,7 @@ std::string ReadFileContents(const char *filename)
 int main(int argc, char* argv[])
 {
 
-	Graphics::API api = Graphics::DirectX11;
+	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
@@ -50,12 +52,12 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	window->Show();
+
 	Auto<VertexShader> vertexShader;
 	Auto<PixelShader> pixelShader;
 
 	Auto<ResourceManager> resourceManager;
-
-	window->Show();
 	
 	Auto<WindowRenderTarget> windowRenderTarget;
 	Auto<DepthBuffer> depthBuffer;
@@ -70,7 +72,7 @@ int main(int argc, char* argv[])
 	krono::Scene sceneTest;
 	krono::SceneView sceneView(sceneTest);
 
-	Scene scene;
+	::Scene scene;
 
 	GameObject::Ref objectReference = scene.CreateGameObject();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
@@ -118,7 +120,6 @@ int main(int argc, char* argv[])
 	{
 		const char* what = exception.what();
 		std::cerr << what;
-		std::cin.get();
 		exit(1);
 	}
 

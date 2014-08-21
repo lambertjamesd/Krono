@@ -4,6 +4,9 @@
 
 #include "Interface/VertexBuffer.h"
 
+namespace krono
+{
+
 class DX11VertexBuffer :
 	public VertexBuffer
 {
@@ -26,3 +29,4 @@ private:
 	size_t mCurrentVertexCount;
 };
 
+}

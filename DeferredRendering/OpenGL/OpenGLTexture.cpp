@@ -1,6 +1,8 @@
 
 #include "OpenGLTexture.h"
 
+namespace krono
+{
 
 OpenGLTexture::OpenGLTexture(void)
 {
@@ -36,4 +38,6 @@ GLenum OpenGLTexture::gTextureChannelMapping[] = {
 GLenum OpenGLTexture::GetTextureChannelType(size_t channelCount)
 {
 	return gTextureChannelMapping[channelCount - 1];
+}
+
 }

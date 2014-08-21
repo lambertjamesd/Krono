@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 
+namespace krono
+{
+
 class MeshGroupLoader : public ResourceLoader
 {
 public:
@@ -16,3 +19,4 @@ public:
 private:
 };
 
+}

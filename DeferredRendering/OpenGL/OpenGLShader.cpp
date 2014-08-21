@@ -4,6 +4,9 @@
 #include <string>
 #include <iostream>
 
+namespace krono
+{
+
 OpenGLVertexShader::OpenGLVertexShader(const std::string& source) :
 	mObjectID(OpenGLObjectIDGenerator::GetNextID())
 {
@@ -81,4 +84,6 @@ bool OpenGLPixelShader::IsValid() const
 OpenGLObjectID OpenGLPixelShader::GetObjectID() const
 {
 	return mObjectID;
+}
+
 }

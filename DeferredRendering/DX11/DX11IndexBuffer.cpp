@@ -2,6 +2,8 @@
 #include "DX11IndexBuffer.h"
 #include "HResultException.h"
 
+namespace krono
+{
 
 DX11IndexBuffer::DX11IndexBuffer(ID3D11Device *device, IndexBuffer::Format format) :
 	IndexBuffer(format),
@@ -94,4 +96,6 @@ void DX11IndexBuffer::RebuildBuffer(size_t indexCount)
 	
 	mBuffer = newBuffer;
 	mCurrentIndexCount = indexCount;
+}
+
 }

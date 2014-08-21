@@ -8,6 +8,9 @@
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLTextureStorage.h"
 
+namespace krono
+{
+
 class ShaderVariable
 {
 public:
@@ -130,3 +133,5 @@ private:
 
 	OpenGLTextureMapping mTextureMapping;
 };
+
+}

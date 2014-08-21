@@ -4,6 +4,9 @@
 #include "Core/Memory.h"
 #include "Interface/Graphics.h"
 
+namespace krono
+{
+
 class Technique
 {
 public:
@@ -17,3 +20,4 @@ private:
 	Auto<PixelShader> mPixelShader;
 };
 
+}

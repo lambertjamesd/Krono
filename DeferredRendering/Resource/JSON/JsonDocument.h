@@ -3,6 +3,9 @@
 #include "Resource/Resource.h"
 #include "JSON/json.h"
 
+namespace krono
+{
+
 class JsonDocument : public Resource
 {
 public:
@@ -16,3 +19,4 @@ private:
 	json::Value mRoot;
 };
 
+}

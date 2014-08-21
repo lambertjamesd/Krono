@@ -1,5 +1,8 @@
 #pragma once
 
+namespace krono
+{
+
 class Object
 {
 public:
@@ -8,3 +11,4 @@ public:
 private:
 };
 
+}

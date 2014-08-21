@@ -2,6 +2,9 @@
 
 #include "WindowsWindow.h"
 
+namespace krono
+{
+
 WNDCLASS WindowsWindow::gWindowClass = {};
 bool WindowsWindow::gWindowClassInitialized = false;
 const wchar_t WindowsWindow::gWindowClassName[] = L"Game Window";
@@ -118,4 +121,6 @@ LRESULT CALLBACK  WindowsWindow::WindowsProcedure(HWND windowHandle, UINT messag
             return DefWindowProc(windowHandle, message, wParameter, lParameter);
     }
     return 0;
+}
+
 }

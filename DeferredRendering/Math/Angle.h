@@ -2,6 +2,9 @@
 
 #include "Math.h"
 
+namespace krono
+{
+
 template <typename T>
 class Degrees;
 
@@ -43,3 +46,5 @@ private:
 
 typedef Degrees<float> Degreesf;
 typedef Radians<float> Radiansf;
+
+}

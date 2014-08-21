@@ -3,6 +3,9 @@
 #include <vector>
 #include "InputLayout.h"
 
+namespace krono
+{
+
 class DataIterator
 {
 public:
@@ -54,3 +57,5 @@ protected:
 	InputLayout mInputLayout;
 private:
 };
+
+}

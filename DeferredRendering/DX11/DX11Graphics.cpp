@@ -19,6 +19,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 DX11Graphics::DX11Graphics(void) :
 	mNeedNewInputMapping(false),
 	mHasIndexBuffer(false)
@@ -329,4 +332,6 @@ void DX11Graphics::UpdatePendingChanges()
 		mDeviceContext->IASetInputLayout(mCurrentVertexShader->GetInputLayout(mCurrentVertexBuffer->GetInputLayout()));
 		mNeedNewInputMapping = false;
 	}
+}
+
 }

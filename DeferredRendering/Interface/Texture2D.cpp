@@ -1,6 +1,10 @@
 
 #include "Texture2D.h"
 
+
+namespace krono
+{
+
 Texture2D::Texture2D(const Vector2i& size, DataFormat format) :
 	mSize(size),
 	mFormat(format)
@@ -21,4 +25,6 @@ Vector2i Texture2D::GetSize() const
 DataFormat Texture2D::GetFormat() const
 {
 	return mFormat;
+}
+
 }

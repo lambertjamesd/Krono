@@ -5,6 +5,9 @@
 #include "OpenGLShaderProgram.h"
 #include <map>
 
+namespace krono
+{
+
 class OpenGLShaderDatabase
 {
 public:
@@ -16,3 +19,4 @@ private:
 	std::map<UInt32, Auto<OpenGLShaderProgram> > mSavedShaders;
 };
 
+}

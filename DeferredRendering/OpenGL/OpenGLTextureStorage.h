@@ -7,6 +7,9 @@
 #include "OpenGLTexture.h"
 #include "OpenGLSampler.h"
 
+namespace krono
+{
+
 class OpenGLTextureStorage;
 
 class OpenGLTextureMapping
@@ -57,4 +60,6 @@ private:
 
 	bool mIsDirty;
 };
+
+}
 

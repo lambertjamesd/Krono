@@ -4,6 +4,9 @@
 #include <utility>
 #include "Core/Types.h"
 
+namespace krono
+{
+
 class ConstantBufferLayout
 {
 public:
@@ -40,3 +43,4 @@ protected:
 	ConstantBufferLayout mLayout;
 };
 
+}

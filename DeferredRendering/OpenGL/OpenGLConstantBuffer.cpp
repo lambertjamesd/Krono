@@ -4,6 +4,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 OpenGLConstantBuffer::OpenGLConstantBuffer(const ConstantBufferLayout& layout) :
 	ConstantBuffer(layout)
 {
@@ -64,3 +67,5 @@ void OpenGLConstantBuffer::ModifyProjectionMatrices()
 
 Matrix4f OpenGLConstantBuffer::gProjectionMatrixConversion(Matrix4f::Translation(Vector3f(0.0f, 0.0f, -1.0f)) * Matrix4f::Scale(Vector3f(1.0f, 1.0f, 2.0f)));
 Matrix4f OpenGLConstantBuffer::gInvProjectionMatrixConversion(Matrix4f::Scale(Vector3f(1.0f, 1.0f, 0.5f)) * Matrix4f::Translation(Vector3f(0.0f, 0.0f, 1.0f)));
+
+}

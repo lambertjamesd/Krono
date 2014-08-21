@@ -7,6 +7,9 @@
 #include <cstring>
 #include <algorithm>
 
+namespace krono
+{
+
 template <size_t Rows, size_t Columns, typename T = float> 
 class Matrix
 {
@@ -259,3 +262,5 @@ typedef Matrix<2, 2, float> Matrix2f;
 
 Vector4f operator*(const Matrix4f& lhs, const Vector4f& rhs);
 Vector4f operator*(const Vector4f& lhs, const Matrix4f& rhs);
+
+}

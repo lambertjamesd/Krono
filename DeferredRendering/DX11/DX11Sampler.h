@@ -4,6 +4,9 @@
 #include "DX11SmartPtr.h"
 #include "DX11Common.h"
 
+namespace krono
+{
+
 class DX11Sampler : public Sampler
 {
 public:
@@ -23,3 +26,4 @@ private:
 	static D3D11_FILTER FilterFromDescription(const SamplerDescription& description);
 };
 
+}

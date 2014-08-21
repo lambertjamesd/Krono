@@ -2,6 +2,9 @@
 #include "MeshGroup.h"
 
 
+namespace krono
+{
+
 MeshGroup::MeshGroup(void)
 {
 }
@@ -28,4 +31,6 @@ Auto<Mesh>& MeshGroup::GetMesh(const std::string& name)
 	{
 		return result->second;
 	}
+}
+
 }

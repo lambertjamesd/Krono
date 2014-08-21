@@ -6,6 +6,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 Texture2DLoader::Texture2DLoader(void)
 {
 }
@@ -119,4 +122,6 @@ Auto<Object> Texture2DLoader::LoadResource(ResourceManager& resourceManager, ist
 	}
 
 	return result;
+}
+
 }

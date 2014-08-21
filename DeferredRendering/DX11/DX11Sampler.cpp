@@ -3,6 +3,9 @@
 #include "HResultException.h"
 
 	
+namespace krono
+{
+
 D3D11_TEXTURE_ADDRESS_MODE DX11Sampler::gAddressModes[EdgeSampling::Count] = {
 	D3D11_TEXTURE_ADDRESS_WRAP,
 	D3D11_TEXTURE_ADDRESS_MIRROR,
@@ -79,4 +82,6 @@ D3D11_FILTER DX11Sampler::FilterFromDescription(const SamplerDescription& descri
 		size_t index = (description.minFilter << 2) | (description.magFilter << 1) | description.mipFilter;
 		return gRegularFilters[description.samplingMode][index];
 	}
+}
+
 }

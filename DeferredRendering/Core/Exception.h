@@ -2,6 +2,9 @@
 #include <exception>
 #include <string>
 
+namespace krono
+{
+
 class Exception : public std::exception
 {
 public:
@@ -15,3 +18,4 @@ private:
 	std::string mWhatMessage;
 };
 
+}

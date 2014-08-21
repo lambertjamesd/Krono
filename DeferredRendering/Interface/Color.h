@@ -1,5 +1,8 @@
 #pragma once
 
+namespace krono
+{
+
 template <typename T>
 class Color
 {
@@ -12,3 +15,5 @@ private:
 };
 
 typedef Color<float> Colorf;
+
+}

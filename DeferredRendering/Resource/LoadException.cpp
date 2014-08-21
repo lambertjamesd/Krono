@@ -1,6 +1,8 @@
 
 #include "LoadException.h"
 
+namespace krono
+{
 
 LoadException::LoadException(const std::string& filename, const std::string& message) :
 	mFilename(filename),
@@ -23,4 +25,6 @@ std::string LoadException::BuildWhat() const
 	result += mMessage;
 
 	return result;
+}
+
 }

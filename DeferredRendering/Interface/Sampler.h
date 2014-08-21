@@ -4,6 +4,9 @@
 #include "Core/Types.h"
 #include "Color.h"
 
+namespace krono
+{
+
 namespace InterpolationMode
 {
 	enum Type
@@ -73,3 +76,4 @@ public:
 	virtual ~Sampler(void);
 };
 
+}

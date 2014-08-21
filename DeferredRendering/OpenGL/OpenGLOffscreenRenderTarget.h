@@ -4,6 +4,9 @@
 #include "OpenGLRenderTarget.h"
 #include "OpenGLTexture2D.h"
 
+namespace krono
+{
+
 class OpenGLOffscreenRenderTarget : public RenderTarget, public OpenGLRenderTarget
 {
 public:
@@ -21,3 +24,4 @@ private:
 	Auto<OpenGLTexture2D> mTextureTarget;
 };
 
+}

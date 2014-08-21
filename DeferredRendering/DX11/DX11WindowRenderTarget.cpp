@@ -3,6 +3,9 @@
 #include "DX11Graphics.h"
 #include "HResultException.h"
 
+namespace krono
+{
+
 DX11WindowRenderTarget::DX11WindowRenderTarget(DX11Graphics& graphics, Window& window) :
 	WindowRenderTarget(window.GetSize()),
 	mDeviceContext(graphics.GetContext())
@@ -81,4 +84,6 @@ void DX11WindowRenderTarget::Clear(const Colorf& color)
 {
 	FLOAT colorArray[] = {color.r, color.g, color.b, color.a};
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, colorArray);
+}
+
 }
