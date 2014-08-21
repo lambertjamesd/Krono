@@ -13,3 +13,8 @@ GameObject::~GameObject(void)
 {
 
 }
+
+Scene& GameObject::GetScene()
+{
+	return *mScene;
+}

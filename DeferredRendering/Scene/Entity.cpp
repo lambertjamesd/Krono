@@ -4,10 +4,6 @@
 #include "SceneIndex.h"
 #include <assert.h>
 
-EntityData::EntityData() :
-	viewTransform(Matrix4f::Identity())
-{
-
 namespace krono
 {
 
@@ -56,7 +52,7 @@ void Entity::SetMesh(Auto<Mesh>& mesh)
 	}
 }
 
-Auto<Mesh>& Entity::GetMesh()
+const Auto<Mesh>& Entity::GetMesh() const
 {
 	return mMesh;
 }
@@ -66,7 +62,7 @@ size_t Entity::GetMaterialCount() const
 	return mMaterials.size();
 }
 
-void Entity::SetMaterial(Auto<Material>& material, size_t index)
+void Entity::SetMaterial(const Auto<Material>& material, size_t index)
 {
 	assert(index < mMaterials.size());
 	mMaterials[index] = material;

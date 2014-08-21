@@ -8,6 +8,8 @@
 class Mesh : public Resource
 {
 public:
+	typedef Auto<Mesh> Ptr;
+
 	Mesh(void);
 	~Mesh(void);
 

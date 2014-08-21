@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Render/RenderManager.h"
 #include "GameObject/GameObject.h"
 #include <vector>
 
@@ -10,7 +11,11 @@ public:
 	~Scene(void);
 
 	GameObject::Ref CreateGameObject();
+
+	RenderManager& GetRenderManager();
 private:
+	RenderManager mRenderManager;
+
 	std::vector<GameObject::Ptr> mGameObjects;
 };
 

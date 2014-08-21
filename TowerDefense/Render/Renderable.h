@@ -1,5 +1,7 @@
 #pragma once
 
+class RenderManager;
+
 class Renderable
 {
 public:
@@ -7,6 +9,7 @@ public:
 
 	virtual void PreRender() = 0;
 protected:
-	Renderable(void);
+	Renderable(RenderManager& manager);
+	RenderManager &mRenderManager;
 };
 

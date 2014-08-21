@@ -16,6 +16,8 @@
 using namespace std;
 
 #include "GameObject/GameObject.h"
+#include "Scene/Scene.h"
+#include "GameObject/Renderer.h"
 
 std::string ReadFileContents(const char *filename)
 {
@@ -68,6 +70,11 @@ int main(int argc, char* argv[])
 	krono::Scene sceneTest;
 	krono::SceneView sceneView(sceneTest);
 
+	Scene scene;
+
+	GameObject::Ref objectReference = scene.CreateGameObject();
+	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
+
 	sceneView.SetViewMatrix(Matrix4f::Translation(Vector3f(0.5f, 0.5f, 0.5f)) * Matrix4f::Scale(Vector3f(0.5f, 0.5f, 0.5f)));
 
 	try
@@ -102,6 +109,10 @@ int main(int argc, char* argv[])
 		Auto<Material> materialTest(new Material());
 		materialTest->AddTechnique(0, Technique(vertexShader, pixelShader));
 		entityTest->SetMaterial(materialTest, 0);
+		
+		Renderer::Ptr rendererPtr = renderer.lock();
+		rendererPtr->SetMesh(meshTest);
+		rendererPtr->SetMaterial(materialTest, 0);
 	}
 	catch (Exception& exception)
 	{
@@ -125,13 +136,6 @@ int main(int argc, char* argv[])
 
 		sceneView.Render(*graphics);
 
-		windowRenderTarget->Present();
-
-		window->Update(false);
-	}
-
-	return 0;
-}
 		windowRenderTarget->Present();
 
 		window->Update(false);

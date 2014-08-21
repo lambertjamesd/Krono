@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include <algorithm>
 
-Transform::Transform(GameObject* parentGameObject) :
+Transform::Transform(GameObject& parentGameObject) :
 	Component(parentGameObject),
 	mIsTransformDirty(false),
 	mTransform(Matrix4f::Identity()),
@@ -80,7 +80,7 @@ const Transform::Ref& Transform::GetParent() const
 	return mParent;
 }
 
-const Matrix4f& Transform::LocalTransform() const
+const Matrix4f& Transform::GetLocalTransform() const
 {
 	if (mIsTransformDirty)
 	{
@@ -91,17 +91,17 @@ const Matrix4f& Transform::LocalTransform() const
 	return mTransform;
 }
 
-const Matrix4f& Transform::WorldTransform() const
+const Matrix4f& Transform::GetWorldTransform() const
 {
 	if (mIsWorldTransformDirty)
 	{
 		if (mParent.expired())
 		{
-			const_cast<Matrix4f&>(mWolrdTransform) = LocalTransform();
+			const_cast<Matrix4f&>(mWolrdTransform) = GetLocalTransform();
 		}
 		else
 		{
-			const_cast<Matrix4f&>(mWolrdTransform) = mParent.lock()->WorldTransform() * LocalTransform();
+			const_cast<Matrix4f&>(mWolrdTransform) = mParent.lock()->GetWorldTransform() * GetLocalTransform();
 		}
 
 		const_cast<bool&>(mIsWorldTransformDirty) = false;
@@ -112,7 +112,7 @@ const Matrix4f& Transform::WorldTransform() const
 
 void Transform::RemoveChild(Transform* child)
 {
-	mChildren.erase(std::find(mChildren.begin(), mChildren.end(), child));
+	mChildren.erase(std::remove(mChildren.begin(), mChildren.end(), child), mChildren.end());
 }
 
 void Transform::AddChild(Transform* child)

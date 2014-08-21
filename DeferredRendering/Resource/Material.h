@@ -12,6 +12,8 @@
 class Material : public Resource
 {
 public:
+	typedef Auto<Material> Ptr;
+
 	Material(void);
 	~Material(void);
 

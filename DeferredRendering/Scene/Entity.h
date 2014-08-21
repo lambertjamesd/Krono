@@ -28,10 +28,10 @@ public:
 	const Matrix4f& GetTransform() const;
 
 	void SetMesh(Auto<Mesh>& mesh);
-	Auto<Mesh>& GetMesh();
+	const Auto<Mesh>& GetMesh() const;
 
 	size_t GetMaterialCount() const;
-	void SetMaterial(Auto<Material>& material, size_t index);
+	void SetMaterial(const Auto<Material>& material, size_t index);
 	const Auto<Material>& GetMaterial(size_t index) const;
 
 	void SetIsVisible(bool value);

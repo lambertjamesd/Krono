@@ -4,3 +4,4 @@ Release/
 */Release/
 ipch/
 *~
+*.sdf

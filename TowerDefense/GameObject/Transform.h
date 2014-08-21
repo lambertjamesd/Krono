@@ -9,7 +9,7 @@ public:
 	typedef std::shared_ptr<Transform> Ptr;
 	typedef std::weak_ptr<Transform> Ref;
 
-	Transform(GameObject* parentGameObject);
+	Transform(GameObject& parentGameObject);
 	~Transform(void);
 
 	const Quaternionf& GetLocalOrientation() const;
@@ -23,8 +23,8 @@ public:
 	void SetParent(const Transform::Ref& value);
 	const Transform::Ref& GetParent() const;
 
-	const Matrix4f& LocalTransform() const;
-	const Matrix4f& WorldTransform() const;
+	const Matrix4f& GetLocalTransform() const;
+	const Matrix4f& GetWorldTransform() const;
 private:
 	void RemoveChild(Transform* child);
 	void AddChild(Transform* child);

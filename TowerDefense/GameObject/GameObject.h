@@ -33,10 +33,12 @@ public:
 	template <typename T>
 	std::weak_ptr<T> AddComponent()
 	{
-		std::shared_ptr<T> result(new T(this));
+		std::shared_ptr<T> result(new T(*this));
 		mComponents.push_back(result);
 		return result;
 	}
+
+	Scene& GetScene();
 private:
 	friend class Scene;
 

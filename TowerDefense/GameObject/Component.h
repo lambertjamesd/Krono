@@ -11,10 +11,12 @@ public:
 
 	typedef std::shared_ptr<Component> Ptr;
 	typedef std::weak_ptr<Component> Ref;
+
+	GameObject& GetGameObject();
 protected:
-	Component(GameObject* parentGameObject);
+	Component(GameObject& parentGameObject);
 	
-	GameObject *mGameObject;
+	GameObject &mGameObject;
 private:
 	Component(const Component& other);
 	Component& operator=(const Component& other);

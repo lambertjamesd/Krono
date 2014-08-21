@@ -18,3 +18,8 @@ GameObject::Ref Scene::CreateGameObject()
 	mGameObjects.push_back(result);
 	return result;
 }
+
+RenderManager& Scene::GetRenderManager()
+{
+	return mRenderManager;
+}
