@@ -4,6 +4,10 @@
 #include "SceneIndex.h"
 #include <assert.h>
 
+EntityData::EntityData() :
+	viewTransform(Matrix4f::Identity())
+{
+
 namespace krono
 {
 

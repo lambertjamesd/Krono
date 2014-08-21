@@ -4,14 +4,27 @@
 
 namespace krono
 {
+{
 
 Scene::Scene(void) :
 	mSceneIndex(new SceneIndexArray())
+Scene::~Scene(void)
 {
 
+
+}
+{
+	mSceneIndex->CollideFrustrum(frustrum, hitCallback);
 }
 
-Scene::~Scene(void)
+Entity* Scene::CreateEntity()
+{
+	Auto<Entity> result(new Entity(mSceneIndex.get()));
+	mSceneIndex->InsertEntity(result);
+	return result.get();
+}
+
+void Scene::RemoveEntity(Entity* entity)
 {
 
 }

@@ -194,7 +194,6 @@
     <ClCompile Include="Resource\FormatException.cpp" />
     <ClCompile Include="Interface\Sampler.cpp" />
     <ClCompile Include="Scene\SceneView.cpp" />
-    <ClCompile Include="Collide\BoundingBox.cpp" />
     <ClCompile Include="DX11\DX11ConstantBuffer.cpp" />
     <ClCompile Include="DX11\DX11DepthBuffer.cpp" />
     <ClCompile Include="DX11\DX11RenderTarget.cpp" />
