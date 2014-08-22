@@ -120,6 +120,8 @@ private:
 	
 	static ShaderVariable VariableFromGLType(const std::string& name, GLenum glType, int count, GLuint index);
 
+	static const size_t MaxAttributeNameLength = 256;
+
 	GLuint mProgram;
 
 	std::map<UInt32, OpenGLVertexLayout> mLayoutMapping;

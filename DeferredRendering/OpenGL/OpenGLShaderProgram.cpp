@@ -251,7 +251,7 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 	GLint count;
 	glGetProgramInterfaceiv(mProgram, type, GL_ACTIVE_RESOURCES, &count);
 
-	std::vector<GLchar> nameData(256);
+	GLchar nameData[MaxAttributeNameLength];
 	GLenum properties[] = {GL_NAME_LENGTH, GL_TYPE, GL_ARRAY_SIZE};
 	GLint values[3];
 
@@ -262,9 +262,8 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 			3, properties, 
 			3, &actualAmountRead, values);
 
-		nameData.resize(values[0]);
-		glGetProgramResourceName(mProgram, type, i, nameData.size(), NULL, &nameData[0]);
-		std::string name((char*)&nameData[0], nameData.size() - 1);
+		glGetProgramResourceName(mProgram, type, i, values[0] + 1, NULL, nameData);
+		std::string name(nameData);
 
 		target.push_back(VariableFromGLType(name, values[1], values[2], i));
 	}
