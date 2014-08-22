@@ -265,9 +265,10 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 			3, properties, 
 			3, &actualAmountRead, values);
 
-		nameData.resize(values[0]);
+		nameData.resize(values[0] + 1);
 		glGetProgramResourceName(mProgram, type, i, nameData.size(), NULL, &nameData[0]);
-		std::string name((char*)&nameData[0], nameData.size() - 1);
+		std::string name((char*)&nameData[0], nameData.size());
+		name.resize(strlen(name.c_str()));
 
 		target.push_back(VariableFromGLType(name, values[1], values[2], i));
 	}

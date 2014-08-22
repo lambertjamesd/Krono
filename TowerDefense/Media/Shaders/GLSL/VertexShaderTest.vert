@@ -1,7 +1,7 @@
 #version 440
 
-attribute vec3 attrPOSITION0;
-attribute vec2 attrTEXCOORD0;
+in vec3 attrPOSITION0;
+in vec2 attrTEXCOORD0;
 
 out vec2 texCoord;
 
