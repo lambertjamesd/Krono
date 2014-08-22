@@ -1,6 +1,10 @@
 project (DeferredRendering)
 
 set (SOURCE_FILES
+	Compositor/CompositeStage.cpp
+	Compositor/Compositor.cpp
+	Compositor/RenderState.cpp
+	Compositor/RenderStateParameters.cpp
 	Interface/Texture.cpp
 	Interface/IndexBuffer.cpp
 	Interface/Shader.cpp
@@ -104,6 +108,7 @@ if (USE_OPENGL4_4)
 		OpenGL/OpenGLVertexBuffer.cpp
 		OpenGL/OpenGLTextureStorage.cpp
 		OpenGL/OpenGLConstantBuffer.cpp
+		OpenGL/OpenGLConstantBufferStorage.cpp
 		OpenGL/OpenGLShaderDatabase.cpp
 		OpenGL/OpenGLShaderProgram.cpp
 		OpenGL/OpenGLOffscreenRenderTarget.cpp

@@ -7,6 +7,7 @@
 #include <map>
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLTextureStorage.h"
+#include "OpenGLConstantBufferStorage.h"
 
 namespace krono
 {
@@ -101,6 +102,7 @@ public:
 
 	void BindVertexBuffer(OpenGLVertexBuffer& buffer);
 	void MapTextures(OpenGLTextureStorage& texureStorage) const;
+	void MapConstantBuffers(OpenGLConstantBufferStorage& constantStorage) const;
 protected:
 	
 private:
@@ -108,10 +110,12 @@ private:
 	OpenGLShaderProgram& operator=(const OpenGLShaderProgram& other);
 	
 	void PopulateVariables(std::vector<ShaderVariable>& target, GLenum type);
+	void PopulateShaderReferencing(std::vector<size_t>& target, size_t count, GLenum type);
 	void PopulateAttributes();
 	void PopulateUniforms();
 	void PopulateOutputs();
 	void PopulateTextureMapping();
+	void PopulateConstantBufferMapping();
 
 	static const size_t MIN_SAMPLER_SUFFIX_LENGTH = 2;
 	static const char SAMPLER_SUFFIX_CHAR = 's';
@@ -134,6 +138,7 @@ private:
 	std::vector<ShaderVariable> mOutputs;
 
 	OpenGLTextureMapping mTextureMapping;
+	OpenGLConstantBufferMapping mConstantBufferMapping;
 };
 
 }

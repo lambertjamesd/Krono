@@ -272,15 +272,35 @@ void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 	mCurrentVertexBuffer->Use();
 }
 
-void DX11Graphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
+void DX11Graphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage)
 {
 	DX11ConstantBuffer *dxContantBuffer = dynamic_cast<DX11ConstantBuffer*>(constantBuffer.get());
 
 	if (dxContantBuffer != NULL)
 	{
 		ID3D11Buffer *dxBuffer = dxContantBuffer->GetBuffer();
-		mDeviceContext->VSSetConstantBuffers(slot, 1, &dxBuffer);
-		mDeviceContext->PSSetConstantBuffers(slot, 1, &dxBuffer);
+
+		switch (stage)
+		{
+		case ShaderStage::PixelShader:
+			mDeviceContext->PSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		case ShaderStage::HullShader:
+			mDeviceContext->HSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		case ShaderStage::DomainShader:
+			mDeviceContext->DSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		case ShaderStage::GeometryShader:
+			mDeviceContext->GSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		case ShaderStage::VertexShader:
+			mDeviceContext->VSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		case ShaderStage::ComputeShader:
+			mDeviceContext->CSSetConstantBuffers(slot, 1, &dxBuffer);
+			break;
+		}
 	}
 }
 

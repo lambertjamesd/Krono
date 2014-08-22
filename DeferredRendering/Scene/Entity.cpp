@@ -93,7 +93,8 @@ void Entity::Render(Graphics& graphics, size_t technique)
 	if (mIsVisisble)
 	{
 		RebuildBuffer(graphics);
-		graphics.SetConstantBuffer(mEntityBuffer, ENTITY_DATA_INDEX);
+		graphics.SetConstantBuffer(mEntityBuffer, ENTITY_DATA_INDEX, ShaderStage::PixelShader);
+		graphics.SetConstantBuffer(mEntityBuffer, ENTITY_DATA_INDEX, ShaderStage::VertexShader);
 
 		for (size_t i = 0; i < mMesh->GetSubMeshCount() && i < mMaterials.size(); ++i)
 		{

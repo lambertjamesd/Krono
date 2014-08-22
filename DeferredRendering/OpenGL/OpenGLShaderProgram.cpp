@@ -201,6 +201,11 @@ void OpenGLShaderProgram::MapTextures(OpenGLTextureStorage& texureStorage) const
 	texureStorage.UseMapping(mTextureMapping);
 }
 
+void OpenGLShaderProgram::MapConstantBuffers(OpenGLConstantBufferStorage& constantStorage) const
+{
+	constantStorage.UseMapping(mConstantBufferMapping);
+}
+
 const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayout& inputLayout)
 {
 	auto existingLayout = mLayoutMapping.find(inputLayout.GetSignature());
@@ -272,6 +277,40 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 	}
 }
 
+void OpenGLShaderProgram::PopulateShaderReferencing(std::vector<size_t>& target, size_t count, GLenum type)
+{
+	GLenum properties[ShaderStage::TypeCount] = {
+		GL_REFERENCED_BY_VERTEX_SHADER, 
+		GL_REFERENCED_BY_TESS_CONTROL_SHADER, 
+		GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+		GL_REFERENCED_BY_GEOMETRY_SHADER,
+		GL_REFERENCED_BY_FRAGMENT_SHADER,
+		GL_REFERENCED_BY_COMPUTE_SHADER
+	};
+
+	GLint values[ShaderStage::TypeCount];
+
+	for (size_t index = 0; index < count; ++index)
+	{
+		GLsizei actualAmountRead;
+		glGetProgramResourceiv(mProgram, type, index, 
+			ShaderStage::TypeCount, properties, 
+			ShaderStage::TypeCount, &actualAmountRead, values);
+
+		size_t result = 0;
+		
+		for (size_t stage = 0; stage < ShaderStage::TypeCount; ++stage)
+		{
+			if (values[stage])
+			{
+				result |= (1 << stage);
+			}
+		}
+
+		target.push_back(result);
+	}
+}
+
 void OpenGLShaderProgram::PopulateAttributes()
 {
 	PopulateVariables(mAttributes, GL_PROGRAM_INPUT);
@@ -340,6 +379,41 @@ void OpenGLShaderProgram::PopulateTextureMapping()
 	}
 
 	glUseProgram(previousProgram);
+}
+
+void OpenGLShaderProgram::PopulateConstantBufferMapping()
+{
+	GLint count;
+	glGetProgramInterfaceiv(mProgram, GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES, &count);
+
+	std::vector<size_t> constantBufferUsage;
+	PopulateShaderReferencing(constantBufferUsage, count, GL_UNIFORM_BLOCK);
+
+	size_t uniformBlockIndex = 0;
+	
+	for (size_t uniformBlock = 0; uniformBlock < count; ++uniformBlock)
+	{
+		ShaderStage::Type shaderStage = ShaderStage::TypeCount;
+	
+		for (size_t stage = 0; stage < ShaderStage::TypeCount; ++stage)
+		{
+			if (constantBufferUsage[uniformBlock] & (1 << stage))
+			{
+				shaderStage = (ShaderStage::Type)stage;
+				break;
+			}
+		}
+
+		if (shaderStage != ShaderStage::TypeCount)
+		{
+			GLint previousBinding;
+			glGetActiveUniformBlockiv(mProgram, uniformBlock, GL_UNIFORM_BLOCK_BINDING, &previousBinding);
+			mConstantBufferMapping.AddConstantBuffer(shaderStage, previousBinding);
+
+			glUniformBlockBinding(mProgram, uniformBlock, uniformBlockIndex);
+			++uniformBlockIndex;
+		}
+	}
 }
 
 size_t OpenGLShaderProgram::GetSamplerIndex(const std::string& uniformName)

@@ -37,6 +37,8 @@ bool OpenGLTextureMapping::operator==(const OpenGLTextureMapping& other) const
 	return mElements.size() == other.mElements.size() && std::equal(mElements.cbegin(), mElements.cend(), other.mElements.cbegin());
 }
 
+////////////////////////////////////////////
+
 OpenGLTextureStorage::OpenGLTextureStorage() :
 	mIsDirty(false)
 {

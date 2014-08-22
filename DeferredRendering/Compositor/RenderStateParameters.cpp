@@ -1,5 +1,6 @@
 #include "RenderStateParameters.h"
 
+#include <cstring>
 
 namespace krono
 {

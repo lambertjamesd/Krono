@@ -6,6 +6,7 @@
 #include "OpenGLShaderDatabase.h"
 #include "OpenGLFBODatabase.h"
 #include "OpenGLTextureStorage.h"
+#include "OpenGLConstantBufferStorage.h"
 
 namespace krono
 {
@@ -49,7 +50,7 @@ public:
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader);
 	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer);
 	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer);
-	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot);
+	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage);
 	
 	virtual bool FlipImageOriginY() const;
 
@@ -68,6 +69,7 @@ private:
 	OpenGLShaderDatabase mShaderDatabase;
 	OpenGLFBODatabase mFBODatabase;
 	OpenGLTextureStorage mTextureStorage;
+	OpenGLConstantBufferStorage mConstantBufferStorage;
 
 	bool mHasGlewInitialized;
 

@@ -202,18 +202,10 @@ void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 	mNeedVertexRebind = true;
 }
 
-void OpenGLGraphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot)
+void OpenGLGraphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage)
 {
 	OpenGLConstantBuffer* glBuffer = dynamic_cast<OpenGLConstantBuffer*>(constantBuffer.get());
-
-	if (glBuffer == NULL)
-	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, slot, 0);
-	}
-	else
-	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, slot, glBuffer->GetBuffer());
-	}
+	mConstantBufferStorage.SetConstantBuffer(std::dynamic_pointer_cast<OpenGLConstantBuffer>(constantBuffer), slot, stage);
 }
 
 bool OpenGLGraphics::FlipImageOriginY() const
@@ -246,6 +238,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 
 		mNeedVertexRebind = true;
 		mCurrentShaderProgram->MapTextures(mTextureStorage);
+		mCurrentShaderProgram->MapConstantBuffers(mConstantBufferStorage);
 	}
 
 	if (mNeedVertexRebind &&
@@ -264,6 +257,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 	}
 
 	mTextureStorage.UpdateBindings();
+	mConstantBufferStorage.UpdateBindings();
 }
 
 }

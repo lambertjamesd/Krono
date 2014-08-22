@@ -77,7 +77,7 @@ public:
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader) = 0;
 	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer) = 0;
 	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer) = 0;
-	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot) = 0;
+	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage) = 0;
 
 	virtual bool FlipImageOriginY() const = 0;
 

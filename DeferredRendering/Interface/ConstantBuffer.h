@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 #include "Core/Types.h"
+#include "Core/Memory.h"
 
 namespace krono
 {

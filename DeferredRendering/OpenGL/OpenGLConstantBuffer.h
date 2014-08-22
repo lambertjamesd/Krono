@@ -11,6 +11,8 @@ namespace krono
 class OpenGLConstantBuffer : public ConstantBuffer
 {
 public:
+	typedef Auto<OpenGLConstantBuffer> Ptr;
+
 	OpenGLConstantBuffer(const ConstantBufferLayout& layout);
 	~OpenGLConstantBuffer(void);
 	

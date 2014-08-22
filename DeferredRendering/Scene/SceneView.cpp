@@ -45,7 +45,8 @@ void SceneView::Render(Graphics& graphics)
 
 	Frustrum viewFrustrum(mSceneData.projectionViewMatrix);
 
-	graphics.SetConstantBuffer(mSceneViewBuffer, SCENEVIEW_DATA_INDEX);
+	graphics.SetConstantBuffer(mSceneViewBuffer, SCENEVIEW_DATA_INDEX, ShaderStage::PixelShader);
+	graphics.SetConstantBuffer(mSceneViewBuffer, SCENEVIEW_DATA_INDEX, ShaderStage::VertexShader);
 
 	mScene.CollideFrustrum(viewFrustrum, [&](Entity& entity) {
 		entity.Render(graphics, mTechniqueType);

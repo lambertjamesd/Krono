@@ -33,7 +33,8 @@ bool Material::Use(Graphics& graphics, size_t technique)
 	}
 	else
 	{
-		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX);
+		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX, ShaderStage::PixelShader);
+		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX, ShaderStage::VertexShader);
 		foundTechnique->second.Use(graphics);
 		return true;
 	}
