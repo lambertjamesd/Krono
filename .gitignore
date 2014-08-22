@@ -5,3 +5,4 @@ Release/
 ipch/
 *~
 *.sdf
+*.shader

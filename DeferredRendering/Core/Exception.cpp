@@ -2,6 +2,9 @@
 #include "Exception.h"
 
 
+namespace krono
+{
+
 Exception::Exception(void)
 {
 }
@@ -19,4 +22,6 @@ const char* Exception::what() const throw()
 	}
 
 	return mWhatMessage.c_str();
+}
+
 }

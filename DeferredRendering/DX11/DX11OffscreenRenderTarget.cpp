@@ -4,6 +4,9 @@
 #include "HResultException.h"
 #include "DX11Texture2D.h"
 
+namespace krono
+{
+
 DX11OffscreenRenderTarget::DX11OffscreenRenderTarget(ID3D11Device* device, Vector2i size, DataFormat format) :
 	RenderTarget(size),
 	mDevice(device)
@@ -69,4 +72,6 @@ void DX11OffscreenRenderTarget::Clear(const Colorf& color)
 	ID3D11DeviceContext *deviceContext;
 	mDevice->GetImmediateContext(&deviceContext);
 	deviceContext->ClearRenderTargetView(mRenderTargetView, colorArray);
+}
+
 }

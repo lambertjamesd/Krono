@@ -5,6 +5,9 @@
 #include "Core/Hash.h"
 #include "DataFormat.h"
 
+namespace krono
+{
+
 class Attribute
 {
 public:
@@ -43,4 +46,6 @@ private:
 	size_t mStride;
 	HashUInt32 mSignature;
 };
+
+}
 

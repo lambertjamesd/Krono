@@ -4,6 +4,9 @@
 
 #include "Interface/DataFormat.h"
 
+namespace krono
+{
+
 class OpenGLTexture
 {
 public:
@@ -21,3 +24,4 @@ protected:
 	static GLenum gTextureChannelMapping[];
 };
 
+}

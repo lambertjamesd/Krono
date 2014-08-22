@@ -6,6 +6,9 @@
 #include "Interface/RenderTarget.h"
 #include "DX11RenderTarget.h"
 
+namespace krono
+{
+
 class DX11Graphics;
 
 class DX11WindowRenderTarget : public WindowRenderTarget, public DX11RenderTarget
@@ -26,3 +29,4 @@ private:
 	ID3D11RenderTargetView *mRenderTargetView;
 };
 
+}

@@ -8,10 +8,13 @@
 
 #ifdef USE_OPENGL4_4
 #include "OpenGL/OpenGLGraphics.h"
-#pragma message("Compiling With OpenGL 4.4 11")
+#pragma message("Compiling With OpenGL 4.4")
 #endif
 
 #include "InvalidEnumException.h"
+
+namespace krono
+{
 
 Graphics::Graphics(void)
 {
@@ -41,4 +44,6 @@ Auto<Graphics> Graphics::CreateGraphics(Graphics::API api)
 	default:
 		throw InvalidEnumException("Invalid Graphics API");
 	}
+}
+
 }

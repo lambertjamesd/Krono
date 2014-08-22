@@ -5,6 +5,9 @@
 #include <vector>
 #include "Resource/Resource.h"
 
+namespace krono
+{
+
 class Mesh : public Resource
 {
 public:
@@ -22,3 +25,4 @@ private:
 	BoundingBoxf mBoundingBox;
 };
 
+}

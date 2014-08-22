@@ -5,6 +5,9 @@
 #include "Interface/IndexBuffer.h"
 #include "DX11SmartPtr.h"
 
+namespace krono
+{
+
 class DX11IndexBuffer : public IndexBuffer
 {
 public:
@@ -30,3 +33,4 @@ public:
 	static DXGI_FORMAT gFormatMapping[IndexBuffer::FormatCount];
 };
 
+}

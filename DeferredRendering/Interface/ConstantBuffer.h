@@ -4,6 +4,9 @@
 #include <utility>
 #include "Core/Types.h"
 
+namespace krono
+{
+
 class ConstantBufferLayout
 {
 public:
@@ -26,6 +29,8 @@ private:
 class ConstantBuffer
 {
 public:
+	typedef Auto<ConstantBuffer> Ptr;
+
 	~ConstantBuffer(void);
 
 	template <typename T>
@@ -40,3 +45,4 @@ protected:
 	ConstantBufferLayout mLayout;
 };
 
+}

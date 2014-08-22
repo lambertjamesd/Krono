@@ -3,6 +3,9 @@
 #include "Resource/ResourceLoader.h"
 #include "JsonDocument.h"
 
+namespace krono
+{
+
 class JsonDocumentLoader : public ResourceLoader
 {
 public:
@@ -13,3 +16,4 @@ public:
 private:
 };
 
+}

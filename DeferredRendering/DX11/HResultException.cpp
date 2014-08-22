@@ -6,6 +6,9 @@
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "DxErr.lib")
 
+namespace krono
+{
+
 HResultException::HResultException(HRESULT hResult, const char* message) :
 		mHResult(hResult),
 		mMessage(message)
@@ -43,4 +46,6 @@ std::string HResultException::BuildWhat() const
 	}
 
 	return result;
+}
+
 }

@@ -5,6 +5,9 @@
 #include "OpenGLTexture2D.h"
 #include "OpenGLRenderTarget.h"
 
+namespace krono
+{
+
 class OpenGLDepthBuffer : public DepthBuffer, public OpenGLRenderTarget
 {
 public:
@@ -24,3 +27,4 @@ private:
 	static GLenum gTextureFormatMapping[];
 };
 
+}

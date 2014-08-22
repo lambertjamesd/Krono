@@ -3,6 +3,9 @@
 #include "Types.h"
 #include <string.h>
 
+namespace krono
+{
+
 template <size_t tDigestSize>
 class Hash
 {
@@ -89,3 +92,5 @@ public:
 	UInt32 GetDigest() const;
 private:
 };
+
+}

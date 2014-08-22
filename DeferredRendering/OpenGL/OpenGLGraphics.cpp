@@ -15,6 +15,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 OpenGLGraphics::OpenGLGraphics(void) :
 		mHasGlewInitialized(false),
 		mNeedNewProgram(false),
@@ -261,4 +264,6 @@ void OpenGLGraphics::UpdatePendingChanges()
 	}
 
 	mTextureStorage.UpdateBindings();
+}
+
 }

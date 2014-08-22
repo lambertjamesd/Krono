@@ -2,6 +2,9 @@
 #include "Interface/Texture2D.h"
 #include "OpenGLTexture.h"
 
+namespace krono
+{
+
 class OpenGLTexture2D : public Texture2D, public OpenGLTexture
 {
 public:
@@ -18,3 +21,5 @@ public:
 protected:
 	GLuint mTexture;
 };
+
+}

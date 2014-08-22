@@ -2,6 +2,9 @@
 
 #include "DX11Common.h"
 
+namespace krono
+{
+
 class IDX11Resource
 {
 public:
@@ -10,3 +13,5 @@ public:
 
 	virtual ID3D11ShaderResourceView *GetResource() = 0;
 };
+
+}

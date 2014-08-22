@@ -3,6 +3,9 @@
 
 #include "OpenGLOffscreenRenderTarget.h"
 
+namespace krono
+{
+
 OpenGLOffscreenRenderTarget::OpenGLOffscreenRenderTarget(Vector2i size, DataFormat format) :
 	RenderTarget(size)
 {
@@ -63,4 +66,6 @@ OpenGLRenderTarget::Type OpenGLOffscreenRenderTarget::GetType() const
 GLuint OpenGLOffscreenRenderTarget::GetGLObject() const
 {
 	return mGLTexture;
+}
+
 }

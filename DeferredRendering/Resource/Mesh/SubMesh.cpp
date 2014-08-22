@@ -3,6 +3,9 @@
 
 #include "Interface/Graphics.h"
 
+namespace krono
+{
+
 SubMesh::SubMesh(void)
 {
 }
@@ -48,4 +51,6 @@ void SubMesh::Render(Graphics& graphics)
 	{
 		graphics.DrawIndexed(mVertexCount, mIndexOffset);
 	}
+}
+
 }

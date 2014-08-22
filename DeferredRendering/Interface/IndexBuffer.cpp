@@ -1,6 +1,9 @@
 
 #include "IndexBuffer.h"
 
+namespace krono
+{
+
 IndexBuffer::IndexBuffer(IndexBuffer::Format format) :
 	mFormat(format)
 {
@@ -27,4 +30,6 @@ size_t IndexBuffer::gFormatSize[IndexBuffer::FormatCount] = {sizeof(short), size
 size_t IndexBuffer::GetFormatSize(IndexBuffer::Format format)
 {
 	return gFormatSize[format];
+}
+
 }

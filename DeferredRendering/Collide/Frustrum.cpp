@@ -1,6 +1,8 @@
 
 #include "Frustrum.h"
 
+namespace krono
+{
 
 Frustrum::Frustrum(const Matrix4f& projViewMatrix)
 {
@@ -18,5 +20,7 @@ Frustrum::~Frustrum(void)
 
 void Frustrum::BuildFrustrum(const Matrix4f& projViewMatrix, const Matrix4f& projViewInvMatrix)
 {
+
+}
 
 }

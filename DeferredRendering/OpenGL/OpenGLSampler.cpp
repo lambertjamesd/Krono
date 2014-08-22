@@ -1,5 +1,8 @@
 #include "OpenGLSampler.h"
 
+namespace krono
+{
+
 GLenum OpenGLSampler::gMagFilterMapping[InterpolationMode::Count] = {
 	GL_NEAREST,
 	GL_LINEAR
@@ -55,4 +58,6 @@ OpenGLSampler::~OpenGLSampler(void)
 GLuint OpenGLSampler::GetGLSampler() const
 {
 	return mSampler;
+}
+
 }

@@ -2,6 +2,9 @@
 
 #include "Vector3.h"
 
+namespace krono
+{
+
 template <typename T>
 class Vector4
 {
@@ -22,3 +25,5 @@ public:
 
 typedef Vector4<int> Vector4i;
 typedef Vector4<float> Vector4f;
+
+}

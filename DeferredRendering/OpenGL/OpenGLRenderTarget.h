@@ -4,6 +4,9 @@
 
 #include "OpenGLObjectID.h"
 
+namespace krono
+{
+
 class OpenGLRenderTarget
 {
 public:
@@ -24,3 +27,4 @@ private:
 	OpenGLObjectID mObjectID;
 };
 
+}

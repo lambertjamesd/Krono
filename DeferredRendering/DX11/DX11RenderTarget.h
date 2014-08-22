@@ -2,6 +2,9 @@
 
 #include "DX11Common.h"
 
+namespace krono
+{
+
 class DX11RenderTarget
 {
 public:
@@ -11,3 +14,4 @@ public:
 	virtual ID3D11RenderTargetView* GetTargetView() = 0;
 };
 
+}

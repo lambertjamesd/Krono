@@ -2,6 +2,9 @@
 
 #include "Math/Vector3.h"
 
+namespace krono
+{
+
 template <typename T>
 class BoundingBox
 {
@@ -16,3 +19,4 @@ public:
 typedef BoundingBox<float> BoundingBoxf;
 typedef BoundingBox<int> BoundingBoxi; 
 
+}

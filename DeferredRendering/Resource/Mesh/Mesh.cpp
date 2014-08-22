@@ -2,6 +2,9 @@
 #include "Mesh.h"
 
 
+namespace krono
+{
+
 Mesh::Mesh(void)
 {
 }
@@ -29,4 +32,6 @@ SubMesh* Mesh::GetSubMesh(size_t index)
 size_t Mesh::GetSubMeshCount() const
 {
 	return mSubMeshes.size();
+}
+
 }

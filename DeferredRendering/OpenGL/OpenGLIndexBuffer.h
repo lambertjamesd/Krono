@@ -4,6 +4,9 @@
 
 #include "Interface/IndexBuffer.h"
 
+namespace krono
+{
+
 class OpenGLIndexBuffer : public IndexBuffer
 {
 public:
@@ -28,3 +31,4 @@ private:
 	size_t mCurrentIndexBuffer;
 };
 
+}

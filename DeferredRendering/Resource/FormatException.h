@@ -2,6 +2,9 @@
 
 #include "Core/Exception.h"
 
+namespace krono
+{
+
 class FormatException :
 	public Exception
 {
@@ -14,3 +17,4 @@ private:
 	const char* mMessage;
 };
 
+}

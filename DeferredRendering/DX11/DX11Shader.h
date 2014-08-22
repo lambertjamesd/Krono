@@ -8,6 +8,9 @@
 #include <map>
 #include "DX11SmartPtr.h"
 
+namespace krono
+{
+
 class DX11VertexShader : public VertexShader
 {
 public:
@@ -41,4 +44,6 @@ private:
 	ID3D11PixelShader *mPixelShader;
 	ID3D11Device *mDevice;
 };
+
+}
 

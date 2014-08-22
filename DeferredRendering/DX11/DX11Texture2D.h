@@ -4,6 +4,9 @@
 #include "DX11SmartPtr.h"
 #include "IDX11Resource.h"
 
+namespace krono
+{
+
 class DX11Texture2D : public Texture2D, public IDX11Resource
 {
 public:
@@ -23,3 +26,4 @@ private:
 	DX11SmartPtr<ID3D11ShaderResourceView> mShaderResourceView;
 };
 
+}

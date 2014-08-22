@@ -60,6 +60,13 @@ if (WIN32)
 
 endif(WIN32)
 
+if (USE_XLIB)
+	set (SOURCE_FILES
+		${SOURCE_FILES}
+		Linux/XLibWindow.cpp
+	)
+endif (USE_XLIB)
+
 if (USE_DX11)
 	set (SOURCE_FILES
 		${SOURCE_FILES}
@@ -79,7 +86,7 @@ if (USE_DX11)
 	)
 endif (USE_DX11)
 
-if (USE_OPENGL)
+if (USE_OPENGL4_4)
 	set (SOURCE_FILES
 		${SOURCE_FILES}
 		OpenGL/OpenGLTexture.cpp
@@ -101,7 +108,7 @@ if (USE_OPENGL)
 		OpenGL/OpenGLShaderProgram.cpp
 		OpenGL/OpenGLOffscreenRenderTarget.cpp
 	)
-endif (USE_OPENGL)
+endif (USE_OPENGL4_4)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 

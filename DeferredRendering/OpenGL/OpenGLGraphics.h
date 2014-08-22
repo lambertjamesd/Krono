@@ -7,6 +7,9 @@
 #include "OpenGLFBODatabase.h"
 #include "OpenGLTextureStorage.h"
 
+namespace krono
+{
+
 class OpenGLVertexBuffer;
 class OpenGLVertexShader;
 class OpenGLPixelShader;
@@ -84,4 +87,6 @@ private:
 
 	bool mNeedViewportUpdate;
 };
+
+}
 

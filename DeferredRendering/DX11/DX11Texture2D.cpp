@@ -3,6 +3,8 @@
 #include "DX11Graphics.h"
 #include "HResultException.h"
 
+namespace krono
+{
 
 DX11Texture2D::DX11Texture2D(ID3D11Device* device, const Vector2i& size, DataFormat format) :
 	Texture2D(size, format),
@@ -102,4 +104,6 @@ void DX11Texture2D::GenerateMipmaps()
 	ID3D11DeviceContext *context;
 	mDevice->GetImmediateContext(&context);
 	context->GenerateMips(mShaderResourceView.Get());
+}
+
 }

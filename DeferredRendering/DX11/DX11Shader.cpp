@@ -8,6 +8,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 DX11VertexShader::DX11VertexShader(ID3D11Device* device, const std::string& compiledData) :
 		mBytecode(compiledData),
 		mVertexShader(NULL),
@@ -139,4 +142,6 @@ void DX11PixelShader::Use()
 	ID3D11DeviceContext *context;
 	mDevice->GetImmediateContext(&context);
 	context->PSSetShader(mPixelShader, NULL, 0);
+}
+
 }

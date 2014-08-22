@@ -1,6 +1,8 @@
 
 #include "UnsupportedFormatException.h"
 
+namespace krono
+{
 
 UnsupportedFormatException::UnsupportedFormatException(const char* message) :
 	mMessage(message)
@@ -16,3 +18,6 @@ std::string UnsupportedFormatException::BuildWhat() const
 {
 	return mMessage;
 }
+
+}
+

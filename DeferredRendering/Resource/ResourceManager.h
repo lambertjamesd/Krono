@@ -7,6 +7,9 @@
 #include <fstream>
 #include "LoadException.h"
 
+namespace krono
+{
+
 class ResourceManager
 {
 public:
@@ -77,3 +80,4 @@ private:
 	void AddDefaultLoaders();
 };
 
+}

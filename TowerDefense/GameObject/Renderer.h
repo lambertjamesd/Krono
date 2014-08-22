@@ -16,13 +16,13 @@ public:
 	
 	virtual void PreRender();
 
-	const Mesh::Ptr& GetMesh() const;
-	void SetMesh(Mesh::Ptr& value);
+	const krono::Mesh::Ptr& GetMesh() const;
+	void SetMesh(krono::Mesh::Ptr& value);
 
 	size_t GetMaterialCount() const;
 
-	const Material::Ptr& GetMaterial(size_t index) const;
-	void SetMaterial(const Material::Ptr& material, size_t index);
+	const krono::Material::Ptr& GetMaterial(size_t index) const;
+	void SetMaterial(const krono::Material::Ptr& material, size_t index);
 private:
 	krono::Entity& mEntity;
 	Transform::Ptr mTransform;

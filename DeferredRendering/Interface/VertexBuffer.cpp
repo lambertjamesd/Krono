@@ -1,6 +1,10 @@
 
 #include "VertexBuffer.h"
 
+
+namespace krono
+{
+
 DataIterator::DataIterator(void* dataPointer, void* dataEnd) :
 	mDataStart(dataPointer),
 	mDataPointer(dataPointer),
@@ -32,4 +36,6 @@ VertexBuffer::~VertexBuffer(void)
 const InputLayout& VertexBuffer::GetInputLayout()
 {
 	return mInputLayout;
+}
+
 }

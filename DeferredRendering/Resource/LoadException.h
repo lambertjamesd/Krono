@@ -2,6 +2,9 @@
 
 #include "Core/Exception.h"
 
+namespace krono
+{
+
 class LoadException : public Exception
 {
 public:
@@ -15,3 +18,4 @@ private:
 	std::string mMessage;
 };
 
+}

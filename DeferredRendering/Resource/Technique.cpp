@@ -2,6 +2,9 @@
 #include "Technique.h"
 
 
+namespace krono
+{
+
 Technique::Technique()
 {
 
@@ -22,4 +25,6 @@ void Technique::Use(Graphics& graphics)
 {
 	graphics.SetVertexShader(mVertexShader);
 	graphics.SetPixelShader(mPixelShader);
+}
+
 }

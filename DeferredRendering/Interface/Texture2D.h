@@ -3,6 +3,9 @@
 #include "Math/Vector2.h"
 #include "DataFormat.h"
 
+namespace krono
+{
+
 class Texture2D : public Texture
 {
 public:
@@ -17,3 +20,5 @@ protected:
 	Vector2i mSize;
 	DataFormat mFormat;
 };
+
+}

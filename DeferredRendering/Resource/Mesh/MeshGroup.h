@@ -5,6 +5,9 @@
 #include "Core/Memory.h"
 #include "Resource/Resource.h"
 
+namespace krono
+{
+
 class MeshGroup : public Resource
 {
 public:
@@ -17,3 +20,4 @@ private:
 	std::map<std::string, Auto<Mesh> > mMeshes;
 };
 
+}

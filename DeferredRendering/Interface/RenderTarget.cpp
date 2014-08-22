@@ -1,6 +1,8 @@
 
 #include "RenderTarget.h"
 
+namespace krono
+{
 
 RenderTarget::RenderTarget(const Vector2i& size) :
 	mSize(size)
@@ -25,5 +27,7 @@ WindowRenderTarget::WindowRenderTarget(const Vector2i& size) :
 
 WindowRenderTarget::~WindowRenderTarget(void)
 {
+
+}
 
 }

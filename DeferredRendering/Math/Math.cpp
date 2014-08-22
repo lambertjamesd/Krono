@@ -1,6 +1,9 @@
 
 #include "Math.h"
 
+namespace krono
+{
+
 ////////////////////////////////
 // float
 template <>
@@ -37,3 +40,5 @@ template <>
 const int Constant<int>::Zero = 0;
 template <>
 const int Constant<int>::One = 1;
+
+}

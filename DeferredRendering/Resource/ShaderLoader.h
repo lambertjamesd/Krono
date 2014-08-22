@@ -2,6 +2,9 @@
 
 #include "ResourceLoader.h"
 
+namespace krono
+{
+
 class ShaderLoader : public ResourceLoader
 {
 public:
@@ -43,3 +46,5 @@ public:
 protected:
 	virtual Auto<Object> BuildShader(ResourceManager& resourceManager, const std::string& source);
 };
+
+}

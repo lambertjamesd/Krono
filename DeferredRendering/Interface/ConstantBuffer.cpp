@@ -1,6 +1,9 @@
 
 #include "ConstantBuffer.h"
 
+namespace krono
+{
+
 ConstantBufferLayout::ConstantBufferLayout(void)
 {
 
@@ -29,4 +32,6 @@ ConstantBuffer::ConstantBuffer(const ConstantBufferLayout& layout) :
 
 ConstantBuffer::~ConstantBuffer(void)
 {
+}
+
 }

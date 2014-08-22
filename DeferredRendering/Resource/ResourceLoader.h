@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 
+namespace krono
+{
+
 class ResourceManager;
 
 class ResourceLoader
@@ -19,3 +22,4 @@ protected:
 private:
 };
 
+}

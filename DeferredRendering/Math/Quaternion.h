@@ -4,6 +4,9 @@
 #include "Vector3.h"
 #include "Angle.h"
 
+namespace krono
+{
+
 template <typename T>
 class Quaternion
 {
@@ -84,3 +87,5 @@ private:
 };
 
 typedef Quaternion<float> Quaternionf;
+
+}

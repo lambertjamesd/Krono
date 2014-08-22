@@ -2,6 +2,9 @@
 
 #include <cstdlib>
 
+namespace krono
+{
+
 template <typename T>
 class DX11SmartPtr
 {
@@ -108,3 +111,5 @@ private:
 
 	T *mValue;
 };
+
+}

@@ -1,6 +1,9 @@
 
 #include "OpenGLVertexBuffer.h"
 
+namespace krono
+{
+
 OpenGLVertexBuffer::OpenGLVertexBuffer(const InputLayout& inputLayout) :
 	VertexBuffer(inputLayout),
 	mCurrentVertexCount(0)
@@ -72,4 +75,6 @@ void OpenGLVertexBuffer::FlipYUV()
 			offset += attrib.GetFormat().GetSize();
 		}
 	}
+}
+
 }

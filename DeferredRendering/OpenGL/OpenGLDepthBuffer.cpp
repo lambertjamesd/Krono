@@ -2,6 +2,9 @@
 #include "OpenGLDepthBuffer.h"
 #include <iostream>
 
+namespace krono
+{
+
 OpenGLDepthBuffer::OpenGLDepthBuffer(Vector2i size, DataFormat::Type format) :
 	DepthBuffer(size, format)
 {
@@ -63,4 +66,6 @@ OpenGLRenderTarget::Type OpenGLDepthBuffer::GetType() const
 GLuint OpenGLDepthBuffer::GetGLObject() const
 {
 	return mGLTexture;
+}
+
 }

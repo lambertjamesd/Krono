@@ -5,6 +5,9 @@
 #include "Core/Exception.h"
 #include <string>
 
+namespace krono
+{
+
 class HResultException :
 	public Exception
 {
@@ -18,3 +21,4 @@ private:
 	const char* mMessage;
 };
 
+}

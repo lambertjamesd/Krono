@@ -6,6 +6,9 @@
 
 #include "Interface/VertexBuffer.h"
 
+namespace krono
+{
+
 class OpenGLVertexBuffer : public VertexBuffer
 {
 public:
@@ -37,3 +40,5 @@ private:
 	GLuint mVertexBuffer;
 	size_t mCurrentVertexCount;
 };
+
+}

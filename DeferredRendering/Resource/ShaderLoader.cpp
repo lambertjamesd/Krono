@@ -4,6 +4,8 @@
 #include "FormatException.h"
 #include "NotFoundException.h"
 
+namespace krono
+{
 
 const std::string ShaderLoader::gHeaderString = "SHDR";
 
@@ -90,4 +92,6 @@ PixelShaderLoader::~PixelShaderLoader(void)
 Auto<Object> PixelShaderLoader::BuildShader(ResourceManager& resourceManager, const std::string& source)
 {
 	return resourceManager.GetGraphics()->CreatePixelShader(source);
+}
+
 }

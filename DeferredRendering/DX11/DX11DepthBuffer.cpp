@@ -3,6 +3,9 @@
 #include "HResultException.h"
 #include "DX11Graphics.h"
 
+namespace krono
+{
+
 DXGI_FORMAT DX11DepthBuffer::gTextureFormatMapping[DataFormat::TypeCount] =
 {
 	DXGI_FORMAT_UNKNOWN,
@@ -95,4 +98,6 @@ void DX11DepthBuffer::Clear(float value)
 	ID3D11DeviceContext *deviceContext;
 	mDevice->GetImmediateContext(&deviceContext);
 	deviceContext->ClearDepthStencilView(mDepthTargetView, D3D11_CLEAR_DEPTH, value, 0);
+}
+
 }

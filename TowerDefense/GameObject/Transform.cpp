@@ -1,6 +1,8 @@
 #include "Transform.h"
 #include <algorithm>
 
+using namespace krono;
+
 Transform::Transform(GameObject& parentGameObject) :
 	Component(parentGameObject),
 	mIsTransformDirty(false),
@@ -23,6 +25,8 @@ Transform::~Transform(void)
 		(*it)->mParent.reset();
 		(*it)->SetParent(mParent);
 	}
+
+	ClearParent();
 }
 
 const Quaternionf& Transform::GetLocalOrientation() const
@@ -56,6 +60,16 @@ void Transform::SetLocalScale(const Vector3f& value)
 {
 	mScale = value;
 	SetIsTransformDirty();
+}
+
+void Transform::ClearParent()
+{
+	if (!mParent.expired())
+	{
+		mParent.lock()->RemoveChild(this);
+		mParent.reset();
+		SetIsWorldTransformDirty();
+	}
 }
 
 void Transform::SetParent(const Transform::Ref& value)

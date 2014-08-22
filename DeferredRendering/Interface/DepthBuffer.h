@@ -4,6 +4,9 @@
 #include "Texture2D.h"
 #include "Core/Memory.h"
 
+namespace krono
+{
+
 class DepthBuffer
 {
 public:
@@ -24,3 +27,4 @@ protected:
 	DataFormat::Type mFormat;
 };
 
+}

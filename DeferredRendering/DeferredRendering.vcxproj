@@ -54,7 +54,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;GLEW_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;USE_DX11;USE_OPENGL4_4;GLEW_BUILD;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -85,6 +85,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compositor\CompositeStage.h" />
+    <ClInclude Include="Compositor\Compositor.h" />
     <ClInclude Include="Math\Angle.h" />
     <ClInclude Include="Collide\Frustrum.h" />
     <ClInclude Include="Core\Types.h" />
@@ -92,6 +94,8 @@
     <ClInclude Include="DX11\DX11Common.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Compositor\RenderState.h" />
+    <ClInclude Include="Compositor\RenderStateParameters.h" />
     <ClInclude Include="Resource\NotFoundException.h" />
     <ClInclude Include="OpenGL\OpenGLSampler.h" />
     <ClInclude Include="OpenGL\OpenGLTextureStorage.h" />
@@ -182,8 +186,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Compositor\CompositeStage.cpp" />
+    <ClCompile Include="Compositor\Compositor.cpp" />
     <ClCompile Include="DX11\DX11Sampler.cpp" />
     <ClCompile Include="Math\Math.cpp" />
+    <ClCompile Include="Compositor\RenderState.cpp" />
+    <ClCompile Include="Compositor\RenderStateParameters.cpp" />
     <ClCompile Include="Resource\NotFoundException.cpp" />
     <ClCompile Include="OpenGL\OpenGLSampler.cpp" />
     <ClCompile Include="OpenGL\OpenGLTextureStorage.cpp" />

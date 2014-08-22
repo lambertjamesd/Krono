@@ -2,6 +2,9 @@
 #include "DepthBuffer.h"
 
 
+namespace krono
+{
+
 DepthBuffer::DepthBuffer(Vector2i size, DataFormat::Type format) :
 	mSize(size),
 	mFormat(format)
@@ -26,3 +29,5 @@ Vector2i DepthBuffer::GetSize() const
 }
 
 Auto<DepthBuffer> DepthBuffer::Null(NULL);
+
+}

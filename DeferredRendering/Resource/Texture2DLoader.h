@@ -2,6 +2,9 @@
 
 #include "ResourceLoader.h"
 
+namespace krono
+{
+
 class Texture2DLoader :
 	public ResourceLoader
 {
@@ -42,3 +45,4 @@ private:
 	}
 };
 
+}

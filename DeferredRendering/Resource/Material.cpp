@@ -1,6 +1,9 @@
 
 #include "Material.h"
 
+namespace krono
+{
+
 Material::Material(void)
 {
 }
@@ -34,4 +37,6 @@ bool Material::Use(Graphics& graphics, size_t technique)
 		foundTechnique->second.Use(graphics);
 		return true;
 	}
+}
+
 }

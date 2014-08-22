@@ -3,6 +3,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+namespace krono
+{
+
 template <typename Type>
 class Constant
 {
@@ -66,3 +69,5 @@ public:
 		return a < b ? b : a;
 	}
 };
+
+}

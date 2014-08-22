@@ -1,10 +1,16 @@
 #pragma once
 
 #include "Core/Object.h"
+#include "Core/Memory.h"
+
+namespace krono
+{
 
 class Texture : public Object
 {
 public:
+	typedef Auto<Texture> Ptr;
+
 	Texture(void);
 	virtual ~Texture(void);
 
@@ -13,3 +19,4 @@ public:
 	virtual void GenerateMipmaps() = 0;
 };
 
+}

@@ -7,6 +7,9 @@
 
 using namespace std;
 
+namespace krono
+{
+
 ObjMeshVertex::ObjMeshVertex(const Vector3f& position, const Vector2f& texCoord, const Vector3f& normal) :
 	position(position),
 	texCoord(texCoord),
@@ -222,4 +225,6 @@ void ObjMeshGroupLoader::ParseLine(istream& inputStream, vector<string>& tokens)
 
 		wordStart = wordEnd;
 	}
+}
+
 }

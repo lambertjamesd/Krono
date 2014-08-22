@@ -4,6 +4,9 @@
 
 #include "Interface/ConstantBuffer.h"
 
+namespace krono
+{
+
 class DX11ConstantBuffer : public ConstantBuffer
 {
 public:
@@ -22,3 +25,4 @@ private:
 	size_t mCurrentSize;
 };
 
+}

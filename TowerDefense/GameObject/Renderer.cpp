@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Scene/Scene.h"
 
+using namespace krono;
+
 Renderer::Renderer(GameObject& parentGameObject) :
 	Component(parentGameObject),
 	Renderable(mGameObject.GetScene().GetRenderManager()),
