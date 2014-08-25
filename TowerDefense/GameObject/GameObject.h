@@ -20,15 +20,17 @@ public:
 	{
 		for (auto it = mComponents.cbegin(); it != mComponents.cend(); ++it)
 		{
-			std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(it);
+			std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(*it);
 			if (result != NULL)
 			{
 				return result;
 			}
 		}
 
-		return std::weak_ptr<T>(NULL);
+		return std::weak_ptr<T>();
 	}
+
+	const Transform::Ptr GetTransform() const;
 
 	template <typename T>
 	std::weak_ptr<T> AddComponent()
@@ -38,14 +40,21 @@ public:
 		return result;
 	}
 
-	Scene& GetScene();
-private:
-	friend class Scene;
+	::Scene& GetScene();
 
-	GameObject(Scene* parentScene);
+	Ref GetWeakPointer() const
+	{
+		return mSelfReference;
+	}
+private:
+	friend class ::Scene;
+
+	GameObject(::Scene* parentScene);
+
+	::Scene* mScene;
 
 	std::vector<Component::Ptr> mComponents;
-	Scene* mScene;
+	Transform::Ptr mTransform;
 	Ref mSelfReference;
 };
 

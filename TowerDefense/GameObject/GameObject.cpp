@@ -3,15 +3,21 @@
 #include "Scene/Scene.h"
 
 GameObject::GameObject(Scene* parentScene) :
-	mScene(parentScene)
+	mScene(parentScene),
+	mTransform(AddComponent<Transform>().lock())
 {
-	AddComponent<Transform>();
+
 }
 
 
 GameObject::~GameObject(void)
 {
 
+}
+
+const Transform::Ptr GameObject::GetTransform() const
+{
+	return mTransform;
 }
 
 Scene& GameObject::GetScene()

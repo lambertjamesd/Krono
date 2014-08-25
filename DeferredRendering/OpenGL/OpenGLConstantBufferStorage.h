@@ -29,7 +29,7 @@ private:
 		bool operator==(const Element& other) const;
 	};
 
-	bool operator==(const OpenGLTextureMapping& other) const;
+	bool operator==(const OpenGLConstantBufferMapping& other) const;
 
 	std::vector<Element> mElements;
 	HashUInt32 mHash;
@@ -48,7 +48,7 @@ public:
 private:
 	const OpenGLConstantBuffer* GetConstantBuffer(size_t slot, ShaderStage::Type stage);
 
-	std::vector<OpenGLConstantBuffer::Ptr> mConstantBuffers;
+	std::vector<OpenGLConstantBuffer::Ptr> mConstantBuffers[ShaderStage::TypeCount];
 
 	OpenGLConstantBufferMapping mCurrentMapping;
 

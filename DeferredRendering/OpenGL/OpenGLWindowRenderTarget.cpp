@@ -44,7 +44,7 @@ OpenGLWindowRenderTarget::~OpenGLWindowRenderTarget(void)
 
 Auto<Texture2D> OpenGLWindowRenderTarget::GetTexture() const
 {
-	return Auto<Texture2D>(NULL);
+	return Texture2D::Null;
 }
 
 void OpenGLWindowRenderTarget::Clear(const Colorf& color)

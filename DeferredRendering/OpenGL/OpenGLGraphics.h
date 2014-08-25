@@ -40,17 +40,17 @@ public:
 
 	virtual void SetViewport(const Rectf& viewport, const Rangef& depthRange);
 
-	virtual void SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer);
+	virtual void SetRenderTargets(const std::vector<Auto<RenderTarget> > &renderTargets, const Auto<DepthBuffer> &depthBuffer);
 
-	virtual void SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage);
+	virtual void SetTexture(const Auto<Texture>& value, size_t slot, ShaderStage::Type stage);
 	
-	virtual void SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage);
+	virtual void SetSampler(const Auto<Sampler>& value, size_t slot, ShaderStage::Type stage);
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader);
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader);
 	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer);
 	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer);
-	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage);
+	virtual void SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage);
 	
 	virtual bool FlipImageOriginY() const;
 

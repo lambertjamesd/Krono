@@ -86,9 +86,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject\Camera.h" />
     <ClInclude Include="GameObject\Component.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\Renderer.h" />
+    <ClInclude Include="Render\RenderStage.h" />
     <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Render\Renderable.h" />
     <ClInclude Include="Resource.h" />
@@ -97,9 +99,11 @@
     <ClInclude Include="GameObject\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\Component.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\Renderer.cpp" />
+    <ClCompile Include="Render\RenderStage.cpp" />
     <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Render\Renderable.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />

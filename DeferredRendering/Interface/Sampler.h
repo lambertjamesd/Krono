@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Memory.h"
 #include "Core/Object.h"
 #include "Core/Types.h"
 #include "Color.h"
@@ -72,6 +73,8 @@ struct SamplerDescription
 class Sampler : public Object
 {
 public:
+	typedef Auto<Sampler> Ptr;
+
 	Sampler(void);
 	virtual ~Sampler(void);
 };

@@ -25,6 +25,5 @@ public:
 	void SetMaterial(const krono::Material::Ptr& material, size_t index);
 private:
 	krono::Entity& mEntity;
-	Transform::Ptr mTransform;
 };
 

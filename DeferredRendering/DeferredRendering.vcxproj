@@ -96,6 +96,10 @@
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Compositor\RenderState.h" />
     <ClInclude Include="Compositor\RenderStateParameters.h" />
+    <ClInclude Include="OpenGL\OpenGLConstantBufferStorage.h" />
+    <ClInclude Include="Compositor\RenderTargetDatabase.h" />
+    <ClInclude Include="Compositor\RenderTargetConfiguration.h" />
+    <ClInclude Include="Compositor\RenderSceneCompositeStage.h" />
     <ClInclude Include="Resource\NotFoundException.h" />
     <ClInclude Include="OpenGL\OpenGLSampler.h" />
     <ClInclude Include="OpenGL\OpenGLTextureStorage.h" />
@@ -192,6 +196,10 @@
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Compositor\RenderState.cpp" />
     <ClCompile Include="Compositor\RenderStateParameters.cpp" />
+    <ClCompile Include="OpenGL\OpenGLConstantBufferStorage.cpp" />
+    <ClCompile Include="Compositor\RenderTargetDatabase.cpp" />
+    <ClCompile Include="Compositor\RenderTargetConfiguration.cpp" />
+    <ClCompile Include="Compositor\RenderSceneCompositeStage.cpp" />
     <ClCompile Include="Resource\NotFoundException.cpp" />
     <ClCompile Include="OpenGL\OpenGLSampler.cpp" />
     <ClCompile Include="OpenGL\OpenGLTextureStorage.cpp" />

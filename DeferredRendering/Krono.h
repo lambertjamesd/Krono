@@ -14,3 +14,6 @@
 
 #include "Scene/Scene.h"
 #include "Scene/SceneView.h"
+
+#include "Compositor/Compositor.h"
+#include "Compositor/RenderSceneCompositeStage.h"

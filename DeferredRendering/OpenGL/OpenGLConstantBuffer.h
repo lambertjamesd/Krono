@@ -18,7 +18,7 @@ public:
 	
 	virtual void Set(const void* data, size_t size);
 
-	GLuint GetBuffer();
+	GLuint GetBuffer() const;
 private:
 	void ModifyProjectionMatrices();
 

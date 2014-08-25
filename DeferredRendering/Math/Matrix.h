@@ -200,7 +200,7 @@ class Matrix4 : public Matrix<4, 4, T>
 {
 public:
 	Matrix4(const Matrix<4, 4, T>& other) :
-		Matrix<4, 4, T>(reinterpret_cast<const T*>(&other))
+		Matrix<4, 4, T>(&other.At(0, 0))
 	{
 
 	}

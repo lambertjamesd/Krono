@@ -7,8 +7,12 @@ Transform::Transform(GameObject& parentGameObject) :
 	Component(parentGameObject),
 	mIsTransformDirty(false),
 	mTransform(Matrix4f::Identity()),
+	mIsInverseTransformDirty(false),
+	mInverseTransform(Matrix4f::Identity()),
 	mIsWorldTransformDirty(false),
-	mWolrdTransform(Matrix4f::Identity()),
+	mWorldTransform(Matrix4f::Identity()),
+	mIsInverseWorldTransformDirty(false),
+	mInverseWorldTransform(Matrix4f::Identity()),
 
 	mOrientation(),
 	mPosition(),
@@ -105,23 +109,45 @@ const Matrix4f& Transform::GetLocalTransform() const
 	return mTransform;
 }
 
+const krono::Matrix4f& Transform::GetInverseLocalTransform() const
+{
+	if (mIsInverseTransformDirty)
+	{
+		const_cast<Matrix4f&>(mInverseTransform) = GetLocalTransform().Inverse();
+		const_cast<bool&>(mIsInverseTransformDirty) = false;
+	}
+
+	return mInverseTransform;
+}
+
 const Matrix4f& Transform::GetWorldTransform() const
 {
 	if (mIsWorldTransformDirty)
 	{
 		if (mParent.expired())
 		{
-			const_cast<Matrix4f&>(mWolrdTransform) = GetLocalTransform();
+			const_cast<Matrix4f&>(mWorldTransform) = GetLocalTransform();
 		}
 		else
 		{
-			const_cast<Matrix4f&>(mWolrdTransform) = mParent.lock()->GetWorldTransform() * GetLocalTransform();
+			const_cast<Matrix4f&>(mWorldTransform) = mParent.lock()->GetWorldTransform() * GetLocalTransform();
 		}
 
 		const_cast<bool&>(mIsWorldTransformDirty) = false;
 	}
 
-	return mWolrdTransform;
+	return mWorldTransform;
+}
+
+const krono::Matrix4f& Transform::GetInverseWorldTransform() const
+{
+	if (mIsInverseWorldTransformDirty)
+	{
+		const_cast<Matrix4f&>(mInverseWorldTransform) = GetWorldTransform().Inverse();
+		const_cast<bool&>(mIsInverseWorldTransformDirty) = false;
+	}
+
+	return mInverseWorldTransform;
 }
 
 void Transform::RemoveChild(Transform* child)
@@ -137,6 +163,7 @@ void Transform::AddChild(Transform* child)
 void Transform::SetIsTransformDirty()
 {
 	mIsTransformDirty = true;
+	mIsInverseTransformDirty = true;
 	SetIsWorldTransformDirty();
 }
 
@@ -145,6 +172,7 @@ void Transform::SetIsWorldTransformDirty()
 	if (!mIsWorldTransformDirty)
 	{
 		mIsWorldTransformDirty = true;
+		mIsInverseWorldTransformDirty = true;
 
 		for (auto it = mChildren.begin(); it != mChildren.end(); ++it)
 		{

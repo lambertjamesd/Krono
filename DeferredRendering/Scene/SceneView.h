@@ -9,37 +9,33 @@
 namespace krono
 {
 
-struct SceneViewData
-{
-	SceneViewData();
-
-	Matrix4f projectionMatrix;
-	Matrix4f viewMatrix;
-	Matrix4f projectionViewMatrix;
-};
-
 class SceneView
 {
 public:
 	SceneView(Scene& scene);
 	~SceneView(void);
 
+	Scene& GetScene();
+	
+	void SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange);
+	const krono::Rectf& GetViewport() const;
+	const krono::Rangef& GetDepthRange() const;
+
 	void SetViewMatrix(const Matrix4f& viewMatrix);
 	void SetProjectionMatrix(const Matrix4f& projectionMatrix);
 
-	void Render(Graphics& graphics);
+	const Matrix4f& GetViewMatrix() const;
+	const Matrix4f& GetProjectionMatrix() const;
+
+	Matrix4f CalculateProjectionMatrix(const Vector2f& renderTargetSize) const;
+	Rectf CalculateViewport(const Vector2i& renderTargetSize) const;
 private:
-	void RebuildBuffer(Graphics& graphics);
-
-	static const size_t SCENEVIEW_DATA_INDEX = 0;
-
-	Auto<ConstantBuffer> mSceneViewBuffer;
-
 	Scene& mScene;
-	SceneViewData mSceneData;
-	bool mBufferIsDirty;
-	bool mProjectionViewIsDirty;
-	size_t mTechniqueType;
+	Matrix4f mProjectionMatrix;
+	Matrix4f mViewMatrix;
+	
+	Rectf mNormalizedViewport;
+	Rangef mDepthRange;
 };
 
 }

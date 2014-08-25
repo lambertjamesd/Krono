@@ -10,12 +10,16 @@ namespace krono
 class RenderTarget
 {
 public:
+	typedef Auto<RenderTarget> Ptr;
+
 	virtual Auto<Texture2D> GetTexture() const = 0;
 	virtual void Clear(const Colorf& color) = 0;
 
 	virtual ~RenderTarget(void);
 
 	Vector2i GetSize() const;
+
+	static const Ptr Null;
 protected:
 	RenderTarget(const Vector2i& size);
 private:

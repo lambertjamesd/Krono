@@ -27,4 +27,6 @@ DataFormat Texture2D::GetFormat() const
 	return mFormat;
 }
 
+const Texture2D::Ptr Texture2D::Null = NULL;
+
 }

@@ -28,6 +28,8 @@ namespace Topology
 class Graphics
 {
 public:
+	typedef Auto<Graphics> Ptr;
+
 	enum ShaderLanguage
 	{
 		HLSL_5,
@@ -67,17 +69,17 @@ public:
 
 	virtual void SetViewport(const Rectf& viewport, const Rangef& depthRange) = 0;
 
-	virtual void SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer) = 0;
+	virtual void SetRenderTargets(const std::vector<Auto<RenderTarget> > &renderTargets, const Auto<DepthBuffer> &depthBuffer) = 0;
 
-	virtual void SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage) = 0;
+	virtual void SetTexture(const Auto<Texture>& value, size_t slot, ShaderStage::Type stage) = 0;
 	
-	virtual void SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage) = 0;
+	virtual void SetSampler(const Auto<Sampler>& value, size_t slot, ShaderStage::Type stage) = 0;
 
 	virtual void SetVertexShader(Auto<VertexShader> &vertexShader) = 0;
 	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader) = 0;
 	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer) = 0;
 	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer) = 0;
-	virtual void SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage) = 0;
+	virtual void SetConstantBuffer(const Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage) = 0;
 
 	virtual bool FlipImageOriginY() const = 0;
 

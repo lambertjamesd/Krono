@@ -2,7 +2,8 @@
 #include "Scene.h"
 
 
-Scene::Scene(void)
+Scene::Scene(const krono::Graphics::Ptr& graphics) : 
+	mRenderManager(graphics)
 {
 }
 

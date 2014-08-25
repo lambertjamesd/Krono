@@ -320,6 +320,7 @@ void OpenGLShaderProgram::PopulateUniforms()
 {
 	PopulateVariables(mUniforms, GL_UNIFORM);
 	PopulateTextureMapping();
+	PopulateConstantBufferMapping();
 }
 
 void OpenGLShaderProgram::PopulateOutputs()
@@ -391,7 +392,7 @@ void OpenGLShaderProgram::PopulateConstantBufferMapping()
 
 	size_t uniformBlockIndex = 0;
 	
-	for (size_t uniformBlock = 0; uniformBlock < count; ++uniformBlock)
+	for (GLint uniformBlock = 0; uniformBlock < count; ++uniformBlock)
 	{
 		ShaderStage::Type shaderStage = ShaderStage::TypeCount;
 	

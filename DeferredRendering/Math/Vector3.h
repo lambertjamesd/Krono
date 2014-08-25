@@ -13,6 +13,21 @@ public:
 	Vector3(void) : x(T()), y(T()), z(T()) {}
 	~Vector3(void) {}
 
+	bool operator==(const Vector3& other) const
+	{
+		return x == other.x && y == other.y && z == other.z;
+	}
+
+	bool operator!=(const Vector3& other) const
+	{
+		return x != other.x || y != other.y || z != other.z;
+	}
+
+	bool IsZero() const
+	{
+		return x == Constant<T>::Zero && y == Constant<T>::Zero && z == Constant<T>::Zero;
+	}
+
 	Vector3 Normalized() const
 	{
 		Vector3 result(*this);

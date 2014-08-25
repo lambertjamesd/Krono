@@ -122,7 +122,7 @@ void OpenGLGraphics::SetViewport(const Rectf& viewport, const Rangef& depthRange
 	glDepthRange(depthRange.start, depthRange.end);
 }
 
-void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
+void OpenGLGraphics::SetRenderTargets(const std::vector<Auto<RenderTarget> > &renderTargets, const Auto<DepthBuffer> &depthBuffer)
 {
 	vector<Auto<OpenGLRenderTarget> > renderBuffers;
 
@@ -158,13 +158,13 @@ void OpenGLGraphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTa
 	mNeedViewportUpdate = true;
 }
 
-void OpenGLGraphics::SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage)
+void OpenGLGraphics::SetTexture(const Auto<Texture>& value, size_t slot, ShaderStage::Type stage)
 {
 	mTextureStorage.SetTexture(std::dynamic_pointer_cast<OpenGLTexture>(value), slot, stage);
 }
 
 
-void OpenGLGraphics::SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage)
+void OpenGLGraphics::SetSampler(const Auto<Sampler>& value, size_t slot, ShaderStage::Type stage)
 {
 	mTextureStorage.SetSampler(std::dynamic_pointer_cast<OpenGLSampler>(value), slot, stage);
 }
@@ -202,7 +202,7 @@ void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 	mNeedVertexRebind = true;
 }
 
-void OpenGLGraphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage)
+void OpenGLGraphics::SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage)
 {
 	OpenGLConstantBuffer* glBuffer = dynamic_cast<OpenGLConstantBuffer*>(constantBuffer.get());
 	mConstantBufferStorage.SetConstantBuffer(std::dynamic_pointer_cast<OpenGLConstantBuffer>(constantBuffer), slot, stage);

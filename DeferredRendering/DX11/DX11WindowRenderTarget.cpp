@@ -77,7 +77,7 @@ ID3D11RenderTargetView* DX11WindowRenderTarget::GetTargetView()
 
 Auto<Texture2D> DX11WindowRenderTarget::GetTexture() const
 {
-	return Auto<Texture2D>(NULL);
+	return Texture2D::Null;
 }
 
 void DX11WindowRenderTarget::Clear(const Colorf& color)

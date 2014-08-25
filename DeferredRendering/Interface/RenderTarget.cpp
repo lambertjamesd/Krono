@@ -19,6 +19,8 @@ Vector2i RenderTarget::GetSize() const
 	return mSize;
 }
 
+const RenderTarget::Ptr RenderTarget::Null = NULL;
+
 WindowRenderTarget::WindowRenderTarget(const Vector2i& size) :
 	RenderTarget(size)
 {

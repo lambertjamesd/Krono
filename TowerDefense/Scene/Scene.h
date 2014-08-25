@@ -7,7 +7,7 @@
 class Scene
 {
 public:
-	Scene(void);
+	Scene(const krono::Graphics::Ptr& graphics);
 	~Scene(void);
 
 	GameObject::Ref CreateGameObject();

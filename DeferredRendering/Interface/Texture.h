@@ -17,6 +17,8 @@ public:
 	virtual void LoadMemory(void* source) = 0;
 
 	virtual void GenerateMipmaps() = 0;
+	
+	static const Ptr Null;
 };
 
 }

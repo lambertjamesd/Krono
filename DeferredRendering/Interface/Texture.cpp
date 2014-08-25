@@ -14,4 +14,6 @@ Texture::~Texture(void)
 {
 }
 
+const Texture::Ptr Texture::Null = NULL;
+
 }

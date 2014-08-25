@@ -25,7 +25,9 @@ public:
 	const Transform::Ref& GetParent() const;
 
 	const krono::Matrix4f& GetLocalTransform() const;
+	const krono::Matrix4f& GetInverseLocalTransform() const;
 	const krono::Matrix4f& GetWorldTransform() const;
+	const krono::Matrix4f& GetInverseWorldTransform() const;
 private:
 	void RemoveChild(Transform* child);
 	void AddChild(Transform* child);
@@ -38,9 +40,13 @@ private:
 
 	bool mIsTransformDirty;
 	krono::Matrix4f mTransform;
+	bool mIsInverseTransformDirty;
+	krono::Matrix4f mInverseTransform;
 
 	bool mIsWorldTransformDirty;
-	krono::Matrix4f mWolrdTransform;
+	krono::Matrix4f mWorldTransform;
+	bool mIsInverseWorldTransformDirty;
+	krono::Matrix4f mInverseWorldTransform;
 
 	krono::Quaternionf mOrientation;
 	krono::Vector3f mPosition;

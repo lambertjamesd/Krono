@@ -9,11 +9,14 @@ namespace krono
 class Texture2D : public Texture
 {
 public:
+	typedef Auto<Texture2D> Ptr;
+
 	virtual ~Texture2D(void);
 
 	Vector2i GetSize() const;
 	DataFormat GetFormat() const;
 
+	static const Ptr Null;
 protected:
 	Texture2D(const Vector2i& size, DataFormat format);
 

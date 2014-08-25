@@ -5,19 +5,13 @@
 namespace krono
 {
 
-SceneViewData::SceneViewData() :
-	projectionMatrix(Matrix4f::Identity()),
-	viewMatrix(Matrix4f::Identity()),
-	projectionViewMatrix(Matrix4f::Identity())
-{
-
-}
-
 SceneView::SceneView(Scene& scene) :
 	mScene(scene),
-	mBufferIsDirty(true),
-	mProjectionViewIsDirty(false),
-	mTechniqueType(0)
+	mProjectionMatrix(Matrix4f::Identity()),
+	mViewMatrix(Matrix4f::Identity()),
+
+	mNormalizedViewport(Vector2f(), Vector2f(1.0f, 1.0f)),
+	mDepthRange(0.0f, 1.0f)
 {
 
 }
@@ -27,54 +21,56 @@ SceneView::~SceneView(void)
 
 }
 
+Scene& SceneView::GetScene()
+{
+	return mScene;
+}
+
+void SceneView::SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange)
+{
+	mNormalizedViewport = viewport;
+	mDepthRange = depthRange;
+}
+
+const krono::Rectf& SceneView::GetViewport() const
+{
+	return mNormalizedViewport;
+}
+
+const krono::Rangef& SceneView::GetDepthRange() const
+{
+	return mDepthRange;
+}
+
 void SceneView::SetViewMatrix(const Matrix4f& viewMatrix)
 {
-	mSceneData.viewMatrix = viewMatrix;
-	mProjectionViewIsDirty = true;
+	mViewMatrix = viewMatrix;
 }
 
 void SceneView::SetProjectionMatrix(const Matrix4f& projectionMatrix)
 {
-	mSceneData.projectionMatrix = projectionMatrix;
-	mProjectionViewIsDirty = true;
+	mProjectionMatrix = projectionMatrix;
 }
 
-void SceneView::Render(Graphics& graphics)
+const Matrix4f& SceneView::GetViewMatrix() const
 {
-	RebuildBuffer(graphics);
-
-	Frustrum viewFrustrum(mSceneData.projectionViewMatrix);
-
-	graphics.SetConstantBuffer(mSceneViewBuffer, SCENEVIEW_DATA_INDEX, ShaderStage::PixelShader);
-	graphics.SetConstantBuffer(mSceneViewBuffer, SCENEVIEW_DATA_INDEX, ShaderStage::VertexShader);
-
-	mScene.CollideFrustrum(viewFrustrum, [&](Entity& entity) {
-		entity.Render(graphics, mTechniqueType);
-	});
+	return mViewMatrix;
 }
 
-void SceneView::RebuildBuffer(Graphics& graphics)
+const Matrix4f& SceneView::GetProjectionMatrix() const
 {
-	if (mSceneViewBuffer == NULL)
-	{
-		ConstantBufferLayout layout;
+	return mProjectionMatrix;
+}
 
-		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(SceneViewData, projectionMatrix));
-		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(SceneViewData, projectionViewMatrix));
+Matrix4f SceneView::CalculateProjectionMatrix(const Vector2f& renderTargetSize) const
+{
+	float aspectRatio = (renderTargetSize.y * mNormalizedViewport.size.y) / (renderTargetSize.x * mNormalizedViewport.size.x);
+	return Matrix4f::Scale(Vector3f(aspectRatio, 1.0f, 1.0f)) * mProjectionMatrix;
+}
 
-		mSceneViewBuffer = Auto<ConstantBuffer>(graphics.CreateConstantBuffer(layout));
-	}
-
-	if (mBufferIsDirty)
-	{
-		if (mProjectionViewIsDirty)
-		{
-			mSceneData.projectionViewMatrix = mSceneData.projectionMatrix * mSceneData.viewMatrix;
-		}
-
-		mSceneViewBuffer->Set<SceneViewData>(mSceneData);
-		mBufferIsDirty = false;
-	}
+Rectf SceneView::CalculateViewport(const Vector2i& renderTargetSize) const
+{
+	return Rectf(mNormalizedViewport.topLeft * (Vector2f)renderTargetSize, mNormalizedViewport.size * (Vector2f)renderTargetSize);
 }
 
 }

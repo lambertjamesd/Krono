@@ -6,7 +6,7 @@
 namespace krono
 {
 
-void OpenGLConstantBufferMapping::AddTextureUnit(ShaderStage::Type stage, size_t uniformIndex)
+void OpenGLConstantBufferMapping::AddConstantBuffer(ShaderStage::Type stage, size_t uniformIndex)
 {
 	mElements.push_back(Element(stage, uniformIndex));
 	mHash.Update<Element>(mElements.back());
@@ -30,7 +30,7 @@ bool OpenGLConstantBufferMapping::Element::operator==(const Element& other) cons
 		uniformIndex == other.uniformIndex;
 }
 
-bool OpenGLConstantBufferMapping::operator==(const OpenGLTextureMapping& other) const
+bool OpenGLConstantBufferMapping::operator==(const OpenGLConstantBufferMapping& other) const
 {
 	return mElements.size() == other.mElements.size() && std::equal(mElements.cbegin(), mElements.cend(), other.mElements.cbegin());
 }
@@ -89,7 +89,7 @@ void OpenGLConstantBufferStorage::UpdateBindings()
 			}
 			else
 			{
-				glBindBufferBase(GL_UNIFORM_BUFFER, slot, OpenGLConstantBuffer->GetBuffer());
+				glBindBufferBase(GL_UNIFORM_BUFFER, slot, buffer->GetBuffer());
 			}
 		}
 

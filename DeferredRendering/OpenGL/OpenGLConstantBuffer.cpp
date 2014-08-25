@@ -32,7 +32,7 @@ void OpenGLConstantBuffer::Set(const void* data, size_t size)
 	glBindBuffer(GL_UNIFORM_BUFFER, existingBuffer);
 }
 
-GLuint OpenGLConstantBuffer::GetBuffer()
+GLuint OpenGLConstantBuffer::GetBuffer() const
 {
 	return mBuffer;
 }

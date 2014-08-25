@@ -147,7 +147,7 @@ void DX11Graphics::DrawIndexed(size_t count, size_t offset)
 	mDeviceContext->DrawIndexed(count, offset, 0);
 }
 
-void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTargets, Auto<DepthBuffer> &depthBuffer)
+void DX11Graphics::SetRenderTargets(const std::vector<Auto<RenderTarget> > &renderTargets, const Auto<DepthBuffer> &depthBuffer)
 {
 	vector<ID3D11RenderTargetView*> dxRenderTargets(renderTargets.size());
 	ID3D11DepthStencilView* depthBufferView;
@@ -171,7 +171,7 @@ void DX11Graphics::SetRenderTargets(std::vector<Auto<RenderTarget> > &renderTarg
 	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
 }
 
-void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Type stage)
+void DX11Graphics::SetTexture(const Auto<Texture>& value, size_t slot, ShaderStage::Type stage)
 {
 	IDX11Resource* resource = dynamic_cast<IDX11Resource*>(value.get());
 
@@ -203,7 +203,7 @@ void DX11Graphics::SetTexture(Auto<Texture> value, size_t slot, ShaderStage::Typ
 	}
 }
 
-void DX11Graphics::SetSampler(Auto<Sampler> value, size_t slot, ShaderStage::Type stage)
+void DX11Graphics::SetSampler(const Auto<Sampler>& value, size_t slot, ShaderStage::Type stage)
 {
 	DX11Sampler *sampler = dynamic_cast<DX11Sampler*>(value.get());
 
@@ -272,7 +272,7 @@ void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
 	mCurrentVertexBuffer->Use();
 }
 
-void DX11Graphics::SetConstantBuffer(Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage)
+void DX11Graphics::SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage)
 {
 	DX11ConstantBuffer *dxContantBuffer = dynamic_cast<DX11ConstantBuffer*>(constantBuffer.get());
 

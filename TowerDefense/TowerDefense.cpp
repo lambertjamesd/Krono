@@ -17,6 +17,7 @@
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "GameObject/Renderer.h"
+#include "GameObject/Camera.h"
 
 using namespace std;
 using namespace krono;
@@ -40,7 +41,6 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-
 	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
@@ -69,21 +69,24 @@ int main(int argc, char* argv[])
 	Auto<Sampler> linearSampler;
 	Auto<Sampler> pointSampler;
 
-	krono::Scene sceneTest;
-	krono::SceneView sceneView(sceneTest);
-
-	::Scene scene;
+	
+	graphics = Graphics::CreateGraphics(api);
+	windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
+	::Scene scene(graphics);
 
 	GameObject::Ref objectReference = scene.CreateGameObject();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
 
-	sceneView.SetViewMatrix(Matrix4f::Translation(Vector3f(0.5f, 0.5f, 0.5f)) * Matrix4f::Scale(Vector3f(0.5f, 0.5f, 0.5f)));
+	Compositor::Ptr compositor(new Compositor());
+	compositor->AddCompositeStage(CompositeStage::Ptr(new RenderSceneCompositeStage(0)));
+	scene.GetRenderManager().SetDefaultCompositor(compositor);
+
+	GameObject::Ref cameraObject = scene.CreateGameObject();
+	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
 
 	try
 	{
-		graphics = Graphics::CreateGraphics(api);
 		resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
-		windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
 
 		depthBuffer = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24);
 
@@ -105,16 +108,20 @@ int main(int argc, char* argv[])
 
 		pointSampler = graphics->CreateSampler(samplerDesc);
 
-		krono::Entity* entityTest = sceneTest.CreateEntity();
-		entityTest->SetMesh(meshTest);
-
 		Auto<Material> materialTest(new Material());
 		materialTest->AddTechnique(0, Technique(vertexShader, pixelShader));
-		entityTest->SetMaterial(materialTest, 0);
 		
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(materialTest, 0);
+
+		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.25f, 0.25f, 0.25f));
+
+		
+		RenderTargetConfiguration renderTarget;
+		renderTarget.AddRenderTarget(windowRenderTarget);
+		camera.lock()->SetRenderTargets(renderTarget);
+		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -0.5f));
 	}
 	catch (Exception& exception)
 	{
@@ -129,13 +136,9 @@ int main(int argc, char* argv[])
 
 	while (!window->IsClosed())
 	{
-		vector<Auto<RenderTarget>> renderTargetArray;
-		renderTargetArray.push_back(windowRenderTarget);
 		windowRenderTarget->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
-		graphics->SetRenderTargets(renderTargetArray, DepthBuffer::Null);
-		graphics->SetViewport(Rectf(Vector2f(), windowRenderTarget->GetSize()), Rangef(0.0f, 1.0f));
 
-		sceneView.Render(*graphics);
+		scene.GetRenderManager().Render();
 
 		windowRenderTarget->Present();
 

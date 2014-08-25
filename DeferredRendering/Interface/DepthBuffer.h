@@ -10,6 +10,7 @@ namespace krono
 class DepthBuffer
 {
 public:
+	typedef Auto<DepthBuffer> Ptr;
 
 	~DepthBuffer(void);
 

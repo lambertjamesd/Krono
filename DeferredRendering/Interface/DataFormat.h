@@ -21,6 +21,7 @@ struct DataFormat
 		TypeCount
 	};
 
+	DataFormat();
 	DataFormat(Type type, size_t count);
 	~DataFormat(void);
 

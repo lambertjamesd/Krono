@@ -21,7 +21,7 @@ Renderer::~Renderer(void)
 
 void Renderer::PreRender()
 {
-	mEntity.SetTransform(mTransform->GetWorldTransform());
+	mEntity.SetTransform(mGameObject.GetTransform()->GetWorldTransform());
 }
 
 const Mesh::Ptr& Renderer::GetMesh() const

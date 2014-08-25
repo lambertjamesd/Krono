@@ -2,7 +2,9 @@
 
 #include "Interface/Shader.h"
 #include "Interface/Graphics.h"
+#include "Scene/SceneView.h"
 #include "RenderStateParameters.h"
+#include "RenderTargetDatabase.h"
 #include <vector>
 
 namespace krono
@@ -11,18 +13,54 @@ namespace krono
 class RenderState
 {
 public:
-	RenderState(Graphics& graphics);
+	RenderState(Graphics& graphics, RenderTargetDatabase& targetDatabase, SceneView& sceneView);
 	~RenderState(void);
+	
+	Graphics& GetGraphics();
 
+	void PushState();
+	void PushRenderTargetTexture(UInt32 targetID, ShaderStage::Type stage);
+	void PushTexture(const Texture::Ptr& texture, ShaderStage::Type stage);
+	void PushSampler(const Sampler::Ptr& buffer, ShaderStage::Type stage);
+	void PushConstantBuffer(const ConstantBuffer::Ptr& sampler, ShaderStage::Type stage);
 	void PushParameters(RenderStateParameters& parameters);
-	void PopParameters();
-private:
-	Graphics& mGraphics;
+	void PopState();
 
-	std::vector<RenderStateParameters::ParameterCount> mParameterCount;
+	void SetViewport(const Rectf& viewport, const Rangef& depthRange);
+
+	const Matrix4f& GetViewMatrix() const;
+	Matrix4f GetProjectionMatrix() const;
+
+	void RenderScene(size_t techniqueType);
+private:
+	struct SavedState
+	{
+		SavedState(
+			size_t currentTextureCount[ShaderStage::TypeCount],
+			size_t currentSamplerCount[ShaderStage::TypeCount],
+			size_t currentUniformCount[ShaderStage::TypeCount],
+			
+			size_t viewportStackSize);
+
+		size_t textureCount[ShaderStage::TypeCount];
+		size_t samplerCount[ShaderStage::TypeCount];
+		size_t uniformCount[ShaderStage::TypeCount];
+
+		size_t viewportStackSize;
+	};
+
+	Graphics& mGraphics;
+	RenderTargetDatabase& mTargetDatabase;
+	SceneView& mSceneView;
+
+	std::vector<SavedState> mSavedStates;
 
 	size_t mCurrentTextureSlot[ShaderStage::TypeCount];
+	size_t mCurrentSamplerSlot[ShaderStage::TypeCount];
 	size_t mCurrentUniformBufferSlot[ShaderStage::TypeCount];
+
+	std::vector<Rectf> mViewportStack;
+	std::vector<Rangef> mDepthRangeStack;
 };
 
 }
