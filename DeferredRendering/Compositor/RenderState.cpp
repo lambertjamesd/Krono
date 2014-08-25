@@ -126,6 +126,16 @@ void RenderState::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 	mGraphics.SetViewport(viewport, depthRange);
 }
 
+void RenderState::SetVertexShader(const VertexShader::Ptr& vertexShader)
+{
+	mGraphics.SetVertexShader(vertexShader);
+}
+
+void RenderState::SetPixelShader(const PixelShader::Ptr& pixelShader)
+{
+	mGraphics.SetPixelShader(pixelShader);
+}
+
 const Matrix4f& RenderState::GetViewMatrix() const
 {
 	return mSceneView.GetViewMatrix();
@@ -141,7 +151,7 @@ void RenderState::RenderScene(size_t techniqueType)
 {
 	Frustrum viewFrustrum(GetProjectionMatrix());
 	mSceneView.GetScene().CollideFrustrum(viewFrustrum, [&](Entity& entity) {
-		entity.Render(mGraphics, techniqueType);
+		entity.Render(*this, techniqueType);
 	});
 }
 

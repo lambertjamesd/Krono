@@ -6,6 +6,8 @@
 
 namespace krono
 {
+	
+class RenderState;
 
 class Technique
 {
@@ -14,7 +16,7 @@ public:
 	Technique(Auto<VertexShader>& vertexShader, Auto<PixelShader>& pixelShader);
 	~Technique(void);
 
-	void Use(Graphics& graphics);
+	void Use(RenderState& renderState);
 private:
 	Auto<VertexShader> mVertexShader;
 	Auto<PixelShader> mPixelShader;

@@ -51,6 +51,15 @@
     <ClInclude Include="Render\RenderStage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameLogic\SpinBehavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Behavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\UpdateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TowerDefense.cpp">
@@ -81,6 +90,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Render\RenderStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\SpinBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Behavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\UpdateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

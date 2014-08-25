@@ -1,6 +1,7 @@
 
 #include "Entity.h"
 #include "Interface/Graphics.h"
+#include "Compositor/RenderState.h"
 #include "SceneIndex.h"
 #include <assert.h>
 
@@ -88,21 +89,24 @@ const Auto<Material>& Entity::GetMaterial(size_t index) const
 	return mMaterials[index];
 }
 
-void Entity::Render(Graphics& graphics, size_t technique)
+void Entity::Render(RenderState& renderState, size_t technique)
 {
 	if (mIsVisisble)
 	{
-		RebuildBuffer(graphics);
-		graphics.SetConstantBuffer(mEntityBuffer, ENTITY_DATA_INDEX, ShaderStage::PixelShader);
-		graphics.SetConstantBuffer(mEntityBuffer, ENTITY_DATA_INDEX, ShaderStage::VertexShader);
+		RebuildBuffer(renderState.GetGraphics());
+
+		renderState.PushState();
+		renderState.PushConstantBuffer(mEntityBuffer, ShaderStage::VertexShader);
 
 		for (size_t i = 0; i < mMesh->GetSubMeshCount() && i < mMaterials.size(); ++i)
 		{
-			if (mMaterials[i] != NULL && mMaterials[i]->Use(graphics, technique))
+			if (mMaterials[i] != NULL && mMaterials[i]->Use(renderState, technique))
 			{
-				mMesh->GetSubMesh(i)->Render(graphics);
+				mMesh->GetSubMesh(i)->Render(renderState.GetGraphics());
 			}
 		}
+
+		renderState.PopState();
 	}
 }
 

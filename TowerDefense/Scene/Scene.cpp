@@ -24,3 +24,8 @@ RenderManager& Scene::GetRenderManager()
 {
 	return mRenderManager;
 }
+
+UpdateManager& Scene::GetUpdateManager()
+{
+	return mUpdateManager;
+}

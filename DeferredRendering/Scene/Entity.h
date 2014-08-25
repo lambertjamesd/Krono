@@ -10,6 +10,8 @@
 namespace krono
 {
 
+class RenderState;
+
 class SceneIndex;
 
 struct EntityData
@@ -39,7 +41,7 @@ public:
 
 	bool ShouldRender(const Frustrum& frustrum) const;
 
-	void Render(Graphics& graphics, size_t technique);
+	void Render(RenderState& renderState, size_t technique);
 private:
 	friend class SceneIndex;
 	friend class Scene;
@@ -56,8 +58,6 @@ private:
 	std::vector<Auto<Material> > mMaterials;
 	EntityData mEntityData;
 	bool mIsVisisble;
-
-	static const size_t ENTITY_DATA_INDEX = 1;
 
 	bool mBufferIsDirty;
 };

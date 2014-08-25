@@ -235,19 +235,19 @@ void DX11Graphics::SetSampler(const Auto<Sampler>& value, size_t slot, ShaderSta
 	}
 }
 
-void DX11Graphics::SetVertexShader(Auto<VertexShader> &vertexShader)
+void DX11Graphics::SetVertexShader(const Auto<VertexShader> &vertexShader)
 {
 	mNeedNewInputMapping = true;
 	mCurrentVertexShader = std::dynamic_pointer_cast<DX11VertexShader>(vertexShader);
 	mCurrentVertexShader->Use();
 }
 
-void DX11Graphics::SetPixelShader(Auto<PixelShader> &fragmentShader)
+void DX11Graphics::SetPixelShader(const Auto<PixelShader> &fragmentShader)
 {
 	std::dynamic_pointer_cast<DX11PixelShader>(fragmentShader)->Use();
 }
 
-void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
+void DX11Graphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 {
 	if (indexBuffer == NULL)
 	{
@@ -262,7 +262,7 @@ void DX11Graphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
 	}
 }
 
-void DX11Graphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+void DX11Graphics::SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer)
 {
 	mNeedNewInputMapping = mNeedNewInputMapping || 
 		mCurrentVertexBuffer == NULL ||

@@ -28,6 +28,9 @@ public:
 
 	void SetViewport(const Rectf& viewport, const Rangef& depthRange);
 
+	void SetVertexShader(const VertexShader::Ptr& vertexShader);
+	void SetPixelShader(const PixelShader::Ptr& pixelShader);
+
 	const Matrix4f& GetViewMatrix() const;
 	Matrix4f GetProjectionMatrix() const;
 

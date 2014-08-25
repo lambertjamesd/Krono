@@ -169,19 +169,19 @@ void OpenGLGraphics::SetSampler(const Auto<Sampler>& value, size_t slot, ShaderS
 	mTextureStorage.SetSampler(std::dynamic_pointer_cast<OpenGLSampler>(value), slot, stage);
 }
 
-void OpenGLGraphics::SetVertexShader(Auto<VertexShader> &vertexShader)
+void OpenGLGraphics::SetVertexShader(const Auto<VertexShader> &vertexShader)
 {
 	mCurrentVertexShader = std::dynamic_pointer_cast<OpenGLVertexShader>(vertexShader);
 	mNeedNewProgram = true;
 }
 
-void OpenGLGraphics::SetPixelShader(Auto<PixelShader> &fragmentShader)
+void OpenGLGraphics::SetPixelShader(const Auto<PixelShader> &fragmentShader)
 {
 	mCurrentPixelShader = std::dynamic_pointer_cast<OpenGLPixelShader>(fragmentShader);
 	mNeedNewProgram = true;
 }
 
-void OpenGLGraphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
+void OpenGLGraphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 {
 	mCurrentIndexBuffer = std::dynamic_pointer_cast<OpenGLIndexBuffer>(indexBuffer);
 
@@ -195,7 +195,7 @@ void OpenGLGraphics::SetIndexBuffer(Auto<IndexBuffer> &indexBuffer)
 	}
 }
 
-void OpenGLGraphics::SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer)
+void OpenGLGraphics::SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer)
 {
 	mCurrentVertexBuffer = std::dynamic_pointer_cast<OpenGLVertexBuffer>(vertexBuffer);
 	mCurrentVertexBuffer->Use();

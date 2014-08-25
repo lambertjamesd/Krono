@@ -1,5 +1,6 @@
 
 #include "Material.h"
+#include "Compositor/RenderState.h"
 
 namespace krono
 {
@@ -23,8 +24,10 @@ Auto<ConstantBuffer>& Material::GetConstantBuffer()
 	return mConstantBuffer;
 }
 
-bool Material::Use(Graphics& graphics, size_t technique)
+bool Material::Use(RenderState& renderState, size_t technique)
 {
+	renderState.PushState();
+
 	auto foundTechnique = mTechniques.find(technique);
 
 	if (foundTechnique == mTechniques.end())
@@ -33,11 +36,12 @@ bool Material::Use(Graphics& graphics, size_t technique)
 	}
 	else
 	{
-		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX, ShaderStage::PixelShader);
-		graphics.SetConstantBuffer(mConstantBuffer, MATERIAL_DATA_INDEX, ShaderStage::VertexShader);
-		foundTechnique->second.Use(graphics);
+		renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::PixelShader);
+		foundTechnique->second.Use(renderState);
 		return true;
 	}
+
+	renderState.PopState();
 }
 
 }

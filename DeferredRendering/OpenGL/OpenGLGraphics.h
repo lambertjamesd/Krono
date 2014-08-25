@@ -46,10 +46,10 @@ public:
 	
 	virtual void SetSampler(const Auto<Sampler>& value, size_t slot, ShaderStage::Type stage);
 
-	virtual void SetVertexShader(Auto<VertexShader> &vertexShader);
-	virtual void SetPixelShader(Auto<PixelShader> &fragmentShader);
-	virtual void SetIndexBuffer(Auto<IndexBuffer> &indexBuffer);
-	virtual void SetVertexBuffer(Auto<VertexBuffer> &vertexBuffer);
+	virtual void SetVertexShader(const Auto<VertexShader> &vertexShader);
+	virtual void SetPixelShader(const Auto<PixelShader> &fragmentShader);
+	virtual void SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer);
+	virtual void SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer);
 	virtual void SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage);
 	
 	virtual bool FlipImageOriginY() const;

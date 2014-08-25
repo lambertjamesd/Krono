@@ -1,6 +1,6 @@
 
 #include "Technique.h"
-
+#include "Compositor/RenderState.h"
 
 namespace krono
 {
@@ -21,10 +21,17 @@ Technique::~Technique(void)
 {
 }
 
-void Technique::Use(Graphics& graphics)
+void Technique::Use(RenderState& renderState)
 {
-	graphics.SetVertexShader(mVertexShader);
-	graphics.SetPixelShader(mPixelShader);
+	if (mVertexShader != NULL)
+	{
+		renderState.SetVertexShader(mVertexShader);
+	}
+
+	if (mPixelShader != NULL)
+	{
+		renderState.SetPixelShader(mPixelShader);
+	}
 }
 
 }

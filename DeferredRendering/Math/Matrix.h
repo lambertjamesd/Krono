@@ -82,12 +82,17 @@ public:
 	{
 		static_assert(Rows == Columns, "Can only take determinat of a square matrix");
 
-		T result = 0;
+		if (Rows == 2)
+		{
+			return mElements[1 - colSkip][1 - rowSkip];
+		}
+
+		T result = Constant<T>::Zero;
 		
 		for (size_t col = 0; col < Columns - 1; ++col)
 		{
-			T positiveSlant = 1;
-			T negativeSlant = 1;
+			T positiveSlant = Constant<T>::One;
+			T negativeSlant = Constant<T>::One;
 
 			for (size_t i = 0; i < Columns - 1; ++i)
 			{
@@ -155,7 +160,7 @@ public:
 		{
 			for (size_t row = 0; row < Rows; ++row)
 			{
-				result.mElements[col][row] = SubDeterminant(col, row) * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
+				result.mElements[row][col] = SubDeterminant(row, col) * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
 			}
 		}
 
@@ -239,17 +244,17 @@ public:
 	{
 		Matrix4 result = Matrix4::Identity();
 
-		result.At(0, 0) = 1 - 2 * (quat.y * quat.y - quat.z * quat.z);
+		result.At(0, 0) = 1 - 2 * (quat.y * quat.y + quat.z * quat.z);
 		result.At(0, 1) = 2 * (quat.x * quat.y - quat.z * quat.w);
 		result.At(0, 2) = 2 * (quat.x * quat.z + quat.y * quat.w);
 		
 		result.At(1, 0) = 2 * (quat.x * quat.y + quat.z * quat.w);
-		result.At(1, 1) = 1 - 2 * (quat.x * quat.x - quat.z * quat.z);
+		result.At(1, 1) = 1 - 2 * (quat.x * quat.x + quat.z * quat.z);
 		result.At(1, 2) = 2 * (quat.y * quat.z - quat.x * quat.w);
 
 		result.At(2, 0) = 2 * (quat.x * quat.z - quat.y * quat.w);
 		result.At(2, 1) = 2 * (quat.y * quat.z + quat.x * quat.w);
-		result.At(2, 2) = 1 - 2 * (quat.x * quat.x - quat.y * quat.y);
+		result.At(2, 2) = 1 - 2 * (quat.x * quat.x + quat.y * quat.y);
 
 		return result;
 	}

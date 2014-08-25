@@ -2,7 +2,7 @@
 #include <string>
 
 #include "Core/Object.h"
-
+#include "Core/Memory.h"
 
 namespace krono
 {
@@ -24,6 +24,8 @@ namespace ShaderStage
 class VertexShader : public Object
 {
 public:
+	typedef Auto<VertexShader> Ptr;
+
 	virtual ~VertexShader(void);
 	virtual bool IsValid() const = 0;
 protected:
@@ -34,6 +36,8 @@ private:
 class PixelShader : public Object
 {
 public:
+	typedef Auto<PixelShader> Ptr;
+
 	virtual ~PixelShader(void);
 	virtual bool IsValid() const = 0;
 protected:

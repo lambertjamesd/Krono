@@ -11,6 +11,8 @@
 #include <fstream>
 #include <cerrno>
 #include <iomanip>
+#include <chrono>
+#include <thread>
 
 #include <Krono.h>
 
@@ -18,6 +20,8 @@
 #include "Scene/Scene.h"
 #include "GameObject/Renderer.h"
 #include "GameObject/Camera.h"
+
+#include "GameLogic/SpinBehavior.h"
 
 using namespace std;
 using namespace krono;
@@ -75,6 +79,7 @@ int main(int argc, char* argv[])
 	::Scene scene(graphics);
 
 	GameObject::Ref objectReference = scene.CreateGameObject();
+	objectReference.lock()->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
 
 	Compositor::Ptr compositor(new Compositor());
@@ -115,8 +120,7 @@ int main(int argc, char* argv[])
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(materialTest, 0);
 
-		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.25f, 0.25f, 0.25f));
-
+		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.125f, 0.125f, 0.125f));
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
@@ -134,15 +138,34 @@ int main(int argc, char* argv[])
 	graphics->SetSampler(pointSampler, 0, ShaderStage::PixelShader);
 	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
 
+	chrono::time_point<chrono::system_clock> lastFrameTime = chrono::system_clock::now();
+
+	chrono::duration<double> frameDuration(1.0 / 60.0);
+
 	while (!window->IsClosed())
 	{
+		chrono::time_point<chrono::system_clock> frameTime = chrono::system_clock::now();
+
 		windowRenderTarget->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
 
+		chrono::duration<float> updateAmount = chrono::duration_cast<chrono::duration<float> >(frameTime - lastFrameTime);
+
+		scene.GetUpdateManager().Update(updateAmount.count());
 		scene.GetRenderManager().Render();
 
 		windowRenderTarget->Present();
 
-		window->Update(false);
+		window->Update(true);
+
+		chrono::time_point<chrono::system_clock> endFrameTime = chrono::system_clock::now();
+		chrono::duration<double> sleepTime = frameDuration - (endFrameTime - frameTime);
+		
+		if (sleepTime > chrono::duration<double>(0.0))
+		{
+			this_thread::sleep_for(chrono::milliseconds((long long)(sleepTime.count() * 1000.0)));
+		}
+		
+		lastFrameTime = frameTime;
 	}
 
 	return 0;

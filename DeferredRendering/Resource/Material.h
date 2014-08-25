@@ -12,6 +12,8 @@
 namespace krono
 {
 
+class RenderState;
+
 class Material : public Resource
 {
 public:
@@ -24,13 +26,11 @@ public:
 
 	Auto<ConstantBuffer>& GetConstantBuffer();
 
-	bool Use(Graphics& graphics, size_t technique);
+	bool Use(RenderState& renderState, size_t technique);
 private:
 	std::unordered_map<UInt32, Technique> mTechniques;
 	std::vector<std::pair<ShaderStage::Type, Auto<Texture> > > mTextures;
 	Auto<ConstantBuffer> mConstantBuffer;
-	
-	static const size_t MATERIAL_DATA_INDEX = 2;
 };
 
 }
