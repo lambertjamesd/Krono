@@ -5,6 +5,7 @@ set (LINUX UNIX && NOT APPLE)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-std=gnu++0x)
+    add_definitions(-D_GLIBCXX_USE_NANOSLEEP)
 endif()
 
 option (USE_OPENGL4_4 "Build Krono with OpenGL support" ON)

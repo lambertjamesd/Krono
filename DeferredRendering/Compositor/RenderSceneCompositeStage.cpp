@@ -1,4 +1,5 @@
 #include "RenderSceneCompositeStage.h"
+#include <cstddef>
 
 namespace krono
 {

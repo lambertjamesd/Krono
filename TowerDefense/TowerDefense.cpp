@@ -88,6 +88,8 @@ int main(int argc, char* argv[])
 
 	GameObject::Ref cameraObject = scene.CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
+	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.01f, 10.0f, Degreesf(90.0f)));
+	camera.lock()->SetLens(cameraLens);
 
 	try
 	{
@@ -120,12 +122,12 @@ int main(int argc, char* argv[])
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(materialTest, 0);
 
-		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.125f, 0.125f, 0.125f));
+		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.5f, 0.5f, 0.5f));
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
 		camera.lock()->SetRenderTargets(renderTarget);
-		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -0.5f));
+		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -5.0f));
 	}
 	catch (Exception& exception)
 	{

@@ -7,7 +7,8 @@ Camera::Camera(GameObject& parentGameObject) :
 	Component(parentGameObject),
 	Renderable(mGameObject.GetScene().GetRenderManager()),
 
-	mRenderStage(mRenderManager.CreateRenderStage())
+	mRenderStage(mRenderManager.CreateRenderStage()),
+	mLens(new OrthographicLens(0.0f, 1.0f, 2.0f))
 {
 
 }
@@ -20,6 +21,7 @@ Camera::~Camera(void)
 void Camera::PreRender()
 {
 	mRenderStage->SetViewMatrix(mGameObject.GetTransform()->GetInverseWorldTransform());
+	mRenderStage->SetProjectionMatrix(mLens->GetProjectionMatrix());
 }
 
 void Camera::SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange)
@@ -30,4 +32,9 @@ void Camera::SetViewport(const krono::Rectf& viewport, const krono::Rangef& dept
 void Camera::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget)
 {
 	mRenderStage->SetRenderTargets(renderTarget);
+}
+
+void Camera::SetLens(std::unique_ptr<Lens>& lens)
+{
+	mLens = std::move(lens);
 }

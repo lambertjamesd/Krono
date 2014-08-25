@@ -3,8 +3,11 @@ project (DeferredRendering)
 set (SOURCE_FILES
 	Compositor/CompositeStage.cpp
 	Compositor/Compositor.cpp
+	Compositor/RenderSceneCompositeStage.cpp
 	Compositor/RenderState.cpp
 	Compositor/RenderStateParameters.cpp
+	Compositor/RenderTargetConfiguration.cpp
+	Compositor/RenderTargetDatabase.cpp
 	Interface/Texture.cpp
 	Interface/IndexBuffer.cpp
 	Interface/Shader.cpp

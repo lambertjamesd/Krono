@@ -3,15 +3,22 @@ project(TowerDefense)
 set (SOURCE_FILES
 	TowerDefense.cpp
 
+	GameLogic/SpinBehavior.cpp
+	
+	GameObject/Behavior.cpp
+	GameObject/Camera.cpp
 	GameObject/Component.cpp
 	GameObject/GameObject.cpp
+	GameObject/Lens.cpp
 	GameObject/Renderer.cpp
 	GameObject/Transform.cpp
 
 	Render/Renderable.cpp
 	Render/RenderManager.cpp
+	Render/RenderStage.cpp
 
 	Scene/Scene.cpp
+	Scene/UpdateManager.cpp
 )
 
 include_directories("${PROJECT_SOURCE_DIR}")

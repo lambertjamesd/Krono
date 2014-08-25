@@ -3,7 +3,9 @@
 #include "Render/Renderable.h"
 #include "Render/RenderStage.h"
 #include "Transform.h"
+#include "Lens.h"
 #include <Krono.h>
+#include <memory>
 
 class Camera : public Component, public Renderable
 {
@@ -19,6 +21,9 @@ public:
 	void SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange);
 
 	void SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget);
+
+	void SetLens(std::unique_ptr<Lens>& lens);
 private:
 	RenderStage::Ptr mRenderStage;
+	std::unique_ptr<Lens> mLens;
 };
