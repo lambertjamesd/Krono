@@ -43,6 +43,35 @@ std::string ReadFileContents(const char *filename)
 	throw(errno);
 }
 
+Compositor::Ptr BuildCompositor(Graphics::Ptr& graphics, ResourceManager::Ptr& resourceManager, ::Scene& scene)
+{
+	Compositor::Ptr compositor(new Compositor());
+
+	compositor->AddRenderTarget("color", DataFormat(DataFormat::Float, 4));
+	compositor->AddRenderTarget("depth", DataFormat(DataFormat::Depth32F, 1));
+
+	compositor->SetClearColor("color", Colorf(0.1f, 0.4f, 0.7f, 1.0f));
+	compositor->SetClearDepth("depth", 1.0f);
+
+	RenderSceneCompositeStage* renderScene;
+	ScreenQuadCompositeStage* colorMap;
+	
+	RenderStateParameters colorMapParameters;
+
+	colorMapParameters.SetVertexShader(resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/ScreenComposite.shader"));
+	colorMapParameters.SetPixelShader(resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/ColorMapper.shader"));
+
+	compositor->AddCompositeStage(CompositeStage::Ptr(renderScene = new RenderSceneCompositeStage(0)));
+	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(scene.GetRenderManager().GetGeometryCache().GetPlane(), colorMapParameters)));
+
+	renderScene->AddRenderTarget("color");
+	//renderScene->SetDepthBuffer("depth");
+
+	colorMap->AddRenderTargetInput("color");
+
+	return compositor;
+}
+
 int main(int argc, char* argv[])
 {
 	Graphics::API api = Graphics::OpenGL;
@@ -76,15 +105,15 @@ int main(int argc, char* argv[])
 	
 	graphics = Graphics::CreateGraphics(api);
 	windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
+	resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
+
 	::Scene scene(graphics);
 
 	GameObject::Ref objectReference = scene.CreateGameObject();
 	objectReference.lock()->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
 
-	Compositor::Ptr compositor(new Compositor());
-	compositor->AddCompositeStage(CompositeStage::Ptr(new RenderSceneCompositeStage(0)));
-	scene.GetRenderManager().SetDefaultCompositor(compositor);
+	scene.GetRenderManager().SetDefaultCompositor(BuildCompositor(graphics, resourceManager, scene));
 
 	GameObject::Ref cameraObject = scene.CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
@@ -93,7 +122,6 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
 
 		depthBuffer = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24);
 
@@ -147,8 +175,6 @@ int main(int argc, char* argv[])
 	while (!window->IsClosed())
 	{
 		chrono::time_point<chrono::system_clock> frameTime = chrono::system_clock::now();
-
-		windowRenderTarget->Clear(Colorf(0.1f, 0.4f, 0.7f, 1.0f));
 
 		chrono::duration<float> updateAmount = chrono::duration_cast<chrono::duration<float> >(frameTime - lastFrameTime);
 

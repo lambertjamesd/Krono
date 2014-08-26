@@ -45,4 +45,14 @@ const ConstantBuffer::Ptr& RenderStateParameters::GetConstantBuffer(ShaderStage:
 	return mUniforms[stage][index];
 }
 
+void RenderStateParameters::SetVertexShader(const VertexShader::Ptr& vertexShader)
+{
+	mVertexShader = vertexShader;
+}
+
+void RenderStateParameters::SetPixelShader(const PixelShader::Ptr& pixelShader)
+{
+	mPixelShader = pixelShader;
+}
+
 }

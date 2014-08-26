@@ -31,7 +31,7 @@ void RenderSceneCompositeStage::Render(RenderState& renderState)
 
 	RebuildBuffer(renderState.GetGraphics(), viewMatrix, projectionMatrix);
 
-	renderState.PushConstantBuffer(mEntityBuffer, ShaderStage::VertexShader);
+	renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::VertexShader);
 	
 	renderState.RenderScene(mTechnique);
 
@@ -41,12 +41,12 @@ void RenderSceneCompositeStage::Render(RenderState& renderState)
 
 void RenderSceneCompositeStage::RebuildBuffer(Graphics& graphics, const Matrix4f& viewMatrix, const Matrix4f& projectionMatrix)
 {
-	if (mEntityBuffer == NULL)
+	if (mConstantBuffer == NULL)
 	{
 		ConstantBufferLayout layout;
 		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(SceneViewData, projectionMatrix));
 		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(SceneViewData, projectionViewMatrix));
-		mEntityBuffer = graphics.CreateConstantBuffer(layout);
+		mConstantBuffer = graphics.CreateConstantBuffer(layout);
 	}
 
 	SceneViewData data;
@@ -54,7 +54,7 @@ void RenderSceneCompositeStage::RebuildBuffer(Graphics& graphics, const Matrix4f
 	data.viewMatrix = viewMatrix;
 	data.projectionViewMatrix = projectionMatrix * viewMatrix;
 
-	mEntityBuffer->Set<SceneViewData>(data);
+	mConstantBuffer->Set<SceneViewData>(data);
 }
 
 }

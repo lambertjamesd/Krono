@@ -9,6 +9,8 @@ namespace krono
 class IndexBuffer
 {
 public:
+	typedef Auto<IndexBuffer> Ptr;
+
 	enum Format
 	{
 		UInt16,

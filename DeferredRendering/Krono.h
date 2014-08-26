@@ -17,3 +17,4 @@
 
 #include "Compositor/Compositor.h"
 #include "Compositor/RenderSceneCompositeStage.h"
+#include "Compositor/ScreenQuadCompositeStage.h"

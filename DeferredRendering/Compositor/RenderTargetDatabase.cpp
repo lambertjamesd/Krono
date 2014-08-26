@@ -34,6 +34,26 @@ void RenderTargetDatabase::BeginCompositeRender(const Vector2i& screenSize, Grap
 	mGraphics = &graphics;
 }
 
+void RenderTargetDatabase::ClearRenderTarget(UInt32 targetID, const Colorf& color)
+{
+	RenderTarget::Ptr target = GetRenderTarget(targetID);
+
+	if (target != NULL)
+	{
+		target->Clear(color);
+	}
+}
+
+void RenderTargetDatabase::ClearDepthBuffer(UInt32 targetID, float depth)
+{
+	DepthBuffer::Ptr target = GetDepthBuffer(targetID);
+
+	if (target != NULL)
+	{
+		target->Clear(depth);
+	}
+}
+
 const RenderTarget::Ptr& RenderTargetDatabase::GetRenderTarget(UInt32 targetID)
 {
 	auto result = mRenderTargets.find(targetID);

@@ -1,0 +1,7 @@
+{
+	"type" : "vertex",
+
+	"sources" : {
+		"GLSL 4.4" : "../GLSL/ScreenComposite.vert"
+	}
+}

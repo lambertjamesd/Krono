@@ -3,6 +3,7 @@ project (DeferredRendering)
 set (SOURCE_FILES
 	Compositor/CompositeStage.cpp
 	Compositor/Compositor.cpp
+	Compositor/ScreenQuadCompositeStage.cpp
 	Compositor/RenderSceneCompositeStage.cpp
 	Compositor/RenderState.cpp
 	Compositor/RenderStateParameters.cpp

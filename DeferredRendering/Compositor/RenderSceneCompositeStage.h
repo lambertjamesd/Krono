@@ -24,7 +24,7 @@ public:
 	virtual void Render(RenderState& renderState);
 private:
 	void RebuildBuffer(Graphics& graphics, const Matrix4f& viewMatrix, const Matrix4f& projectionMatrix);
-	Auto<ConstantBuffer> mEntityBuffer;
+	Auto<ConstantBuffer> mConstantBuffer;
 
 	size_t mTechnique;
 };

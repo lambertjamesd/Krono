@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "InputLayout.h"
+#include "Core/Memory.h"
 
 namespace krono
 {
@@ -44,6 +45,8 @@ private:
 class VertexBuffer
 {
 public:
+	typedef Auto<VertexBuffer> Ptr;
+
 	virtual ~VertexBuffer(void);
 
 	virtual DataIterator Lock(size_t vertexCount) = 0;

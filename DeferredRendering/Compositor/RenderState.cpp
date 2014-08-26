@@ -9,8 +9,14 @@ RenderState::SavedState::SavedState(
 	size_t currentSamplerCount[ShaderStage::TypeCount],
 	size_t currentUniformCount[ShaderStage::TypeCount],
 			
-	size_t viewportStackSize) :
-		viewportStackSize(viewportStackSize)
+	size_t viewportStackSize,
+
+	size_t vertexShaderStackSize,
+	size_t pixelShaderStackSize) :
+		viewportStackSize(viewportStackSize),
+
+		vertexShaderStackSize(vertexShaderStackSize),
+		pixelShaderStackSize(pixelShaderStackSize)
 {
 	memcpy(textureCount, currentTextureCount, sizeof(textureCount));
 	memcpy(samplerCount, currentSamplerCount, sizeof(textureCount));
@@ -32,9 +38,7 @@ RenderState::RenderState(Graphics& graphics, RenderTargetDatabase& targetDatabas
 
 RenderState::~RenderState(void)
 {
-	memset(mCurrentTextureSlot, 0, sizeof(mCurrentTextureSlot));
-	memset(mCurrentSamplerSlot, 0, sizeof(mCurrentSamplerSlot));
-	memset(mCurrentUniformBufferSlot, 0, sizeof(mCurrentUniformBufferSlot));
+	assert(mSavedStates.size() == 1 && "Missing PopState pair");
 }
 
 Graphics& RenderState::GetGraphics()
@@ -49,7 +53,10 @@ void RenderState::PushState()
 		mCurrentSamplerSlot, 
 		mCurrentUniformBufferSlot,
 		
-		mViewportStack.size()
+		mViewportStack.size(),
+
+		mVertexShaderStack.size(),
+		mPixelShaderStack.size()
 		));
 }
 
@@ -76,7 +83,7 @@ void RenderState::PushConstantBuffer(const ConstantBuffer::Ptr& buffer, ShaderSt
 	++mCurrentUniformBufferSlot[stage];
 }
 
-void RenderState::PushParameters(RenderStateParameters& parameters)
+void RenderState::PushParameters(const RenderStateParameters& parameters)
 {
 	for (size_t stageIndex = 0; stageIndex < ShaderStage::TypeCount; ++stageIndex)
 	{
@@ -84,8 +91,22 @@ void RenderState::PushParameters(RenderStateParameters& parameters)
 		for (size_t i = 0; i < parameters.GetTextureCount(stage); ++i)
 		{
 			PushTexture(parameters.GetTexture(stage, i), stage);
+		}
+
+		for (size_t i = 0; i < parameters.GetConstantBufferCount(stage); ++i)
+		{
 			PushConstantBuffer(parameters.GetConstantBuffer(stage, i), stage);
 		}
+	}
+
+	if (parameters.mVertexShader != NULL)
+	{
+		SetVertexShader(parameters.mVertexShader);
+	}
+
+	if (parameters.mPixelShader != NULL)
+	{
+		SetPixelShader(parameters.mPixelShader);
 	}
 }
 
@@ -105,6 +126,26 @@ void RenderState::PopState()
 		mDepthRangeStack.pop_back();
 
 		mGraphics.SetViewport(mViewportStack.back(), mDepthRangeStack.back());
+	}
+
+	if (savedState.vertexShaderStackSize != mVertexShaderStack.size())
+	{
+		mVertexShaderStack.pop_back();
+
+		if (mVertexShaderStack.size() > 0)
+		{
+			mGraphics.SetVertexShader(mVertexShaderStack.back());
+		}
+	}
+
+	if (savedState.pixelShaderStackSize != mPixelShaderStack.size())
+	{
+		mPixelShaderStack.pop_back();
+
+		if (mPixelShaderStack.size() > 0)
+		{
+			mGraphics.SetPixelShader(mPixelShaderStack.back());
+		}
 	}
 
 	mSavedStates.pop_back();
@@ -128,11 +169,29 @@ void RenderState::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 
 void RenderState::SetVertexShader(const VertexShader::Ptr& vertexShader)
 {
+	if (mSavedStates.back().vertexShaderStackSize == mVertexShaderStack.size())
+	{
+		mVertexShaderStack.push_back(vertexShader);
+	}
+	else
+	{
+		mVertexShaderStack.back() = vertexShader;
+	}
+
 	mGraphics.SetVertexShader(vertexShader);
 }
 
 void RenderState::SetPixelShader(const PixelShader::Ptr& pixelShader)
 {
+	if (mSavedStates.back().pixelShaderStackSize == mPixelShaderStack.size())
+	{
+		mPixelShaderStack.push_back(pixelShader);
+	}
+	else
+	{
+		mPixelShaderStack.back() = pixelShader;
+	}
+
 	mGraphics.SetPixelShader(pixelShader);
 }
 

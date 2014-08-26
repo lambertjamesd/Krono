@@ -1,0 +1,7 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"GLSL 4.4" : "../GLSL/ColorMapper.frag"
+	}
+}

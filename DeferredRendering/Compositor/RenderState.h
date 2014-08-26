@@ -23,7 +23,7 @@ public:
 	void PushTexture(const Texture::Ptr& texture, ShaderStage::Type stage);
 	void PushSampler(const Sampler::Ptr& buffer, ShaderStage::Type stage);
 	void PushConstantBuffer(const ConstantBuffer::Ptr& sampler, ShaderStage::Type stage);
-	void PushParameters(RenderStateParameters& parameters);
+	void PushParameters(const RenderStateParameters& parameters);
 	void PopState();
 
 	void SetViewport(const Rectf& viewport, const Rangef& depthRange);
@@ -43,13 +43,19 @@ private:
 			size_t currentSamplerCount[ShaderStage::TypeCount],
 			size_t currentUniformCount[ShaderStage::TypeCount],
 			
-			size_t viewportStackSize);
+			size_t viewportStackSize,
+			
+			size_t vertexShaderStackSize,
+			size_t pixelShaderStackSize);
 
 		size_t textureCount[ShaderStage::TypeCount];
 		size_t samplerCount[ShaderStage::TypeCount];
 		size_t uniformCount[ShaderStage::TypeCount];
 
 		size_t viewportStackSize;
+
+		size_t vertexShaderStackSize;
+		size_t pixelShaderStackSize;
 	};
 
 	Graphics& mGraphics;
@@ -64,6 +70,10 @@ private:
 
 	std::vector<Rectf> mViewportStack;
 	std::vector<Rangef> mDepthRangeStack;
+
+
+	std::vector<VertexShader::Ptr> mVertexShaderStack;
+	std::vector<PixelShader::Ptr> mPixelShaderStack;
 };
 
 }

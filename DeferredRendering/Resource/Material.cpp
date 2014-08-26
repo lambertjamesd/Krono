@@ -30,18 +30,22 @@ bool Material::Use(RenderState& renderState, size_t technique)
 
 	auto foundTechnique = mTechniques.find(technique);
 
+	bool result;
+
 	if (foundTechnique == mTechniques.end())
 	{
-		return false;
+		result = false;
 	}
 	else
 	{
 		renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::PixelShader);
 		foundTechnique->second.Use(renderState);
-		return true;
+		result = true;
 	}
 
 	renderState.PopState();
+
+	return result;
 }
 
 }

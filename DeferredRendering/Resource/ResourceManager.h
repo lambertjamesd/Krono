@@ -13,6 +13,8 @@ namespace krono
 class ResourceManager
 {
 public:
+	typedef Auto<ResourceManager> Ptr;
+
 	ResourceManager(Graphics* graphics);
 	~ResourceManager(void);
 

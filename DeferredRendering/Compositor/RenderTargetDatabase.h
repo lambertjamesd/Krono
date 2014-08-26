@@ -4,6 +4,7 @@
 #include "Interface/Graphics.h"
 #include "Interface/RenderTarget.h"
 #include "Interface/DepthBuffer.h"
+#include "Interface/Color.h"
 
 #include <map>
 #include <string>
@@ -34,6 +35,9 @@ public:
 	~RenderTargetDatabase(void);
 
 	void BeginCompositeRender(const Vector2i& screenSize, Graphics& graphics);
+
+	void ClearRenderTarget(UInt32 targetID, const Colorf& color);
+	void ClearDepthBuffer(UInt32 targetID, float depth);
 	
 	const RenderTarget::Ptr& GetRenderTarget(UInt32 targetID);
 	const DepthBuffer::Ptr& GetDepthBuffer(UInt32 targetID);
