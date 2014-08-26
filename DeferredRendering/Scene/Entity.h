@@ -19,6 +19,7 @@ struct EntityData
 	EntityData();
 
 	Matrix4f viewTransform;
+	Matrix4f normalMatrix;
 };
 
 class Entity

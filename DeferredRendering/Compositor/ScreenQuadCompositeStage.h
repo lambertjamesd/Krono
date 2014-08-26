@@ -20,7 +20,7 @@ struct CompositeData
 class ScreenQuadCompositeStage : public CompositeStage
 {
 public:
-	ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh, const RenderStateParameters& renderParameters);
+	ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh);
 	~ScreenQuadCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
@@ -29,7 +29,6 @@ private:
 	Auto<ConstantBuffer> mConstantBuffer;
 
 	Mesh::Ptr mScreenMesh;
-	RenderStateParameters mRenderParameters;
 };
 
 }

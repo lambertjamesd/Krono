@@ -30,7 +30,15 @@ OpenGLSampler::OpenGLSampler(const SamplerDescription& description)
 		glSamplerParameteri(mSampler, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	}
 	
-	glSamplerParameteri(mSampler, GL_TEXTURE_MIN_FILTER, gMinMipFilterMapping[description.minFilter][description.mipFilter]);
+	if (description.useMipMap)
+	{
+		glSamplerParameteri(mSampler, GL_TEXTURE_MIN_FILTER, gMinMipFilterMapping[description.minFilter][description.mipFilter]);
+	}
+	else
+	{
+		glSamplerParameteri(mSampler, GL_TEXTURE_MIN_FILTER, gMagFilterMapping[description.minFilter]);
+	}
+
 	glSamplerParameteri(mSampler, GL_TEXTURE_MAG_FILTER, gMagFilterMapping[description.magFilter]);
 
 	glSamplerParameteri(mSampler, GL_TEXTURE_WRAP_S, gEdgeSampleMapping[description.uWrap]);

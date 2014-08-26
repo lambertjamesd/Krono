@@ -15,5 +15,5 @@ layout(binding = 0) uniform SceneViewData
 
 void main()
 {
-	colorOut = texture2D(textureTest, texCoord);
+	colorOut = vec4(texture2D(textureTest, texCoord).rgb, 1.0);
 }

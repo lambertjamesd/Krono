@@ -6,6 +6,7 @@
 #include "Interface/ConstantBuffer.h"
 #include "Interface/Graphics.h"
 #include "Interface/Texture.h"
+#include "Compositor/RenderStateParameters.h"
 #include <vector>
 #include <utility>
 
@@ -27,10 +28,13 @@ public:
 	Auto<ConstantBuffer>& GetConstantBuffer();
 
 	bool Use(RenderState& renderState, size_t technique);
+
+	void SetTexture(const Texture::Ptr& texture, size_t slot, ShaderStage::Type stage);
 private:
 	std::unordered_map<UInt32, Technique> mTechniques;
 	std::vector<std::pair<ShaderStage::Type, Auto<Texture> > > mTextures;
 	Auto<ConstantBuffer> mConstantBuffer;
+	RenderStateParameters mRenderStateParameters;
 };
 
 }

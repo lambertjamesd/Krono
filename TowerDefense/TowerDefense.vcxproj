@@ -90,7 +90,10 @@
     <ClInclude Include="GameObject\Camera.h" />
     <ClInclude Include="GameObject\Component.h" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="GameObject\Lens.h" />
     <ClInclude Include="GameObject\Renderer.h" />
+    <ClInclude Include="GameObject\Light.h" />
+    <ClInclude Include="Render\GeometryCache.h" />
     <ClInclude Include="Render\RenderStage.h" />
     <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Render\Renderable.h" />
@@ -106,7 +109,10 @@
     <ClCompile Include="GameObject\Camera.cpp" />
     <ClCompile Include="GameObject\Component.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="GameObject\Lens.cpp" />
     <ClCompile Include="GameObject\Renderer.cpp" />
+    <ClCompile Include="GameObject\Light.cpp" />
+    <ClCompile Include="Render\GeometryCache.cpp" />
     <ClCompile Include="Render\RenderStage.cpp" />
     <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Render\Renderable.cpp" />

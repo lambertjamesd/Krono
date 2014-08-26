@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="Compositor\CompositeStage.h" />
     <ClInclude Include="Compositor\Compositor.h" />
+    <ClInclude Include="Compositor\ScreenQuadCompositeStage.h" />
     <ClInclude Include="Math\Angle.h" />
     <ClInclude Include="Collide\Frustrum.h" />
     <ClInclude Include="Core\Types.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Collide\Frustrum.cpp" />
     <ClCompile Include="Compositor\CompositeStage.cpp" />
     <ClCompile Include="Compositor\Compositor.cpp" />
+    <ClCompile Include="Compositor\ScreenQuadCompositeStage.cpp" />
     <ClCompile Include="DX11\DX11Sampler.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Compositor\RenderState.cpp" />

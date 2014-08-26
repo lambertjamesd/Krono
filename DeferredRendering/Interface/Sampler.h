@@ -59,6 +59,7 @@ struct SamplerDescription
 	EdgeSampling::Type vWrap;
 	EdgeSampling::Type wWrap;
 
+	bool useMipMap;
 	float mipBias;
 	float minLOD;
 	float maxLOD;

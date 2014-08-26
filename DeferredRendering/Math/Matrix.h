@@ -71,7 +71,7 @@ public:
 		{
 			for (size_t row = 0; row < std::min(Rows, NewRows); ++row)
 			{
-				result.mElements[col][row] = mElements[col][row];
+				result.At(row, col) = mElements[col][row];
 			}
 		}
 

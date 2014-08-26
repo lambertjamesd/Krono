@@ -4,9 +4,9 @@
 
 using namespace krono;
 
-Lens::Lens(float near, float far) :
-	mNear(near),
-	mFar(far)
+Lens::Lens(float nearPlane, float farPlane) :
+	mNear(nearPlane),
+	mFar(farPlane)
 {
 
 }
@@ -17,8 +17,8 @@ Lens::~Lens()
 }
 
 
-PerspectiveLens::PerspectiveLens(float near, float far, const Radiansf& verticalFov) :
-	Lens(near, far),
+PerspectiveLens::PerspectiveLens(float nearPlane, float farPlane, const Radiansf& verticalFov) :
+	Lens(nearPlane, farPlane),
 	mVerticalFov(verticalFov)
 {
 
@@ -44,8 +44,8 @@ Matrix4f PerspectiveLens::GetProjectionMatrix() const
 }
 
 
-OrthographicLens::OrthographicLens(float near, float far, float height) :
-	Lens(near, far),
+OrthographicLens::OrthographicLens(float nearPlane, float farPlane, float height) :
+	Lens(nearPlane, farPlane),
 	mHeight(height)
 {
 
@@ -57,7 +57,7 @@ Matrix4f OrthographicLens::GetProjectionMatrix() const
 
 	result.At(0, 0) = 2.0f / mHeight;
 	result.At(1, 1) = 2.0f / mHeight;
-	result.At(2, 2) = 1.0 / (mFar - mNear);
+	result.At(2, 2) = 1.0f / (mFar - mNear);
 
 	result.At(2, 3) = mNear / (mNear - mFar);
 

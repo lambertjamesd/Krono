@@ -46,26 +46,34 @@ std::string ReadFileContents(const char *filename)
 Compositor::Ptr BuildCompositor(Graphics::Ptr& graphics, ResourceManager::Ptr& resourceManager, ::Scene& scene)
 {
 	Compositor::Ptr compositor(new Compositor());
-
+	
 	compositor->AddRenderTarget("color", DataFormat(DataFormat::Float, 4));
+	compositor->AddRenderTarget("normal", DataFormat(DataFormat::Float, 4));
 	compositor->AddRenderTarget("depth", DataFormat(DataFormat::Depth32F, 1));
+	compositor->AddRenderTarget("combined", DataFormat(DataFormat::Float, 4));
 
 	compositor->SetClearColor("color", Colorf(0.1f, 0.4f, 0.7f, 1.0f));
+	compositor->SetClearColor("normal", Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 	compositor->SetClearDepth("depth", 1.0f);
 
 	RenderSceneCompositeStage* renderScene;
+	RenderSceneCompositeStage* lightScene;
 	ScreenQuadCompositeStage* colorMap;
-	
-	RenderStateParameters colorMapParameters;
-
-	colorMapParameters.SetVertexShader(resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/ScreenComposite.shader"));
-	colorMapParameters.SetPixelShader(resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/ColorMapper.shader"));
 
 	compositor->AddCompositeStage(CompositeStage::Ptr(renderScene = new RenderSceneCompositeStage(0)));
-	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(scene.GetRenderManager().GetGeometryCache().GetPlane(), colorMapParameters)));
+	compositor->AddCompositeStage(CompositeStage::Ptr(lightScene = new RenderSceneCompositeStage(1)));
+	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(scene.GetRenderManager().GetGeometryCache().GetPlane())));
 
 	renderScene->AddRenderTarget("color");
-	//renderScene->SetDepthBuffer("depth");
+	renderScene->AddRenderTarget("normal");
+	renderScene->SetDepthBuffer("depth");
+	
+	lightScene->AddRenderTargetInput("color");
+	lightScene->AddRenderTargetInput("normal");
+	lightScene->AddRenderTarget("combined");
+	
+	colorMap->GetStateParameters().SetVertexShader(resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/ScreenComposite.shader"));
+	colorMap->GetStateParameters().SetPixelShader(resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/ColorMapper.shader"));
 
 	colorMap->AddRenderTargetInput("color");
 
@@ -145,17 +153,18 @@ int main(int argc, char* argv[])
 
 		Auto<Material> materialTest(new Material());
 		materialTest->AddTechnique(0, Technique(vertexShader, pixelShader));
+		materialTest->SetTexture(textureTest, 0, ShaderStage::PixelShader);
 		
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(materialTest, 0);
 
-		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(0.5f, 0.5f, 0.5f));
+		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(1.0f, 1.0f, 1.0f));
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
 		camera.lock()->SetRenderTargets(renderTarget);
-		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -5.0f));
+		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -2.0f));
 	}
 	catch (Exception& exception)
 	{
@@ -164,10 +173,9 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	graphics->SetTexture(textureTest, 0, ShaderStage::PixelShader);
 	graphics->SetSampler(pointSampler, 0, ShaderStage::PixelShader);
 	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
-
+	
 	chrono::time_point<chrono::system_clock> lastFrameTime = chrono::system_clock::now();
 
 	chrono::duration<double> frameDuration(1.0 / 60.0);

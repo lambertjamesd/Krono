@@ -115,9 +115,9 @@ Texture2D::Ptr RenderTargetDatabase::GetRenderTexture(UInt32 targetID)
 
 	auto depthResult = mDepthBuffers.find(targetID);
 
-	if (depthResult == mDepthBuffers.end())
+	if (depthResult != mDepthBuffers.end())
 	{
-		return targetResult->second->GetTexture();
+		return depthResult->second->GetTexture();
 	}
 
 	return Texture2D::Null;

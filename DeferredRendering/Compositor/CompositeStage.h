@@ -3,6 +3,7 @@
 #include <memory>
 #include "RenderState.h"
 #include "RenderTargetDatabase.h"
+#include "RenderStateParameters.h"
 #include <vector>
 
 namespace krono
@@ -18,6 +19,7 @@ public:
 	virtual void Render(RenderState& renderState) = 0;
 	
 	const RenderTargetDescription& GetTargetDescription() const;
+	RenderStateParameters& GetStateParameters();
 
 	void AddRenderTarget(const std::string& targetName);
 	void SetDepthBuffer(const std::string& bufferName);
@@ -30,6 +32,7 @@ protected:
 	std::vector<UInt32> mRenderTargetInput;
 private:
 	RenderTargetDescription mRenderTargetDescription;
+	RenderStateParameters mStateParameters;
 };
 
 }

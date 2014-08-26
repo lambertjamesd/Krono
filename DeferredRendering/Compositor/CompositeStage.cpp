@@ -17,6 +17,11 @@ const RenderTargetDescription& CompositeStage::GetTargetDescription() const
 	return mRenderTargetDescription;
 }
 
+RenderStateParameters& CompositeStage::GetStateParameters()
+{
+	return mStateParameters;
+}
+
 void CompositeStage::AddRenderTarget(const std::string& targetName)
 {
 	mRenderTargetDescription.AddRenderTarget(RenderTargetDatabase::GetTargetID(targetName));
@@ -39,6 +44,8 @@ void CompositeStage::PushTargetInput(RenderState& renderState) const
 	{
 		renderState.PushRenderTargetTexture(*it, ShaderStage::PixelShader);
 	}
+
+	renderState.PushParameters(mStateParameters);
 }
 
 }

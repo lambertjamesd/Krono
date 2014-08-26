@@ -33,6 +33,8 @@ void RenderSceneCompositeStage::Render(RenderState& renderState)
 
 	renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::VertexShader);
 	
+	PushTargetInput(renderState);
+	
 	renderState.RenderScene(mTechnique);
 
 	renderState.PopState();

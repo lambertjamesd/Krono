@@ -1,9 +1,11 @@
 #version 420
 
 in vec3 attrPOSITION0;
+in vec3 attrNORMAL0;
 in vec2 attrTEXCOORD0;
 
 out vec2 texCoord;
+out vec3 normal;
 
 layout(binding = 0) uniform SceneViewData
 {
@@ -15,10 +17,12 @@ layout(binding = 0) uniform SceneViewData
 layout(binding = 1) uniform EntityData
 {
 	mat4 modelMatrix;
+	mat4 normalMatrix;
 };
 
 void main()
 {
 	gl_Position = projectionViewMatrix * modelMatrix * vec4(attrPOSITION0, 1);
 	texCoord = attrTEXCOORD0;
+	normal = (normalMatrix * vec4(attrNORMAL0, 0.0)).xyz;
 }

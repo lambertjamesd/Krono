@@ -9,7 +9,7 @@ public:
 
 	virtual krono::Matrix4f GetProjectionMatrix() const = 0;
 protected:
-	Lens(float near, float far); 
+	Lens(float nearPlane, float farPlane); 
 	
 	float mNear;
 	float mFar;
@@ -20,17 +20,17 @@ private:
 class PerspectiveLens : public Lens
 {
 public:
-	PerspectiveLens(float near, float far, const krono::Radiansf& verticalFov);
+	PerspectiveLens(float nearPlane, float farPlane, const krono::Radiansf& verticalFov);
 
 	virtual krono::Matrix4f GetProjectionMatrix() const;
 private:
-	float mVerticalFov;
+	krono::Radiansf mVerticalFov;
 };
 
 class OrthographicLens : public Lens
 {
 public:
-	OrthographicLens(float near, float far, float height);
+	OrthographicLens(float nearPlane, float farPlane, float height);
 
 	virtual krono::Matrix4f GetProjectionMatrix() const;
 private:

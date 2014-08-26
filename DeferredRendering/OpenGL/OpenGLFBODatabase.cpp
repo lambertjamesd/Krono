@@ -21,8 +21,12 @@ OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<Open
 
 	for (auto it = renderBuffers.cbegin(); it != renderBuffers.cend(); ++it)
 	{
-		OpenGLObjectID objectID = (*it)->GetObjectID();
-		signatureHash.Update(&objectID, sizeof(objectID));
+		signatureHash.Update<OpenGLObjectID>((*it)->GetObjectID());
+	}
+
+	if (depthBuffer != NULL)
+	{
+		signatureHash.Update<OpenGLObjectID>(depthBuffer->GetObjectID());
 	}
 
 	UInt32 signature = signatureHash.GetDigest();

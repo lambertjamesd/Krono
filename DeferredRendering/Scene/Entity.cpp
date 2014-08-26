@@ -9,7 +9,8 @@ namespace krono
 {
 
 EntityData::EntityData() :
-	viewTransform(Matrix4f::Identity())
+	viewTransform(Matrix4f::Identity()),
+	normalMatrix(Matrix4f::Identity())
 {
 
 }
@@ -120,6 +121,8 @@ void Entity::RebuildBuffer(Graphics& graphics)
 
 	if (mBufferIsDirty)
 	{
+		mEntityData.normalMatrix = mEntityData.viewTransform.Inverse().Transpose();
+
 		mEntityBuffer->Set<EntityData>(mEntityData);
 		mBufferIsDirty = false;
 	}

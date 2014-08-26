@@ -15,6 +15,26 @@ RenderStateParameters::~RenderStateParameters(void)
 
 }
 
+void RenderStateParameters::SetTexture(const Texture::Ptr& texture, size_t index, ShaderStage::Type stage)
+{
+	if (mTextures[stage].size() < index + 1)
+	{
+		mTextures[stage].resize(index + 1);
+	}
+
+	mTextures[stage][index] = texture;
+}
+
+void RenderStateParameters::SetConstantBuffer(const ConstantBuffer::Ptr& buffer, size_t index, ShaderStage::Type stage)
+{
+	if (mUniforms[stage].size() < index + 1)
+	{
+		mUniforms[stage].resize(index + 1);
+	}
+	
+	mUniforms[stage][index] = buffer;
+}
+
 size_t RenderStateParameters::GetTextureCount(ShaderStage::Type stage) const
 {
 	return mTextures[stage].size();

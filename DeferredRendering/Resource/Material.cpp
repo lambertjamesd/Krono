@@ -26,7 +26,6 @@ Auto<ConstantBuffer>& Material::GetConstantBuffer()
 
 bool Material::Use(RenderState& renderState, size_t technique)
 {
-	renderState.PushState();
 
 	auto foundTechnique = mTechniques.find(technique);
 
@@ -38,14 +37,24 @@ bool Material::Use(RenderState& renderState, size_t technique)
 	}
 	else
 	{
+		renderState.PushState();
+
+		renderState.PushParameters(mRenderStateParameters);
+
 		renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::PixelShader);
 		foundTechnique->second.Use(renderState);
 		result = true;
+
+		renderState.PopState();
 	}
 
-	renderState.PopState();
 
 	return result;
+}
+
+void Material::SetTexture(const Texture::Ptr& texture, size_t slot, ShaderStage::Type stage)
+{
+	mRenderStateParameters.SetTexture(texture, slot, stage);
 }
 
 }

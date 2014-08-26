@@ -15,5 +15,5 @@ layout(binding = 0) uniform SceneViewData
 void main()
 {
 	gl_Position = compositeTransform * vec4(attrPOSITION0, 1);
-	texCoord = attrTEXCOORD0;
+	texCoord = vec2(attrTEXCOORD0.x, 1 - attrTEXCOORD0.y);
 }

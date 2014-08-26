@@ -13,9 +13,8 @@ CompositeData::CompositeData() :
 
 }
 
-ScreenQuadCompositeStage::ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh, const RenderStateParameters& renderParameters) :
-	mScreenMesh(screenMesh),
-	mRenderParameters(renderParameters)
+ScreenQuadCompositeStage::ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh) :
+	mScreenMesh(screenMesh)
 {
 
 }
@@ -34,8 +33,6 @@ void ScreenQuadCompositeStage::Render(RenderState& renderState)
 	renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::PixelShader);
 
 	PushTargetInput(renderState);
-
-	renderState.PushParameters(mRenderParameters);
 
 	mScreenMesh->GetSubMesh(0)->Render(renderState.GetGraphics());
 

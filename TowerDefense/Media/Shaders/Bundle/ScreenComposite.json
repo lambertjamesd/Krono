@@ -2,6 +2,7 @@
 	"type" : "vertex",
 
 	"sources" : {
+		"HLSL 5" : "../HLSL/ScreenComposite.hlsl",
 		"GLSL 4.4" : "../GLSL/ScreenComposite.vert"
 	}
 }

@@ -18,6 +18,9 @@ public:
 
 	RenderStateParameters(void);
 	~RenderStateParameters(void);
+	
+	void SetTexture(const Texture::Ptr& texture, size_t index, ShaderStage::Type stage);
+	void SetConstantBuffer(const ConstantBuffer::Ptr& buffer, size_t index, ShaderStage::Type stage);
 
 	void AddTexture(const Texture::Ptr& texture, ShaderStage::Type stage);
 	void AddConstantBuffer(const ConstantBuffer::Ptr& buffer, ShaderStage::Type stage);
