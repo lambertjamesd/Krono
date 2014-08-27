@@ -4,12 +4,15 @@
 #include "Compositor/RenderState.h"
 #include "SceneIndex.h"
 #include <assert.h>
+#include <cstddef>
 
 namespace krono
 {
 
 EntityData::EntityData() :
-	viewTransform(Matrix4f::Identity()),
+	modelMatrix(Matrix4f::Identity()),
+	viewModelMatrix(Matrix4f::Identity()),
+	projectionViewModelMatrix(Matrix4f::Identity()),
 	normalMatrix(Matrix4f::Identity())
 {
 
@@ -17,8 +20,7 @@ EntityData::EntityData() :
 
 Entity::Entity(SceneIndex* sceneIndex) :
 	mSceneIndex(sceneIndex),
-	mIsVisisble(true),
-	mBufferIsDirty(true)
+	mIsVisisble(true)
 {
 }
 
@@ -29,15 +31,14 @@ Entity::~Entity(void)
 
 void Entity::SetTransform(const Matrix4f& value)
 {
-	mEntityData.viewTransform = value;
-	mBufferIsDirty = true;
+	mEntityData.modelMatrix = value;
 
 	mSceneIndex->UpdateEntity(this);
 }
 
 const Matrix4f& Entity::GetTransform() const
 {
-	return mEntityData.viewTransform;
+	return mEntityData.modelMatrix;
 }
 
 void Entity::SetMesh(Auto<Mesh>& mesh)
@@ -94,7 +95,7 @@ void Entity::Render(RenderState& renderState, size_t technique)
 {
 	if (mIsVisisble)
 	{
-		RebuildBuffer(renderState.GetGraphics());
+		RebuildBuffer(renderState);
 
 		renderState.PushState();
 		renderState.PushConstantBuffer(mEntityBuffer, ShaderStage::VertexShader);
@@ -111,21 +112,20 @@ void Entity::Render(RenderState& renderState, size_t technique)
 	}
 }
 
-void Entity::RebuildBuffer(Graphics& graphics)
+void Entity::RebuildBuffer(RenderState& renderState)
 {
 	if (mEntityBuffer == NULL)
 	{
 		ConstantBufferLayout layout;
-		mEntityBuffer = Auto<ConstantBuffer>(graphics.CreateConstantBuffer(layout));
+		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(EntityData, projectionViewModelMatrix));
+		mEntityBuffer = Auto<ConstantBuffer>(renderState.GetGraphics().CreateConstantBuffer(layout));
 	}
 
-	if (mBufferIsDirty)
-	{
-		mEntityData.normalMatrix = mEntityData.viewTransform.Inverse().Transpose();
+	mEntityData.viewModelMatrix = renderState.GetViewMatrix() * mEntityData.modelMatrix;
+	mEntityData.projectionViewModelMatrix = renderState.GetProjectionMatrix() * mEntityData.viewModelMatrix;
+	mEntityData.normalMatrix = mEntityData.viewModelMatrix.Inverse().Transpose();
 
-		mEntityBuffer->Set<EntityData>(mEntityData);
-		mBufferIsDirty = false;
-	}
+	mEntityBuffer->Set<EntityData>(mEntityData);
 }
 
 }

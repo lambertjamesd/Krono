@@ -327,6 +327,15 @@
     <ClInclude Include="Compositor\ScreenQuadCompositeStage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\GeometryCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Compositor\CompositorLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Compositor\CompositeStageLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Object.cpp">
@@ -594,6 +603,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compositor\ScreenQuadCompositeStage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\GeometryCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Compositor\CompositorLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

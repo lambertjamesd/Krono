@@ -17,6 +17,8 @@ layout(binding = 0) uniform SceneViewData
 layout(binding = 1) uniform EntityData
 {
 	mat4 modelMatrix;
+	mat4 viewModelMatrix;
+	mat4 projectionViewModelMatrix;
 	mat4 normalMatrix;
 };
 

@@ -18,7 +18,10 @@ struct EntityData
 {
 	EntityData();
 
-	Matrix4f viewTransform;
+	Matrix4f modelMatrix;
+	Matrix4f viewModelMatrix;
+	Matrix4f projectionViewModelMatrix;
+
 	Matrix4f normalMatrix;
 };
 
@@ -52,15 +55,13 @@ private:
 	SceneIndex *mSceneIndex;
 	void *mSceneIndexData;
 
-	void RebuildBuffer(Graphics& graphics);
+	void RebuildBuffer(RenderState& renderState);
 	Auto<ConstantBuffer> mEntityBuffer;
 
 	Auto<Mesh> mMesh;
 	std::vector<Auto<Material> > mMaterials;
 	EntityData mEntityData;
 	bool mIsVisisble;
-
-	bool mBufferIsDirty;
 };
 
 }

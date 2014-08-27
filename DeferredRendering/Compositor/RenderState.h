@@ -26,13 +26,16 @@ public:
 	void PushParameters(const RenderStateParameters& parameters);
 	void PopState();
 
+	const Vector2i& GetRenderTargetSize() const;
+
 	void SetViewport(const Rectf& viewport, const Rangef& depthRange);
+	Rectf GetViewport() const;
 
 	void SetVertexShader(const VertexShader::Ptr& vertexShader);
 	void SetPixelShader(const PixelShader::Ptr& pixelShader);
 
 	const Matrix4f& GetViewMatrix() const;
-	Matrix4f GetProjectionMatrix() const;
+	const Matrix4f& GetProjectionMatrix() const;
 
 	void RenderScene(size_t techniqueType);
 private:
@@ -71,9 +74,10 @@ private:
 	std::vector<Rectf> mViewportStack;
 	std::vector<Rangef> mDepthRangeStack;
 
-
 	std::vector<VertexShader::Ptr> mVertexShaderStack;
 	std::vector<PixelShader::Ptr> mPixelShaderStack;
+
+	Matrix4f mProjectionMatrix;
 };
 
 }

@@ -85,6 +85,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\Compositor\CompositeStageLoader.h" />
+    <ClInclude Include="Resource\Compositor\CompositorLoader.h" />
     <ClInclude Include="Compositor\CompositeStage.h" />
     <ClInclude Include="Compositor\Compositor.h" />
     <ClInclude Include="Compositor\ScreenQuadCompositeStage.h" />
@@ -101,6 +103,7 @@
     <ClInclude Include="Compositor\RenderTargetDatabase.h" />
     <ClInclude Include="Compositor\RenderTargetConfiguration.h" />
     <ClInclude Include="Compositor\RenderSceneCompositeStage.h" />
+    <ClInclude Include="Resource\GeometryCache.h" />
     <ClInclude Include="Resource\NotFoundException.h" />
     <ClInclude Include="OpenGL\OpenGLSampler.h" />
     <ClInclude Include="OpenGL\OpenGLTextureStorage.h" />
@@ -191,6 +194,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp" />
+    <ClCompile Include="Resource\Compositor\CompositorLoader.cpp" />
     <ClCompile Include="Compositor\CompositeStage.cpp" />
     <ClCompile Include="Compositor\Compositor.cpp" />
     <ClCompile Include="Compositor\ScreenQuadCompositeStage.cpp" />
@@ -202,6 +207,7 @@
     <ClCompile Include="Compositor\RenderTargetDatabase.cpp" />
     <ClCompile Include="Compositor\RenderTargetConfiguration.cpp" />
     <ClCompile Include="Compositor\RenderSceneCompositeStage.cpp" />
+    <ClCompile Include="Resource\GeometryCache.cpp" />
     <ClCompile Include="Resource\NotFoundException.cpp" />
     <ClCompile Include="OpenGL\OpenGLSampler.cpp" />
     <ClCompile Include="OpenGL\OpenGLTextureStorage.cpp" />

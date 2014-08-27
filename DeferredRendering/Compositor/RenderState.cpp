@@ -26,7 +26,8 @@ RenderState::SavedState::SavedState(
 RenderState::RenderState(Graphics& graphics, RenderTargetDatabase& targetDatabase, SceneView& sceneView) :
 	mGraphics(graphics),
 	mTargetDatabase(targetDatabase),
-	mSceneView(sceneView)
+	mSceneView(sceneView),
+	mProjectionMatrix(mSceneView.CalculateProjectionMatrix(mSceneView.CalculateViewport(mTargetDatabase.GetRenderSize()).size))
 {
 	memset(mCurrentTextureSlot, 0, sizeof(mCurrentTextureSlot));
 	memset(mCurrentSamplerSlot, 0, sizeof(mCurrentSamplerSlot));
@@ -151,6 +152,11 @@ void RenderState::PopState()
 	mSavedStates.pop_back();
 }
 
+const Vector2i& RenderState::GetRenderTargetSize() const
+{
+	return mTargetDatabase.GetRenderSize();
+}
+
 void RenderState::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
 	if (mSavedStates.back().viewportStackSize == mViewportStack.size())
@@ -165,6 +171,18 @@ void RenderState::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 	}
 
 	mGraphics.SetViewport(viewport, depthRange);
+}
+
+Rectf RenderState::GetViewport() const
+{
+	if (mViewportStack.size())
+	{
+		return mViewportStack.back();
+	}
+	else
+	{
+		return Rectf();
+	}
 }
 
 void RenderState::SetVertexShader(const VertexShader::Ptr& vertexShader)
@@ -200,10 +218,9 @@ const Matrix4f& RenderState::GetViewMatrix() const
 	return mSceneView.GetViewMatrix();
 }
 
-Matrix4f RenderState::GetProjectionMatrix() const
+const Matrix4f& RenderState::GetProjectionMatrix() const
 {
-	Rectf viewport = mSceneView.CalculateViewport(mTargetDatabase.GetRenderSize());
-	return mSceneView.CalculateProjectionMatrix(viewport.size);
+	return mProjectionMatrix;
 }
 
 void RenderState::RenderScene(size_t techniqueType)

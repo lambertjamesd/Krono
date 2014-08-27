@@ -5,7 +5,7 @@ in vec2 attrTEXCOORD0;
 
 out vec2 texCoord;
 
-layout(binding = 0) uniform SceneViewData
+layout(binding = 0) uniform VertexCompositeData
 {
 	mat4 projectionMatrix;
 	mat4 projectionInvMatrix;

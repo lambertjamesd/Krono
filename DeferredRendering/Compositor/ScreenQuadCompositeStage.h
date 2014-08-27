@@ -23,6 +23,7 @@ struct PixelCompositeData
 
 	Matrix4f projectionMatrix;
 	Matrix4f projectionInverseMatrix;
+	Vector4f screenSize;
 };
 
 class ScreenQuadCompositeStage : public CompositeStage
@@ -33,7 +34,7 @@ public:
 	
 	virtual void Render(RenderState& renderState);
 private:
-	void RebuildBuffer(Graphics& graphics, const Matrix4f& compositeTransform, const Matrix4f& projectionMatrix);
+	void RebuildBuffer(RenderState& renderState);
 	Auto<ConstantBuffer> mVertexContantBuffer;
 	Auto<ConstantBuffer> mPixelContantBuffer;
 

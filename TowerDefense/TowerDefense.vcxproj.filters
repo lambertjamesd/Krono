@@ -60,9 +60,6 @@
     <ClInclude Include="Scene\UpdateManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Render\GeometryCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\Lens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -110,9 +107,6 @@
     <ClCompile Include="Scene\UpdateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Render\GeometryCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\Lens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -139,15 +133,15 @@
     <None Include="Media\Shaders\Bundle\PixelShaderTest.shader" />
     <None Include="Media\Shaders\Bundle\VertexShaderTest.shader" />
     <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.vert" />
     <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
     <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
+    <None Include="Media\Shaders\GLSL\ColorMapper.frag" />
+    <None Include="Media\Shaders\GLSL\ScreenComposite.vert" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl" />
     <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl" />
+    <FxCompile Include="Media\Shaders\HLSL\ScreenComposite.hlsl" />
+    <FxCompile Include="Media\Shaders\HLSL\ColorMapper.hlsl" />
   </ItemGroup>
 </Project>

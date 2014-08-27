@@ -5,6 +5,8 @@
 #include "Texture2DLoader.h"
 #include "ShaderLoader.h"
 #include "JSON/JsonDocumentLoader.h"
+#include "Compositor/CompositeStageLoader.h"
+#include "Compositor/CompositorLoader.h"
 
 namespace krono
 {
@@ -39,6 +41,8 @@ void ResourceManager::AddDefaultLoaders()
 	AddLoader<VertexShader>(Auto<ResourceLoader>(new VertexShaderLoader()));
 	AddLoader<PixelShader>(Auto<ResourceLoader>(new PixelShaderLoader()));
 	AddLoader<JsonDocument>(Auto<ResourceLoader>(new JsonDocumentLoader()));
+	AddLoader<CompositeStageLoader>(Auto<ResourceLoader>(new CompositeStageLoader()));
+	AddLoader<CompositorLoader>(Auto<ResourceLoader>(new CompositorLoader()));
 }
 
 }

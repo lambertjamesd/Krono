@@ -93,7 +93,6 @@
     <ClInclude Include="GameObject\Lens.h" />
     <ClInclude Include="GameObject\Renderer.h" />
     <ClInclude Include="GameObject\Light.h" />
-    <ClInclude Include="Render\GeometryCache.h" />
     <ClInclude Include="Render\RenderStage.h" />
     <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Render\Renderable.h" />
@@ -112,7 +111,6 @@
     <ClCompile Include="GameObject\Lens.cpp" />
     <ClCompile Include="GameObject\Renderer.cpp" />
     <ClCompile Include="GameObject\Light.cpp" />
-    <ClCompile Include="Render\GeometryCache.cpp" />
     <ClCompile Include="Render\RenderStage.cpp" />
     <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Render\Renderable.cpp" />
@@ -137,22 +135,22 @@
     <None Include="Media\Shaders\Bundle\PixelShaderTest.shader" />
     <None Include="Media\Shaders\Bundle\VertexShaderTest.json" />
     <None Include="Media\Shaders\Bundle\VertexShaderTest.shader" />
+    <None Include="Media\Shaders\GLSL\ColorMapper.frag" />
     <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenCopy.vert" />
+    <None Include="Media\Shaders\GLSL\ScreenComposite.vert" />
     <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
     <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Media\Shaders\HLSL\ColorMapper.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyPix.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Media\Shaders\HLSL\ScreenCopyVert.hlsl">
+    <FxCompile Include="Media\Shaders\HLSL\ScreenComposite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>

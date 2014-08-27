@@ -7,7 +7,7 @@ SpinBehavior::SpinBehavior(GameObject& parentGameObject) :
 	Behavior(parentGameObject),
 
 	mAxis(0.0f, 1.0f, 0.0f),
-	mRotationRate(5.0f)
+	mRotationRate(10.0f)
 {
 
 }

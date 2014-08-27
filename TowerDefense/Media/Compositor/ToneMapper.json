@@ -1,0 +1,11 @@
+{
+	"type" : "screenQuad",
+	
+	"inputCount" : 1,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "Media/Shaders/Bundle/ScreenComposite.shader",
+		"pixelShader" : "Media/Shaders/Bundle/ColorMapper.shader"
+	}
+}

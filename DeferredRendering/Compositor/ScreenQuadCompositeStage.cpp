@@ -13,6 +13,13 @@ VertexCompositeData::VertexCompositeData() :
 
 }
 
+PixelCompositeData::PixelCompositeData() :
+	projectionMatrix(Matrix4f::Identity()),
+	projectionInverseMatrix(Matrix4f::Identity())
+{
+
+}
+
 ScreenQuadCompositeStage::ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh) :
 	mScreenMesh(screenMesh)
 {
@@ -26,7 +33,7 @@ ScreenQuadCompositeStage::~ScreenQuadCompositeStage(void)
 
 void ScreenQuadCompositeStage::Render(RenderState& renderState)
 {
-	RebuildBuffer(renderState.GetGraphics(), Matrix4f::Identity(), renderState.GetProjectionMatrix());
+	RebuildBuffer(renderState);
 	renderState.PushConstantBuffer(mVertexContantBuffer, ShaderStage::VertexShader);
 	renderState.PushConstantBuffer(mPixelContantBuffer, ShaderStage::PixelShader);
 
@@ -35,23 +42,38 @@ void ScreenQuadCompositeStage::Render(RenderState& renderState)
 	mScreenMesh->GetSubMesh(0)->Render(renderState.GetGraphics());
 }
 
-void ScreenQuadCompositeStage::RebuildBuffer(Graphics& graphics, const Matrix4f& compositeTransform, const Matrix4f& projectionMatrix)
+void ScreenQuadCompositeStage::RebuildBuffer(RenderState& renderState)
 {
+	Matrix4f projectionMatrix = renderState.GetProjectionMatrix();
+	Rectf viewport = renderState.GetViewport();
+	Vector2f screenSize = renderState.GetRenderTargetSize();
+	Matrix4f compositeTransform = Matrix4f::Scale(Vector3f(screenSize / viewport.size, 1.0f)) * Matrix4f::Translation(Vector3f(-viewport.topLeft, 0.0f));
+
 	if (mVertexContantBuffer == NULL)
 	{
-		ConstantBufferLayout layout;
-		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, projectionMatrix));
-		layout.MarkSpecialType(ConstantBufferLayout::TypeInvProjectionMatrix, offsetof(VertexCompositeData, projectionInverseMatrix));
-		layout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, compositeTransform));
-		mVertexContantBuffer = graphics.CreateConstantBuffer(layout);
+		ConstantBufferLayout vertexLayout;
+		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, projectionMatrix));
+		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeInvProjectionMatrix, offsetof(VertexCompositeData, projectionInverseMatrix));
+		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, compositeTransform));
+		mVertexContantBuffer = renderState.GetGraphics().CreateConstantBuffer(vertexLayout);
+		
+		ConstantBufferLayout pixelLayout;
+		pixelLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(PixelCompositeData, projectionMatrix));
+		pixelLayout.MarkSpecialType(ConstantBufferLayout::TypeInvProjectionMatrix, offsetof(PixelCompositeData, projectionInverseMatrix));
+		mPixelContantBuffer = renderState.GetGraphics().CreateConstantBuffer(pixelLayout);
 	}
 
-	VertexCompositeData data;
-	data.projectionMatrix = projectionMatrix;
-	data.projectionInverseMatrix = projectionMatrix.Inverse();
-	data.compositeTransform = compositeTransform;
-
-	mVertexContantBuffer->Set<VertexCompositeData>(data);
+	VertexCompositeData vertexData;
+	vertexData.projectionMatrix = projectionMatrix;
+	vertexData.projectionInverseMatrix = projectionMatrix.Inverse();
+	vertexData.compositeTransform = compositeTransform;
+	mVertexContantBuffer->Set<VertexCompositeData>(vertexData);
+	
+	PixelCompositeData pixelData;
+	pixelData.projectionMatrix = projectionMatrix;
+	pixelData.projectionInverseMatrix = projectionMatrix.Inverse();
+	pixelData.screenSize = Vector4f(screenSize, 1.0f / screenSize);
+	mPixelContantBuffer->Set<PixelCompositeData>(pixelData);
 }
 
 }

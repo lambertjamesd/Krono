@@ -72,6 +72,24 @@ Vector2<T> operator* (const Vector2<T>& a, const T& b)
 	return Vector2<T>(a.x * b, a.y * b);
 }
 
+template <typename T>
+Vector2<T> operator/ (const Vector2<T>& a, const Vector2<T>& b)
+{
+	return Vector2<T>(a.x / b.x, a.y / b.y);
+}
+
+template <typename T>
+Vector2<T> operator/ (const Vector2<T>& a, const T& b)
+{
+	return *this * (Constant<T>::One / b);
+}
+
+template <typename T>
+Vector2<T> operator/ (const T& a, const Vector2<T>& b)
+{
+	return Vector2<T>(a / b.x, a / b.y);
+}
+
 typedef Vector2<int> Vector2i;
 typedef Vector2<float> Vector2f;
 typedef Vector2i Size;

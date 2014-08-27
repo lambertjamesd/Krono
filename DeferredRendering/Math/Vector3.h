@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include "Math.h"
+#include "Vector2.h"
 
 namespace krono
 {
@@ -10,6 +11,8 @@ class Vector3
 {
 public:
 	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
+	Vector3(const Vector2<T>& xy, const T& z) : x(xy.x), y(xy.y), z(z) {}
+	Vector3(const T& x, const Vector2<T>& yz) : x(x), y(yz.y), z(yz.z) {}
 	Vector3(void) : x(T()), y(T()), z(T()) {}
 	~Vector3(void) {}
 

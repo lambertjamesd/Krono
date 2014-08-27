@@ -1,0 +1,24 @@
+{
+	"documentType" : "compositor",
+
+	"stages" : [
+		{
+			"stage" : "SceneRender.json",
+			
+			"output" : ["color", "normal"],
+			"depthBuffer" : ["depth"]
+		},
+		{
+			"stage" : "Lighting.json",
+			
+			"input" : ["color", "normal"],
+			"output" : ["combined"]
+		},
+		{
+			"stage" : "ToneMapper.json",
+			
+			"input" : ["combined"],
+			"output" : ["output0"]
+		}
+	]
+}
