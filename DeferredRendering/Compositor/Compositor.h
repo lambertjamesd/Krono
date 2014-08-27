@@ -5,11 +5,29 @@
 #include "RenderTargetDatabase.h"
 #include "RenderTargetConfiguration.h"
 #include "Scene/SceneView.h"
+#include "RenderState.h"
 #include <vector>
 #include <map>
 
 namespace krono
 {
+
+class CompositeStageConnections
+{
+public:
+	void AddRenderTarget(const std::string& targetName);
+	void SetDepthBuffer(const std::string& bufferName);
+	void AddRenderTargetInput(const std::string& targetName);
+
+	void PushInputTargets(RenderState& renderState) const;
+	const RenderTargetDescription& GetTargetDescription() const;
+
+	size_t GetInputCount() const;
+private:
+	RenderTargetDescription mRenderTargets;
+
+	std::vector<UInt32> mTargetInputs;
+};
 
 class Compositor
 {
@@ -27,9 +45,15 @@ public:
 	void Render(Graphics& graphics, const RenderTargetConfiguration& renderTargetConfig, SceneView& sceneView);
 
 	void AddRenderTarget(const std::string& name, const DataFormat& dataFormat);
-	void AddCompositeStage(const CompositeStage::Ptr& compositeStage);
+	void AddCompositeStage(const CompositeStage::Ptr& compositeStage, const CompositeStageConnections& connections);
 private:
-	std::vector<CompositeStage::Ptr> mCompositeStages;
+	struct CompositeStageEntry
+	{
+		CompositeStage::Ptr compositeStage;
+		CompositeStageConnections connections;
+	};
+
+	std::vector<CompositeStageEntry> mCompositeStages;
 	RenderTargetDatabase mRenderTargetDatabase;
 
 	std::map<UInt32, Colorf> mClearColors;

@@ -10,7 +10,7 @@ GeometryCache::GeometryCache(Graphics& graphics) :
 
 }
 
-Mesh::Ptr& GeometryCache::GetPlane()
+const Mesh::Ptr& GeometryCache::GetPlane()
 {
 	if (mPlane == NULL)
 	{

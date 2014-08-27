@@ -24,8 +24,6 @@ RenderSceneCompositeStage::~RenderSceneCompositeStage(void)
 
 void RenderSceneCompositeStage::Render(RenderState& renderState)
 {
-	renderState.PushState();
-
 	Matrix4f viewMatrix = renderState.GetViewMatrix();
 	Matrix4f projectionMatrix = renderState.GetProjectionMatrix();
 
@@ -33,11 +31,9 @@ void RenderSceneCompositeStage::Render(RenderState& renderState)
 
 	renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::VertexShader);
 	
-	PushTargetInput(renderState);
+	PushStateParameters(renderState);
 	
 	renderState.RenderScene(mTechnique);
-
-	renderState.PopState();
 }
 
 

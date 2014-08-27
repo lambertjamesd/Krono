@@ -36,6 +36,7 @@ set (SOURCE_FILES
 	Resource/Mesh/MeshLoader.cpp
 	Resource/Technique.cpp
 	Resource/FormatException.cpp
+	Resource/GeometryCache.cpp
 	Resource/ObjMeshGroupLoader.cpp
 	Resource/Material.cpp
 	Resource/NotFoundException.cpp

@@ -4,7 +4,6 @@
 
 #include "Renderable.h"
 #include "RenderStage.h"
-#include "GeometryCache.h"
 #include <vector>
 
 class RenderManager
@@ -21,8 +20,6 @@ public:
 
 	void SetDefaultCompositor(const krono::Compositor::Ptr& compositor);
 
-	GeometryCache& GetGeometryCache();
-
 	void Render();
 private:
 	friend class Renderable;
@@ -32,8 +29,6 @@ private:
 
 	krono::Graphics::Ptr mGraphics;
 	krono::Compositor::Ptr mDefaultCompositor;
-
-	GeometryCache mGeometryCache;
 
 	krono::Scene mScene;
 

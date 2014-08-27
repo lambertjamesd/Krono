@@ -10,7 +10,8 @@ namespace krono
 {
 
 ResourceManager::ResourceManager(Graphics* graphics) :
-	mGraphics(graphics)
+	mGraphics(graphics),
+	mGeometryCache(*graphics)
 {
 	AddDefaultLoaders();
 }
@@ -23,6 +24,11 @@ ResourceManager::~ResourceManager(void)
 Graphics* ResourceManager::GetGraphics()
 {
 	return mGraphics;
+}
+
+const Mesh::Ptr& ResourceManager::GetPlane()
+{
+	return mGeometryCache.GetPlane();
 }
 
 void ResourceManager::AddDefaultLoaders()

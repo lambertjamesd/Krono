@@ -57,25 +57,25 @@ Compositor::Ptr BuildCompositor(Graphics::Ptr& graphics, ResourceManager::Ptr& r
 	compositor->SetClearDepth("depth", 1.0f);
 
 	RenderSceneCompositeStage* renderScene;
-	RenderSceneCompositeStage* lightScene;
 	ScreenQuadCompositeStage* colorMap;
 
-	compositor->AddCompositeStage(CompositeStage::Ptr(renderScene = new RenderSceneCompositeStage(0)));
-	compositor->AddCompositeStage(CompositeStage::Ptr(lightScene = new RenderSceneCompositeStage(1)));
-	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(scene.GetRenderManager().GetGeometryCache().GetPlane())));
+	CompositeStageConnections renderSceneConnections;
+	renderSceneConnections.AddRenderTarget("color");
+	renderSceneConnections.AddRenderTarget("normal");
+	renderSceneConnections.SetDepthBuffer("depth");
 
-	renderScene->AddRenderTarget("color");
-	renderScene->AddRenderTarget("normal");
-	renderScene->SetDepthBuffer("depth");
-	
-	lightScene->AddRenderTargetInput("color");
-	lightScene->AddRenderTargetInput("normal");
-	lightScene->AddRenderTarget("combined");
+	CompositeStageConnections colorMapConnections;
+	colorMapConnections.AddRenderTarget("output0");
+	colorMapConnections.AddRenderTargetInput("color");
+
+	compositor->AddCompositeStage(CompositeStage::Ptr(renderScene = new RenderSceneCompositeStage(0)), renderSceneConnections);
+	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(resourceManager->GetPlane())), colorMapConnections);
+
 	
 	colorMap->GetStateParameters().SetVertexShader(resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/ScreenComposite.shader"));
 	colorMap->GetStateParameters().SetPixelShader(resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/ColorMapper.shader"));
+	colorMap->SetExpectedTargetInputCount(1);
 
-	colorMap->AddRenderTargetInput("color");
 
 	return compositor;
 }

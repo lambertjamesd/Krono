@@ -5,8 +5,7 @@
 using namespace std;
 
 RenderManager::RenderManager(const krono::Graphics::Ptr& graphics) :
-	mGraphics(graphics),
-	mGeometryCache(*graphics)
+	mGraphics(graphics)
 {
 
 }
@@ -41,11 +40,6 @@ void RenderManager::RemoveRenderStage(const RenderStage::Ptr& stage)
 void RenderManager::SetDefaultCompositor(const krono::Compositor::Ptr& compositor)
 {
 	mDefaultCompositor = compositor;
-}
-
-GeometryCache& RenderManager::GetGeometryCache()
-{
-	return mGeometryCache;
 }
 
 void RenderManager::Render()

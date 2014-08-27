@@ -5,6 +5,7 @@
 #include "Interface/RenderTarget.h"
 #include "Interface/DepthBuffer.h"
 #include "Interface/Color.h"
+#include "RenderTargetConfiguration.h"
 
 #include <map>
 #include <string>
@@ -34,7 +35,7 @@ public:
 	RenderTargetDatabase(void);
 	~RenderTargetDatabase(void);
 
-	void BeginCompositeRender(const Vector2i& screenSize, Graphics& graphics);
+	void BeginCompositeRender(const RenderTargetConfiguration& output, Graphics& graphics);
 
 	void ClearRenderTarget(UInt32 targetID, const Colorf& color);
 	void ClearDepthBuffer(UInt32 targetID, float depth);
@@ -51,8 +52,6 @@ public:
 	void UseRenderTargets(const RenderTargetDescription& descrpition);
 
 	static UInt32 GetTargetID(const std::string& targetName);
-
-	static const std::string& GetScreenTargetName();
 private:
 	void Resize(const Vector2i& renderSize);
 
@@ -64,7 +63,8 @@ private:
 	std::map<UInt32, RenderTarget::Ptr> mRenderTargets;
 	std::map<UInt32, DepthBuffer::Ptr> mDepthBuffers;
 	
-	static const std::string gScreenTargetName;
+	static const std::string gOutputTargetName;
+	static const std::string gOutputDepthName;
 };
 
 }

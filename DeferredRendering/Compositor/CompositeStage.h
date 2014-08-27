@@ -18,20 +18,17 @@ public:
 
 	virtual void Render(RenderState& renderState) = 0;
 	
-	const RenderTargetDescription& GetTargetDescription() const;
 	RenderStateParameters& GetStateParameters();
 
-	void AddRenderTarget(const std::string& targetName);
-	void SetDepthBuffer(const std::string& bufferName);
-	void AddRenderTargetInput(const std::string& targetName);
+	void SetExpectedTargetInputCount(size_t value);
+	size_t GetExpectedTargetInputCount() const;
 protected:
 	CompositeStage(void);
 
-	void PushTargetInput(RenderState& renderState) const;
+	void PushStateParameters(RenderState& renderState) const;
 
-	std::vector<UInt32> mRenderTargetInput;
+	size_t mExpectedTargetInputCount;
 private:
-	RenderTargetDescription mRenderTargetDescription;
 	RenderStateParameters mStateParameters;
 };
 

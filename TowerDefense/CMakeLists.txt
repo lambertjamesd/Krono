@@ -13,7 +13,6 @@ set (SOURCE_FILES
 	GameObject/Renderer.cpp
 	GameObject/Transform.cpp
 
-	Render/GeometryCache.cpp
 	Render/Renderable.cpp
 	Render/RenderManager.cpp
 	Render/RenderStage.cpp

@@ -6,6 +6,7 @@
 #include "ResourceLoader.h"
 #include <fstream>
 #include "LoadException.h"
+#include "GeometryCache.h"
 
 namespace krono
 {
@@ -74,10 +75,13 @@ public:
 		}
 	}
 
+	const Mesh::Ptr& GetPlane();
+
 	Graphics* GetGraphics();
 private:
 	Graphics* mGraphics;
 	std::unordered_map<size_t, Auto<ResourceLoader> > mLoaders;
+	GeometryCache mGeometryCache;
 
 	void AddDefaultLoaders();
 };

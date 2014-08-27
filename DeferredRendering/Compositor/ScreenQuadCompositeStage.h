@@ -8,13 +8,21 @@
 namespace krono
 {
 
-struct CompositeData
+struct VertexCompositeData
 {
-	CompositeData();
+	VertexCompositeData();
 
 	Matrix4f projectionMatrix;
 	Matrix4f projectionInverseMatrix;
 	Matrix4f compositeTransform;
+};
+
+struct PixelCompositeData
+{
+	PixelCompositeData();
+
+	Matrix4f projectionMatrix;
+	Matrix4f projectionInverseMatrix;
 };
 
 class ScreenQuadCompositeStage : public CompositeStage
@@ -26,7 +34,8 @@ public:
 	virtual void Render(RenderState& renderState);
 private:
 	void RebuildBuffer(Graphics& graphics, const Matrix4f& compositeTransform, const Matrix4f& projectionMatrix);
-	Auto<ConstantBuffer> mConstantBuffer;
+	Auto<ConstantBuffer> mVertexContantBuffer;
+	Auto<ConstantBuffer> mPixelContantBuffer;
 
 	Mesh::Ptr mScreenMesh;
 };

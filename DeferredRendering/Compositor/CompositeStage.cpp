@@ -3,7 +3,8 @@
 namespace krono
 {
 
-CompositeStage::CompositeStage(void)
+CompositeStage::CompositeStage(void) :
+	mExpectedTargetInputCount(0)
 {
 }
 
@@ -12,39 +13,23 @@ CompositeStage::~CompositeStage(void)
 {
 }
 
-const RenderTargetDescription& CompositeStage::GetTargetDescription() const
-{
-	return mRenderTargetDescription;
-}
-
 RenderStateParameters& CompositeStage::GetStateParameters()
 {
 	return mStateParameters;
 }
 
-void CompositeStage::AddRenderTarget(const std::string& targetName)
+void CompositeStage::SetExpectedTargetInputCount(size_t value)
 {
-	mRenderTargetDescription.AddRenderTarget(RenderTargetDatabase::GetTargetID(targetName));
+	mExpectedTargetInputCount = value;
 }
 
-void CompositeStage::SetDepthBuffer(const std::string& bufferName)
+size_t CompositeStage::GetExpectedTargetInputCount() const
 {
-	mRenderTargetDescription.SetDepthTarget(RenderTargetDatabase::GetTargetID(bufferName));
+	return mExpectedTargetInputCount;
 }
 
-void CompositeStage::AddRenderTargetInput(const std::string& targetName)
+void CompositeStage::PushStateParameters(RenderState& renderState) const
 {
-	mRenderTargetInput.push_back(RenderTargetDatabase::GetTargetID(targetName));
-}
-
-
-void CompositeStage::PushTargetInput(RenderState& renderState) const
-{
-	for (auto it = mRenderTargetInput.cbegin(); it != mRenderTargetInput.cend(); ++it)
-	{
-		renderState.PushRenderTargetTexture(*it, ShaderStage::PixelShader);
-	}
-
 	renderState.PushParameters(mStateParameters);
 }
 

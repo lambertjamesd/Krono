@@ -1,14 +1,16 @@
 #pragma once
 
-#include <Krono.h>
+#include "Mesh/Mesh.h"
+#include "Math/Vector3.h"
+#include "Math/Vector2.h"
 
 class GeometryCache
 {
 public:
 	GeometryCache(krono::Graphics& graphics);
 
-	krono::Mesh::Ptr& GetPlane();
-	krono::Mesh::Ptr& GetSphere(size_t horizontalRes, size_t verticalRes);
+	const krono::Mesh::Ptr& GetPlane();
+	const krono::Mesh::Ptr& GetSphere(size_t horizontalRes, size_t verticalRes);
 private:
 	struct GeometryVertex
 	{

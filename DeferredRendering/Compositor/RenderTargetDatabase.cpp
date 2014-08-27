@@ -1,4 +1,5 @@
 #include "RenderTargetDatabase.h"
+#include <sstream>
 
 namespace krono
 {
@@ -28,10 +29,19 @@ RenderTargetDatabase::~RenderTargetDatabase(void)
 {
 }
 
-void RenderTargetDatabase::BeginCompositeRender(const Vector2i& screenSize, Graphics& graphics)
+void RenderTargetDatabase::BeginCompositeRender(const RenderTargetConfiguration& output, Graphics& graphics)
 {
-	Resize(screenSize);
+	Resize(output.GetSize());
 	mGraphics = &graphics;
+
+	for (size_t index = 0; index < output.GetRenderTargets().size(); ++index)
+	{
+		std::ostringstream targetName;
+		targetName << gOutputTargetName << index;
+		mRenderTargets[GetTargetID(targetName.str())] = output.GetRenderTargets()[index];
+	}
+
+	mDepthBuffers[GetTargetID(gOutputDepthName)] = output.GetDepthBuffer();
 }
 
 void RenderTargetDatabase::ClearRenderTarget(UInt32 targetID, const Colorf& color)
@@ -166,11 +176,6 @@ UInt32 RenderTargetDatabase::GetTargetID(const std::string& targetName)
 	return hash.GetDigest();
 }
 
-const std::string& RenderTargetDatabase::GetScreenTargetName()
-{
-	return gScreenTargetName;
-}
-
 void RenderTargetDatabase::Resize(const Vector2i& renderSize)
 {
 	if (mRenderSize != renderSize)
@@ -181,6 +186,7 @@ void RenderTargetDatabase::Resize(const Vector2i& renderSize)
 	}
 }
 
-const std::string RenderTargetDatabase::gScreenTargetName = "screen";
+const std::string RenderTargetDatabase::gOutputTargetName = "output";
+const std::string RenderTargetDatabase::gOutputDepthName = "outputDepth";
 
 }
