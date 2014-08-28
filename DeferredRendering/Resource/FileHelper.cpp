@@ -1,6 +1,10 @@
 
 #include "FileHelper.h"
 #include <cstring>
+#include <fstream>
+
+namespace krono
+{
 
 size_t FileHelper::LastSlash(const std::string& path)
 {
@@ -58,4 +62,12 @@ std::string FileHelper::JoinPaths(const std::string& basePath, const std::string
 	{
 		return modifedPath;
 	}
+}
+
+bool FileHelper::DoesFileExist(const std::string& filename)
+{
+	std::ifstream file(filename);
+	return file.good();
+}
+
 }

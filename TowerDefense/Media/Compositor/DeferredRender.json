@@ -1,23 +1,37 @@
 {
 	"documentType" : "compositor",
+	
+	"renderTargets" : {
+		"color" : {
+			"type" : "float", 
+			"count" : 4,
+			"clearColor" : {"r" : 0.1, "g" : 0.4, "b" : 0.7, "a" : 1.0}
+		},
+		"normal" : {
+			"type" : "float", 
+			"count" : 4
+		},
+		"depth" : {
+			"type" : "depth32f",
+			"clearDepth" : 1.0f
+		},
+		"combined" : {
+			"type" : "float", 
+			"count" : 4
+		}
+	},
 
 	"stages" : [
 		{
-			"stage" : "SceneRender.json",
+			"stage" : "SceneRenderer.json",
 			
 			"output" : ["color", "normal"],
-			"depthBuffer" : ["depth"]
-		},
-		{
-			"stage" : "Lighting.json",
-			
-			"input" : ["color", "normal"],
-			"output" : ["combined"]
+			"depthBuffer" : "depth"
 		},
 		{
 			"stage" : "ToneMapper.json",
 			
-			"input" : ["combined"],
+			"input" : ["color"],
 			"output" : ["output0"]
 		}
 	]

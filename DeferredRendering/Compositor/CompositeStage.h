@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "Core/Object.h"
 #include "RenderState.h"
 #include "RenderTargetDatabase.h"
 #include "RenderStateParameters.h"
@@ -9,7 +10,7 @@
 namespace krono
 {
 
-class CompositeStage
+class CompositeStage : public Object
 {
 public:
 	typedef std::shared_ptr<CompositeStage> Ptr;

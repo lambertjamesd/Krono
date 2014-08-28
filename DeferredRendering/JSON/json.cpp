@@ -159,6 +159,8 @@ void Value::Clear()
 	mValueType = NULLVal;
 }
 
+const Value Value::Null;
+
 size_t Value::size() const
 {
 	if ((mValueType != ObjectVal) && (mValueType != ArrayVal))
@@ -420,7 +422,15 @@ Value& Object::operator [](const std::string& key)
 const Value& Object::operator [](const std::string& key) const
 {
 	ValueMap::const_iterator it = mValues.find(key);
-	return it->second;
+
+	if (it == mValues.end())
+	{
+		return Value::Null;
+	}
+	else
+	{
+		return it->second;
+	}
 }
 
 Value& Object::operator [](const char* key)
@@ -431,7 +441,15 @@ Value& Object::operator [](const char* key)
 const Value& Object::operator [](const char* key) const
 {
 	ValueMap::const_iterator it = mValues.find(key);
-	return it->second;
+
+	if (it == mValues.end())
+	{
+		return Value::Null;
+	}
+	else
+	{
+		return it->second;
+	}
 }
 
 Object::ValueMap::const_iterator Object::begin() const

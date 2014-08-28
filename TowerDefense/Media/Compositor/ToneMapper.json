@@ -1,4 +1,6 @@
 {
+	"documentType" : "compositeStage",
+	
 	"type" : "screenQuad",
 	
 	"inputCount" : 1,

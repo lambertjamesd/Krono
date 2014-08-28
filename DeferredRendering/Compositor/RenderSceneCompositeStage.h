@@ -18,6 +18,8 @@ struct SceneViewData
 class RenderSceneCompositeStage : public CompositeStage
 {
 public:
+	typedef Auto<RenderSceneCompositeStage> Ptr;
+
 	RenderSceneCompositeStage(size_t technique);
 	~RenderSceneCompositeStage(void);
 	

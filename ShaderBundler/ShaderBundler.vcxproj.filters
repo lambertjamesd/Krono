@@ -36,10 +36,10 @@
     <ClInclude Include="Bundle\GLSLBundler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bundle\FileHelper.h">
+    <ClInclude Include="Bundle\FileNotFoundException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bundle\FileNotFoundException.h">
+    <ClInclude Include="Bundle\BundlerFileHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,10 +62,10 @@
     <ClCompile Include="Bundle\GLSLBundler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bundle\FileHelper.cpp">
+    <ClCompile Include="Bundle\FileNotFoundException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bundle\FileNotFoundException.cpp">
+    <ClCompile Include="Bundle\BundlerFileHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

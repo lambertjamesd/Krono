@@ -21,7 +21,14 @@ OpenGLFramebuffer& OpenGLFBODatabase::GetFrameBuffer(const std::vector<Auto<Open
 
 	for (auto it = renderBuffers.cbegin(); it != renderBuffers.cend(); ++it)
 	{
-		signatureHash.Update<OpenGLObjectID>((*it)->GetObjectID());
+		if (*it == NULL)
+		{
+			signatureHash.Update<OpenGLObjectID>(-1);
+		}
+		else
+		{
+			signatureHash.Update<OpenGLObjectID>((*it)->GetObjectID());
+		}
 	}
 
 	if (depthBuffer != NULL)

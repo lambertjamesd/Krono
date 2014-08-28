@@ -1,10 +1,10 @@
 #include "BundleDefinition.h"
-#include "FileHelper.h"
+#include "BundlerFileHelper.h"
 
 #include "JSON/json.h"
 
 BundleDefinition::BundleDefinition(const std::string& filename) :
-	mBaseFilename(FileHelper::RemoveLastPathElement(filename))
+	mBaseFilename(BundlerFileHelper::RemoveLastPathElement(filename))
 {
 	std::ifstream file(filename, std::ios::binary);
 	ParseDefinition(file);
@@ -75,7 +75,7 @@ void BundleDefinition::ParseDefinition(std::istream& input)
 
 		if (langauge != ShaderLanguage::Invalid)
 		{
-			mSources[langauge] = FileHelper::JoinPaths(mBaseFilename, it->second.ToString());
+			mSources[langauge] = BundlerFileHelper::JoinPaths(mBaseFilename, it->second.ToString());
 		}
 	}
 

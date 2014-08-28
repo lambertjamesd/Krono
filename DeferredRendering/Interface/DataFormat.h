@@ -30,6 +30,9 @@ struct DataFormat
 
 	size_t GetSize() const;
 
+	bool IsDepthFormat() const;
+	static bool IsDepthFormat(Type type);
+
 private:
 	static size_t gTypeSize[DataFormat::TypeCount];
 };

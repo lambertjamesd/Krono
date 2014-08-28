@@ -29,6 +29,8 @@ struct PixelCompositeData
 class ScreenQuadCompositeStage : public CompositeStage
 {
 public:
+	typedef Auto<ScreenQuadCompositeStage> Ptr;
+
 	ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh);
 	~ScreenQuadCompositeStage(void);
 	

@@ -87,7 +87,7 @@
   <ItemGroup>
     <ClInclude Include="Bundle\Bundle.h" />
     <ClInclude Include="Bundle\BundleDefinition.h" />
-    <ClInclude Include="Bundle\FileHelper.h" />
+    <ClInclude Include="Bundle\BundlerFileHelper.h" />
     <ClInclude Include="Bundle\FileNotFoundException.h" />
     <ClInclude Include="Bundle\HLSLCompiler.h" />
     <ClInclude Include="Bundle\GLSLBundler.h" />
@@ -97,7 +97,7 @@
   <ItemGroup>
     <ClCompile Include="Bundle\Bundle.cpp" />
     <ClCompile Include="Bundle\BundleDefinition.cpp" />
-    <ClCompile Include="Bundle\FileHelper.cpp" />
+    <ClCompile Include="Bundle\BundlerFileHelper.cpp" />
     <ClCompile Include="Bundle\FileNotFoundException.cpp" />
     <ClCompile Include="Bundle\HLSLCompiler.cpp" />
     <ClCompile Include="Bundle\GLSLBundler.cpp" />

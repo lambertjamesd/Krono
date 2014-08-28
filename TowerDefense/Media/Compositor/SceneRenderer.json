@@ -1,4 +1,6 @@
 {
+	"documentType" : "compositeStage",
+	
 	"type" : "sceneRender",
 	
 	"renderTechnique" : 0

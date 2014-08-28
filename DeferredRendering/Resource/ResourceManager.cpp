@@ -16,6 +16,7 @@ ResourceManager::ResourceManager(Graphics* graphics) :
 	mGeometryCache(*graphics)
 {
 	AddDefaultLoaders();
+	mPathStack.push_back("");
 }
 
 
@@ -41,8 +42,8 @@ void ResourceManager::AddDefaultLoaders()
 	AddLoader<VertexShader>(Auto<ResourceLoader>(new VertexShaderLoader()));
 	AddLoader<PixelShader>(Auto<ResourceLoader>(new PixelShaderLoader()));
 	AddLoader<JsonDocument>(Auto<ResourceLoader>(new JsonDocumentLoader()));
-	AddLoader<CompositeStageLoader>(Auto<ResourceLoader>(new CompositeStageLoader()));
-	AddLoader<CompositorLoader>(Auto<ResourceLoader>(new CompositorLoader()));
+	AddLoader<CompositeStage>(Auto<ResourceLoader>(new CompositeStageLoader()));
+	AddLoader<Compositor>(Auto<ResourceLoader>(new CompositorLoader()));
 }
 
 }

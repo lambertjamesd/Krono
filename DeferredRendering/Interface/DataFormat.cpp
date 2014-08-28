@@ -32,4 +32,14 @@ size_t DataFormat::GetSize() const
 	return gTypeSize[type] * count;
 }
 
+bool DataFormat::IsDepthFormat() const
+{
+	return IsDepthFormat(type);
+}
+
+bool DataFormat::IsDepthFormat(Type type)
+{
+	return type >= Depth16 && type <= Depth32FS8;
+}
+
 }

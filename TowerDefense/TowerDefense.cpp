@@ -43,43 +43,6 @@ std::string ReadFileContents(const char *filename)
 	throw(errno);
 }
 
-Compositor::Ptr BuildCompositor(Graphics::Ptr& graphics, ResourceManager::Ptr& resourceManager, ::Scene& scene)
-{
-	Compositor::Ptr compositor(new Compositor());
-	
-	compositor->AddRenderTarget("color", DataFormat(DataFormat::Float, 4));
-	compositor->AddRenderTarget("normal", DataFormat(DataFormat::Float, 4));
-	compositor->AddRenderTarget("depth", DataFormat(DataFormat::Depth32F, 1));
-	compositor->AddRenderTarget("combined", DataFormat(DataFormat::Float, 4));
-
-	compositor->SetClearColor("color", Colorf(0.1f, 0.4f, 0.7f, 1.0f));
-	compositor->SetClearColor("normal", Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-	compositor->SetClearDepth("depth", 1.0f);
-
-	RenderSceneCompositeStage* renderScene;
-	ScreenQuadCompositeStage* colorMap;
-
-	CompositeStageConnections renderSceneConnections;
-	renderSceneConnections.AddRenderTarget("color");
-	renderSceneConnections.AddRenderTarget("normal");
-	renderSceneConnections.SetDepthBuffer("depth");
-
-	CompositeStageConnections colorMapConnections;
-	colorMapConnections.AddRenderTarget("output0");
-	colorMapConnections.AddRenderTargetInput("color");
-
-	compositor->AddCompositeStage(CompositeStage::Ptr(renderScene = new RenderSceneCompositeStage(0)), renderSceneConnections);
-	compositor->AddCompositeStage(CompositeStage::Ptr(colorMap = new ScreenQuadCompositeStage(resourceManager->GetPlane())), colorMapConnections);
-
-	
-	colorMap->GetStateParameters().SetVertexShader(resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/ScreenComposite.shader"));
-	colorMap->GetStateParameters().SetPixelShader(resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/ColorMapper.shader"));
-	colorMap->SetExpectedTargetInputCount(1);
-
-
-	return compositor;
-}
-
 int main(int argc, char* argv[])
 {
 	Graphics::API api = Graphics::OpenGL;
@@ -121,7 +84,7 @@ int main(int argc, char* argv[])
 	objectReference.lock()->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
 
-	scene.GetRenderManager().SetDefaultCompositor(BuildCompositor(graphics, resourceManager, scene));
+	scene.GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 
 	GameObject::Ref cameraObject = scene.CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();

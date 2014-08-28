@@ -1,5 +1,5 @@
 #include "HLSLCompiler.h"
-#include "FileHelper.h"
+#include "BundlerFileHelper.h"
 #include "FileNotFoundException.h"
 
 #include <iostream>
@@ -7,7 +7,7 @@
 HLSLIncludeHandler::HLSLIncludeHandler(const std::string& systemPath, const std::string& filePath) :
 	mSystemPath(systemPath)
 {
-	mFileStack.push(FileHelper::RemoveLastPathElement(filePath));
+	mFileStack.push(BundlerFileHelper::RemoveLastPathElement(filePath));
 }
 
 HLSLIncludeHandler::~HLSLIncludeHandler(void)
@@ -32,12 +32,12 @@ HRESULT HLSLIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName,
 	{
 	case D3D_INCLUDE_LOCAL:
 		{
-			absolutePath = FileHelper::JoinPaths(mFileStack.top(), pFileName);
+			absolutePath = BundlerFileHelper::JoinPaths(mFileStack.top(), pFileName);
 		}
 		break;
 	case D3D_INCLUDE_SYSTEM:
 		{
-			absolutePath = FileHelper::JoinPaths(mSystemPath, pFileName);
+			absolutePath = BundlerFileHelper::JoinPaths(mSystemPath, pFileName);
 		}
 	}
 
@@ -57,7 +57,7 @@ HRESULT HLSLIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName,
 	*ppData = (LPCVOID)contents;
 	*pBytes = (UINT)fileSize;
 
-	mFileStack.push(FileHelper::RemoveLastPathElement(absolutePath));
+	mFileStack.push(BundlerFileHelper::RemoveLastPathElement(absolutePath));
 
 	return S_OK;
 

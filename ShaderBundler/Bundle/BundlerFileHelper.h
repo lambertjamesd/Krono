@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <string>
 
-class FileHelper
+class BundlerFileHelper
 {
 public:
 	static size_t LastSlash(const std::string& path);

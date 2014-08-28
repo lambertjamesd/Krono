@@ -336,6 +336,12 @@
     <ClInclude Include="Resource\Compositor\CompositeStageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\FileHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\JSON\JsonTypeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Object.cpp">
@@ -612,6 +618,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\FileHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\JSON\JsonTypeHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Object.h"
 #include "CompositeStage.h"
 #include "Interface/Graphics.h"
 #include "RenderTargetDatabase.h"
@@ -29,7 +30,7 @@ private:
 	std::vector<UInt32> mTargetInputs;
 };
 
-class Compositor
+class Compositor : public Object
 {
 public:
 	typedef Auto<Compositor> Ptr;

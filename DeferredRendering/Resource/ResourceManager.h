@@ -7,6 +7,7 @@
 #include <fstream>
 #include "LoadException.h"
 #include "GeometryCache.h"
+#include "FileHelper.h"
 
 namespace krono
 {
@@ -43,6 +44,11 @@ public:
 			internalName = filename.substr(hashPosition + 1);
 		}
 
+		if (!FileHelper::DoesFileExist(path))
+		{
+			path = FileHelper::JoinPaths(mPathStack.back(), path);
+		}
+
 		std::ifstream fileInput(path, std::ios::in | std::ios::binary);
 
 		if (!fileInput.is_open())
@@ -52,10 +58,14 @@ public:
 
 		try
 		{
-			return LoadResource<T>(fileInput, internalName);
+			mPathStack.push_back(FileHelper::RemoveLastPathElement(path));
+			Auto<T> result = LoadResource<T>(fileInput, internalName);
+			mPathStack.pop_back();
+			return result;
 		}
 		catch (Exception& e)
 		{
+			mPathStack.pop_back();
 			throw LoadException(filename, e.what());
 		}
 	}
@@ -82,6 +92,8 @@ private:
 	Graphics* mGraphics;
 	std::unordered_map<size_t, Auto<ResourceLoader> > mLoaders;
 	GeometryCache mGeometryCache;
+
+	std::vector<std::string> mPathStack;
 
 	void AddDefaultLoaders();
 };
