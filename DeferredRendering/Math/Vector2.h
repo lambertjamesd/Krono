@@ -81,7 +81,7 @@ Vector2<T> operator/ (const Vector2<T>& a, const Vector2<T>& b)
 template <typename T>
 Vector2<T> operator/ (const Vector2<T>& a, const T& b)
 {
-	return *this * (Constant<T>::One / b);
+	return a * (Constant<T>::One / b);
 }
 
 template <typename T>

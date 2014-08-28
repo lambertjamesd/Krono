@@ -13,7 +13,7 @@
 		},
 		"depth" : {
 			"type" : "depth32f",
-			"clearDepth" : 1.0f
+			"clearDepth" : 1.0
 		},
 		"combined" : {
 			"type" : "float", 

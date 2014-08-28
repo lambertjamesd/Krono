@@ -24,7 +24,7 @@ layout(binding = 1) uniform EntityData
 
 void main()
 {
-	gl_Position = projectionViewMatrix * modelMatrix * vec4(attrPOSITION0, 1);
-	texCoord = attrTEXCOORD0;
+	gl_Position = projectionViewModelMatrix * vec4(attrPOSITION0, 1);
 	normal = (normalMatrix * vec4(attrNORMAL0, 0.0)).xyz;
+	texCoord = attrTEXCOORD0;
 }

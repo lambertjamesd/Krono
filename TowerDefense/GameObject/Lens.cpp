@@ -40,6 +40,8 @@ Matrix4f PerspectiveLens::GetProjectionMatrix() const
 	result.At(2, 3) = -mNear * zScale;
 	result.At(3, 2) = 1.0f;
 
+	result.At(3, 3) = 0.0f;
+
 	return result;
 }
 

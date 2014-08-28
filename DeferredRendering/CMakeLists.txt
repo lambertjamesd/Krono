@@ -28,6 +28,8 @@ set (SOURCE_FILES
 	Math/Math.cpp
 	Math/Matrix.cpp
 	Math/Range.cpp
+	Resource/Compositor/CompositeStageLoader.cpp
+	Resource/Compositor/CompositorLoader.cpp
 	Resource/ResourceLoader.cpp
 	Resource/Mesh/MeshGroupLoader.cpp
 	Resource/Mesh/Mesh.cpp
@@ -35,6 +37,7 @@ set (SOURCE_FILES
 	Resource/Mesh/SubMesh.cpp
 	Resource/Mesh/MeshLoader.cpp
 	Resource/Technique.cpp
+	Resource/FileHelper.cpp
 	Resource/FormatException.cpp
 	Resource/GeometryCache.cpp
 	Resource/ObjMeshGroupLoader.cpp
@@ -47,6 +50,7 @@ set (SOURCE_FILES
 	Resource/ResourceManager.cpp
 	Resource/JSON/JsonDocumentLoader.cpp
 	Resource/JSON/JsonDocument.cpp
+	Resource/JSON/JsonTypeHelper.cpp
 	Core/Hash.cpp
 	Core/Exception.cpp
 	Core/Object.cpp

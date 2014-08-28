@@ -8,7 +8,7 @@ set (SOURCE_FILES
 	Bundle/GLSLBundler.cpp
 
 	Bundle/FileNotFoundException.cpp
-	Bundle/FileHelper.cpp
+	Bundle/BundlerFileHelper.cpp
 
 	JSON/json.cpp
 )
