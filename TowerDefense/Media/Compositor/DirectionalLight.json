@@ -1,0 +1,13 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "screenQuad",
+	
+	"inputCount" : 2,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "Media/Shaders/Bundle/ScreenComposite.shader",
+		"pixelShader" : "Media/Shaders/Bundle/DirectionalLight.shader"
+	}
+}

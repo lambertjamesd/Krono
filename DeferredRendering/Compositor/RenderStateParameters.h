@@ -2,6 +2,7 @@
 
 #include "Interface/Shader.h"
 #include "Interface/Texture.h"
+#include "Interface/Sampler.h"
 #include "Interface/ConstantBuffer.h"
 #include "Interface/Shader.h"
 
@@ -36,6 +37,7 @@ private:
 	friend class RenderState;
 
 	std::vector<Texture::Ptr> mTextures[ShaderStage::TypeCount];
+	std::vector<Sampler::Ptr> mSamplers[ShaderStage::TypeCount];
 	std::vector<ConstantBuffer::Ptr> mUniforms[ShaderStage::TypeCount];
 
 	VertexShader::Ptr mVertexShader;

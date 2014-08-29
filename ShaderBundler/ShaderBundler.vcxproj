@@ -91,6 +91,8 @@
     <ClInclude Include="Bundle\FileNotFoundException.h" />
     <ClInclude Include="Bundle\HLSLCompiler.h" />
     <ClInclude Include="Bundle\GLSLBundler.h" />
+    <ClInclude Include="HLSLParser\HLSLParser.h" />
+    <ClInclude Include="HLSLParser\HLSLTokenizer.h" />
     <ClInclude Include="JSON\json.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -101,6 +103,8 @@
     <ClCompile Include="Bundle\FileNotFoundException.cpp" />
     <ClCompile Include="Bundle\HLSLCompiler.cpp" />
     <ClCompile Include="Bundle\GLSLBundler.cpp" />
+    <ClCompile Include="HLSLParser\HLSLParser.cpp" />
+    <ClCompile Include="HLSLParser\HLSLTokenizer.cpp" />
     <ClCompile Include="JSON\json.cpp" />
     <ClCompile Include="ShaderBundler.cpp" />
   </ItemGroup>

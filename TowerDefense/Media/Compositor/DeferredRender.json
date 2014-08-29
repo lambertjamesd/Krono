@@ -9,7 +9,8 @@
 		},
 		"normal" : {
 			"type" : "float", 
-			"count" : 4
+			"count" : 4,
+			"clearColor" : {"r" : 0.0, "g" : 0.0, "b" : 0.0, "a" : 0.0}
 		},
 		"depth" : {
 			"type" : "depth32f",
@@ -29,9 +30,15 @@
 			"depthBuffer" : "depth"
 		},
 		{
+			"stage" : "DirectionalLight.json",
+			
+			"input" : ["normal", "color"],
+			"output" : ["combined"]
+		},
+		{
 			"stage" : "ToneMapper.json",
 			
-			"input" : ["color"],
+			"input" : ["combined"],
 			"output" : ["output0"]
 		}
 	]

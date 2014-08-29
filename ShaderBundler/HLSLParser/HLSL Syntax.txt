@@ -1,0 +1,40 @@
+Variable = [Storage_Class] [Type_Modifier] Type Name[Index]
+    [: Semantic]
+    [: Packoffset]
+    [: Register];
+    [Annotations]
+    [= Initial_Value]
+	
+Flow_Control = Break | Continue | Discard | Do | For | If | Switch | While
+
+Do = [Attribute] do { Statement_Block } while { Conditional );
+	Attribute = 'fastopt'
+	
+For = [Attribute] for ( Initializer; Conditional; Iterator) { Statement_Block }
+	Attribute = unroll(x) | loop | fastopt | allow_uav_condition
+	Initializer = ?
+	Conditional = Conditional_Expression
+	Iterator = ?
+
+Switch = [Attribute] switch ( Selector ) { case n: Statement_Block break; default: Statement_Block break; }
+	Attribute = flatten | branch | forcecase | call
+	Selector = ?
+
+While = [Attribute] while ( Conditional ) { Statement_Block }
+	Attribute = unroll(x) | loop | fastopt | allow_uav_condition
+	Conditional = Conditional_Expression
+
+Function = [StorageClass] [clipplanes()] [precise] Return_Value Name ([ArgumentList]) [: Semantic] { Statement_Block }
+	StorageClass = inline
+	
+ArgumentList = Argument [, ArgumentList]
+
+Argument = [InputModifier] Type Name [: Semantic] [InterpolationModifier] [=Initializers]
+	InputModifier = in | inout | out | uniform
+	InterpolationModifier = linear | centroid | nointerpolation | noperspective | sample
+	
+Statement_Block = Statement [ Statement_Block ]
+
+Statement = Expression
+
+Expression = Flow_Control | return | Variable
