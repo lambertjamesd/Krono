@@ -13,6 +13,12 @@ using namespace std;
 namespace krono
 {
 
+
+ShaderVariable::ShaderVariable()
+{
+
+}
+
 ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index) :
 		mName(name),
 		mWidth(size),
@@ -260,20 +266,28 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 	glGetProgramInterfaceiv(mProgram, type, GL_ACTIVE_RESOURCES, &count);
 
 	GLchar nameData[MaxAttributeNameLength];
-	GLenum properties[] = {GL_NAME_LENGTH, GL_TYPE, GL_ARRAY_SIZE};
-	GLint values[3];
+	GLenum properties[] = {GL_NAME_LENGTH, GL_TYPE, GL_ARRAY_SIZE, GL_LOCATION};
+	GLint values[4];
+
+	target.resize(count);
 
 	for (int i = 0; i < count; ++i)
 	{
 		GLsizei actualAmountRead;
 		glGetProgramResourceiv(mProgram, type, i, 
-			3, properties, 
-			3, &actualAmountRead, values);
+			4, properties, 
+			4, &actualAmountRead, values);
 
 		glGetProgramResourceName(mProgram, type, i, values[0] + 1, NULL, nameData);
 		std::string name(nameData);
 
-		target.push_back(VariableFromGLType(name, values[1], values[2], i));
+		int index = values[3];
+		if (index < 0 || index >= count)
+		{
+			index = i;
+		}
+
+		target[index] = VariableFromGLType(name, values[1], values[2], i);
 	}
 }
 

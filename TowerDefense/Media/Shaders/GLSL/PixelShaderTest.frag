@@ -1,7 +1,9 @@
 #version 420
 
-in vec2 texCoord;
-in vec3 normal;
+in TextureNormal {
+	vec2 texCoord;
+	vec3 normal;
+};
 
 layout(binding = 0) uniform sampler2D textureTest;
 
@@ -10,6 +12,6 @@ layout(location = 1) out vec4 normalOut;
 
 void main()
 {
-	colorOut = texture2D(textureTest, texCoord);
-	normalOut = vec4(normalize(normal), 1.0);
+	colorOut = vec4(texture2D(textureTest, texCoord).rgb, 1);
+	normalOut = vec4(normal, 1);
 }

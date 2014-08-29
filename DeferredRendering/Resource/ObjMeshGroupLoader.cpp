@@ -10,10 +10,10 @@ using namespace std;
 namespace krono
 {
 
-ObjMeshVertex::ObjMeshVertex(const Vector3f& position, const Vector2f& texCoord, const Vector3f& normal) :
+ObjMeshVertex::ObjMeshVertex(const Vector3f& position, const Vector3f& normal, const Vector2f& texCoord) :
 	position(position),
-	texCoord(texCoord),
-	normal(normal)
+	normal(normal),
+	texCoord(texCoord)
 {
 
 }
@@ -54,7 +54,7 @@ UInt16 ObjMeshVertexData::GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoo
 	{
 		UInt16 result = (UInt16)mVertexData.size();
 		mIndexMap[digest] = result;
-		mVertexData.push_back(ObjMeshVertex(mPositions[vertexIndex], mTexCoords[texCoordIndex], mNormals[normalIndex]));
+		mVertexData.push_back(ObjMeshVertex(mPositions[vertexIndex], mNormals[normalIndex], mTexCoords[texCoordIndex]));
 		return result;
 	}
 	else
@@ -86,8 +86,8 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 
 	InputLayout inputLayout;
 	inputLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
-	inputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
 	inputLayout.AddAttribute(Attribute("NORMAL", DataFormat(DataFormat::Float, 3)));
+	inputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
 	Auto<VertexBuffer> vertexBuffer = Auto<VertexBuffer>(resourceManager.GetGraphics()->CreateVertexBuffer(inputLayout));
 	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16));
 

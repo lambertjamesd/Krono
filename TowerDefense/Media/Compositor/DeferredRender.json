@@ -32,7 +32,7 @@
 		{
 			"stage" : "DirectionalLight.json",
 			
-			"input" : ["normal", "color"],
+			"input" : ["color", "normal"],
 			"output" : ["combined"]
 		},
 		{

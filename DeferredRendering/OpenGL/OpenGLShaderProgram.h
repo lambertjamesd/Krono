@@ -31,6 +31,7 @@ public:
 		TextureCube,
 	};
 
+	ShaderVariable();
 	ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index);
 	ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint index);
 

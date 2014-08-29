@@ -13,11 +13,11 @@ namespace krono
 
 struct ObjMeshVertex
 {
-	ObjMeshVertex(const Vector3f& position, const Vector2f& texCoord, const Vector3f& normal);
+	ObjMeshVertex(const Vector3f& position, const Vector3f& normal, const Vector2f& texCoord);
 
 	Vector3f position;
-	Vector2f texCoord;
 	Vector3f normal;
+	Vector2f texCoord;
 };
 
 class ObjMeshVertexData

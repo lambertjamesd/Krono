@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <cstring>
 
 #include "Bundle/BundleDefinition.h"
 #include "Bundle/GLSLBundler.h"
@@ -16,6 +17,22 @@ std::string GetOutputFilename(const std::string& inputFilename)
 {
 	size_t extensionPosition = inputFilename.find_last_of('.');
 	return inputFilename.substr(0, extensionPosition) + ".shader";
+}
+
+void MakeDependencies(const char* filename)
+{
+	BundleDefinition bundleDef(filename);
+
+	std::vector<ShaderLanguage::Type> languages = bundleDef.GetBoundLanguages();
+
+	std::cout << filename << ": ";
+
+	for (auto it = languages.begin(); it != languages.end(); ++it)
+	{
+		std::cout << bundleDef.GetFilename(*it) << " ";
+	}
+
+	std::cout << std::endl;
 }
 
 void ProccessFile(const char* filename)
@@ -57,9 +74,19 @@ void ProccessFile(const char* filename)
 
 int main(int argc, char* argv[])
 {
-	for (int i = 1; i < argc; ++i)
+	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{
-		ProccessFile(argv[i]);
+		for (int i = 2; i < argc; ++i)
+		{
+			MakeDependencies(argv[i]);
+		}
+	}
+	else
+	{
+		for (int i = 1; i < argc; ++i)
+		{
+			ProccessFile(argv[i]);
+		}
 	}
 
 	return 0;

@@ -4,8 +4,10 @@ in vec3 attrPOSITION0;
 in vec3 attrNORMAL0;
 in vec2 attrTEXCOORD0;
 
-out vec2 texCoord;
-out vec3 normal;
+out TextureNormal {
+	vec2 texCoord;
+	vec3 normal;
+};
 
 layout(binding = 0) uniform SceneViewData
 {
