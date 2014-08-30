@@ -110,6 +110,8 @@ private:
 	OpenGLShaderProgram(const OpenGLShaderProgram& other);
 	OpenGLShaderProgram& operator=(const OpenGLShaderProgram& other);
 	
+	GLint GetProgramResource(GLenum type, GLenum resource, int index);
+
 	void PopulateVariables(std::vector<ShaderVariable>& target, GLenum type);
 	void PopulateShaderReferencing(std::vector<size_t>& target, size_t count, GLenum type);
 	void PopulateAttributes();

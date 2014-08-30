@@ -11,7 +11,6 @@ layout(binding = 0) uniform PixelCompositeData
 
 layout(binding = 0) uniform sampler2D textureTest;
 
-
 layout(location = 0) out vec4 colorOut;
 
 void main()

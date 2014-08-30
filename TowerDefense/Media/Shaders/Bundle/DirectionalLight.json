@@ -2,6 +2,7 @@
 	"type" : "pixel",
 
 	"sources" : {
+		"HLSL 5" : "../HLSL/DirectionalLight.hlsl"
 		"GLSL 4.4" : "../GLSL/DirectionalLight.frag"
 	}
 }

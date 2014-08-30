@@ -260,6 +260,14 @@ const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayou
 	}
 }
 
+GLint OpenGLShaderProgram::GetProgramResource(GLenum type, GLenum resource, int index)
+{
+	GLint actualAmountRead;
+	GLint result;
+	glGetProgramResourceiv(mProgram, type, index, 1, &resource, 1, &actualAmountRead, &result);
+	return result;
+}
+
 void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target, GLenum type)
 {
 	GLint count;
@@ -370,6 +378,9 @@ void OpenGLShaderProgram::PopulateTextureMapping()
 				ShaderStage::TypeCount, properties, 
 				ShaderStage::TypeCount, &actualAmountRead, values);
 
+
+			GLint location = glGetUniformLocation(mProgram, mUniforms[uniform].GetName().c_str());
+
 			ShaderStage::Type shaderStage = ShaderStage::TypeCount;
 			
 			for (size_t stage = 0; stage < ShaderStage::TypeCount; ++stage)
@@ -387,7 +398,8 @@ void OpenGLShaderProgram::PopulateTextureMapping()
 				glGetUniformuiv(mProgram, uniform, &previousBinding);
 				mTextureMapping.AddTextureUnit(shaderStage, previousBinding, GetSamplerIndex(mUniforms[uniform].GetName()));
 
-				glUniform1ui(uniform, textureUnitIndex);
+				glUniform1i(uniform, textureUnitIndex);
+
 				++textureUnitIndex;
 			}
 		}

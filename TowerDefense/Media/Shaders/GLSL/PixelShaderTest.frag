@@ -13,5 +13,5 @@ layout(location = 1) out vec4 normalOut;
 void main()
 {
 	colorOut = vec4(texture2D(textureTest, texCoord).rgb, 1);
-	normalOut = vec4(normal, 1);
+	normalOut = vec4(normalize(normal), 1);
 }

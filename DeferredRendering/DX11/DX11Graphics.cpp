@@ -161,11 +161,18 @@ void DX11Graphics::SetRenderTargets(const std::vector<Auto<RenderTarget> > &rend
 		depthBufferView = NULL;
 	}
 
-	ID3D11RenderTargetView** dxRenderTargetPointer = &(dxRenderTargets.front());
-	for (size_t i = 0; i < renderTargets.size(); ++i, ++dxRenderTargetPointer)
+	for (size_t i = 0; i < renderTargets.size(); ++i)
 	{
 		DX11RenderTarget *dxRenderTarget = dynamic_cast<DX11RenderTarget*>(renderTargets[i].get());
-		dxRenderTargetPointer[i] = dxRenderTarget->GetTargetView();
+
+		if (dxRenderTarget)
+		{
+			dxRenderTargets[i] = dxRenderTarget->GetTargetView();
+		}
+		else
+		{
+			dxRenderTargets[i] = NULL;
+		}
 	}
 
 	mDeviceContext->OMSetRenderTargets(renderTargets.size(), &(dxRenderTargets.front()), depthBufferView);
