@@ -13,17 +13,10 @@
 #include "DepthBuffer.h"
 #include "ConstantBuffer.h"
 #include "Sampler.h"
+#include "BlendState.h"
 
 namespace krono
 {
-
-namespace Topology
-{
-	enum Type
-	{
-		Triangles
-	};
-};
 
 class Graphics
 {
@@ -64,6 +57,8 @@ public:
 
 	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description) = 0;
 
+	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description) = 0;
+
 	virtual void Draw(size_t count, size_t offset) = 0;
 	virtual void DrawIndexed(size_t count, size_t offset) = 0;
 
@@ -80,6 +75,10 @@ public:
 	virtual void SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer) = 0;
 	virtual void SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer) = 0;
 	virtual void SetConstantBuffer(const Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage) = 0;
+
+	virtual void SetBlendState(const Auto<BlendState> &blendState) = 0;
+
+	virtual void SetTopology(Topology::Type topology) = 0;
 
 	virtual bool FlipImageOriginY() const = 0;
 

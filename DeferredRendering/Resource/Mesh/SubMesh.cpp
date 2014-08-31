@@ -11,6 +11,7 @@ SubMesh::SubMesh(void)
 }
 
 SubMesh::SubMesh(Auto<VertexBuffer>& vertexBuffer, Auto<IndexBuffer>& indexBuffer) :
+	mTopology(Topology::TriangleList),
 	mVertexBuffer(vertexBuffer),
 	mIndexBuffer(indexBuffer),
 	mIndexOffset(0)
@@ -26,6 +27,7 @@ SubMesh::SubMesh(Auto<VertexBuffer>& vertexBuffer, Auto<IndexBuffer>& indexBuffe
 }
 
 SubMesh::SubMesh(Auto<VertexBuffer>& vertexBuffer, Auto<IndexBuffer>& indexBuffer, size_t indexOffset, size_t vertexCount) :
+	mTopology(Topology::TriangleList),
 	mVertexBuffer(vertexBuffer),
 	mIndexBuffer(indexBuffer),
 	mIndexOffset(indexOffset),
@@ -42,6 +44,7 @@ void SubMesh::Render(Graphics& graphics)
 {
 	graphics.SetIndexBuffer(mIndexBuffer);
 	graphics.SetVertexBuffer(mVertexBuffer);
+	graphics.SetTopology(mTopology);
 
 	if (mIndexBuffer == NULL)
 	{
@@ -51,6 +54,16 @@ void SubMesh::Render(Graphics& graphics)
 	{
 		graphics.DrawIndexed(mVertexCount, mIndexOffset);
 	}
+}
+
+void SubMesh::SetTopology(Topology::Type topology)
+{
+	mTopology = topology;
+}
+
+Topology::Type SubMesh::GetTopology() const
+{
+	return mTopology;
 }
 
 }

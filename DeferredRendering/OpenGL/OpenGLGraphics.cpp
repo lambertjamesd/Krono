@@ -11,6 +11,7 @@
 #include "OpenGLTexture2D.h"
 #include "OpenGLDepthBuffer.h"
 #include "OpenGLSampler.h"
+#include "OpenGLBlendState.h"
 #include <iostream>
 
 using namespace std;
@@ -20,6 +21,7 @@ namespace krono
 
 OpenGLGraphics::OpenGLGraphics(void) :
 		mHasGlewInitialized(false),
+		mTopology(GL_TRIANGLES),
 		mNeedNewProgram(false),
 		mNeedVertexRebind(false)
 {
@@ -101,10 +103,15 @@ Auto<Sampler> OpenGLGraphics::CreateSampler(const SamplerDescription& descriptio
 	return Auto<Sampler>(new OpenGLSampler(description));
 }
 
+Auto<BlendState> OpenGLGraphics::CreateBlendState(const BlendStateDescription& description)
+{
+	return Auto<BlendState>(new OpenGLBlendState(description));
+}
+
 void OpenGLGraphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
-	glDrawArrays(GL_TRIANGLES, offset, count);
+	glDrawArrays(mTopology, offset, count);
 }
 
 void OpenGLGraphics::DrawIndexed(size_t count, size_t offset)
@@ -112,7 +119,7 @@ void OpenGLGraphics::DrawIndexed(size_t count, size_t offset)
 	UpdatePendingChanges();
 	GLenum glFormat = OpenGLIndexBuffer::GetGLFormat(mCurrentIndexBuffer->GetFormat());
 	size_t byteOffset = offset * mCurrentIndexBuffer->GetStrideSize();
-	glDrawElementsBaseVertex(GL_TRIANGLES, count, glFormat, (void*)byteOffset, 0);
+	glDrawElementsBaseVertex(mTopology, count, glFormat, (void*)byteOffset, 0);
 }
 
 void OpenGLGraphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
@@ -208,6 +215,21 @@ void OpenGLGraphics::SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffe
 	mConstantBufferStorage.SetConstantBuffer(std::dynamic_pointer_cast<OpenGLConstantBuffer>(constantBuffer), slot, stage);
 }
 
+void OpenGLGraphics::SetBlendState(const Auto<BlendState> &blendState)
+{
+	OpenGLBlendState* glBlendState = static_cast<OpenGLBlendState*>(blendState.get());
+
+	if (glBlendState != NULL)
+	{
+		glBlendState->Use();
+	}
+}
+
+void OpenGLGraphics::SetTopology(Topology::Type topology)
+{
+	mTopology = gTopologyMapping[topology];
+}
+
 bool OpenGLGraphics::FlipImageOriginY() const
 {
 	return true;
@@ -219,6 +241,14 @@ Graphics::ShaderLanguage OpenGLGraphics::ExpectedShaderLanguage() const
 }
 
 GLenum OpenGLGraphics::gGLTypeMapping[DataFormat::TypeCount] = {GL_FLOAT, GL_UNSIGNED_BYTE, GL_SHORT, 0, GL_FLOAT, 0, 0};
+
+GLenum OpenGLGraphics::gTopologyMapping[Topology::Count] = {
+	GL_POINTS,
+	GL_LINES,
+	GL_LINE_STRIP,
+	GL_TRIANGLES,
+	GL_TRIANGLE_STRIP,
+};
 
 GLenum OpenGLGraphics::GetGLType(DataFormat::Type type)
 {

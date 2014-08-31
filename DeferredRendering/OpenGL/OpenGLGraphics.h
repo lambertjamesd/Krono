@@ -35,6 +35,8 @@ public:
 	
 	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description);
 
+	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description);
+
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
 
@@ -52,6 +54,10 @@ public:
 	virtual void SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer);
 	virtual void SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage);
 	
+	virtual void SetBlendState(const Auto<BlendState> &blendState);
+	
+	virtual void SetTopology(Topology::Type topology);
+
 	virtual bool FlipImageOriginY() const;
 
 	virtual Graphics::ShaderLanguage ExpectedShaderLanguage() const;
@@ -65,6 +71,7 @@ private:
 	friend class Graphics;
 
 	static GLenum gGLTypeMapping[DataFormat::TypeCount];
+	static GLenum gTopologyMapping[Topology::Count];
 
 	OpenGLShaderDatabase mShaderDatabase;
 	OpenGLFBODatabase mFBODatabase;
@@ -82,6 +89,7 @@ private:
 
 	Vector2i mRenderBufferSize;
 	Rectf mViewport;
+	GLenum mTopology;
 
 	bool mNeedNewProgram;
 	

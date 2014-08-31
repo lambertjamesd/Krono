@@ -351,6 +351,15 @@
     <ClInclude Include="Resource\Mesh\ObjMeshGroupLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Interface\BlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11\DX11BlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLBlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Object.cpp">
@@ -642,6 +651,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Mesh\ObjMeshGroupLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11\DX11BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLBlendState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

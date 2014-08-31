@@ -85,6 +85,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DX11\DX11BlendState.h" />
+    <ClInclude Include="Interface\BlendState.h" />
+    <ClInclude Include="OpenGL\OpenGLBlendState.h" />
     <ClInclude Include="Resource\MaterialLoader.h" />
     <ClInclude Include="Resource\JSON\JsonTypeHelper.h" />
     <ClInclude Include="Resource\Compositor\CompositeStageLoader.h" />
@@ -198,7 +201,10 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DX11\DX11BlendState.cpp" />
+    <ClCompile Include="Interface\BlendState.cpp" />
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="OpenGL\OpenGLBlendState.cpp" />
     <ClCompile Include="Resource\MaterialLoader.cpp" />
     <ClCompile Include="Resource\JSON\JsonTypeHelper.cpp" />
     <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp" />

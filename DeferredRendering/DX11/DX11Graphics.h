@@ -27,6 +27,8 @@ public:
 	virtual Auto<Texture2D> CreateTexture2D(Vector2i size, DataFormat format);
 	
 	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description);
+
+	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description);
 	
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
@@ -44,6 +46,10 @@ public:
 	virtual void SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer);
 	virtual void SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer);
 	virtual void SetConstantBuffer(const Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage);
+
+	virtual void SetBlendState(const Auto<BlendState> &blendState);
+
+	virtual void SetTopology(Topology::Type topology);
 	
 	virtual bool FlipImageOriginY() const;
 
@@ -62,6 +68,7 @@ private:
 	friend class Graphics;
 	
 	static DXGI_FORMAT gFormatMapping[DataFormat::TypeCount][4];
+	static D3D11_PRIMITIVE_TOPOLOGY gTopologyMapping[Topology::Count];
 
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;

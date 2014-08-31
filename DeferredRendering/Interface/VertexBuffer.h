@@ -42,6 +42,20 @@ private:
 	void* mDataEnd;
 };
 
+namespace Topology
+{
+	enum Type
+	{
+		PointList,
+		LineList,
+		LineStrip,
+		TriangleList,
+		TriangleStrip,
+
+		Count
+	};
+}
+
 class VertexBuffer
 {
 public:

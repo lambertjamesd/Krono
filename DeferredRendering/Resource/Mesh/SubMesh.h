@@ -21,7 +21,11 @@ public:
 	~SubMesh(void);
 
 	void Render(Graphics& graphics);
+
+	void SetTopology(Topology::Type topology);
+	Topology::Type GetTopology() const;
 private:
+	Topology::Type mTopology;
 	Auto<VertexBuffer> mVertexBuffer;
 	Auto<IndexBuffer> mIndexBuffer;
 	size_t mIndexOffset;

@@ -11,6 +11,7 @@
 #include "DX11ConstantBuffer.h"
 #include "DX11Texture2D.h"
 #include "DX11Sampler.h"
+#include "DX11BlendState.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -119,6 +120,11 @@ Auto<Sampler> DX11Graphics::CreateSampler(const SamplerDescription& description)
 	return Auto<Sampler>(new DX11Sampler(mDevice, description));
 }
 
+Auto<BlendState> DX11Graphics::CreateBlendState(const BlendStateDescription& description)
+{
+	return Auto<BlendState>(new DX11BlendState(mDevice, description));
+}
+
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 {
 	D3D11_VIEWPORT dxViewport;
@@ -136,14 +142,12 @@ void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
 void DX11Graphics::Draw(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
-	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mDeviceContext->Draw(count, offset);
 }
 
 void DX11Graphics::DrawIndexed(size_t count, size_t offset)
 {
 	UpdatePendingChanges();
-	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mDeviceContext->DrawIndexed(count, offset, 0);
 }
 
@@ -311,6 +315,29 @@ void DX11Graphics::SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer,
 	}
 }
 
+void DX11Graphics::SetBlendState(const Auto<BlendState> &blendState)
+{
+	DX11BlendState* dxBlendState = static_cast<DX11BlendState*>(blendState.get());
+
+	if (dxBlendState != NULL)
+	{
+		FLOAT blendFactor[4];
+		blendFactor[0] = dxBlendState->GetDescription().blendFactor.r;
+		blendFactor[1] = dxBlendState->GetDescription().blendFactor.g;
+		blendFactor[2] = dxBlendState->GetDescription().blendFactor.b;
+		blendFactor[3] = dxBlendState->GetDescription().blendFactor.a;
+		UINT sampleMask = dxBlendState->GetDescription().sampleMask;
+
+
+		mDeviceContext->OMSetBlendState(dxBlendState->GetBlendState(), blendFactor, sampleMask);
+	}
+}
+
+void DX11Graphics::SetTopology(Topology::Type topology)
+{
+	mDeviceContext->IASetPrimitiveTopology(gTopologyMapping[topology]);
+}
+
 bool DX11Graphics::FlipImageOriginY() const
 {
 	return false;
@@ -345,6 +372,15 @@ DXGI_FORMAT DX11Graphics::gFormatMapping[DataFormat::TypeCount][4] =
 	{DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
 	{DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
 	{DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN},
+};
+
+
+D3D11_PRIMITIVE_TOPOLOGY DX11Graphics::gTopologyMapping[Topology::Count] = {
+	D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,
+	D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
+	D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
 };
 
 DXGI_FORMAT DX11Graphics::GetDXFormat(const DataFormat& dataFormat)
