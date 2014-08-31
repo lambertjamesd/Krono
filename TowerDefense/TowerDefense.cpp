@@ -114,9 +114,7 @@ int main(int argc, char* argv[])
 
 		pointSampler = graphics->CreateSampler(samplerDesc);
 
-		Auto<Material> materialTest(new Material());
-		materialTest->AddTechnique(0, Technique(vertexShader, pixelShader));
-		materialTest->SetTexture(textureTest, 0, ShaderStage::PixelShader);
+		Material::Ptr materialTest = resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json");
 		
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);

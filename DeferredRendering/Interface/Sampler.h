@@ -78,6 +78,8 @@ public:
 
 	Sampler(void);
 	virtual ~Sampler(void);
+
+	static const Sampler::Ptr Null;
 };
 
 }

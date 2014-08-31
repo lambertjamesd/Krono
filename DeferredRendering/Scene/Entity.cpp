@@ -20,7 +20,8 @@ EntityData::EntityData() :
 
 Entity::Entity(SceneIndex* sceneIndex) :
 	mSceneIndex(sceneIndex),
-	mIsVisisble(true)
+	mIsVisisble(true),
+	mUsedTechniques(0)
 {
 }
 
@@ -53,6 +54,8 @@ void Entity::SetMesh(Auto<Mesh>& mesh)
 	{
 		mMaterials.resize(mMesh->GetSubMeshCount());
 	}
+
+	RebuildUsedTechniques();
 }
 
 const Auto<Mesh>& Entity::GetMesh() const
@@ -69,6 +72,8 @@ void Entity::SetMaterial(const Auto<Material>& material, size_t index)
 {
 	assert(index < mMaterials.size());
 	mMaterials[index] = material;
+
+	RebuildUsedTechniques();
 }
 
 void Entity::SetIsVisible(bool value)
@@ -93,7 +98,7 @@ const Auto<Material>& Entity::GetMaterial(size_t index) const
 
 void Entity::Render(RenderState& renderState, size_t technique)
 {
-	if (mIsVisisble)
+	if (mIsVisisble && (mUsedTechniques & (1 << technique)))
 	{
 		RebuildBuffer(renderState);
 
@@ -102,13 +107,29 @@ void Entity::Render(RenderState& renderState, size_t technique)
 
 		for (size_t i = 0; i < mMesh->GetSubMeshCount() && i < mMaterials.size(); ++i)
 		{
-			if (mMaterials[i] != NULL && mMaterials[i]->Use(renderState, technique))
+			if (mMaterials[i] != NULL && mMaterials[i]->HasTechnique(technique))
 			{
+				renderState.PushState();
+				mMaterials[i]->Use(renderState, technique);
 				mMesh->GetSubMesh(i)->Render(renderState.GetGraphics());
+				renderState.PopState();
 			}
 		}
 
 		renderState.PopState();
+	}
+}
+
+void Entity::RebuildUsedTechniques()
+{
+	mUsedTechniques = 0;
+
+	for (auto it = mMaterials.begin(); it != mMaterials.end(); ++it)
+	{
+		if (*it != NULL)
+		{
+			mUsedTechniques |= (*it)->GetTechniqueMask();
+		}
 	}
 }
 

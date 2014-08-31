@@ -3,7 +3,7 @@
 #include <string>
 #include <ctype.h>
 #include "Core/Hash.h"
-#include "ResourceManager.h"
+#include "Resource/ResourceManager.h"
 
 using namespace std;
 

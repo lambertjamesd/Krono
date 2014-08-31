@@ -5,6 +5,11 @@
 
 namespace krono
 {
+	
+Shader::Shader(void)
+{
+
+}
 
 VertexShader::VertexShader(void)
 {

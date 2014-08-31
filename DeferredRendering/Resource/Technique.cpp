@@ -10,11 +10,10 @@ Technique::Technique()
 
 }
 
-Technique::Technique(Auto<VertexShader>& vertexShader, Auto<PixelShader>& pixelShader) :
-	mVertexShader(vertexShader),
-	mPixelShader(pixelShader)
+Technique::Technique(Auto<VertexShader>& vertexShader, Auto<PixelShader>& pixelShader)
 {
-
+	mRenderStateParameters.SetVertexShader(vertexShader);
+	mRenderStateParameters.SetPixelShader(pixelShader);
 }
 
 Technique::~Technique(void)
@@ -23,15 +22,12 @@ Technique::~Technique(void)
 
 void Technique::Use(RenderState& renderState)
 {
-	if (mVertexShader != NULL)
-	{
-		renderState.SetVertexShader(mVertexShader);
-	}
+	renderState.PushParameters(mRenderStateParameters);
+}
 
-	if (mPixelShader != NULL)
-	{
-		renderState.SetPixelShader(mPixelShader);
-	}
+RenderStateParameters& Technique::GetRenderStateParameters()
+{
+	return mRenderStateParameters;
 }
 
 }

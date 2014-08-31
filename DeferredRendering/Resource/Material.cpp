@@ -5,7 +5,8 @@
 namespace krono
 {
 
-Material::Material(void)
+Material::Material(void) :
+		mTechniqueMask(0)
 {
 }
 
@@ -17,44 +18,35 @@ Material::~Material(void)
 void Material::AddTechnique(UInt32 id, const Technique& technique)
 {
 	mTechniques[id] = technique;
+	mTechniqueMask |= 1 << id;
 }
 
-Auto<ConstantBuffer>& Material::GetConstantBuffer()
+bool Material::HasTechnique(size_t technique)
 {
-	return mConstantBuffer;
+	return mTechniques.find(technique) != mTechniques.end();
 }
 
-bool Material::Use(RenderState& renderState, size_t technique)
+void Material::Use(RenderState& renderState, size_t technique)
 {
-
 	auto foundTechnique = mTechniques.find(technique);
 
-	bool result;
-
-	if (foundTechnique == mTechniques.end())
+	if (foundTechnique != mTechniques.end())
 	{
-		result = false;
-	}
-	else
-	{
-		renderState.PushState();
-
-		renderState.PushParameters(mRenderStateParameters);
-
-		renderState.PushConstantBuffer(mConstantBuffer, ShaderStage::PixelShader);
 		foundTechnique->second.Use(renderState);
-		result = true;
-
-		renderState.PopState();
 	}
-
-
-	return result;
 }
 
 void Material::SetTexture(const Texture::Ptr& texture, size_t slot, ShaderStage::Type stage)
 {
-	mRenderStateParameters.SetTexture(texture, slot, stage);
+	for (auto it = mTechniques.begin(); it != mTechniques.end(); ++it)
+	{
+		it->second.GetRenderStateParameters().SetTexture(texture, slot, stage);
+	}
+}
+
+UInt32 Material::GetTechniqueMask() const
+{
+	return mTechniqueMask;
 }
 
 }

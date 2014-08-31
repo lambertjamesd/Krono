@@ -54,7 +54,8 @@ private:
 
 	SceneIndex *mSceneIndex;
 	void *mSceneIndexData;
-
+	
+	void RebuildUsedTechniques();
 	void RebuildBuffer(RenderState& renderState);
 	Auto<ConstantBuffer> mEntityBuffer;
 
@@ -62,6 +63,7 @@ private:
 	std::vector<Auto<Material> > mMaterials;
 	EntityData mEntityData;
 	bool mIsVisisble;
+	Material::TechniqueMask mUsedTechniques;
 };
 
 }

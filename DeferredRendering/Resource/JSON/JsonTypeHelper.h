@@ -18,6 +18,8 @@ public:
 	static DataFormat ParseDataFormat(const json::Value& data);
 	static void ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters);
 	static Colorf ParseColor(const json::Value& color);
+private:
+	static const char* gStageName[ShaderStage::TypeCount];
 };
 
 }

@@ -85,6 +85,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\MaterialLoader.h" />
     <ClInclude Include="Resource\JSON\JsonTypeHelper.h" />
     <ClInclude Include="Resource\Compositor\CompositeStageLoader.h" />
     <ClInclude Include="Resource\Compositor\CompositorLoader.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Resource\FormatException.h" />
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Interface\Sampler.h" />
+    <ClInclude Include="Resource\SamplerLoader.h" />
     <ClInclude Include="Scene\SceneView.h" />
     <ClInclude Include="Collide\BoundingBox.h" />
     <ClInclude Include="DX11\DX11ConstantBuffer.h" />
@@ -129,7 +131,7 @@
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Resource\ResourceLoader.h" />
     <ClInclude Include="Resource\Mesh\MeshGroup.h" />
-    <ClInclude Include="Resource\ObjMeshGroupLoader.h" />
+    <ClInclude Include="Resource\Mesh\ObjMeshGroupLoader.h" />
     <ClInclude Include="Resource\Mesh\MeshGroupLoader.h" />
     <ClInclude Include="Scene\SceneIndexArray.h" />
     <ClInclude Include="Scene\SceneIndex.h" />
@@ -192,10 +194,12 @@
     <ClInclude Include="Interface\UnsupportedFormatException.h" />
     <ClInclude Include="Resource\Technique.h" />
     <ClInclude Include="Resource\Texture2DLoader.h" />
+    <ClInclude Include="Resource\TextureLoader.h" />
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Resource\MaterialLoader.cpp" />
     <ClCompile Include="Resource\JSON\JsonTypeHelper.cpp" />
     <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp" />
     <ClCompile Include="Resource\Compositor\CompositorLoader.cpp" />
@@ -221,6 +225,7 @@
     <ClCompile Include="Resource\LoadException.cpp" />
     <ClCompile Include="Resource\FormatException.cpp" />
     <ClCompile Include="Interface\Sampler.cpp" />
+    <ClCompile Include="Resource\SamplerLoader.cpp" />
     <ClCompile Include="Scene\SceneView.cpp" />
     <ClCompile Include="DX11\DX11ConstantBuffer.cpp" />
     <ClCompile Include="DX11\DX11DepthBuffer.cpp" />
@@ -231,7 +236,7 @@
     <ClCompile Include="Resource\Resource.cpp" />
     <ClCompile Include="Resource\ResourceLoader.cpp" />
     <ClCompile Include="Resource\Mesh\MeshGroup.cpp" />
-    <ClCompile Include="Resource\ObjMeshGroupLoader.cpp" />
+    <ClCompile Include="Resource\Mesh\ObjMeshGroupLoader.cpp" />
     <ClCompile Include="Resource\Mesh\MeshGroupLoader.cpp" />
     <ClCompile Include="Scene\SceneIndexArray.cpp" />
     <ClCompile Include="Scene\SceneIndex.cpp" />
@@ -288,6 +293,7 @@
     <ClCompile Include="Resource\Technique.cpp" />
     <ClCompile Include="Resource\Texture2DLoader.cpp" />
     <ClCompile Include="Resource\ShaderLoader.cpp" />
+    <ClCompile Include="Resource\TextureLoader.cpp" />
     <ClCompile Include="Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

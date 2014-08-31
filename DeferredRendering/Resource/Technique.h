@@ -3,6 +3,7 @@
 #include "Interface/Shader.h"
 #include "Core/Memory.h"
 #include "Interface/Graphics.h"
+#include "Compositor/RenderStateParameters.h"
 
 namespace krono
 {
@@ -17,9 +18,9 @@ public:
 	~Technique(void);
 
 	void Use(RenderState& renderState);
+	RenderStateParameters& GetRenderStateParameters();
 private:
-	Auto<VertexShader> mVertexShader;
-	Auto<PixelShader> mPixelShader;
+	RenderStateParameters mRenderStateParameters;
 };
 
 }

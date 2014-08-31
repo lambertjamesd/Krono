@@ -93,6 +93,8 @@
     <ClInclude Include="Bundle\GLSLBundler.h" />
     <ClInclude Include="HLSLParser\HLSLParser.h" />
     <ClInclude Include="HLSLParser\HLSLTokenizer.h" />
+    <ClInclude Include="HLSLParser\HLSLToken.h" />
+    <ClInclude Include="HLSLParser\HLSLParserException.h" />
     <ClInclude Include="JSON\json.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -105,6 +107,8 @@
     <ClCompile Include="Bundle\GLSLBundler.cpp" />
     <ClCompile Include="HLSLParser\HLSLParser.cpp" />
     <ClCompile Include="HLSLParser\HLSLTokenizer.cpp" />
+    <ClCompile Include="HLSLParser\HLSLToken.cpp" />
+    <ClCompile Include="HLSLParser\HLSLParserException.cpp" />
     <ClCompile Include="JSON\json.cpp" />
     <ClCompile Include="ShaderBundler.cpp" />
   </ItemGroup>

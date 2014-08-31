@@ -37,4 +37,6 @@ Sampler::~Sampler(void)
 {
 }
 
+const Sampler::Ptr Sampler::Null;
+
 }

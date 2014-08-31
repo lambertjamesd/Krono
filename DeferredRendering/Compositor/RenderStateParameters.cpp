@@ -25,6 +25,16 @@ void RenderStateParameters::SetTexture(const Texture::Ptr& texture, size_t index
 	mTextures[stage][index] = texture;
 }
 
+void RenderStateParameters::SetSampler(const Sampler::Ptr& texture, size_t index, ShaderStage::Type stage)
+{
+	if (mSamplers[stage].size() < index + 1)
+	{
+		mSamplers[stage].resize(index + 1);
+	}
+
+	mSamplers[stage][index] = texture;
+}
+
 void RenderStateParameters::SetConstantBuffer(const ConstantBuffer::Ptr& buffer, size_t index, ShaderStage::Type stage)
 {
 	if (mUniforms[stage].size() < index + 1)
@@ -35,19 +45,14 @@ void RenderStateParameters::SetConstantBuffer(const ConstantBuffer::Ptr& buffer,
 	mUniforms[stage][index] = buffer;
 }
 
-size_t RenderStateParameters::GetTextureCount(ShaderStage::Type stage) const
-{
-	return mTextures[stage].size();
-}
-
 void RenderStateParameters::AddTexture(const Texture::Ptr& texture, ShaderStage::Type stage)
 {
 	mTextures[stage].push_back(texture);
 }
 
-size_t RenderStateParameters::GetConstantBufferCount(ShaderStage::Type stage) const
+void RenderStateParameters::AddSampler(const Sampler::Ptr& texture, ShaderStage::Type stage)
 {
-	return mUniforms[stage].size();
+	mSamplers[stage].push_back(texture);
 }
 
 void RenderStateParameters::AddConstantBuffer(const ConstantBuffer::Ptr& buffer, ShaderStage::Type stage)
@@ -55,9 +60,29 @@ void RenderStateParameters::AddConstantBuffer(const ConstantBuffer::Ptr& buffer,
 	mUniforms[stage].push_back(buffer);
 }
 
+size_t RenderStateParameters::GetTextureCount(ShaderStage::Type stage) const
+{
+	return mTextures[stage].size();
+}
+
 const Texture::Ptr& RenderStateParameters::GetTexture(ShaderStage::Type stage, size_t index) const
 {
 	return mTextures[stage][index];
+}
+
+size_t RenderStateParameters::GetSamplerCount(ShaderStage::Type stage) const
+{
+	return mSamplers[stage].size();
+}
+
+const Sampler::Ptr& RenderStateParameters::GetSampler(ShaderStage::Type stage, size_t index) const
+{
+	return mSamplers[stage][index];
+}
+
+size_t RenderStateParameters::GetConstantBufferCount(ShaderStage::Type stage) const
+{
+	return mUniforms[stage].size();
 }
 
 const ConstantBuffer::Ptr& RenderStateParameters::GetConstantBuffer(ShaderStage::Type stage, size_t index) const

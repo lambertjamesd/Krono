@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh/MeshGroupLoader.h"
+#include "MeshGroupLoader.h"
 #include "Interface/Graphics.h"
 #include <vector>
 #include <unordered_map>

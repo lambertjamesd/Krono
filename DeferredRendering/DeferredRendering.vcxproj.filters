@@ -201,9 +201,6 @@
     <ClInclude Include="Scene\SceneIndexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\ObjMeshGroupLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource\ResourceLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -340,6 +337,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource\JSON\JsonTypeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\MaterialLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\SamplerLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Mesh\ObjMeshGroupLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -509,9 +518,6 @@
     <ClCompile Include="Scene\SceneIndexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\ObjMeshGroupLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Resource\ResourceLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -624,6 +630,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resource\JSON\JsonTypeHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\MaterialLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\SamplerLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Mesh\ObjMeshGroupLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -94,6 +94,11 @@ void RenderState::PushParameters(const RenderStateParameters& parameters)
 			PushTexture(parameters.GetTexture(stage, i), stage);
 		}
 
+		for (size_t i = 0; i < parameters.GetSamplerCount(stage); ++i)
+		{
+			PushSampler(parameters.GetSampler(stage, i), stage);
+		}
+
 		for (size_t i = 0; i < parameters.GetConstantBufferCount(stage); ++i)
 		{
 			PushConstantBuffer(parameters.GetConstantBuffer(stage, i), stage);

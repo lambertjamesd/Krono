@@ -9,6 +9,8 @@
 #include "Bundle/GLSLBundler.h"
 #include "Bundle/Bundle.h"
 
+#include "HLSLParser/HLSLTokenizer.h"
+
 #ifdef USE_DX11
 #include "Bundle/HLSLCompiler.h"
 #endif
@@ -74,6 +76,10 @@ void ProccessFile(const char* filename)
 
 int main(int argc, char* argv[])
 {
+#ifdef _DEBUG
+	HLSLTokenizer::Test();
+#endif
+
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{
 		for (int i = 2; i < argc; ++i)

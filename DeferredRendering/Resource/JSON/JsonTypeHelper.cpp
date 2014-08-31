@@ -1,5 +1,6 @@
 #include "JsonTypeHelper.h"
 #include "Resource/FormatException.h"
+#include "Resource/SamplerLoader.h"
 
 using namespace json;
 
@@ -62,6 +63,15 @@ DataFormat JsonTypeHelper::ParseDataFormat(const json::Value& data)
 	return DataFormat(type, count);
 }
 
+const char* JsonTypeHelper::gStageName[ShaderStage::TypeCount] = {
+	"vertexStage",
+	"hullStage",
+	"domainStage",
+	"geometryStage",
+	"pixelStage",
+	"computeStage"
+};
+
 void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters)
 {
 	if (stateParameters.HasKey("vertexShader") && stateParameters["vertexShader"].GetType() == StringVal)
@@ -72,6 +82,55 @@ void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager
 	if (stateParameters.HasKey("pixelShader") && stateParameters["pixelShader"].GetType() == StringVal)
 	{
 		result.SetPixelShader(resourceManager.LoadResource<PixelShader>(stateParameters["pixelShader"].ToString()));
+	}
+
+	for (size_t i = 0; i < ShaderStage::TypeCount; ++i)
+	{
+		ShaderStage::Type stageType = static_cast<ShaderStage::Type>(i);
+
+		if (stateParameters.HasKey(gStageName[i]))
+		{
+			const Value& stage = stateParameters[gStageName[i]];
+
+			if (stage["textures"].GetType() == ArrayVal)
+			{
+				Array textures = stage["textures"].ToArray();
+
+				for (auto it = textures.begin(); it != textures.end(); ++it)
+				{
+					if (it->GetType() == StringVal)
+					{
+						result.AddTexture(resourceManager.LoadResource<Texture>(it->ToString()), stageType);
+					}
+					else
+					{
+						result.AddTexture(Texture::Null, stageType);
+					}
+				}
+			}
+
+			if (stage["samplers"].GetType() == ArrayVal)
+			{
+				Array samplers = stage["samplers"].ToArray();
+
+				for (auto it = samplers.begin(); it != samplers.end(); ++it)
+				{
+					if (it->GetType() == NULLVal)
+					{
+						result.AddSampler(Sampler::Null, stageType);
+					}
+					else
+					{
+						result.AddSampler(SamplerLoader::ParseSampler(resourceManager, *it), stageType);
+					}
+				}
+			}
+
+			if (stage["uniforms"].GetType() == ArrayVal)
+			{
+
+			}
+		}
 	}
 }
 

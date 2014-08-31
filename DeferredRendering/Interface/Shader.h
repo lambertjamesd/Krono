@@ -21,7 +21,14 @@ namespace ShaderStage
 	};
 }
 
-class VertexShader : public Object
+class Shader : public Object
+{
+public:
+protected:
+	Shader(void);
+};
+
+class VertexShader : public Shader
 {
 public:
 	typedef Auto<VertexShader> Ptr;
@@ -33,7 +40,7 @@ protected:
 private:
 };
 
-class PixelShader : public Object
+class PixelShader : public Shader
 {
 public:
 	typedef Auto<PixelShader> Ptr;

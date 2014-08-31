@@ -48,6 +48,12 @@
     <ClInclude Include="HLSLParser\HLSLTokenizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLToken.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLParserException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderBundler.cpp">
@@ -78,6 +84,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HLSLParser\HLSLTokenizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLToken.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLParserException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,12 +1,15 @@
 
 #include "ResourceManager.h"
 #include "Mesh/MeshLoader.h"
-#include "ObjMeshGroupLoader.h"
+#include "Mesh/ObjMeshGroupLoader.h"
 #include "Texture2DLoader.h"
 #include "ShaderLoader.h"
 #include "JSON/JsonDocumentLoader.h"
 #include "Compositor/CompositeStageLoader.h"
 #include "Compositor/CompositorLoader.h"
+#include "TextureLoader.h"
+#include "MaterialLoader.h"
+#include "SamplerLoader.h"
 
 namespace krono
 {
@@ -39,11 +42,14 @@ void ResourceManager::AddDefaultLoaders()
 	AddLoader<Mesh>(Auto<ResourceLoader>(new MeshLoader()));
 	AddLoader<MeshGroup>(Auto<ResourceLoader>(new ObjMeshGroupLoader()));
 	AddLoader<Texture2D>(Auto<ResourceLoader>(new Texture2DLoader()));
+	AddLoader<Texture>(Auto<ResourceLoader>(new TextureLoader()));
 	AddLoader<VertexShader>(Auto<ResourceLoader>(new VertexShaderLoader()));
 	AddLoader<PixelShader>(Auto<ResourceLoader>(new PixelShaderLoader()));
 	AddLoader<JsonDocument>(Auto<ResourceLoader>(new JsonDocumentLoader()));
 	AddLoader<CompositeStage>(Auto<ResourceLoader>(new CompositeStageLoader()));
 	AddLoader<Compositor>(Auto<ResourceLoader>(new CompositorLoader()));
+	AddLoader<Material>(Auto<ResourceLoader>(new MaterialLoader()));
+	AddLoader<Sampler>(Auto<ResourceLoader>(new SamplerLoader()));
 }
 
 }

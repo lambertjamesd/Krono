@@ -19,22 +19,23 @@ class Material : public Resource
 {
 public:
 	typedef Auto<Material> Ptr;
+	typedef UInt32 TechniqueMask;
 
 	Material(void);
 	~Material(void);
 
 	void AddTechnique(UInt32 id, const Technique& technique);
 
-	Auto<ConstantBuffer>& GetConstantBuffer();
-
-	bool Use(RenderState& renderState, size_t technique);
+	bool HasTechnique(size_t technique);
+	void Use(RenderState& renderState, size_t technique);
 
 	void SetTexture(const Texture::Ptr& texture, size_t slot, ShaderStage::Type stage);
+
+	UInt32 GetTechniqueMask() const;
 private:
+	TechniqueMask mTechniqueMask;
+
 	std::unordered_map<UInt32, Technique> mTechniques;
-	std::vector<std::pair<ShaderStage::Type, Auto<Texture> > > mTextures;
-	Auto<ConstantBuffer> mConstantBuffer;
-	RenderStateParameters mRenderStateParameters;
 };
 
 }

@@ -1,0 +1,15 @@
+{
+	"documentType" : "material",
+	
+	"techniques" : [
+		{
+			"vertexShader" : "Media/Shaders/Bundle/VertexShaderTest.shader",
+			"pixelShader" : "Media/Shaders/Bundle/PixelShaderTest.shader",
+			
+			"pixelStage" : {
+				"textures" : ["Media/Textures/Test.png"],
+				"samplers" : [{}]
+			}
+		}
+	]
+}
