@@ -132,6 +132,11 @@ void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager
 			}
 		}
 	}
+
+	if (stateParameters.HasKey("blendState"))
+	{
+		result.SetBlendState(ParseBlendState(resourceManager, stateParameters["blendState"]));
+	}
 }
 
 
@@ -143,6 +148,77 @@ Colorf JsonTypeHelper::ParseColor(const json::Value& color)
 		color["b"].ToFloat(0.0f),
 		color["a"].ToFloat(1.0f)
 		);
+}
+
+RenderTargetBlend JsonTypeHelper::ParseRenderTargetBlend(const json::Value& rootValue)
+{
+	if (rootValue.GetType() == StringVal)
+	{
+		std::string stringValue = rootValue.ToString();
+
+		if (stringValue == "alphaBlend")
+		{
+			return RenderTargetBlend::AlphaBlend;		
+		}
+		else if (stringValue == "add")
+		{
+			return RenderTargetBlend::Add;
+		}
+		else if (stringValue == "multiply")
+		{
+			return RenderTargetBlend::Multiply;
+		}
+		else if (stringValue == "disabled")
+		{
+			return RenderTargetBlend();
+		}
+		else
+		{
+			throw FormatException("Invalid render target blend type");
+		}
+	}
+	else
+	{
+		RenderTargetBlend result;
+
+		// TODO implement custom blend types
+
+		return result;
+	}
+}
+
+BlendState::Ptr JsonTypeHelper::ParseBlendState(ResourceManager& resourceManager, const json::Value& blendState)
+{
+	BlendStateDescription description;
+
+	const Value& renderTargets = blendState["renderTargets"];
+
+	if (renderTargets.GetType() == StringVal)
+	{
+		description.independentBlend = false;
+		description.renderTargets[0] = ParseRenderTargetBlend(renderTargets);
+	}
+	else if (renderTargets.GetType() == ArrayVal)
+	{
+		Array arrayValue = renderTargets.ToArray();
+
+		description.independentBlend = true;
+		for (size_t i = 0; i < arrayValue.size() && i < MaxRenderTargetCount; ++i)
+		{
+			description.renderTargets[i] = ParseRenderTargetBlend(arrayValue[i]);
+		}
+	}
+	else
+	{
+		throw FormatException("renderTargets must be a string or an array");
+	}
+
+	if (blendState["blendFactor"].GetType() == ObjectVal)
+	{
+		description.blendFactor = ParseColor(blendState["blendFactor"]);
+	}
+
+	return resourceManager.GetGraphics()->CreateBlendState(description);
 }
 
 }

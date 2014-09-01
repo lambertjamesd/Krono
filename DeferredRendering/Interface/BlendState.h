@@ -65,6 +65,11 @@ namespace BlendMask
 struct RenderTargetBlend
 {
 	RenderTargetBlend();
+	RenderTargetBlend(
+		Blend::Type srcBlend, Blend::Type destBlend, BlendOperator::Type blendOperation,
+		Blend::Type srcBlendAlpha, Blend::Type destBlendAlpha, BlendOperator::Type blendOperationAlpha,
+		BlendMask::Type blendMask);
+		
 
 	bool blendEnabled;
 
@@ -77,6 +82,10 @@ struct RenderTargetBlend
 	BlendOperator::Type blendOperationAlpha;
 
 	BlendMask::Type blendMask;
+	
+	static const RenderTargetBlend AlphaBlend;
+	static const RenderTargetBlend Add;
+	static const RenderTargetBlend Multiply;
 };
 
 static const size_t MaxRenderTargetCount = 8;

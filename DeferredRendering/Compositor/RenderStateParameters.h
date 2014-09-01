@@ -5,6 +5,7 @@
 #include "Interface/Sampler.h"
 #include "Interface/ConstantBuffer.h"
 #include "Interface/Shader.h"
+#include "Interface/BlendState.h"
 
 #include <vector>
 
@@ -39,6 +40,8 @@ public:
 
 	void SetVertexShader(const VertexShader::Ptr& vertexShader);
 	void SetPixelShader(const PixelShader::Ptr& pixelShader);
+
+	void SetBlendState(const BlendState::Ptr& blendState);
 private:
 	friend class RenderState;
 
@@ -48,6 +51,8 @@ private:
 
 	VertexShader::Ptr mVertexShader;
 	PixelShader::Ptr mPixelShader;
+
+	BlendState::Ptr mBlendState;
 };
 
 }

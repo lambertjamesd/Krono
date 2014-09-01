@@ -5,6 +5,7 @@
 #include "JSON/json.h"
 #include "Resource/ResourceManager.h"
 #include "Interface/Color.h"
+#include "Interface/BlendState.h"
 
 namespace krono
 {
@@ -18,6 +19,9 @@ public:
 	static DataFormat ParseDataFormat(const json::Value& data);
 	static void ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters);
 	static Colorf ParseColor(const json::Value& color);
+
+	static RenderTargetBlend ParseRenderTargetBlend(const json::Value& rootValue);
+	static BlendState::Ptr ParseBlendState(ResourceManager& resourceManager, const json::Value& blendState);
 private:
 	static const char* gStageName[ShaderStage::TypeCount];
 };

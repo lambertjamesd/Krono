@@ -34,6 +34,8 @@ public:
 	void SetVertexShader(const VertexShader::Ptr& vertexShader);
 	void SetPixelShader(const PixelShader::Ptr& pixelShader);
 
+	void SetBlendState(const BlendState::Ptr& blendState);
+
 	const Matrix4f& GetViewMatrix() const;
 	const Matrix4f& GetProjectionMatrix() const;
 
@@ -49,7 +51,8 @@ private:
 			size_t viewportStackSize,
 			
 			size_t vertexShaderStackSize,
-			size_t pixelShaderStackSize);
+			size_t pixelShaderStackSize,
+			size_t blendStateStackSize);
 
 		size_t textureCount[ShaderStage::TypeCount];
 		size_t samplerCount[ShaderStage::TypeCount];
@@ -59,6 +62,8 @@ private:
 
 		size_t vertexShaderStackSize;
 		size_t pixelShaderStackSize;
+
+		size_t blendStateStackSize;
 	};
 
 	Graphics& mGraphics;
@@ -76,6 +81,8 @@ private:
 
 	std::vector<VertexShader::Ptr> mVertexShaderStack;
 	std::vector<PixelShader::Ptr> mPixelShaderStack;
+
+	std::vector<BlendState::Ptr> mBlendStateStack;
 
 	Matrix4f mProjectionMatrix;
 };

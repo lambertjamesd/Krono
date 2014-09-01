@@ -8,6 +8,10 @@
 	"renderStateParameters" :
 	{
 		"vertexShader" : "Media/Shaders/Bundle/ScreenComposite.shader",
-		"pixelShader" : "Media/Shaders/Bundle/DirectionalLight.shader"
+		"pixelShader" : "Media/Shaders/Bundle/DirectionalLight.shader",
+		
+		"blendState" : {
+			"renderTargets" : "add"
+		}
 	}
 }

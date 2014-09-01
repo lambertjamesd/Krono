@@ -12,11 +12,14 @@ RenderState::SavedState::SavedState(
 	size_t viewportStackSize,
 
 	size_t vertexShaderStackSize,
-	size_t pixelShaderStackSize) :
+	size_t pixelShaderStackSize,
+	size_t blendStateStackSize) :
 		viewportStackSize(viewportStackSize),
 
 		vertexShaderStackSize(vertexShaderStackSize),
-		pixelShaderStackSize(pixelShaderStackSize)
+		pixelShaderStackSize(pixelShaderStackSize),
+
+		blendStateStackSize(blendStateStackSize)
 {
 	memcpy(textureCount, currentTextureCount, sizeof(textureCount));
 	memcpy(samplerCount, currentSamplerCount, sizeof(textureCount));
@@ -57,7 +60,9 @@ void RenderState::PushState()
 		mViewportStack.size(),
 
 		mVertexShaderStack.size(),
-		mPixelShaderStack.size()
+		mPixelShaderStack.size(),
+
+		mBlendStateStack.size()
 		));
 }
 
@@ -114,6 +119,11 @@ void RenderState::PushParameters(const RenderStateParameters& parameters)
 	{
 		SetPixelShader(parameters.mPixelShader);
 	}
+
+	if (parameters.mBlendState != NULL)
+	{
+		SetBlendState(parameters.mBlendState);
+	}
 }
 
 void RenderState::PopState()
@@ -151,6 +161,16 @@ void RenderState::PopState()
 		if (mPixelShaderStack.size() > 0)
 		{
 			mGraphics.SetPixelShader(mPixelShaderStack.back());
+		}
+	}
+
+	if (savedState.blendStateStackSize != mBlendStateStack.size())
+	{
+		mBlendStateStack.pop_back();
+
+		if (mBlendStateStack.size() > 0)
+		{
+			mGraphics.SetBlendState(mBlendStateStack.back());
 		}
 	}
 
@@ -216,6 +236,20 @@ void RenderState::SetPixelShader(const PixelShader::Ptr& pixelShader)
 	}
 
 	mGraphics.SetPixelShader(pixelShader);
+}
+
+void RenderState::SetBlendState(const BlendState::Ptr& blendState)
+{
+	if (mSavedStates.back().blendStateStackSize == mBlendStateStack.size())
+	{
+		mBlendStateStack.push_back(blendState);
+	}
+	else
+	{
+		mBlendStateStack.back() = blendState;
+	}
+
+	mGraphics.SetBlendState(blendState);
 }
 
 const Matrix4f& RenderState::GetViewMatrix() const

@@ -100,4 +100,9 @@ void RenderStateParameters::SetPixelShader(const PixelShader::Ptr& pixelShader)
 	mPixelShader = pixelShader;
 }
 
+void RenderStateParameters::SetBlendState(const BlendState::Ptr& blendState)
+{
+	mBlendState = blendState;
+}
+
 }

@@ -3,5 +3,11 @@
 	
 	"type" : "sceneRender",
 	
-	"renderTechnique" : 0
+	"renderTechnique" : 0,
+	
+	"renderStateParameters" : {
+		"blendState" : {
+			"renderTargets" : "disabled"
+		}
+	}
 }
