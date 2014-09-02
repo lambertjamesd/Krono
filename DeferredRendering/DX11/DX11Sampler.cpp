@@ -1,4 +1,5 @@
 #include "DX11Sampler.h"
+#include "DX11DepthState.h"
 
 #include "HResultException.h"
 
@@ -24,7 +25,7 @@ DX11Sampler::DX11Sampler(ID3D11Device* device, const SamplerDescription& descrip
 	samplerDesc.AddressW = gAddressModes[description.wWrap];
 	samplerDesc.MipLODBias = description.mipBias;
 	samplerDesc.MaxAnisotropy = description.maxAnisotropy;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.ComparisonFunc = DX11DepthState::GetComparisonFunction(description.compareFunction);
 	samplerDesc.BorderColor[0] = description.borderColor.r;
 	samplerDesc.BorderColor[1] = description.borderColor.g;
 	samplerDesc.BorderColor[2] = description.borderColor.b;

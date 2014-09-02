@@ -4,6 +4,7 @@
 #include "Core/Object.h"
 #include "Core/Types.h"
 #include "Color.h"
+#include "DepthState.h"
 
 namespace krono
 {
@@ -64,7 +65,7 @@ struct SamplerDescription
 	float minLOD;
 	float maxLOD;
 
-	// TODO add comparison function
+	CompareFunction::Type compareFunction;
 
 	UInt32 maxAnisotropy;
 

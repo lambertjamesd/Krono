@@ -46,7 +46,7 @@ void OpenGLBlendState::Use()
 {
 	for (size_t i = 0; i < MaxRenderTargetCount; ++i)
 	{
-		RenderTargetBlend& renderTarget = mDescription.renderTargets[i];
+		RenderTargetBlend& renderTarget = mDescription.independentBlend ? mDescription.renderTargets[0] : mDescription.renderTargets[i];
 
 		if (renderTarget.blendEnabled)
 		{

@@ -20,6 +20,8 @@ SamplerDescription::SamplerDescription() :
 	mipBias(0.0f),
 	minLOD(-std::numeric_limits<float>::max()),
 	maxLOD(std::numeric_limits<float>::max()),
+
+	compareFunction(CompareFunction::Never),
 	
 	maxAnisotropy(1),
 
