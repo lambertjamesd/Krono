@@ -13,6 +13,7 @@
 #include "OpenGLSampler.h"
 #include "OpenGLBlendState.h"
 #include "OpenGLDepthState.h"
+#include "OpenGLRasterizerState.h"
 #include <iostream>
 
 using namespace std;
@@ -112,6 +113,11 @@ Auto<BlendState> OpenGLGraphics::CreateBlendState(const BlendStateDescription& d
 Auto<DepthState> OpenGLGraphics::CreateDepthState(const DepthStateDescription& description)
 {
 	return Auto<DepthState>(new OpenGLDepthState(description));
+}
+
+Auto<RasterizerState> OpenGLGraphics::CreateRasterizerState(const RasterizerStateDescription& description)
+{
+	return Auto<RasterizerState>(new OpenGLRasterizerState(description));
 }
 
 void OpenGLGraphics::Draw(size_t count, size_t offset)
@@ -238,6 +244,16 @@ void OpenGLGraphics::SetDepthState(const Auto<DepthState> &depthState, UInt32 st
 	if (openGLDepthState != NULL)
 	{
 		openGLDepthState->Use(stencilReference);
+	}
+}
+
+void OpenGLGraphics::SetRasterizerState(const Auto<RasterizerState> &rasterizerState)
+{
+	OpenGLRasterizerState *openGLRasterizerState = static_cast<OpenGLRasterizerState*>(rasterizerState.get());
+
+	if (openGLRasterizerState != NULL)
+	{
+		openGLRasterizerState->Use();
 	}
 }
 

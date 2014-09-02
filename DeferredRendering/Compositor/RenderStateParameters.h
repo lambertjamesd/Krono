@@ -6,6 +6,8 @@
 #include "Interface/ConstantBuffer.h"
 #include "Interface/Shader.h"
 #include "Interface/BlendState.h"
+#include "Interface/DepthState.h"
+#include "Interface/RasterizerState.h"
 
 #include <vector>
 
@@ -42,6 +44,9 @@ public:
 	void SetPixelShader(const PixelShader::Ptr& pixelShader);
 
 	void SetBlendState(const BlendState::Ptr& blendState);
+	void SetDepthState(const DepthState::Ptr& depthState);
+	void SetStencilReference(UInt32 reference);
+	void SetRasterizerState(const RasterizerState::Ptr& rasterizerState);
 private:
 	friend class RenderState;
 
@@ -53,6 +58,9 @@ private:
 	PixelShader::Ptr mPixelShader;
 
 	BlendState::Ptr mBlendState;
+	DepthState::Ptr mDepthState;
+	UInt32 mStencilReference;
+	RasterizerState::Ptr mRasterizerState;
 };
 
 }

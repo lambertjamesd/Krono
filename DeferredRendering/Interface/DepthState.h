@@ -42,6 +42,8 @@ namespace StencilOperation
 
 struct StencilFunction
 {
+	StencilFunction();
+
 	StencilOperation::Type stencilFail;
 	StencilOperation::Type stencilDepthFail;
 	StencilOperation::Type stencilPass;
@@ -50,6 +52,8 @@ struct StencilFunction
 
 struct DepthStateDescription
 {
+	DepthStateDescription();
+
 	bool depthEnable;
 	bool depthWriteEnabled;
 	CompareFunction::Type depthCompare;
@@ -67,7 +71,7 @@ class DepthState
 public:
 	typedef Auto<DepthState> Ptr;
 
-	~DepthState(void);
+	virtual ~DepthState(void);
 
 	const DepthStateDescription& GetDescription() const;
 protected:

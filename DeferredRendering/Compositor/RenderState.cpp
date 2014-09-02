@@ -13,13 +13,18 @@ RenderState::SavedState::SavedState(
 
 	size_t vertexShaderStackSize,
 	size_t pixelShaderStackSize,
-	size_t blendStateStackSize) :
+
+	size_t blendStateStackSize,
+	size_t depthStateStackSize,
+	size_t rasterizerStateStackSize) :
 		viewportStackSize(viewportStackSize),
 
 		vertexShaderStackSize(vertexShaderStackSize),
 		pixelShaderStackSize(pixelShaderStackSize),
 
-		blendStateStackSize(blendStateStackSize)
+		blendStateStackSize(blendStateStackSize),
+		depthStateStackSize(depthStateStackSize),
+		rasterizerStateStackSize(rasterizerStateStackSize)
 {
 	memcpy(textureCount, currentTextureCount, sizeof(textureCount));
 	memcpy(samplerCount, currentSamplerCount, sizeof(textureCount));
@@ -62,7 +67,9 @@ void RenderState::PushState()
 		mVertexShaderStack.size(),
 		mPixelShaderStack.size(),
 
-		mBlendStateStack.size()
+		mBlendStateStack.size(),
+		mDepthStateStack.size(),
+		mRasterizerStateStack.size()
 		));
 }
 
@@ -123,6 +130,16 @@ void RenderState::PushParameters(const RenderStateParameters& parameters)
 	if (parameters.mBlendState != NULL)
 	{
 		SetBlendState(parameters.mBlendState);
+	}
+
+	if (parameters.mDepthState != NULL)
+	{
+		SetDepthState(parameters.mDepthState, parameters.mStencilReference);
+	}
+
+	if (parameters.mRasterizerState != NULL)
+	{
+		SetRasterizerState(parameters.mRasterizerState);
 	}
 }
 
@@ -250,6 +267,36 @@ void RenderState::SetBlendState(const BlendState::Ptr& blendState)
 	}
 
 	mGraphics.SetBlendState(blendState);
+}
+
+void RenderState::SetDepthState(const DepthState::Ptr& depthState, UInt32 stencilReference)
+{
+	if (mSavedStates.back().blendStateStackSize == mDepthStateStack.size())
+	{
+		mDepthStateStack.push_back(depthState);
+		mStencilReferenceStack.push_back(stencilReference);
+	}
+	else
+	{
+		mDepthStateStack.back() = depthState;
+		mStencilReferenceStack.back() = stencilReference;
+	}
+
+	mGraphics.SetDepthState(depthState, stencilReference);
+}
+
+void RenderState::SetRasterizerState(const RasterizerState::Ptr& rasterizerState)
+{
+	if (mSavedStates.back().rasterizerStateStackSize == mRasterizerStateStack.size())
+	{
+		mRasterizerStateStack.push_back(rasterizerState);
+	}
+	else
+	{
+		mRasterizerStateStack.back() = rasterizerState;
+	}
+
+	mGraphics.SetRasterizerState(rasterizerState);
 }
 
 const Matrix4f& RenderState::GetViewMatrix() const

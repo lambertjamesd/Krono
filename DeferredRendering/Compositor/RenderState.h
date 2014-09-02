@@ -35,6 +35,8 @@ public:
 	void SetPixelShader(const PixelShader::Ptr& pixelShader);
 
 	void SetBlendState(const BlendState::Ptr& blendState);
+	void SetDepthState(const DepthState::Ptr& depthState, UInt32 stencilReference);
+	void SetRasterizerState(const RasterizerState::Ptr& rasterizerState);
 
 	const Matrix4f& GetViewMatrix() const;
 	const Matrix4f& GetProjectionMatrix() const;
@@ -52,7 +54,9 @@ private:
 			
 			size_t vertexShaderStackSize,
 			size_t pixelShaderStackSize,
-			size_t blendStateStackSize);
+			size_t blendStateStackSize,
+			size_t depthStateStackSize,
+			size_t rasterizerStateStackSize);
 
 		size_t textureCount[ShaderStage::TypeCount];
 		size_t samplerCount[ShaderStage::TypeCount];
@@ -64,6 +68,8 @@ private:
 		size_t pixelShaderStackSize;
 
 		size_t blendStateStackSize;
+		size_t depthStateStackSize;
+		size_t rasterizerStateStackSize;
 	};
 
 	Graphics& mGraphics;
@@ -83,6 +89,9 @@ private:
 	std::vector<PixelShader::Ptr> mPixelShaderStack;
 
 	std::vector<BlendState::Ptr> mBlendStateStack;
+	std::vector<DepthState::Ptr> mDepthStateStack;
+	std::vector<UInt32> mStencilReferenceStack;;
+	std::vector<RasterizerState::Ptr> mRasterizerStateStack;
 
 	Matrix4f mProjectionMatrix;
 };

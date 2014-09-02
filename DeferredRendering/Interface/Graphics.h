@@ -15,6 +15,7 @@
 #include "Sampler.h"
 #include "BlendState.h"
 #include "DepthState.h"
+#include "RasterizerState.h"
 
 namespace krono
 {
@@ -60,6 +61,7 @@ public:
 
 	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description) = 0;
 	virtual Auto<DepthState> CreateDepthState(const DepthStateDescription& description) = 0;
+	virtual Auto<RasterizerState> CreateRasterizerState(const RasterizerStateDescription& description) = 0;
 
 	virtual void Draw(size_t count, size_t offset) = 0;
 	virtual void DrawIndexed(size_t count, size_t offset) = 0;
@@ -80,6 +82,7 @@ public:
 
 	virtual void SetBlendState(const Auto<BlendState> &blendState) = 0;
 	virtual void SetDepthState(const Auto<DepthState> &depthState, UInt32 stencilReference) = 0;
+	virtual void SetRasterizerState(const Auto<RasterizerState> &rasterizerState) = 0;
 
 	virtual void SetTopology(Topology::Type topology) = 0;
 

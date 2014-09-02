@@ -6,6 +6,8 @@
 #include "Resource/ResourceManager.h"
 #include "Interface/Color.h"
 #include "Interface/BlendState.h"
+#include "Interface/DepthState.h"
+#include "Interface/RasterizerState.h"
 
 namespace krono
 {
@@ -22,6 +24,8 @@ public:
 
 	static RenderTargetBlend ParseRenderTargetBlend(const json::Value& rootValue);
 	static BlendState::Ptr ParseBlendState(ResourceManager& resourceManager, const json::Value& blendState);
+	static DepthState::Ptr ParseDepthState(ResourceManager& resourceManager, const json::Value& blendState);
+	static RasterizerState::Ptr ParseRasterizerState(ResourceManager& resourceManager, const json::Value& blendState);
 private:
 	static const char* gStageName[ShaderStage::TypeCount];
 };

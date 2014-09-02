@@ -10,16 +10,19 @@ set (SOURCE_FILES
 	Compositor/RenderTargetConfiguration.cpp
 	Compositor/RenderTargetDatabase.cpp
 	Interface/Texture.cpp
+	Interface/BlendState.cpp
 	Interface/IndexBuffer.cpp
 	Interface/Shader.cpp
 	Interface/VertexBuffer.cpp
 	Interface/Graphics.cpp
+	Interface/RasterizerState.cpp
 	Interface/RenderTarget.cpp
 	Interface/DataFormat.cpp
 	Interface/Sampler.cpp
 	Interface/InvalidEnumException.cpp
 	Interface/ConstantBuffer.cpp
 	Interface/DepthBuffer.cpp
+	Interface/DepthState.cpp
 	Interface/InputLayout.cpp
 	Interface/UnsupportedFormatException.cpp
 	Interface/Window.cpp
@@ -36,15 +39,18 @@ set (SOURCE_FILES
 	Resource/Mesh/MeshGroup.cpp
 	Resource/Mesh/SubMesh.cpp
 	Resource/Mesh/MeshLoader.cpp
+	Resource/Mesh/ObjMeshGroupLoader.cpp
 	Resource/Technique.cpp
 	Resource/FileHelper.cpp
 	Resource/FormatException.cpp
 	Resource/GeometryCache.cpp
-	Resource/ObjMeshGroupLoader.cpp
 	Resource/Material.cpp
+	Resource/MaterialLoader.cpp
 	Resource/NotFoundException.cpp
+	Resource/TextureLoader.cpp
 	Resource/Texture2DLoader.cpp
 	Resource/LoadException.cpp
+	Resource/SamplerLoader.cpp
 	Resource/ShaderLoader.cpp
 	Resource/Resource.cpp
 	Resource/ResourceManager.cpp
@@ -83,10 +89,13 @@ endif (USE_XLIB)
 if (USE_DX11)
 	set (SOURCE_FILES
 		${SOURCE_FILES}
+		DX11/DX11BlendState.cpp
+		DX11/DX11DepthState.cpp
 		DX11/DX11IndexBuffer.cpp
 		DX11/DX11Shader.cpp
 		DX11/DX11OffscreenRenderTarget.cpp
 		DX11/DX11Graphics.cpp
+		DX11/DX11RasterizerState.cpp
 		DX11/IDX11Resource.cpp
 		DX11/DX11RenderTarget.cpp
 		DX11/DX11VertexBuffer.cpp
@@ -103,6 +112,8 @@ if (USE_OPENGL4_4)
 	set (SOURCE_FILES
 		${SOURCE_FILES}
 		OpenGL/OpenGLTexture.cpp
+		OpenGL/OpenGLBlendState.cpp
+		OpenGL/OpenGLRasterizerState.cpp
 		OpenGL/OpenGLRenderTarget.cpp
 		OpenGL/OpenGLFramebuffer.cpp
 		OpenGL/OpenGLObjectID.cpp
@@ -112,6 +123,7 @@ if (USE_OPENGL4_4)
 		OpenGL/OpenGLSampler.cpp
 		OpenGL/OpenGLIndexBuffer.cpp
 		OpenGL/OpenGLDepthBuffer.cpp
+		OpenGL/OpenGLDepthState.cpp
 		OpenGL/OpenGLWindowRenderTarget.cpp
 		OpenGL/OpenGLShader.cpp
 		OpenGL/OpenGLVertexBuffer.cpp

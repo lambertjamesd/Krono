@@ -137,6 +137,17 @@ void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager
 	{
 		result.SetBlendState(ParseBlendState(resourceManager, stateParameters["blendState"]));
 	}
+
+	if (stateParameters.HasKey("depthState"))
+	{
+		result.SetDepthState(ParseDepthState(resourceManager, stateParameters["depthState"]));
+		result.SetStencilReference(stateParameters["stencilReference"].ToInt(0));
+	}
+
+	if (stateParameters.HasKey("rasterizerState"))
+	{
+		result.SetRasterizerState(ParseRasterizerState(resourceManager, stateParameters["rasterizerState"]));
+	}
 }
 
 
@@ -219,6 +230,16 @@ BlendState::Ptr JsonTypeHelper::ParseBlendState(ResourceManager& resourceManager
 	}
 
 	return resourceManager.GetGraphics()->CreateBlendState(description);
+}
+
+DepthState::Ptr JsonTypeHelper::ParseDepthState(ResourceManager& resourceManager, const json::Value& blendState)
+{
+	return DepthState::Ptr(NULL);
+}
+
+RasterizerState::Ptr JsonTypeHelper::ParseRasterizerState(ResourceManager& resourceManager, const json::Value& blendState)
+{
+	return RasterizerState::Ptr(NULL);
 }
 
 }

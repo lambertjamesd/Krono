@@ -3,6 +3,7 @@
 #include "Math/Vector2.h"
 #include "Texture2D.h"
 #include "Core/Memory.h"
+#include "DataFormat.h"
 
 namespace krono
 {
@@ -12,7 +13,7 @@ class DepthBuffer
 public:
 	typedef Auto<DepthBuffer> Ptr;
 
-	~DepthBuffer(void);
+	virtual ~DepthBuffer(void);
 
 	DataFormat::Type GetFormat() const;
 	Vector2i GetSize() const;

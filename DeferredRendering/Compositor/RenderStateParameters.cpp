@@ -5,7 +5,8 @@
 namespace krono
 {
 
-RenderStateParameters::RenderStateParameters(void)
+RenderStateParameters::RenderStateParameters(void) :
+	mStencilReference(0)
 {
 
 }
@@ -103,6 +104,21 @@ void RenderStateParameters::SetPixelShader(const PixelShader::Ptr& pixelShader)
 void RenderStateParameters::SetBlendState(const BlendState::Ptr& blendState)
 {
 	mBlendState = blendState;
+}
+
+void RenderStateParameters::SetDepthState(const DepthState::Ptr& depthState)
+{
+	mDepthState = depthState;
+}
+
+void RenderStateParameters::SetStencilReference(UInt32 reference)
+{
+	mStencilReference = reference;
+}
+
+void RenderStateParameters::SetRasterizerState(const RasterizerState::Ptr& rasterizerState)
+{
+	mRasterizerState = rasterizerState;
 }
 
 }
