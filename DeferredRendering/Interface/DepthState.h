@@ -74,6 +74,10 @@ protected:
 	DepthState(const DepthStateDescription& description);
 
 	DepthStateDescription mDescription;
+
+private:
+	DepthState(const DepthState& other);
+	DepthState& operator=(const DepthState& other);
 };
 
 }

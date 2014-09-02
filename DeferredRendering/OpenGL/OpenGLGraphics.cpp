@@ -12,6 +12,7 @@
 #include "OpenGLDepthBuffer.h"
 #include "OpenGLSampler.h"
 #include "OpenGLBlendState.h"
+#include "OpenGLDepthState.h"
 #include <iostream>
 
 using namespace std;
@@ -106,6 +107,11 @@ Auto<Sampler> OpenGLGraphics::CreateSampler(const SamplerDescription& descriptio
 Auto<BlendState> OpenGLGraphics::CreateBlendState(const BlendStateDescription& description)
 {
 	return Auto<BlendState>(new OpenGLBlendState(description));
+}
+
+Auto<DepthState> OpenGLGraphics::CreateDepthState(const DepthStateDescription& description)
+{
+	return Auto<DepthState>(new OpenGLDepthState(description));
 }
 
 void OpenGLGraphics::Draw(size_t count, size_t offset)
@@ -222,6 +228,16 @@ void OpenGLGraphics::SetBlendState(const Auto<BlendState> &blendState)
 	if (glBlendState != NULL)
 	{
 		glBlendState->Use();
+	}
+}
+
+void OpenGLGraphics::SetDepthState(const Auto<DepthState> &depthState, UInt32 stencilReference)
+{
+	OpenGLDepthState* openGLDepthState = static_cast<OpenGLDepthState*>(depthState.get());
+
+	if (openGLDepthState != NULL)
+	{
+		openGLDepthState->Use(stencilReference);
 	}
 }
 

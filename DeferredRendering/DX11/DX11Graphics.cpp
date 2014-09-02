@@ -12,6 +12,7 @@
 #include "DX11Texture2D.h"
 #include "DX11Sampler.h"
 #include "DX11BlendState.h"
+#include "DX11DepthState.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -123,6 +124,11 @@ Auto<Sampler> DX11Graphics::CreateSampler(const SamplerDescription& description)
 Auto<BlendState> DX11Graphics::CreateBlendState(const BlendStateDescription& description)
 {
 	return Auto<BlendState>(new DX11BlendState(mDevice, description));
+}
+
+Auto<DepthState> DX11Graphics::CreateDepthState(const DepthStateDescription& description)
+{
+	return Auto<DepthState>(new DX11DepthState(mDevice, description));
 }
 
 void DX11Graphics::SetViewport(const Rectf& viewport, const Rangef& depthRange)
@@ -330,6 +336,16 @@ void DX11Graphics::SetBlendState(const Auto<BlendState> &blendState)
 
 
 		mDeviceContext->OMSetBlendState(dxBlendState->GetBlendState(), blendFactor, sampleMask);
+	}
+}
+
+void DX11Graphics::SetDepthState(const Auto<DepthState> &depthState, UInt32 stencilReference)
+{
+	DX11DepthState *dxDepthState = static_cast<DX11DepthState*>(depthState.get());
+
+	if (dxDepthState != NULL)
+	{
+		mDeviceContext->OMSetDepthStencilState(dxDepthState->GetDepthStencilState(), stencilReference);
 	}
 }
 

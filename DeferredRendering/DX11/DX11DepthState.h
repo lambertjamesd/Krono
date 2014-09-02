@@ -14,7 +14,7 @@ public:
 	~DX11DepthState(void);
 
 	static D3D11_COMPARISON_FUNC GetComparisonFunction(CompareFunction::Type compareFunction);
-	const ID3D11DepthStencilState* GetDepthStencilState() const;
+	ID3D11DepthStencilState* GetDepthStencilState();
 
 private:
 	static D3D11_DEPTH_STENCILOP_DESC BuildStencilDescription(const StencilFunction& stencilFunction);

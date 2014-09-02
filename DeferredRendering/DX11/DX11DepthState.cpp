@@ -35,7 +35,7 @@ D3D11_COMPARISON_FUNC DX11DepthState::GetComparisonFunction(CompareFunction::Typ
 	return gComparisonFunction[compareFunction];
 }
 
-const ID3D11DepthStencilState* DX11DepthState::GetDepthStencilState() const
+ID3D11DepthStencilState* DX11DepthState::GetDepthStencilState()
 {
 	return mDepthStencil.Get();
 }

@@ -29,6 +29,7 @@ public:
 	virtual Auto<Sampler> CreateSampler(const SamplerDescription& description);
 
 	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description);
+	virtual Auto<DepthState> CreateDepthState(const DepthStateDescription& description);
 	
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
@@ -48,6 +49,7 @@ public:
 	virtual void SetConstantBuffer(const Auto<ConstantBuffer> &constantBuffer, size_t slot, ShaderStage::Type stage);
 
 	virtual void SetBlendState(const Auto<BlendState> &blendState);
+	virtual void SetDepthState(const Auto<DepthState> &depthState, UInt32 stencilReference);
 
 	virtual void SetTopology(Topology::Type topology);
 	
