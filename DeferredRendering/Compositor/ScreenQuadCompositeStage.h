@@ -15,6 +15,7 @@ struct VertexCompositeData
 	Matrix4f projectionMatrix;
 	Matrix4f projectionInverseMatrix;
 	Matrix4f compositeTransform;
+	Matrix4f projectionMatrixRasterSpace;
 };
 
 struct PixelCompositeData

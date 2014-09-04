@@ -29,7 +29,7 @@ const Mesh::Ptr& Renderer::GetMesh() const
 	return mEntity.GetMesh();
 }
 
-void Renderer::SetMesh(Mesh::Ptr& value)
+void Renderer::SetMesh(const Mesh::Ptr& value)
 {
 	mEntity.SetMesh(value);
 }

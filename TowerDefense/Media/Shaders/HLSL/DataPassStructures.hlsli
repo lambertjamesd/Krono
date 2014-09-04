@@ -23,3 +23,9 @@ struct CompositeOutput
 	float4 color: SV_TARGET0;
 	float4 normal: SV_TARGET1;
 };
+
+struct ScreenPositionVertex
+{
+	float4 position : SV_Position;
+	float4 rasterPosition : RasterPosition;
+};

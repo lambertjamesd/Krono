@@ -92,7 +92,8 @@
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\Lens.h" />
     <ClInclude Include="GameObject\Renderer.h" />
-    <ClInclude Include="GameObject\Light.h" />
+    <ClInclude Include="Lighting\Light.h" />
+    <ClInclude Include="Lighting\PositionalLight.h" />
     <ClInclude Include="Render\RenderStage.h" />
     <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Render\Renderable.h" />
@@ -110,7 +111,8 @@
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\Lens.cpp" />
     <ClCompile Include="GameObject\Renderer.cpp" />
-    <ClCompile Include="GameObject\Light.cpp" />
+    <ClCompile Include="Lighting\Light.cpp" />
+    <ClCompile Include="Lighting\PositionalLight.cpp" />
     <ClCompile Include="Render\RenderStage.cpp" />
     <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Render\Renderable.cpp" />

@@ -31,7 +31,7 @@ void OpenGLRasterizerState::Use()
 	}
 
 	glFrontFace(mDescription.frontCCW ? GL_CCW : GL_CW);
-	glPolygonOffset(mDescription.slopeScaledDepthBias, mDescription.depthBias);
+	glPolygonOffset(mDescription.slopeScaledDepthBias, (GLfloat)mDescription.depthBias);
 
 	if (mDescription.depthClipEnable)
 	{

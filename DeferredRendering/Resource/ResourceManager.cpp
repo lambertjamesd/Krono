@@ -37,6 +37,11 @@ const Mesh::Ptr& ResourceManager::GetPlane()
 	return mGeometryCache.GetPlane();
 }
 
+const Mesh::Ptr& ResourceManager::GetSphere()
+{
+	return mGeometryCache.GetSphere();
+}
+
 void ResourceManager::AddDefaultLoaders()
 {
 	AddLoader<Mesh>(Auto<ResourceLoader>(new MeshLoader()));

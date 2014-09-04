@@ -86,6 +86,7 @@ public:
 	}
 
 	const Mesh::Ptr& GetPlane();
+	const Mesh::Ptr& GetSphere();
 
 	Graphics* GetGraphics();
 private:

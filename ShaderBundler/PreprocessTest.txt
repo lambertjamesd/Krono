@@ -1,0 +1,50 @@
+
+#include "PreprocessInclude.txt"
+
+#ifdef TESTING_123
+
+foo bar
+
+#else
+
+oh noes!
+
+#endif
+
+#if 1 > 0
+
+compare works
+
+#endif
+
+#if 1 + 1 == 2
+
+add works
+
+#endif
+
+#if 1 + 2 * 3 == 7
+
+order of operations works
+
+#endif
+
+#ifdef TESTING_1234
+
+oh noes!
+
+#elif defined(TESTING_123)
+
+yay!
+
+#endif
+
+#if !defined(TESTING_123)
+
+oh noes!
+
+#else
+
+yay!
+
+#endif

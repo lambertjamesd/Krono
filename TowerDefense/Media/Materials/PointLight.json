@@ -1,0 +1,12 @@
+{
+	"documentType" : "material",
+	
+	"techniques" : [
+		{
+			"techniqueID" : 1,
+		
+			"vertexShader" : "Media/Shaders/Bundle/LightVertexShader.shader",
+			"pixelShader" : "Media/Shaders/Bundle/PointLight.shader"
+		}
+	]
+}

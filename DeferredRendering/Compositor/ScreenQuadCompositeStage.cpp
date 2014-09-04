@@ -8,7 +8,8 @@ namespace krono
 VertexCompositeData::VertexCompositeData() :
 	projectionMatrix(Matrix4f::Identity()),
 	projectionInverseMatrix(Matrix4f::Identity()),
-	compositeTransform(Matrix4f::Identity())	
+	compositeTransform(Matrix4f::Identity()),
+	projectionMatrixRasterSpace(Matrix4f::Identity())
 {
 
 }
@@ -47,7 +48,7 @@ void ScreenQuadCompositeStage::RebuildBuffer(RenderState& renderState)
 	Matrix4f projectionMatrix = renderState.GetProjectionMatrix();
 	Rectf viewport = renderState.GetViewport();
 	Vector2f screenSize = renderState.GetRenderTargetSize();
-	Matrix4f compositeTransform = Matrix4f::Scale(Vector3f(screenSize / viewport.size, 1.0f)) * Matrix4f::Translation(Vector3f(-viewport.topLeft, 0.0f));
+	Matrix4f compositeTransform = Matrix4f::Scale(Vector3f(screenSize / viewport.size, 1.0f)) * Matrix4f::Translation(Vector3f(-viewport.topLeft / viewport.size, 0.0f));
 
 	if (mVertexContantBuffer == NULL)
 	{
@@ -55,6 +56,7 @@ void ScreenQuadCompositeStage::RebuildBuffer(RenderState& renderState)
 		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, projectionMatrix));
 		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeInvProjectionMatrix, offsetof(VertexCompositeData, projectionInverseMatrix));
 		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, compositeTransform));
+		vertexLayout.MarkSpecialType(ConstantBufferLayout::TypeProjectionMatrix, offsetof(VertexCompositeData, projectionMatrixRasterSpace));
 		mVertexContantBuffer = renderState.GetGraphics().CreateConstantBuffer(vertexLayout);
 		
 		ConstantBufferLayout pixelLayout;
@@ -67,6 +69,7 @@ void ScreenQuadCompositeStage::RebuildBuffer(RenderState& renderState)
 	vertexData.projectionMatrix = projectionMatrix;
 	vertexData.projectionInverseMatrix = projectionMatrix.Inverse();
 	vertexData.compositeTransform = compositeTransform;
+	vertexData.projectionMatrixRasterSpace = Matrix4f::Translation(Vector3f(0.5f, 0.5f, 0.0f)) * Matrix4f::Scale(Vector3f(0.5f, -0.5f, 1.0f)) * vertexData.compositeTransform * projectionMatrix;
 	mVertexContantBuffer->Set<VertexCompositeData>(vertexData);
 	
 	PixelCompositeData pixelData;

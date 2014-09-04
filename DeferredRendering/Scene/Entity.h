@@ -33,7 +33,7 @@ public:
 	void SetTransform(const Matrix4f& value);
 	const Matrix4f& GetTransform() const;
 
-	void SetMesh(Auto<Mesh>& mesh);
+	void SetMesh(const Auto<Mesh>& mesh);
 	const Auto<Mesh>& GetMesh() const;
 
 	size_t GetMaterialCount() const;

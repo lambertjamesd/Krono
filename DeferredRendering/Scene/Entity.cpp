@@ -42,7 +42,7 @@ const Matrix4f& Entity::GetTransform() const
 	return mEntityData.modelMatrix;
 }
 
-void Entity::SetMesh(Auto<Mesh>& mesh)
+void Entity::SetMesh(const Auto<Mesh>& mesh)
 {
 	mMesh = mesh;
 

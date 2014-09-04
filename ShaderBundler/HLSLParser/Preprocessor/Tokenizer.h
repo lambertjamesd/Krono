@@ -5,7 +5,10 @@
 #include <vector>
 #include <istream>
 
-class HLSLPreprocessorToken
+namespace preproc
+{
+
+class Token
 {
 public:
 	enum Type
@@ -20,35 +23,81 @@ public:
 
 		String,
 
+		Number,
+
 		OpenParen,
 		CloseParen,
 
-		OpenAngle,
-		CloseAngle,
-
 		Comma,
+
+		Add,
+		Minus,
+		Multiply,
+		Divide,
+		Modulus,
+
+		LessThan,
+		LessEqual,
+		LeftShift,
+
+		GreaterThan,
+		GreaterEqual,
+		RightShift,
+
+		Equal,
+		NotEqual,
+
+		BitAnd,
+		BooleanAnd,
+
+		BitOr,
+		BooleanOr,
+
+		BitXor,
+		
+		BitNot,
+		BooleanNot,
 
 		BackSlash,
 	};
+	
+	enum OperatorPrecedence
+	{
+		PrecedenceBooleanOr,
+		PrecedenceBooleanAnd,
+		PrecedenceBitOr,
+		PrecedenceBitXor,
+		PrecedenceBitAnd,
+		PrecedenceEqual,
+		PrecedenceCompare,
+		PrecedenceBitShift,
+		PrecedenceAdd,
+		PrecedenceMultiply
+	};
 
-	HLSLPreprocessorToken(Type type, const std::string& value, size_t line);
+	Token(Type type, const std::string& value, size_t line);
 
 	Type GetType() const;
 	const std::string& GetValue() const;
 	size_t GetLineNumber() const;
+
+	bool IsBinaryOperator() const;
+	bool IsUnaryOperator() const;
+
+	OperatorPrecedence GetPrecedence() const;
 private:
 	Type mType;
 	std::string mValue;
 	size_t mLine;
 };
 
-class HLSLPreprocessorTokenizer
+class Tokenizer
 {
 public:
-	HLSLPreprocessorTokenizer(std::istream& input);
-	~HLSLPreprocessorTokenizer(void);
+	Tokenizer(std::istream& input);
+	~Tokenizer(void);
 
-	const HLSLPreprocessorToken& GetToken(size_t index) const;
+	const Token& GetToken(size_t index) const;
 private:
 	void Tokenize(std::istream& input);
 
@@ -57,9 +106,9 @@ private:
 		typedef NextState (*StateFunction)(int nextCharacter);
 
 		NextState(StateFunction functionPointer);
-		NextState(StateFunction functionPointer, HLSLPreprocessorToken::Type tokenType);
+		NextState(StateFunction functionPointer, Token::Type tokenType);
 		StateFunction functionPointer;
-		HLSLPreprocessorToken::Type type;
+		Token::Type type;
 	};
 	
 	static NextState::StateFunction DefaultState(int nextCharacter);
@@ -72,15 +121,23 @@ private:
 	static NextState IdentifierState(int nextCharacter);
 	static NextState StringState(int nextCharacter);
 	static NextState StringEscapeState(int nextCharacter);
+	static NextState NumberState(int nextCharacter);
+	static NextState LessThanState(int nextCharacter);
+	static NextState GreaterThanState(int nextCharacter);
+	static NextState AndState(int nextCharacter);
+	static NextState OrState(int nextCharacter);
+	static NextState EqualState(int nextCharacter);
+	static NextState BooleanNotState(int nextCharacter);
 	static NextState OtherState(int nextCharacter);
 	
-	template <HLSLPreprocessorToken::Type Type>
+	template <Token::Type Type>
 	static NextState EndState(int nextCharacter)
 	{
 		return NextState(DefaultState(nextCharacter), Type);
 	}
 	
 	NextState::StateFunction mCurrentState;
-	std::vector<HLSLPreprocessorToken> mTokenList;
+	std::vector<Token> mTokenList;
 };
 
+}

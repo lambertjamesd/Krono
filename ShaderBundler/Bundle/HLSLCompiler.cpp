@@ -60,8 +60,6 @@ HRESULT HLSLIncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName,
 	mFileStack.push(BundlerFileHelper::RemoveLastPathElement(absolutePath));
 
 	return S_OK;
-
-	return STG_E_FILENOTFOUND;
 }
 
 HLSLCompiler::HLSLCompiler(void)

@@ -369,6 +369,18 @@
     <ClInclude Include="OpenGL\OpenGLDepthState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DX11\DX11RasterizerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\RasterizerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\OpenGLRasterizerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Compositor\LightingCompositeState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Object.cpp">
@@ -678,6 +690,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11\DX11RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\OpenGLRasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Compositor\LightingCompositeState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

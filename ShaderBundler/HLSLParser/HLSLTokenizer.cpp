@@ -30,7 +30,7 @@ HLSLTokenizer::~HLSLTokenizer(void)
 }
 
 const char* HLSLTokenizer::gTokenizerTest = 
-	"_id id0 ID 0 1. 1.0 \"string \\\"\n"
+	"_id id0 ID 0 1. 1.0 \"string \\\"\"\n"
 	"// this is a comment huzah!\n"
 	"/* multi \n line \n comment */"
 	"+-*/% =+=-=*=/=%="
@@ -53,7 +53,7 @@ const HLSLToken HLSLTokenizer::gExpectedTokens[] = {
 	HLSLToken(HLSLTokenType::Number, "1.0", 0),
 	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	
-	HLSLToken(HLSLTokenType::String, "\"string \\\"", 0),
+	HLSLToken(HLSLTokenType::String, "\"string \\\"\"", 0),
 	HLSLToken(HLSLTokenType::Whitespace, "\n", 0),
 	HLSLToken(HLSLTokenType::Comment, "// this is a comment huzah!", 1),
 	HLSLToken(HLSLTokenType::Whitespace, "\n", 1),

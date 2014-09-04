@@ -1,0 +1,22 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "lighting",
+	
+	"technique" : 1,
+	
+	"inputCount" : 3,
+	
+	"renderStateParameters" :
+	{
+		"blendState" : {
+			"renderTargets" : "add"
+		},
+		
+		"depthState" : "disabled",
+		
+		"rasterizerState" : {
+			"cullMode" : "front"
+		}
+	}
+}

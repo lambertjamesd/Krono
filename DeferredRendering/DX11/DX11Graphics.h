@@ -30,6 +30,7 @@ public:
 
 	virtual Auto<BlendState> CreateBlendState(const BlendStateDescription& description);
 	virtual Auto<DepthState> CreateDepthState(const DepthStateDescription& description);
+	virtual Auto<RasterizerState> CreateRasterizerState(const RasterizerStateDescription& description);
 	
 	virtual void Draw(size_t count, size_t offset);
 	virtual void DrawIndexed(size_t count, size_t offset);
@@ -50,6 +51,7 @@ public:
 
 	virtual void SetBlendState(const Auto<BlendState> &blendState);
 	virtual void SetDepthState(const Auto<DepthState> &depthState, UInt32 stencilReference);
+	virtual void SetRasterizerState(const Auto<RasterizerState> &rasterizerState);
 
 	virtual void SetTopology(Topology::Type topology);
 	

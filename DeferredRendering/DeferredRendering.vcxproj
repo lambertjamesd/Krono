@@ -86,11 +86,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DX11\DX11DepthState.h" />
+    <ClInclude Include="DX11\DX11RasterizerState.h" />
     <ClInclude Include="Interface\DepthState.h" />
     <ClInclude Include="DX11\DX11BlendState.h" />
     <ClInclude Include="Interface\BlendState.h" />
+    <ClInclude Include="Interface\RasterizerState.h" />
+    <ClInclude Include="Compositor\LightingCompositeState.h" />
     <ClInclude Include="OpenGL\OpenGLDepthState.h" />
     <ClInclude Include="OpenGL\OpenGLBlendState.h" />
+    <ClInclude Include="OpenGL\OpenGLRasterizerState.h" />
     <ClInclude Include="Resource\MaterialLoader.h" />
     <ClInclude Include="Resource\JSON\JsonTypeHelper.h" />
     <ClInclude Include="Resource\Compositor\CompositeStageLoader.h" />
@@ -205,12 +209,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX11\DX11DepthState.cpp" />
+    <ClCompile Include="DX11\DX11RasterizerState.cpp" />
     <ClCompile Include="Interface\DepthState.cpp" />
     <ClCompile Include="DX11\DX11BlendState.cpp" />
     <ClCompile Include="Interface\BlendState.cpp" />
     <ClCompile Include="Collide\Frustrum.cpp" />
+    <ClCompile Include="Interface\RasterizerState.cpp" />
+    <ClCompile Include="Compositor\LightingCompositeState.cpp" />
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp" />
     <ClCompile Include="OpenGL\OpenGLBlendState.cpp" />
+    <ClCompile Include="OpenGL\OpenGLRasterizerState.cpp" />
     <ClCompile Include="Resource\MaterialLoader.cpp" />
     <ClCompile Include="Resource\JSON\JsonTypeHelper.cpp" />
     <ClCompile Include="Resource\Compositor\CompositeStageLoader.cpp" />

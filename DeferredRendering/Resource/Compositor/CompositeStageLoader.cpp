@@ -6,6 +6,7 @@
 
 #include "Compositor/RenderSceneCompositeStage.h"
 #include "Compositor/ScreenQuadCompositeStage.h"
+#include "Compositor/LightingCompositeState.h"
 
 #include "Resource/Mesh/Mesh.h"
 
@@ -53,6 +54,10 @@ CompositeStage::Ptr CompositeStageLoader::ParseStage(ResourceManager& resourceMa
 	else if (type == "screenQuad")
 	{
 		result = ParseScreenQuadStage(resourceManager, stage);
+	}
+	else if (type == "lighting")
+	{
+		result = LightingCompositeState::Ptr(new LightingCompositeState(stage["technique"].ToInt(1)));
 	}
 	else
 	{

@@ -92,6 +92,11 @@ void CompositorLoader::ParseRenderTargets(Compositor::Ptr& compositor, const jso
 
 void CompositorLoader::ParseStage(ResourceManager& resourceManager, Compositor::Ptr& compositor, const json::Value& stageJson)
 {
+	if (stageJson.HasKey("disabled") && stageJson["disabled"].ToBool(false))
+	{
+		return;
+	}
+
 	if (!stageJson.HasKey("stage") || stageJson["stage"].GetType() != StringVal)
 	{
 		throw FormatException("stages[].stage needs to be a string containing the relvative path to a CompositeStage");

@@ -8,6 +8,9 @@
 	"renderStateParameters" : {
 		"blendState" : {
 			"renderTargets" : "disabled"
-		}
+		},
+		
+		"depthState" : "default",
+		"rasterizerState" : "default"
 	}
 }

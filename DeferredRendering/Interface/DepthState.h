@@ -30,7 +30,7 @@ namespace StencilOperation
 		Keep,
 		Zero,
 		Replace,
-		IncSat,
+		IncrSat,
 		DecrSat,
 		Invert,
 		Incr,

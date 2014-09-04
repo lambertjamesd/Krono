@@ -31,9 +31,17 @@
 			"depthBuffer" : "depth"
 		},
 		{
+			"disabled" : true,
+		
 			"stage" : "DirectionalLight.json",
 			
 			"input" : ["color", "normal"],
+			"output" : ["combined"]
+		},
+		{
+			"stage" : "PositionalLights.json",
+			
+			"input" : ["color", "normal", "depth"],
 			"output" : ["combined"]
 		},
 		{

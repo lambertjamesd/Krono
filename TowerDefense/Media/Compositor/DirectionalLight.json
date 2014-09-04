@@ -12,6 +12,9 @@
 		
 		"blendState" : {
 			"renderTargets" : "add"
-		}
+		},
+		
+		"depthState" : "disabled",
+		"rasterizerState" : "default"
 	}
 }

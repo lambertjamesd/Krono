@@ -61,6 +61,8 @@ Sampler::Ptr SamplerLoader::ParseSampler(ResourceManager& resourceManager, const
 	description.minLOD = root["minLOD"].ToFloat(description.minLOD);
 	description.maxLOD = root["maxLOD"].ToFloat(description.maxLOD);
 
+	description.compareFunction = JsonTypeHelper::ParseCompareFunction(root["compareFunction"].ToString("never"));
+
 	description.maxAnisotropy = root["maxAnisotropy"].ToInt(description.maxAnisotropy);
 
 	if (root.HasKey("borderColor"))

@@ -45,7 +45,7 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Graphics::API api = Graphics::OpenGL;
+	Graphics::API api = Graphics::DirectX11;
 
 	Auto<Graphics> graphics;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));
@@ -91,6 +91,10 @@ int main(int argc, char* argv[])
 	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.01f, 10.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
+	GameObject::Ref lightObject = scene.CreateGameObject();
+	lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0, -1.0));
+	Renderer::Ref lightRenderer = lightObject.lock()->AddComponent<Renderer>();
+
 	try
 	{
 
@@ -113,12 +117,14 @@ int main(int argc, char* argv[])
 		samplerDesc.mipFilter = InterpolationMode::Point;
 
 		pointSampler = graphics->CreateSampler(samplerDesc);
-
-		Material::Ptr materialTest = resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json");
 		
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);
-		rendererPtr->SetMaterial(materialTest, 0);
+		rendererPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json"), 0);
+
+		Renderer::Ptr lightPtr = lightRenderer.lock();
+		lightPtr->SetMesh(resourceManager->GetSphere());
+		lightPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/PointLight.json"), 0);
 
 		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(1.0f, 1.0f, 1.0f));
 		

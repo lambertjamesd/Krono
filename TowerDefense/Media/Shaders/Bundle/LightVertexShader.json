@@ -1,0 +1,8 @@
+{
+	"type" : "vertex",
+
+	"sources" : {
+		"HLSL 5" : "../HLSL/LightVertexShader.hlsl",
+		"GLSL 4.4" : "../GLSL/LightVertexShader.vert"
+	}
+}

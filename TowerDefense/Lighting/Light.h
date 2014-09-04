@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Component.h"
+#include "GameObject/Component.h"
 #include "Render/Renderable.h"
-#include "Transform.h"
 
-class Light : public Component, public Renderable
+class Light : public Component
 {
 public:
 	typedef std::shared_ptr<Light> Ptr;
@@ -12,10 +11,6 @@ public:
 
 	Light(GameObject& parentGameObject);
 	~Light(void);
-	
-	virtual void PreRender();
-
 private:
-	krono::Entity& mEntity;
 };
 

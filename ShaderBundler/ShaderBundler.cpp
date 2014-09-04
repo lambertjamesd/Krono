@@ -10,6 +10,7 @@
 #include "Bundle/Bundle.h"
 
 #include "HLSLParser/HLSLTokenizer.h"
+#include "HLSLParser/Preprocessor/Preprocessor.h"
 
 #ifdef USE_DX11
 #include "Bundle/HLSLCompiler.h"
@@ -78,6 +79,9 @@ int main(int argc, char* argv[])
 {
 #ifdef _DEBUG
 	HLSLTokenizer::Test();
+	preproc::Preprocessor::Test();
+
+	std::cout << preproc::Preprocessor::PreprocessFile("PreprocessTest.txt");
 #endif
 
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)

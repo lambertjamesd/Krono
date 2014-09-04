@@ -21,7 +21,11 @@ std::vector<char> GLSLBundler::Process(const BundleDefinition& bundleDef) const
 		input.seekg(0, std::ios::end);
 		result.resize((unsigned int)input.tellg());
 		input.seekg(0, std::ios::beg);
-		input.read(&result[0], result.size());
+
+		if (result.size())
+		{
+			input.read(&result[0], result.size());
+		}
 
 		return result;
 	}

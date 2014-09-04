@@ -6,6 +6,7 @@ cbuffer SceneViewData : register(b0)
 	float4x4 projectionMatrix;
 	float4x4 projectionInvMatrix;
 	float4x4 compositeTransform;
+	float4x4 projectionMatrixRasterSpace;
 };
 
 TexCoordVertex main( float4 pos : POSITION, float2 texCoord : TEXCOORD)

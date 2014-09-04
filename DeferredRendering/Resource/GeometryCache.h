@@ -4,28 +4,39 @@
 #include "Math/Vector3.h"
 #include "Math/Vector2.h"
 
+namespace krono
+{
+
 class GeometryCache
 {
 public:
 	GeometryCache(krono::Graphics& graphics);
 
-	const krono::Mesh::Ptr& GetPlane();
-	const krono::Mesh::Ptr& GetSphere(size_t horizontalRes, size_t verticalRes);
+	const Mesh::Ptr& GetPlane();
+	const Mesh::Ptr& GetSphere();
 private:
+	VertexBuffer::Ptr BuildVertexBuffer();
+
 	struct GeometryVertex
 	{
 		GeometryVertex(
-			const krono::Vector3f& position,
-			const krono::Vector3f& normal,
-			const krono::Vector2f& textureCoord);
+			const Vector3f& position,
+			const Vector3f& normal,
+			const Vector2f& textureCoord);
 
-		krono::Vector3f position;
-		krono::Vector3f normal;
-		krono::Vector2f textureCoord;
+		Vector3f position;
+		Vector3f normal;
+		Vector2f textureCoord;
 	};
 
-	krono::Graphics &mGraphics;
+	static const size_t gSphereLatitude = 16;
+	static const size_t gSphereLongitude = 32;
 
-	krono::Mesh::Ptr mPlane;
+	Graphics &mGraphics;
+
+	Mesh::Ptr mPlane;
+	Mesh::Ptr mSphere;
 };
+
+}
 

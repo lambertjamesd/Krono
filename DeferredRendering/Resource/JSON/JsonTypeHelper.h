@@ -22,10 +22,17 @@ public:
 	static void ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters);
 	static Colorf ParseColor(const json::Value& color);
 
+	static CompareFunction::Type ParseCompareFunction(const std::string& value);
+	static StencilOperation::Type ParseStencilOperation(const std::string& value);
+	static StencilFunction ParseStencilFunction(const json::Value& value);
+
+	static FillMode::Type ParseFillMode(const std::string& value);
+	static CullMode::Type ParseCullMode(const std::string& value);
+
 	static RenderTargetBlend ParseRenderTargetBlend(const json::Value& rootValue);
 	static BlendState::Ptr ParseBlendState(ResourceManager& resourceManager, const json::Value& blendState);
-	static DepthState::Ptr ParseDepthState(ResourceManager& resourceManager, const json::Value& blendState);
-	static RasterizerState::Ptr ParseRasterizerState(ResourceManager& resourceManager, const json::Value& blendState);
+	static DepthState::Ptr ParseDepthState(ResourceManager& resourceManager, const json::Value& depthState);
+	static RasterizerState::Ptr ParseRasterizerState(ResourceManager& resourceManager, const json::Value& rasterizerState);
 private:
 	static const char* gStageName[ShaderStage::TypeCount];
 };

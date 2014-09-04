@@ -3,6 +3,7 @@
 #include "Resource/SamplerLoader.h"
 
 using namespace json;
+using namespace std;
 
 namespace krono
 {
@@ -161,6 +162,137 @@ Colorf JsonTypeHelper::ParseColor(const json::Value& color)
 		);
 }
 
+CompareFunction::Type JsonTypeHelper::ParseCompareFunction(const std::string& value)
+{
+	if (value == "never")
+	{
+		return CompareFunction::Never;
+	}
+	else if (value == "less")
+	{
+		return CompareFunction::Less;
+	}
+	else if (value == "equal")
+	{
+		return CompareFunction::Equal;
+	}
+	else if (value == "lessEqual")
+	{
+		return CompareFunction::LessEqual;
+	}
+	else if (value == "greater")
+	{
+		return CompareFunction::Greater;
+	}
+	else if (value == "greaterEqual")
+	{
+		return CompareFunction::GreaterEqual;
+	}
+	else if (value == "notEqual")
+	{
+		return CompareFunction::NotEqual;
+	}
+	else if (value == "always")
+	{
+		return CompareFunction::Always;
+	}
+	else
+	{
+		throw FormatException("Invalid compare function");
+	}
+}
+
+StencilOperation::Type JsonTypeHelper::ParseStencilOperation(const std::string& value)
+{
+	if (value == "keep")
+	{
+		return StencilOperation::Keep;
+	}
+	else if (value == "zero")
+	{
+		return StencilOperation::Zero;
+	}
+	else if (value == "replace")
+	{
+		return StencilOperation::Replace;
+	}
+	else if (value == "incrSat")
+	{
+		return StencilOperation::IncrSat;
+	}
+	else if (value == "decrSat")
+	{
+		return StencilOperation::DecrSat;
+	}
+	else if (value == "invert")
+	{
+		return StencilOperation::Invert;
+	}
+	else if (value == "incr")
+	{
+		return StencilOperation::Incr;
+	}
+	else if (value == "decr")
+	{
+		return StencilOperation::Decr;
+	}
+	else
+	{
+		throw FormatException("Invalid stencil operation");
+	}
+}
+
+StencilFunction JsonTypeHelper::ParseStencilFunction(const json::Value& value)
+{
+	StencilFunction result;
+
+	if (value.GetType() == ObjectVal)
+	{
+		result.stencilFail = ParseStencilOperation(value["stencilFail"].ToString("keep"));
+		result.stencilDepthFail = ParseStencilOperation(value["stencilDepthFail"].ToString("keep"));
+		result.stencilPass = ParseStencilOperation(value["stencilDepthPass"].ToString("keep"));
+		result.stencilFunction = ParseCompareFunction(value["stencilFunction"].ToString("always"));
+	}
+	
+	return StencilFunction();
+}
+
+FillMode::Type JsonTypeHelper::ParseFillMode(const std::string& value)
+{
+	if (value == "wireframe")
+	{
+		return FillMode::WireFrame;
+	}
+	else if (value == "solid")
+	{
+		return FillMode::Solid;
+	}
+	else
+	{
+		throw FormatException("Invalid fill mode");
+	}
+}
+
+CullMode::Type JsonTypeHelper::ParseCullMode(const std::string& value)
+{
+	if (value == "none")
+	{
+		return CullMode::None;
+	}
+	else if (value == "back")
+	{
+		return CullMode::Back;
+	}
+	else if (value == "front")
+	{
+		return CullMode::Front;
+	}
+	else
+	{
+		throw FormatException("Invalid cull mode");
+	}
+}
+
 RenderTargetBlend JsonTypeHelper::ParseRenderTargetBlend(const json::Value& rootValue)
 {
 	if (rootValue.GetType() == StringVal)
@@ -232,14 +364,74 @@ BlendState::Ptr JsonTypeHelper::ParseBlendState(ResourceManager& resourceManager
 	return resourceManager.GetGraphics()->CreateBlendState(description);
 }
 
-DepthState::Ptr JsonTypeHelper::ParseDepthState(ResourceManager& resourceManager, const json::Value& blendState)
+DepthState::Ptr JsonTypeHelper::ParseDepthState(ResourceManager& resourceManager, const json::Value& depthState)
 {
-	return DepthState::Ptr(NULL);
+	DepthStateDescription description;
+	
+	if (depthState.GetType() == StringVal)
+	{
+		string stringValue = depthState.ToString();
+
+		if (stringValue == "disabled")
+		{
+			description.depthEnable = false;
+		}
+		else if (stringValue == "default")
+		{
+			// use default description, do nothing
+		}
+		else
+		{
+			throw FormatException("Unrecognized depthState");
+		}
+	}
+	else
+	{
+		description.depthEnable = depthState["depthEnable"].ToBool(description.depthEnable);
+		description.depthWriteEnabled = depthState["depthWriteEnable"].ToBool(description.depthWriteEnabled);
+		description.depthCompare = ParseCompareFunction(depthState["depthCompare"].ToString("less"));
+		description.stencilEnable = depthState["stencilEnable"].ToBool(description.depthEnable);
+		description.stencilReadMask = depthState["stencilReadMask"].ToInt(description.stencilReadMask);
+		description.stencilWriteMask = depthState["stencilWriteMask"].ToInt(description.stencilWriteMask);
+		description.frontFace = ParseStencilFunction(depthState["frontFace"]);
+		description.backFace = ParseStencilFunction(depthState["backFace"]);
+	}
+
+	return resourceManager.GetGraphics()->CreateDepthState(description);
 }
 
-RasterizerState::Ptr JsonTypeHelper::ParseRasterizerState(ResourceManager& resourceManager, const json::Value& blendState)
+RasterizerState::Ptr JsonTypeHelper::ParseRasterizerState(ResourceManager& resourceManager, const json::Value& rasterizerState)
 {
-	return RasterizerState::Ptr(NULL);
+	RasterizerStateDescription description;
+
+	if (rasterizerState.GetType() == StringVal)
+	{
+		string stringValue = rasterizerState.ToString();
+
+		if (stringValue == "default")
+		{
+			// Use default config, do nothing
+		}
+		else
+		{
+			throw FormatException("Unrecognized rasterizer state");
+		}
+	}
+	else
+	{
+		description.fillMode = ParseFillMode(rasterizerState["fillMode"].ToString("solid"));
+		description.cullMode = ParseCullMode(rasterizerState["cullMode"].ToString("back"));
+		description.frontCCW = rasterizerState["frontCCW"].ToBool(description.frontCCW);
+		description.depthBias = rasterizerState["depthBias"].ToInt(description.depthBias);
+		description.depthBiasClamp = rasterizerState["depthBiasClamp"].ToFloat(description.depthBiasClamp);
+		description.slopeScaledDepthBias = rasterizerState["slopeScaledDepthBias"].ToFloat(description.slopeScaledDepthBias);
+		description.depthClipEnable = rasterizerState["depthClipEnable"].ToBool(description.depthClipEnable);
+		description.scissorEnable = rasterizerState["scissorEnable"].ToBool(description.scissorEnable);
+		description.multisampleEnable = rasterizerState["multisampleEnable"].ToBool(description.multisampleEnable);
+		description.antialiasedLineEnable = rasterizerState["antialiasedLineEnable"].ToBool(description.antialiasedLineEnable);
+	}
+
+	return resourceManager.GetGraphics()->CreateRasterizerState(description);
 }
 
 }

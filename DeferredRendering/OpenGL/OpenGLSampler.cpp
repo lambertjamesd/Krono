@@ -1,4 +1,5 @@
 #include "OpenGLSampler.h"
+#include "OpenGLDepthState.h"
 
 namespace krono
 {
@@ -48,6 +49,12 @@ OpenGLSampler::OpenGLSampler(const SamplerDescription& description)
 	glSamplerParameterf(mSampler, GL_TEXTURE_LOD_BIAS, description.mipBias);
 	glSamplerParameterf(mSampler, GL_TEXTURE_MIN_LOD, description.minLOD);
 	glSamplerParameterf(mSampler, GL_TEXTURE_MAX_LOD, description.maxLOD);
+
+	if (description.compareFunction != CompareFunction::Never)
+	{
+		glSamplerParameteri(mSampler, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+		glSamplerParameteri(mSampler, GL_TEXTURE_COMPARE_FUNC, OpenGLDepthState::GetComparisonFunction(description.compareFunction));
+	}
 
 	if (description.anisotropicEnabled)
 	{

@@ -63,7 +63,10 @@
     <ClInclude Include="GameObject\Lens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Light.h">
+    <ClInclude Include="Lighting\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting\PositionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,7 +113,10 @@
     <ClCompile Include="GameObject\Lens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\Light.cpp">
+    <ClCompile Include="Lighting\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting\PositionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

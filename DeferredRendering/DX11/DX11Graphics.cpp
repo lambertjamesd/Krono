@@ -13,6 +13,7 @@
 #include "DX11Sampler.h"
 #include "DX11BlendState.h"
 #include "DX11DepthState.h"
+#include "DX11RasterizerState.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -109,6 +110,11 @@ Auto<RenderTarget> DX11Graphics::CreateOffscreenRenderTarget(Vector2i size, Data
 Auto<DepthBuffer> DX11Graphics::CreateDepthBuffer(Vector2i size, DataFormat::Type format)
 {
 	return Auto<DepthBuffer>(new DX11DepthBuffer(mDevice, size, format));
+}
+
+Auto<RasterizerState> DX11Graphics::CreateRasterizerState(const RasterizerStateDescription& description)
+{
+	return Auto<RasterizerState>(new DX11RasterizerState(mDevice, description));
 }
 
 Auto<Texture2D> DX11Graphics::CreateTexture2D(Vector2i size, DataFormat format)
@@ -346,6 +352,16 @@ void DX11Graphics::SetDepthState(const Auto<DepthState> &depthState, UInt32 sten
 	if (dxDepthState != NULL)
 	{
 		mDeviceContext->OMSetDepthStencilState(dxDepthState->GetDepthStencilState(), stencilReference);
+	}
+}
+
+void DX11Graphics::SetRasterizerState(const Auto<RasterizerState> &rasterizerState)
+{
+	DX11RasterizerState *dxRasterizerState = static_cast<DX11RasterizerState*>(rasterizerState.get());
+
+	if (dxRasterizerState != NULL)
+	{
+		mDeviceContext->RSSetState(dxRasterizerState->GetRasterizerState());
 	}
 }
 

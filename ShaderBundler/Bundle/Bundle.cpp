@@ -36,7 +36,10 @@ void Bundle::Write(std::ostream& output) const
 	
 	for (auto it = mShaders.begin(); it != mShaders.end(); ++it)
 	{
-		output.write(&it->second.front(), it->second.size());
+		if (it->second.size())
+		{
+			output.write(&it->second.front(), it->second.size());
+		}
 	}
 }
 

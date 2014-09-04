@@ -17,7 +17,7 @@ public:
 	virtual void PreRender();
 
 	const krono::Mesh::Ptr& GetMesh() const;
-	void SetMesh(krono::Mesh::Ptr& value);
+	void SetMesh(const krono::Mesh::Ptr& value);
 
 	size_t GetMaterialCount() const;
 

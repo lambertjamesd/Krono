@@ -133,16 +133,12 @@ public:
 
 		for (size_t col = 0; col < Columns; ++col)
 		{
-			T positiveSlant = Constant<T>::One;
-			T negativeSlant = Constant<T>::One;
+			T subValue = (col & 0x1) ? -Constant<T>::One : Constant<T>::One;
 
-			for (size_t i = 0; i < Columns; ++i)
-			{
-				positiveSlant *= mElements[(col + i) % Columns][i];
-				negativeSlant *= mElements[(col + i) % Columns][(Columns - 1) - i];
-			}
+			subValue *= mElements[col][0];
+			subValue *= SubDeterminant(0, col);
 
-			result += positiveSlant - negativeSlant;
+			result += subValue;
 		}
 
 		return result;
