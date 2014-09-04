@@ -91,7 +91,7 @@
     <ClInclude Include="DX11\DX11BlendState.h" />
     <ClInclude Include="Interface\BlendState.h" />
     <ClInclude Include="Interface\RasterizerState.h" />
-    <ClInclude Include="Compositor\LightingCompositeState.h" />
+    <ClInclude Include="Compositor\LightingCompositeStage.h" />
     <ClInclude Include="OpenGL\OpenGLDepthState.h" />
     <ClInclude Include="OpenGL\OpenGLBlendState.h" />
     <ClInclude Include="OpenGL\OpenGLRasterizerState.h" />
@@ -215,7 +215,7 @@
     <ClCompile Include="Interface\BlendState.cpp" />
     <ClCompile Include="Collide\Frustrum.cpp" />
     <ClCompile Include="Interface\RasterizerState.cpp" />
-    <ClCompile Include="Compositor\LightingCompositeState.cpp" />
+    <ClCompile Include="Compositor\LightingCompositeStage.cpp" />
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp" />
     <ClCompile Include="OpenGL\OpenGLBlendState.cpp" />
     <ClCompile Include="OpenGL\OpenGLRasterizerState.cpp" />

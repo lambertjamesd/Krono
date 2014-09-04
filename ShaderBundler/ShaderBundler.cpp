@@ -32,7 +32,25 @@ void MakeDependencies(const char* filename)
 
 	for (auto it = languages.begin(); it != languages.end(); ++it)
 	{
-		std::cout << bundleDef.GetFilename(*it) << " ";
+		std::string fileName = bundleDef.GetFilename(*it);
+		std::cout << fileName << " ";
+
+		if (*it == ShaderLanguage::HLSL_5)
+		{
+			try
+			{
+				preproc::PreprocessResult includes = preproc::Preprocessor::PreprocessFile(fileName);
+
+				for (auto includeIt = includes.includedFiles.begin(); includeIt != includes.includedFiles.end(); ++includeIt)
+				{
+					std::cout << *includeIt << " ";
+				}
+			}
+			catch (preproc::Exception&)
+			{
+
+			}
+		}
 	}
 
 	std::cout << std::endl;
@@ -77,12 +95,10 @@ void ProccessFile(const char* filename)
 
 int main(int argc, char* argv[])
 {
-#ifdef _DEBUG
 	HLSLTokenizer::Test();
 	preproc::Preprocessor::Test();
 
-	std::cout << preproc::Preprocessor::PreprocessFile("PreprocessTest.txt");
-#endif
+	std::cout << preproc::Preprocessor::PreprocessFile("PreprocessTest.txt").text;
 
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{

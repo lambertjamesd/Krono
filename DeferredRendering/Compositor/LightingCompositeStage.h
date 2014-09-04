@@ -24,13 +24,13 @@ struct LightPixelCompositeData
 	Vector4f screenSize;
 };
 
-class LightingCompositeState : public CompositeStage
+class LightingCompositeStage : public CompositeStage
 {
 public:
-	typedef Auto<LightingCompositeState> Ptr;
+	typedef Auto<LightingCompositeStage> Ptr;
 
-	LightingCompositeState(size_t technique);
-	~LightingCompositeState(void);
+	LightingCompositeStage(size_t technique);
+	~LightingCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
 private:

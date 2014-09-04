@@ -10,7 +10,7 @@ HLSLParserException::HLSLParserException(const HLSLToken& token) :
 	mMessage = messageBuilder.str();
 }
 
-HLSLParserException::~HLSLParserException(void)
+HLSLParserException::~HLSLParserException(void) throw()
 {
 
 }

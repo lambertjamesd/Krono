@@ -5,6 +5,7 @@ set (SOURCE_FILES
 	Compositor/Compositor.cpp
 	Compositor/ScreenQuadCompositeStage.cpp
 	Compositor/RenderSceneCompositeStage.cpp
+	Compositor/LightingCompositeStage.cpp
 	Compositor/RenderState.cpp
 	Compositor/RenderStateParameters.cpp
 	Compositor/RenderTargetConfiguration.cpp

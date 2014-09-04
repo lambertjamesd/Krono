@@ -13,7 +13,7 @@ public:
 	Exception(const Token& token, const char* expected);
 	virtual ~Exception(void) throw();
 
-	virtual const char* what() throw();
+	virtual const char* what() const throw();
 private:
 	std::string mMessage;
 };

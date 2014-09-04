@@ -35,16 +35,51 @@ oh noes!
 
 #elif defined(TESTING_123)
 
-yay!
+elif defined
 
 #endif
 
 #if !defined(TESTING_123)
 
-oh noes!
+on noes!
 
 #else
 
-yay!
+!defined
+
+#endif
+
+#define FIRST_HALF	1 + 2
+#define SECOND_HALF	== 3
+
+#if FIRST_HALF SECOND_HALF
+
+first half second half
+
+#else
+
+oh noes!
+
+#endif
+
+#define ADD(x, y) (x + y)
+
+#if ADD(2, 3) == 5
+
+macro function works
+
+#else
+
+oh noes!
+
+#endif
+
+#if ADD(ADD(1, 2), 3) == 6
+
+macro recursion works
+
+#else
+
+oh noes!
 
 #endif

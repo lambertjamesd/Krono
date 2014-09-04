@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <set>
 
 #include "Macro.h"
 #include "Tokenizer.h"
@@ -20,19 +21,26 @@
 namespace preproc
 {
 
+struct PreprocessResult
+{
+	std::string text;
+	std::set<std::string> includedFiles;
+};
+
 class Preprocessor
 {
 public:
-	Preprocessor(std::istream& stream);
 	~Preprocessor(void);
 
-	static std::string PreprocessFile(const std::string& filename);
+	static PreprocessResult PreprocessFile(const std::string& filename);
 	static std::string PreprocessStream(std::istream& input, MacroStorage& storage, IncludeHandler& includeHandler);
-	
-	Node& GetRootNode();
+
+	static std::unique_ptr<ExpressionNode> ParseExpression(const std::string& value);
 
 	static void Test();
 private:
+	Preprocessor(std::istream& stream);
+
 	static void Test(const char* input);
 
 	typedef std::function<bool (const Token&)> TokenChecker;
@@ -77,7 +85,7 @@ private:
 	std::unique_ptr<IfNode> ParseIfDef();
 	std::unique_ptr<IfNode> ParseIfNDef();
 	
-	std::unique_ptr<IfNode> ParseIfBody(std::unique_ptr<ExpressionNode> expression);
+	std::unique_ptr<IfNode> ParseIfBody(std::unique_ptr<Node> expression);
 
 	void ParseError();
 	std::unique_ptr<IncludeNode> ParseInclude();
@@ -98,8 +106,6 @@ private:
 	
 	Tokenizer mTokens;
 	size_t mCurrentToken;
-
-	std::unique_ptr<Node> mRootNode;
 };
 
 }

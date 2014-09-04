@@ -36,10 +36,8 @@ float4 main(ScreenPositionVertex input) : SV_TARGET
 		float lightFactor = saturate(dot(lightDir, normal.Sample(samPoint, textureCoord)) / lightDistance);
 	
 		// simple attenuation
-		lightFactor *= (1 - lightDistance) * lightFactor;
+		lightFactor *= max(1 - lightDistance, 0);
 	
-		lightFactor = saturate(lightFactor);
-	
-		return float4(float3(lightFactor, lightFactor, lightFactor), 1.0);	
+		return float4(color.Sample(samPoint, textureCoord) * lightFactor , 1.0);	
 	}
 }

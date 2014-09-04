@@ -15,5 +15,7 @@ layout(location = 0) out vec4 colorOut;
 
 void main()
 {	
-	colorOut = vec4(texture2D(textureTest, texCoord).rgb, 1.0);
+	vec3 inputColor = texture2D(textureTest, texCoord).rgb;
+	float gray = dot(inputColor, vec3(0.299, 0.587, 0.114));
+	colorOut = vec4(inputColor / (1 + gray), 1.0);
 }

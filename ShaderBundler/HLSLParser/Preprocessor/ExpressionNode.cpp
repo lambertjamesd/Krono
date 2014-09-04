@@ -16,8 +16,9 @@ ExpressionNode::~ExpressionNode(void)
 
 }
 
-DefinedOperatorNode::DefinedOperatorNode(const std::string& name) :
-	mName(name)
+DefinedOperatorNode::DefinedOperatorNode(const std::string& name, bool useParenthesis) :
+	mName(name),
+	mUseParenthesis(useParenthesis)
 {
 
 }
@@ -35,6 +36,11 @@ void DefinedOperatorNode::Accept(NodeVisitor& visitor)
 const std::string& DefinedOperatorNode::GetName()
 {
 	return mName;
+}
+
+bool DefinedOperatorNode::DoesUseParenthesis() const
+{
+	return mUseParenthesis;
 }
 
 IdentifierNode::IdentifierNode(const std::string& value) :
@@ -91,9 +97,8 @@ Node* FunctionNode::GetParameter(size_t index)
 	}
 }
 
-ConstantNode::ConstantNode(const std::string& value) :
-	mValue(value),
-	mNumberValue(atoi(value.c_str()))
+ConstantNode::ConstantNode(long value) :
+	mNumberValue(value)
 {
 
 }
@@ -101,11 +106,6 @@ ConstantNode::ConstantNode(const std::string& value) :
 void ConstantNode::Accept(NodeVisitor& visitor)
 {
 	visitor.Visit(*this);
-}
-
-const std::string& ConstantNode::GetValue() const
-{
-	return mValue;
 }
 
 long ConstantNode::GetNumberValue() const

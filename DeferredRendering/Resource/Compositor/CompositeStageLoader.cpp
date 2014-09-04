@@ -6,7 +6,7 @@
 
 #include "Compositor/RenderSceneCompositeStage.h"
 #include "Compositor/ScreenQuadCompositeStage.h"
-#include "Compositor/LightingCompositeState.h"
+#include "Compositor/LightingCompositeStage.h"
 
 #include "Resource/Mesh/Mesh.h"
 
@@ -57,7 +57,7 @@ CompositeStage::Ptr CompositeStageLoader::ParseStage(ResourceManager& resourceMa
 	}
 	else if (type == "lighting")
 	{
-		result = LightingCompositeState::Ptr(new LightingCompositeState(stage["technique"].ToInt(1)));
+		result = LightingCompositeStage::Ptr(new LightingCompositeStage(stage["technique"].ToInt(1)));
 	}
 	else
 	{

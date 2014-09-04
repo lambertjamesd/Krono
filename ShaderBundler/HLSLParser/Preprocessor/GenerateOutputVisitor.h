@@ -28,10 +28,10 @@ public:
 	virtual void Visit(LineNode& node);
 	virtual void Visit(PragmaNode& node);
 	virtual void Visit(UnDefNode& node);
-	
+
+	virtual void Visit(DefinedOperatorNode& node);
 	virtual void Visit(IdentifierNode& node);
 	virtual void Visit(FunctionNode& node);
-	virtual void Visit(ConstantNode& node);
 
 private:
 	struct MacroParameterStorage

@@ -31,7 +31,7 @@
 			"depthBuffer" : "depth"
 		},
 		{
-			"disabled" : true,
+			"disabled" : false,
 		
 			"stage" : "DirectionalLight.json",
 			

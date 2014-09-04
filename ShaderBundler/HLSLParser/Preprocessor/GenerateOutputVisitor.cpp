@@ -40,18 +40,23 @@ void GenerateOutputVisitor::Visit(DefineNode& node)
 {
 	if (node.HasParameters())
 	{
-		mMacroDB.DefineMacro(node.GetName(), node.GetParameters(), node.GetValue(), node.GetExpressionValue());
+		mMacroDB.DefineMacro(node.GetName(), node.GetParameters(), node.GetValue());
 	}
 	else
 	{
-		mMacroDB.DefineMacro(node.GetName(), node.GetValue(), node.GetExpressionValue());
+		mMacroDB.DefineMacro(node.GetName(), node.GetValue());
 	}
 }
 
 void GenerateOutputVisitor::Visit(IfNode& node)
 {
+	GenerateOutputVisitor expressionGenerator(mMacroDB, mIncludeHandler);
+	node.GetExpression().Accept(expressionGenerator);
+
+	unique_ptr<ExpressionNode> expression = Preprocessor::ParseExpression(expressionGenerator.mOutput.str());
+
 	EvaluateVisitor evalutator(mMacroDB);
-	node.GetExpression().Accept(evalutator);
+	expression->Accept(evalutator);
 
 	if (evalutator.GetResult())
 	{
@@ -94,6 +99,18 @@ void GenerateOutputVisitor::Visit(UnDefNode& node)
 	mMacroDB.UndefineMacro(node.GetName());
 }
 
+void GenerateOutputVisitor::Visit(DefinedOperatorNode& node)
+{
+	if (node.DoesUseParenthesis())
+	{
+		mOutput << "defined(" << node.GetName() << ")";
+	}
+	else
+	{
+		mOutput << "defined " << node.GetName();
+	}
+}
+
 void GenerateOutputVisitor::Visit(IdentifierNode& node)
 {
 	if (mMacroVariableStack.size())
@@ -104,6 +121,8 @@ void GenerateOutputVisitor::Visit(IdentifierNode& node)
 		{
 			mOutput << macroParameter->second;
 		}
+
+		return;
 	}
 
 	std::shared_ptr<Macro> macro = mMacroDB.GetMacro(node.GetValue());
@@ -146,7 +165,7 @@ void GenerateOutputVisitor::Visit(FunctionNode& node)
 			for (size_t i = 0; i < node.GetParameterCount(); ++i)
 			{
 				GenerateOutputVisitor subGenerater(mMacroDB, mIncludeHandler);
-				node.GetParameter(i)->Accept(*this);
+				node.GetParameter(i)->Accept(subGenerater);
 				parameterStorage.macroValues[macro->GetParameters()[i]] = subGenerater.mOutput.str();
 			}
 
@@ -170,16 +189,15 @@ void GenerateOutputVisitor::Visit(FunctionNode& node)
 
 	for (size_t i = 0; i < node.GetParameterCount(); ++i)
 	{
+		if (i > 0)
+		{
+			mOutput << ",";
+		}
+
 		node.GetParameter(i)->Accept(*this);
-		mOutput << ",";
 	}
 
 	mOutput << ")";
-}
-
-void GenerateOutputVisitor::Visit(ConstantNode& node)
-{
-	mOutput << node.GetValue();
 }
 
 }

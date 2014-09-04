@@ -1,4 +1,5 @@
-#include "LightingCompositeState.h"
+#include "LightingCompositeStage.h"
+#include <cstddef>
 
 namespace krono
 {
@@ -19,18 +20,18 @@ LightPixelCompositeData::LightPixelCompositeData() :
 
 }
 
-LightingCompositeState::LightingCompositeState(size_t technique) :
+LightingCompositeStage::LightingCompositeStage(size_t technique) :
 	mTechnique(technique)
 {
 
 }
 
-LightingCompositeState::~LightingCompositeState(void)
+LightingCompositeStage::~LightingCompositeStage(void)
 {
 
 }
 
-void LightingCompositeState::Render(RenderState& renderState)
+void LightingCompositeStage::Render(RenderState& renderState)
 {
 	RebuildBuffer(renderState);
 	
@@ -42,7 +43,7 @@ void LightingCompositeState::Render(RenderState& renderState)
 	renderState.RenderScene(mTechnique);
 }
 
-void LightingCompositeState::RebuildBuffer(RenderState& renderState)
+void LightingCompositeStage::RebuildBuffer(RenderState& renderState)
 {
 	Matrix4f projectionMatrix = renderState.GetProjectionMatrix();
 	Rectf viewport = renderState.GetViewport();

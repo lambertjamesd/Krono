@@ -13,8 +13,7 @@ namespace preproc
 
 Preprocessor::Preprocessor(std::istream& stream) :
 	mTokens(stream),
-	mCurrentToken(0),
-	mRootNode(move(ParseFile()))
+	mCurrentToken(0)
 {
 
 }
@@ -24,25 +23,51 @@ Preprocessor::~Preprocessor(void)
 
 }
 
-std::string Preprocessor::PreprocessFile(const std::string& filename)
+PreprocessResult Preprocessor::PreprocessFile(const std::string& filename)
 {
 	std::ifstream inputStream(filename, std::ios::binary);
 	Preprocessor preprocessor(inputStream);
 	
 	IncludeHandler includeHandler("", filename);
 	MacroStorage storage;
-	return GenerateOutputVisitor::Process(preprocessor.GetRootNode(), storage, includeHandler);
+
+	unique_ptr<NodeList> parsedFile(move(preprocessor.ParseFile()));
+
+	PreprocessResult result;
+	result.text = GenerateOutputVisitor::Process(*parsedFile, storage, includeHandler);
+	result.includedFiles = includeHandler.GetIncludedFiles();
+	return result;
 }
 
 std::string Preprocessor::PreprocessStream(std::istream& input, MacroStorage& storage, IncludeHandler& includeHandler)
 {
 	Preprocessor preprocessor(input);
-	return GenerateOutputVisitor::Process(preprocessor.GetRootNode(), storage, includeHandler);
+	unique_ptr<NodeList> result(move(preprocessor.ParseFile()));
+	return GenerateOutputVisitor::Process(*result, storage, includeHandler);
 }
 
-Node& Preprocessor::GetRootNode()
+std::unique_ptr<ExpressionNode> Preprocessor::ParseExpression(const std::string& value)
 {
-	return *mRootNode;
+	istringstream input(value);
+	Preprocessor preprocessor(input);
+
+	const Token& firstToken = preprocessor.PeekNoWhite(0);
+
+	if (firstToken.GetType() == Token::NewLine || firstToken.GetType() == Token::EndOfFile)
+	{
+		return std::unique_ptr<ExpressionNode>(new ConstantNode(0));
+	}
+	else
+	{
+		unique_ptr<ExpressionNode> result(move(preprocessor.ParseBinaryOperator()));
+
+		if (preprocessor.PeekNoWhite(0).GetType() != Token::EndOfFile)
+		{
+			throw Exception(preprocessor.PeekNoWhite(0), "expected end of expression");
+		}
+
+		return move(result);
+	}
 }
 
 void Preprocessor::Test()
@@ -79,7 +104,7 @@ const Token& Preprocessor::PeekNoWhite(size_t offset)
 
 	while (Peek(peekOffset).GetType() == Token::Whitespace || offset > 0)
 	{
-		if (Peek(0).GetType() != Token::Whitespace)
+		if (Peek(peekOffset).GetType() != Token::Whitespace)
 		{
 			--offset;
 		}
@@ -374,8 +399,6 @@ std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
 	Require(Token::Whitespace);
 	const Token& name = Require(Token::Identifier);
 	std::vector<std::string> parameters;
-	std::unique_ptr<NodeList> contents;
-	std::unique_ptr<ExpressionNode> expressionValue;
 
 	bool hasParameters = false;
 
@@ -385,17 +408,15 @@ std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
 
 		Optional(Token::Whitespace);
 
-		bool isLooping = Optional(Token::CloseParen);
+		bool isLooping = !Optional(Token::CloseParen);
 
 		while (isLooping)
 		{
-			Optional(Token::Whitespace);
-			parameters.push_back(Require(Token::Identifier).GetValue());
-			Optional(Token::Whitespace);
+			parameters.push_back(RequireNoWhite(Token::Identifier).GetValue());
 
-			if (!Optional(Token::Comma))
+			if (!OptionalNoWhite(Token::Comma))
 			{
-				Require(Token::CloseParen);
+				RequireNoWhite(Token::CloseParen);
 				isLooping = false;
 			}
 		}
@@ -403,25 +424,7 @@ std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
 
 	Optional(Token::Whitespace);
 
-	if (Peek(0).GetType() == Token::EndOfFile || Peek(0).GetType() == Token::NewLine)
-	{
-		expressionValue.reset(new ConstantNode("0"));
-	}
-	else
-	{
-		size_t valueLocation = GetLocation();
-
-		try
-		{
-			expressionValue = move(ParseBinaryOperator());
-		}
-		catch (Exception&)
-		{
-
-		}
-
-		RestoreLocation(valueLocation);
-	}
+	std::unique_ptr<NodeList> contents(new NodeList());
 
 	while (!IsEndDirective())
 	{
@@ -431,15 +434,23 @@ std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
 		}
 	}
 
-	return std::unique_ptr<DefineNode>(new DefineNode(name.GetValue(), parameters, hasParameters, move(contents), move(expressionValue)));
+	return std::unique_ptr<DefineNode>(new DefineNode(name.GetValue(), parameters, hasParameters, move(contents)));
 }
 
 std::unique_ptr<IfNode> Preprocessor::ParseIf()
 {
 	Require(Token::Whitespace);
 
-	std::unique_ptr<ExpressionNode> expression(move(ParseBinaryOperator()));
-	ConsumeTillEndline();
+	unique_ptr<NodeList> expression(new NodeList());
+
+	while (!IsEndDirective())
+	{
+		if (!CheckLineExtend())
+		{
+			expression->AddNode(move(ParseDefinitionValue()));
+		}
+	}
+
 	return move(ParseIfBody(move(expression)));
 }
 
@@ -448,7 +459,12 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfDef()
 	Require(Token::Whitespace);
 	const Token& token = Require(Token::Identifier);
 	ConsumeTillEndline();
-	return move(ParseIfBody(std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(token.GetValue()))));
+
+	string syntax("defined(");
+	syntax += token.GetValue();
+	syntax += ")";
+
+	return move(ParseIfBody(std::unique_ptr<OtherNode>(new OtherNode(syntax))));
 }
 
 std::unique_ptr<IfNode> Preprocessor::ParseIfNDef()
@@ -457,12 +473,14 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfNDef()
 	const Token& token = Require(Token::Identifier);
 	ConsumeTillEndline();
 
-	std::unique_ptr<ExpressionNode> defined(new DefinedOperatorNode(token.GetValue()));
+	string syntax("!defined(");
+	syntax += token.GetValue();
+	syntax += ")";
 
-	return move(ParseIfBody(std::unique_ptr<ExpressionNode>(new BooleanNotOperatorNode(move(defined)))));
+	return move(ParseIfBody(std::unique_ptr<OtherNode>(new OtherNode(syntax))));
 }
 
-std::unique_ptr<IfNode> Preprocessor::ParseIfBody(std::unique_ptr<ExpressionNode> expression)
+std::unique_ptr<IfNode> Preprocessor::ParseIfBody(std::unique_ptr<Node> expression)
 {
 	std::unique_ptr<Node> body = move(ParseBlock([](const Token& token) {
 		return token.GetType() != Token::Directive || (
@@ -626,7 +644,7 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseValue()
 	{
 	case Token::Number:
 		AdvanceNoWhite();
-		return std::unique_ptr<ExpressionNode>(new ConstantNode(next.GetValue()));
+		return std::unique_ptr<ExpressionNode>(new ConstantNode(atoi(next.GetValue().c_str())));
 	case Token::Identifier:
 		return move(ParseIdentifier(true));
 	case Token::OpenParen:
@@ -646,13 +664,22 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseParenthesis()
 
 std::unique_ptr<ExpressionNode> Preprocessor::ParseIdentifier(bool useExpression)
 {
-	if (Peek(1, useExpression).GetType() == Token::OpenParen)
+	if (PeekNoWhite(1).GetType() == Token::OpenParen)
 	{
 		return move(ParseFunctionCall(useExpression));
 	}
 	else
 	{
-		return std::unique_ptr<ExpressionNode>(new IdentifierNode(Require(Token::Identifier, useExpression).GetValue()));
+		const Token& name = Require(Token::Identifier, useExpression);
+
+		if (name.GetValue() == "defined" && PeekNoWhite(0).GetType() == Token::Identifier)
+		{
+			return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(RequireNoWhite(Token::Identifier).GetValue(), false));
+		}
+		else
+		{
+			return std::unique_ptr<ExpressionNode>(new IdentifierNode(name.GetValue()));
+		}
 	}
 }
 
@@ -685,16 +712,34 @@ std::unique_ptr<Node> Preprocessor::ParseFunctionParameter(bool useExpression)
 
 std::unique_ptr<ExpressionNode> Preprocessor::ParseFunctionCall(bool useExpression)
 {
-	std::unique_ptr<FunctionNode> result(new FunctionNode(Require(Token::Identifier).GetValue()));
-	
-	Require(Token::OpenParen, useExpression);
+	const Token& name = Require(Token::Identifier);
 
-	while (!Optional(Token::CloseParen, useExpression))
+	if (name.GetValue() == "defined" &&
+			PeekNoWhite(0).GetType() == Token::OpenParen &&
+			PeekNoWhite(1).GetType() == Token::Identifier &&
+			PeekNoWhite(2).GetType() == Token::CloseParen)
 	{
-		result->AddParameter(move(ParseFunctionParameter(useExpression)));
-	}
+		RequireNoWhite(Token::OpenParen);
+		std::string identifierName = RequireNoWhite(Token::Identifier).GetValue();
+		RequireNoWhite(Token::CloseParen);
 
-	return move(result);
+		return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(identifierName, true));
+	}
+	else
+	{
+		std::unique_ptr<FunctionNode> result(new FunctionNode(name.GetValue()));
+
+		Optional(Token::Whitespace);
+		Require(Token::OpenParen, useExpression);
+
+		while (!Optional(Token::CloseParen, useExpression))
+		{
+			result->AddParameter(move(ParseFunctionParameter(useExpression)));
+			Optional(Token::Comma, useExpression);
+		}
+	
+		return move(result);
+	}
 }
 
 std::unique_ptr<ExpressionNode> Preprocessor::ParseUnaryOperator()
@@ -714,20 +759,6 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseUnaryOperator()
 		default:
 			throw Exception(unaryOperator, " invalid unary operator");
 		}
-	}
-	else if (PeekNoWhite(0).GetValue() == "defined")
-	{
-		AdvanceNoWhite();
-
-		bool needParen = OptionalNoWhite(Token::OpenParen);
-		std::string name = RequireNoWhite(Token::Identifier).GetValue();
-
-		if (needParen)
-		{
-			RequireNoWhite(Token::CloseParen);
-		}
-
-		return std::unique_ptr<DefinedOperatorNode>(new DefinedOperatorNode(name));
 	}
 	else
 	{

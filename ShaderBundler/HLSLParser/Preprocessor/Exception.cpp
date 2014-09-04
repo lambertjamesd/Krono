@@ -23,7 +23,7 @@ Exception::~Exception(void) throw()
 
 }
 
-const char* Exception::what() throw()
+const char* Exception::what() const throw()
 {
 	return mMessage.c_str();
 }

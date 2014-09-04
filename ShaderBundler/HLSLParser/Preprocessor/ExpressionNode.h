@@ -16,14 +16,16 @@ protected:
 class DefinedOperatorNode : public ExpressionNode
 {
 public:
-	DefinedOperatorNode(const std::string& name);
+	DefinedOperatorNode(const std::string& name, bool useParenthesis);
 	~DefinedOperatorNode(void);
 
 	virtual void Accept(NodeVisitor& visitor);
 
 	const std::string& GetName();
+	bool DoesUseParenthesis() const;
 private:
 	std::string mName;
+	bool mUseParenthesis;
 };
 
 class IdentifierNode : public ExpressionNode
@@ -57,13 +59,11 @@ private:
 class ConstantNode : public ExpressionNode
 {
 public:
-	ConstantNode(const std::string& value);
+	ConstantNode(long value);
 	virtual void Accept(NodeVisitor& visitor);
 	
-	const std::string& GetValue() const;
 	long GetNumberValue() const;
 private:
-	std::string mValue;
 	long mNumberValue;
 };
 

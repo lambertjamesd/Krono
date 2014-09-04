@@ -42,25 +42,12 @@ void EvaluateVisitor::Visit(DefinedOperatorNode& node)
 
 void EvaluateVisitor::Visit(IdentifierNode& node)
 {
-	shared_ptr<Macro> macro = mMacroDB.GetMacro(node.GetValue());
-
-	if (macro == NULL)
-	{
-		mValueStack.push(0);
-	}
-	else if (macro->GetExpressionValue() == NULL)
-	{
-		throw Exception("Macro does not evaluate to valid expression");
-	}
-	else
-	{
-		macro->GetExpressionValue()->Accept(*this);
-	}
+	mValueStack.push(0);
 }
 
 void EvaluateVisitor::Visit(FunctionNode& node)
 {
-	mValueStack.push(0);
+	throw Exception("Undeclared macro");
 }
 
 void EvaluateVisitor::Visit(ConstantNode& node)

@@ -4,12 +4,11 @@
 namespace preproc
 {
 
-DefineNode::DefineNode(const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value, std::unique_ptr<ExpressionNode> expressionValue) :
+DefineNode::DefineNode(const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value) :
 	mName(name),
-	mParameters(mParameters),
+	mParameters(parameters),
 	mHasParameters(hasParameters),
-	mValue(move(value)),
-	mExpressionValue(move(expressionValue))
+	mValue(move(value))
 {
 
 }
@@ -29,11 +28,6 @@ const std::shared_ptr<Node>& DefineNode::GetValue() const
 	return mValue;
 }
 
-const std::shared_ptr<ExpressionNode>& DefineNode::GetExpressionValue() const
-{
-	return mExpressionValue;
-}
-
 bool DefineNode::HasParameters() const
 {
 	return mHasParameters;
@@ -44,7 +38,7 @@ const std::vector<std::string>& DefineNode::GetParameters() const
 	return mParameters;
 }
 
-IfNode::IfNode(std::unique_ptr<ExpressionNode> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody) :
+IfNode::IfNode(std::unique_ptr<Node> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody) :
 	mExpression(move(expression)),
 	mBody(move(body)),
 	mElseBody(move(elseBody))
@@ -57,7 +51,7 @@ void IfNode::Accept(NodeVisitor& visitor)
 	visitor.Visit(*this);
 }
 
-ExpressionNode& IfNode::GetExpression()
+Node& IfNode::GetExpression()
 {
 	return *mExpression;
 }

@@ -41,6 +41,7 @@ void IncludeHandler::Open(IncludeNode::IncludeType includeType, const char* file
 		}
 	}
 
+	mIncludedFiles.insert(absolutePath);
 	std::ifstream input(absolutePath, std::ios::binary);
 
 	if (!input.is_open())
@@ -61,6 +62,11 @@ void IncludeHandler::Open(IncludeNode::IncludeType includeType, const char* file
 	*dataSize = (size_t)fileSize;
 
 	mFileStack.push(BundlerFileHelper::RemoveLastPathElement(absolutePath));
+}
+
+const std::set<std::string>& IncludeHandler::GetIncludedFiles() const
+{
+	return mIncludedFiles;
 }
 
 }

@@ -3,19 +3,17 @@
 namespace preproc
 {
 
-Macro::Macro(const std::shared_ptr<Node>& value, const std::shared_ptr<ExpressionNode>& expressionValue) :
+Macro::Macro(const std::shared_ptr<Node>& value) :
 	mHasParameters(false),
-	mValue(value),
-	mExpressionValue(expressionValue)
+	mValue(value)
 {
 
 }
 
-Macro::Macro(const std::vector<std::string>& parameters, const std::shared_ptr<Node>& value, const std::shared_ptr<ExpressionNode>& expressionValue) :
-	mHasParameters(false),
+Macro::Macro(const std::vector<std::string>& parameters, const std::shared_ptr<Node>& value) :
+	mHasParameters(true),
 	mParameterNames(parameters),
-	mValue(value),
-	mExpressionValue(expressionValue)
+	mValue(value)
 {
 
 }
@@ -39,19 +37,14 @@ const std::shared_ptr<Node>& Macro::GetValue() const
 	return mValue;
 }
 
-const std::shared_ptr<ExpressionNode>& Macro::GetExpressionValue() const
+void MacroStorage::DefineMacro(const std::string& name, const std::shared_ptr<Node>& value)
 {
-	return mExpressionValue;
+	mMacros[name] = std::shared_ptr<Macro>(new Macro(value));
 }
 
-void MacroStorage::DefineMacro(const std::string& name, const std::shared_ptr<Node>& value, const std::shared_ptr<ExpressionNode>& expressionValue)
+void MacroStorage::DefineMacro(const std::string& name, const std::vector<std::string>& parameters, const std::shared_ptr<Node>& value)
 {
-	mMacros[name] = std::shared_ptr<Macro>(new Macro(value, expressionValue));
-}
-
-void MacroStorage::DefineMacro(const std::string& name, const std::vector<std::string>& parameters, const std::shared_ptr<Node>& value, const std::shared_ptr<ExpressionNode>& expressionValue)
-{
-	mMacros[name] = std::shared_ptr<Macro>(new Macro(parameters, value, expressionValue));
+	mMacros[name] = std::shared_ptr<Macro>(new Macro(parameters, value));
 }
 
 void MacroStorage::UndefineMacro(const std::string& name)
