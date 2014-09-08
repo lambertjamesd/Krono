@@ -55,7 +55,7 @@ GLSLGenerator::~GLSLGenerator(void)
 void GLSLGenerator::ProcessFile(const std::string& filename, std::ostream& output)
 {
 	map<string, string> macros;
-	macros["GLSL"] = "1";
+	macros["OPENGL"] = "1";
 
 	preproc::PreprocessResult preprocessResult = preproc::Preprocessor::PreprocessFile(filename, macros);
 	std::istringstream input(preprocessResult.text);

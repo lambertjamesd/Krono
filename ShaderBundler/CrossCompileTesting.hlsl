@@ -27,7 +27,7 @@ cbuffer ConstantBuffer : register( b0 )
 	float arrayTestConstant[2];
 };
 
-#ifdef GLSL
+#ifdef OPENGL
 
 struct GLSLOnly
 {
@@ -36,7 +36,7 @@ struct GLSLOnly
 
 #endif
 
-#ifndef GLSL
+#ifndef OPENGL
 
 struct HLSLOnly
 {
