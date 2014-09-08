@@ -10,10 +10,24 @@ set (SOURCE_FILES
 	Bundle/FileNotFoundException.cpp
 	Bundle/BundlerFileHelper.cpp
 
+	HLSLParser/GLSLGenerator/GLSLGenerator.cpp
+	HLSLParser/GLSLGenerator/GLSLTypeStorage.cpp
+
 	HLSLParser/HLSLParser.cpp
 	HLSLParser/HLSLParserException.cpp
 	HLSLParser/HLSLToken.cpp
 	HLSLParser/HLSLTokenizer.cpp
+
+	HLSLParser/HLSLBinaryOperatorNode.cpp
+	HLSLParser/HLSLExpressionNode.cpp
+	HLSLParser/HLSLFlowControlNode.cpp
+	HLSLParser/HLSLNode.cpp
+	HLSLParser/HLSLNodeVisitor.cpp
+	HLSLParser/HLSLPostfixNode.cpp
+	HLSLParser/HLSLPrefixNode.cpp
+	HLSLParser/HLSLStatementNode.cpp
+	HLSLParser/HLSLTypeNode.cpp
+	HLSLParser/HLSLUnaryOperator.cpp
 
 	HLSLParser/Preprocessor/BinaryOperatorNode.cpp
 	HLSLParser/Preprocessor/DirectiveNode.cpp

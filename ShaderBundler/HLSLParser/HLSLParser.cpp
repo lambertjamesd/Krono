@@ -574,7 +574,7 @@ VariableTypeModifer::Type HLSLParser::ParseVariableTypeModifier()
 
 	do
 	{
-		if (currentValue != VariableStorageClass::None)
+		if (currentValue != VariableTypeModifer::None)
 		{
 			Advance();
 		}
