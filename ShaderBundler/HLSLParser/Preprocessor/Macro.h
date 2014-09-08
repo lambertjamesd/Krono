@@ -28,6 +28,7 @@ private:
 class MacroStorage
 {
 public:
+	void DefineMacro(const std::string& name, const std::string& value);
 	void DefineMacro(const std::string& name, const std::shared_ptr<Node>& value);
 	void DefineMacro(const std::string& name, const std::vector<std::string>& parameters, const std::shared_ptr<Node>& value);
 	void UndefineMacro(const std::string& name);

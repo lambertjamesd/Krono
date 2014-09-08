@@ -95,6 +95,42 @@
     <ClInclude Include="HLSLParser\Preprocessor\EvaluateVisitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLFlowControlNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLExpressionNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLStatementNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLUnaryOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLBinaryOperatorNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLPostfixNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLTypeNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLNodeVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLPrefixNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderBundler.cpp">
@@ -170,6 +206,42 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HLSLParser\Preprocessor\EvaluateVisitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLFlowControlNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLExpressionNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLStatementNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLUnaryOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLBinaryOperatorNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLPostfixNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLTypeNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLNodeVisitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLPrefixNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

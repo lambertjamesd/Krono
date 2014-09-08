@@ -13,7 +13,7 @@ Exception::Exception(const char* message) :
 Exception::Exception(const Token& token, const char* expected)
 {
 	std::ostringstream messageBuilder;
-	messageBuilder << "line: " << token.GetLineNumber() << " unexpected token " << token.GetValue() << expected;
+	messageBuilder << "error line: " << token.GetLineNumber() << " at '" << token.GetValue() << "' " << expected;
 	mMessage = messageBuilder.str();
 }
 

@@ -134,7 +134,7 @@ void GenerateOutputVisitor::Visit(IdentifierNode& node)
 			std::string message;
 			message += "The macro needs to be a function ";
 			message += node.GetValue();
-			throw Exception(message.c_str());
+			throw Exception(node.GetToken(), message.c_str());
 		}
 		else
 		{
@@ -157,7 +157,7 @@ void GenerateOutputVisitor::Visit(FunctionNode& node)
 		{
 			if (macro->GetParameters().size() != node.GetParameterCount())
 			{
-				throw Exception("Incorrect number of parameters in macro");
+				throw Exception(node.GetToken(), "Incorrect number of parameters in macro");
 			}
 
 			MacroParameterStorage parameterStorage; 

@@ -10,13 +10,13 @@ class ExpressionNode : public Node
 public:
 	virtual ~ExpressionNode(void);
 protected:
-	ExpressionNode(void);
+	ExpressionNode(const Token& token);
 };
 
 class DefinedOperatorNode : public ExpressionNode
 {
 public:
-	DefinedOperatorNode(const std::string& name, bool useParenthesis);
+	DefinedOperatorNode(const Token& token, const std::string& name, bool useParenthesis);
 	~DefinedOperatorNode(void);
 
 	virtual void Accept(NodeVisitor& visitor);
@@ -31,7 +31,8 @@ private:
 class IdentifierNode : public ExpressionNode
 {
 public:
-	IdentifierNode(const std::string& value);
+	IdentifierNode(const Token& token);
+	IdentifierNode(const Token& token, const std::string& value);
 	virtual void Accept(NodeVisitor& visitor);
 
 	const std::string& GetValue() const;
@@ -42,7 +43,7 @@ private:
 class FunctionNode : public ExpressionNode
 {
 public:
-	FunctionNode(const std::string& name);
+	FunctionNode(const Token& token, const std::string& name);
 	virtual void Accept(NodeVisitor& visitor);
 
 	void AddParameter(std::unique_ptr<Node> value);
@@ -59,7 +60,7 @@ private:
 class ConstantNode : public ExpressionNode
 {
 public:
-	ConstantNode(long value);
+	ConstantNode(const Token& token, long value);
 	virtual void Accept(NodeVisitor& visitor);
 	
 	long GetNumberValue() const;

@@ -37,6 +37,11 @@ const std::shared_ptr<Node>& Macro::GetValue() const
 	return mValue;
 }
 
+void MacroStorage::DefineMacro(const std::string& name, const std::string& value)
+{
+	DefineMacro(name, std::shared_ptr<Node>(new OtherNode(Token(Token::Other, value, 0))));
+}
+
 void MacroStorage::DefineMacro(const std::string& name, const std::shared_ptr<Node>& value)
 {
 	mMacros[name] = std::shared_ptr<Macro>(new Macro(value));

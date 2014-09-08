@@ -9,13 +9,13 @@ namespace preproc
 class DirectiveNode : public Node
 {
 protected:
-	DirectiveNode(void) : Node() {}
+	DirectiveNode(const Token& token) : Node(token) {}
 };
 
 class DefineNode : public DirectiveNode
 {
 public:
-	DefineNode(const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value);
+	DefineNode(const Token& token, const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value);
 
 	virtual void Accept(NodeVisitor& visitor);
 
@@ -35,7 +35,7 @@ protected:
 class IfNode : public DirectiveNode
 {
 public:
-	IfNode(std::unique_ptr<Node> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody);
+	IfNode(const Token& token, std::unique_ptr<Node> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody);
 
 	virtual void Accept(NodeVisitor& visitor);
 
@@ -57,7 +57,7 @@ public:
 		SystemInclude
 	};
 
-	IncludeNode(const std::string& filename, IncludeType includeType);
+	IncludeNode(const Token& token, const std::string& filename, IncludeType includeType);
 	
 	virtual void Accept(NodeVisitor& visitor);
 
@@ -71,21 +71,21 @@ protected:
 class LineNode : public DirectiveNode
 {
 public:
-	LineNode(size_t line, const std::string& file);
+	LineNode(const Token& token, size_t line, const std::string& file);
 	virtual void Accept(NodeVisitor& visitor);
 };
 
 class PragmaNode : public DirectiveNode
 {
 public:
-	PragmaNode();
+	PragmaNode(const Token& token);
 	virtual void Accept(NodeVisitor& visitor);
 };
 
 class UnDefNode : public DirectiveNode
 {
 public:
-	UnDefNode(const std::string& name);
+	UnDefNode(const Token& token, const std::string& name);
 	virtual void Accept(NodeVisitor& visitor);
 
 	const std::string& GetName() const;

@@ -130,7 +130,7 @@ void Tokenizer::Tokenize(std::istream& input)
 {
 	bool active = true;
 	std::ostringstream currentToken;
-	size_t lineNumber = 0;
+	size_t lineNumber = 1;
 
 	while (active)
 	{
@@ -489,7 +489,7 @@ Tokenizer::NextState Tokenizer::OtherState(int nextCharacter)
 
 	if (nextState != &OtherState)
 	{
-		return NextState(&IdentifierState, Token::Other);
+		return NextState(nextState, Token::Other);
 	}
 	else
 	{

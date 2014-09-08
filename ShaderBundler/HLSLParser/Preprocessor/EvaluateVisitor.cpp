@@ -47,7 +47,7 @@ void EvaluateVisitor::Visit(IdentifierNode& node)
 
 void EvaluateVisitor::Visit(FunctionNode& node)
 {
-	throw Exception("Undeclared macro");
+	throw Exception(node.GetToken(), "Undeclared macro");
 }
 
 void EvaluateVisitor::Visit(ConstantNode& node)

@@ -4,7 +4,8 @@
 namespace preproc
 {
 
-DefineNode::DefineNode(const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value) :
+DefineNode::DefineNode(const Token& token, const std::string& name, const std::vector<std::string>& parameters, bool hasParameters, std::unique_ptr<Node> value) :
+	DirectiveNode(token),
 	mName(name),
 	mParameters(parameters),
 	mHasParameters(hasParameters),
@@ -38,7 +39,8 @@ const std::vector<std::string>& DefineNode::GetParameters() const
 	return mParameters;
 }
 
-IfNode::IfNode(std::unique_ptr<Node> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody) :
+IfNode::IfNode(const Token& token, std::unique_ptr<Node> expression, std::unique_ptr<Node> body, std::unique_ptr<Node> elseBody) :
+	DirectiveNode(token),
 	mExpression(move(expression)),
 	mBody(move(body)),
 	mElseBody(move(elseBody))
@@ -66,7 +68,8 @@ Node* IfNode::GetElse()
 	return mElseBody.get();
 }
 
-IncludeNode::IncludeNode(const std::string& filename, IncludeType includeType) :
+IncludeNode::IncludeNode(const Token& token, const std::string& filename, IncludeType includeType) :
+	DirectiveNode(token),
 	mFilename(filename),
 	mIncludeType(includeType)
 {
@@ -88,7 +91,8 @@ IncludeNode::IncludeType IncludeNode::GetIncludeType() const
 	return mIncludeType;
 }
 
-LineNode::LineNode(size_t line, const std::string& file)
+LineNode::LineNode(const Token& token, size_t line, const std::string& file) :
+	DirectiveNode(token)
 {
 
 }
@@ -98,7 +102,8 @@ void LineNode::Accept(NodeVisitor& visitor)
 	visitor.Visit(*this);
 }
 
-PragmaNode::PragmaNode()
+PragmaNode::PragmaNode(const Token& token) :
+	DirectiveNode(token)
 {
 
 }
@@ -108,7 +113,8 @@ void PragmaNode::Accept(NodeVisitor& visitor)
 	visitor.Visit(*this);
 }
 
-UnDefNode::UnDefNode(const std::string& name) :
+UnDefNode::UnDefNode(const Token& token, const std::string& name) :
+	DirectiveNode(token),
 	mName(name)
 {
 

@@ -4,13 +4,23 @@
 namespace preproc
 {
 
-Node::Node(void)
+Node::Node(void) :
+	mToken(Token::None, "", 0)
 {
 }
 
+Node::Node(const Token& token) :
+	mToken(token)
+{
+}
 
 Node::~Node(void)
 {
+}
+
+const Token& Node::GetToken() const
+{
+	return mToken;
 }
 
 NodeList::NodeList(void)
@@ -31,7 +41,15 @@ void NodeList::AddNode(std::unique_ptr<Node> node)
 	mNodeList.push_back(move(node));
 }
 
-OtherNode::OtherNode(const std::string& value) :
+OtherNode::OtherNode(const Token& token) :
+	Node(token),
+	mValue(token.GetValue())
+{
+
+}
+
+OtherNode::OtherNode(const Token& token, const std::string& value) :
+	Node(token),
 	mValue(value)
 {
 

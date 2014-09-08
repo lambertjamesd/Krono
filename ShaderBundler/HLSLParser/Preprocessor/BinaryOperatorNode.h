@@ -13,7 +13,7 @@ public:
 	ExpressionNode& GetOperandA();
 	ExpressionNode& GetOperandB();
 protected:
-	BinaryOperatorNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BinaryOperatorNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 	
 	std::unique_ptr<ExpressionNode> mOperandA;
 	std::unique_ptr<ExpressionNode> mOperandB;
@@ -22,7 +22,7 @@ protected:
 class AddNode : public BinaryOperatorNode
 {
 public:
-	AddNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	AddNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -31,7 +31,7 @@ private:
 class SubtractNode : public BinaryOperatorNode
 {
 public:
-	SubtractNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	SubtractNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -40,7 +40,7 @@ private:
 class MultiplyNode : public BinaryOperatorNode
 {
 public:
-	MultiplyNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	MultiplyNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -49,7 +49,7 @@ private:
 class DivideNode : public BinaryOperatorNode
 {
 public:
-	DivideNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	DivideNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -58,7 +58,7 @@ private:
 class ModulusNode : public BinaryOperatorNode
 {
 public:
-	ModulusNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	ModulusNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -67,7 +67,7 @@ private:
 class EqualNode : public BinaryOperatorNode
 {
 public:
-	EqualNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	EqualNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -76,7 +76,7 @@ private:
 class NotEqualNode : public BinaryOperatorNode
 {
 public:
-	NotEqualNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	NotEqualNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -85,7 +85,7 @@ private:
 class GreaterThanNode : public BinaryOperatorNode
 {
 public:
-	GreaterThanNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	GreaterThanNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -94,7 +94,7 @@ private:
 class LessThanNode : public BinaryOperatorNode
 {
 public:
-	LessThanNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	LessThanNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -103,7 +103,7 @@ private:
 class GreaterThanEqualNode : public BinaryOperatorNode
 {
 public:
-	GreaterThanEqualNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	GreaterThanEqualNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -112,7 +112,7 @@ private:
 class LessThanEqualNode : public BinaryOperatorNode
 {
 public:
-	LessThanEqualNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	LessThanEqualNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -121,7 +121,7 @@ private:
 class BooleanAndNode : public BinaryOperatorNode
 {
 public:
-	BooleanAndNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BooleanAndNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -130,7 +130,7 @@ private:
 class BooleanOrNode : public BinaryOperatorNode
 {
 public:
-	BooleanOrNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BooleanOrNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -139,7 +139,7 @@ private:
 class BitwiseAndNode : public BinaryOperatorNode
 {
 public:
-	BitwiseAndNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BitwiseAndNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -148,7 +148,7 @@ private:
 class BitwiseOrNode : public BinaryOperatorNode
 {
 public:
-	BitwiseOrNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BitwiseOrNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -157,7 +157,7 @@ private:
 class BitwiseXorNode : public BinaryOperatorNode
 {
 public:
-	BitwiseXorNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BitwiseXorNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -166,7 +166,7 @@ private:
 class BitshiftLeftNode : public BinaryOperatorNode
 {
 public:
-	BitshiftLeftNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BitshiftLeftNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -175,7 +175,7 @@ private:
 class BitshiftRightNode : public BinaryOperatorNode
 {
 public:
-	BitshiftRightNode(std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
+	BitshiftRightNode(const Token& token, std::unique_ptr<ExpressionNode> operandA, std::unique_ptr<ExpressionNode> operandB);
 
 	virtual void Accept(NodeVisitor& visitor);
 private:

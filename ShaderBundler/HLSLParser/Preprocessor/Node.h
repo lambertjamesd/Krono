@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#include "Tokenizer.h"
+
 namespace preproc
 {
 
@@ -15,8 +17,13 @@ public:
 	virtual ~Node(void);
 
 	virtual void Accept(NodeVisitor& visitor) = 0;
+
+	const Token& GetToken() const;
 protected:
 	Node(void);
+	Node(const Token& token);
+
+	Token mToken;
 };
 
 class NodeList : public Node
@@ -36,7 +43,8 @@ protected:
 class OtherNode : public Node
 {
 public:
-	OtherNode(const std::string& value);
+	OtherNode(const Token& token);
+	OtherNode(const Token& token, const std::string& value);
 	virtual void Accept(NodeVisitor& visitor);
 
 	const std::string& GetValue() const;

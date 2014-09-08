@@ -23,13 +23,18 @@ Preprocessor::~Preprocessor(void)
 
 }
 
-PreprocessResult Preprocessor::PreprocessFile(const std::string& filename)
+PreprocessResult Preprocessor::PreprocessFile(const std::string& filename, const std::map<std::string, std::string>& macros)
 {
 	std::ifstream inputStream(filename, std::ios::binary);
 	Preprocessor preprocessor(inputStream);
 	
 	IncludeHandler includeHandler("", filename);
 	MacroStorage storage;
+
+	for (auto it = macros.begin(); it != macros.end(); ++it)
+	{
+		storage.DefineMacro(it->first, it->second);
+	}
 
 	unique_ptr<NodeList> parsedFile(move(preprocessor.ParseFile()));
 
@@ -55,7 +60,7 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseExpression(const std::string&
 
 	if (firstToken.GetType() == Token::NewLine || firstToken.GetType() == Token::EndOfFile)
 	{
-		return std::unique_ptr<ExpressionNode>(new ConstantNode(0));
+		return std::unique_ptr<ExpressionNode>(new ConstantNode(firstToken, 0));
 	}
 	else
 	{
@@ -329,7 +334,7 @@ std::unique_ptr<NodeList> Preprocessor::ParseBlock(Preprocessor::TokenChecker sh
 		}
 		else
 		{
-			result->AddNode(std::unique_ptr<Node>(new OtherNode(token.GetValue())));
+			result->AddNode(std::unique_ptr<Node>(new OtherNode(token)));
 			Advance((size_t)1);
 		}
 
@@ -345,7 +350,7 @@ std::unique_ptr<DirectiveNode> Preprocessor::ParseDirective()
 
 	if (token.GetValue() == "#define")
 	{
-		return move(ParseDefine());
+		return move(ParseDefine(token));
 	}
 	else if (token.GetValue() == "#error")
 	{
@@ -354,31 +359,31 @@ std::unique_ptr<DirectiveNode> Preprocessor::ParseDirective()
 	}
 	else if (token.GetValue() == "#if")
 	{
-		return move(ParseIf());
+		return move(ParseIf(token));
 	}
 	else if (token.GetValue() == "#ifdef")
 	{
-		return move(ParseIfDef());
+		return move(ParseIfDef(token));
 	}
 	else if (token.GetValue() == "#ifndef")
 	{
-		return move(ParseIfNDef());
+		return move(ParseIfNDef(token));
 	}
 	else if (token.GetValue() == "#include")
 	{
-		return move(ParseInclude());
+		return move(ParseInclude(token));
 	}
 	else if (token.GetValue() == "#line")
 	{
-		return move(ParseLineDef());
+		return move(ParseLineDef(token));
 	}
 	else if (token.GetValue() == "#pragma")
 	{
-		return move(ParsePragma());
+		return move(ParsePragma(token));
 	}
 	else if (token.GetValue() == "#undef")
 	{
-		return move(ParseUnDef());
+		return move(ParseUnDef(token));
 	}
 	else if (token.GetValue() == "#elif" || token.GetValue() == "#else")
 	{
@@ -394,7 +399,7 @@ std::unique_ptr<DirectiveNode> Preprocessor::ParseDirective()
 	}
 }
 
-std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
+std::unique_ptr<DefineNode> Preprocessor::ParseDefine(const Token& token)
 {
 	Require(Token::Whitespace);
 	const Token& name = Require(Token::Identifier);
@@ -434,10 +439,10 @@ std::unique_ptr<DefineNode> Preprocessor::ParseDefine()
 		}
 	}
 
-	return std::unique_ptr<DefineNode>(new DefineNode(name.GetValue(), parameters, hasParameters, move(contents)));
+	return std::unique_ptr<DefineNode>(new DefineNode(token, name.GetValue(), parameters, hasParameters, move(contents)));
 }
 
-std::unique_ptr<IfNode> Preprocessor::ParseIf()
+std::unique_ptr<IfNode> Preprocessor::ParseIf(const Token& token)
 {
 	Require(Token::Whitespace);
 
@@ -451,10 +456,10 @@ std::unique_ptr<IfNode> Preprocessor::ParseIf()
 		}
 	}
 
-	return move(ParseIfBody(move(expression)));
+	return move(ParseIfBody(token, move(expression)));
 }
 
-std::unique_ptr<IfNode> Preprocessor::ParseIfDef()
+std::unique_ptr<IfNode> Preprocessor::ParseIfDef(const Token& ifDefToken)
 {
 	Require(Token::Whitespace);
 	const Token& token = Require(Token::Identifier);
@@ -464,10 +469,10 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfDef()
 	syntax += token.GetValue();
 	syntax += ")";
 
-	return move(ParseIfBody(std::unique_ptr<OtherNode>(new OtherNode(syntax))));
+	return move(ParseIfBody(ifDefToken, std::unique_ptr<OtherNode>(new OtherNode(token, syntax))));
 }
 
-std::unique_ptr<IfNode> Preprocessor::ParseIfNDef()
+std::unique_ptr<IfNode> Preprocessor::ParseIfNDef(const Token& ifNDefToken)
 {
 	Require(Token::Whitespace);
 	const Token& token = Require(Token::Identifier);
@@ -477,10 +482,10 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfNDef()
 	syntax += token.GetValue();
 	syntax += ")";
 
-	return move(ParseIfBody(std::unique_ptr<OtherNode>(new OtherNode(syntax))));
+	return move(ParseIfBody(ifNDefToken, std::unique_ptr<OtherNode>(new OtherNode(token, syntax))));
 }
 
-std::unique_ptr<IfNode> Preprocessor::ParseIfBody(std::unique_ptr<Node> expression)
+std::unique_ptr<IfNode> Preprocessor::ParseIfBody(const Token& token, std::unique_ptr<Node> expression)
 {
 	std::unique_ptr<Node> body = move(ParseBlock([](const Token& token) {
 		return token.GetType() != Token::Directive || (
@@ -495,7 +500,7 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfBody(std::unique_ptr<Node> expressi
 
 	if (nextBlock.GetValue() == "#elif")
 	{
-		elseBlock = move(ParseIf());
+		elseBlock = move(ParseIf(nextBlock));
 	}
 	else if (nextBlock.GetValue() == "#else")
 	{
@@ -522,7 +527,7 @@ std::unique_ptr<IfNode> Preprocessor::ParseIfBody(std::unique_ptr<Node> expressi
 		assert(false && "Unexpected directive");
 	}
 
-	return std::unique_ptr<IfNode>(new IfNode(move(expression), move(body), move(elseBlock)));
+	return std::unique_ptr<IfNode>(new IfNode(token, move(expression), move(body), move(elseBlock)));
 }
 
 void Preprocessor::ParseError()
@@ -541,7 +546,7 @@ void Preprocessor::ParseError()
 	throw Exception(message.c_str());
 }
 
-std::unique_ptr<IncludeNode> Preprocessor::ParseInclude()
+std::unique_ptr<IncludeNode> Preprocessor::ParseInclude(const Token& token)
 {
 	Require(Token::Whitespace);
 	const Token& next = Peek(0);
@@ -554,6 +559,7 @@ std::unique_ptr<IncludeNode> Preprocessor::ParseInclude()
 		ConsumeTillEndline();
 
 		return std::unique_ptr<IncludeNode>(new IncludeNode(
+			token,
 			includePath.substr(1, includePath.length() - 2),
 			IncludeNode::LocalInclude));
 	}
@@ -572,6 +578,7 @@ std::unique_ptr<IncludeNode> Preprocessor::ParseInclude()
 		ConsumeTillEndline();
 		
 		return std::unique_ptr<IncludeNode>(new IncludeNode(
+			token,
 			includePath,
 			IncludeNode::SystemInclude));
 	}
@@ -582,7 +589,7 @@ std::unique_ptr<IncludeNode> Preprocessor::ParseInclude()
 }
 
 
-std::unique_ptr<LineNode> Preprocessor::ParseLineDef()
+std::unique_ptr<LineNode> Preprocessor::ParseLineDef(const Token& token)
 {
 	Require(Token::Whitespace);
 	size_t line = atoi(Require(Token::Other).GetValue().c_str());
@@ -595,10 +602,10 @@ std::unique_ptr<LineNode> Preprocessor::ParseLineDef()
 
 	ConsumeTillEndline();
 
-	return std::unique_ptr<LineNode>(new LineNode(line, filename));
+	return std::unique_ptr<LineNode>(new LineNode(token, line, filename));
 }
 
-std::unique_ptr<PragmaNode> Preprocessor::ParsePragma()
+std::unique_ptr<PragmaNode> Preprocessor::ParsePragma(const Token& token)
 {
 	while (!IsEndDirective())
 	{
@@ -608,14 +615,14 @@ std::unique_ptr<PragmaNode> Preprocessor::ParsePragma()
 		}
 	}
 
-	return std::unique_ptr<PragmaNode>(new PragmaNode());
+	return std::unique_ptr<PragmaNode>(new PragmaNode(token));
 }
 
-std::unique_ptr<UnDefNode> Preprocessor::ParseUnDef()
+std::unique_ptr<UnDefNode> Preprocessor::ParseUnDef(const Token& token)
 {
 	Require(Token::Whitespace);
 
-	std::unique_ptr<UnDefNode> result(new UnDefNode(Require(Token::Identifier).GetValue()));
+	std::unique_ptr<UnDefNode> result(new UnDefNode(token, Require(Token::Identifier).GetValue()));
 
 	ConsumeTillEndline();
 
@@ -630,8 +637,7 @@ std::unique_ptr<Node> Preprocessor::ParseDefinitionValue()
 	}
 	else
 	{
-		std::unique_ptr<Node> result(new OtherNode(Peek(0).GetValue()));
-		Advance((size_t)1);
+		std::unique_ptr<Node> result(new OtherNode(Advance()));
 		return move(result);
 	}
 }
@@ -644,7 +650,7 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseValue()
 	{
 	case Token::Number:
 		AdvanceNoWhite();
-		return std::unique_ptr<ExpressionNode>(new ConstantNode(atoi(next.GetValue().c_str())));
+		return std::unique_ptr<ExpressionNode>(new ConstantNode(next, atoi(next.GetValue().c_str())));
 	case Token::Identifier:
 		return move(ParseIdentifier(true));
 	case Token::OpenParen:
@@ -674,11 +680,11 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseIdentifier(bool useExpression
 
 		if (name.GetValue() == "defined" && PeekNoWhite(0).GetType() == Token::Identifier)
 		{
-			return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(RequireNoWhite(Token::Identifier).GetValue(), false));
+			return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(name, RequireNoWhite(Token::Identifier).GetValue(), false));
 		}
 		else
 		{
-			return std::unique_ptr<ExpressionNode>(new IdentifierNode(name.GetValue()));
+			return std::unique_ptr<ExpressionNode>(new IdentifierNode(name));
 		}
 	}
 }
@@ -723,11 +729,11 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseFunctionCall(bool useExpressi
 		std::string identifierName = RequireNoWhite(Token::Identifier).GetValue();
 		RequireNoWhite(Token::CloseParen);
 
-		return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(identifierName, true));
+		return std::unique_ptr<ExpressionNode>(new DefinedOperatorNode(name, identifierName, true));
 	}
 	else
 	{
-		std::unique_ptr<FunctionNode> result(new FunctionNode(name.GetValue()));
+		std::unique_ptr<FunctionNode> result(new FunctionNode(name, name.GetValue()));
 
 		Optional(Token::Whitespace);
 		Require(Token::OpenParen, useExpression);
@@ -751,11 +757,11 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseUnaryOperator()
 		switch (unaryOperator.GetType())
 		{
 		case Token::BitNot:
-			return std::unique_ptr<UnaryOperatorNode>(new BitwiseNotOperatorNode(move(ParseUnaryOperator())));
+			return std::unique_ptr<UnaryOperatorNode>(new BitwiseNotOperatorNode(unaryOperator, move(ParseUnaryOperator())));
 		case Token::BooleanNot:
-			return std::unique_ptr<UnaryOperatorNode>(new BooleanNotOperatorNode(move(ParseUnaryOperator())));
+			return std::unique_ptr<UnaryOperatorNode>(new BooleanNotOperatorNode(unaryOperator, move(ParseUnaryOperator())));
 		case Token::Minus:
-			return std::unique_ptr<UnaryOperatorNode>(new NegateOperatorNode(move(ParseUnaryOperator())));
+			return std::unique_ptr<UnaryOperatorNode>(new NegateOperatorNode(unaryOperator, move(ParseUnaryOperator())));
 		default:
 			throw Exception(unaryOperator, " invalid unary operator");
 		}
@@ -772,7 +778,8 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseBinaryOperator(Token::Operato
 
 	while (PeekNoWhite(0).IsBinaryOperator())
 	{
-		Token::OperatorPrecedence precedence = PeekNoWhite(0).GetPrecedence();
+		const Token& operatorToken = PeekNoWhite(0);
+		Token::OperatorPrecedence precedence = operatorToken.GetPrecedence();
 
 		if (precedence >= minPrecedence)
 		{
@@ -783,64 +790,64 @@ std::unique_ptr<ExpressionNode> Preprocessor::ParseBinaryOperator(Token::Operato
 			switch (binaryOperator.GetType())
 			{
 			case Token::Add:
-				result.reset(new AddNode(move(operandA), move(operandB)));
+				result.reset(new AddNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::Minus:
-				result.reset(new SubtractNode(move(operandA), move(operandB)));
+				result.reset(new SubtractNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::Multiply:
-				result.reset(new MultiplyNode(move(operandA), move(operandB)));
+				result.reset(new MultiplyNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::Divide:
-				result.reset(new DivideNode(move(operandA), move(operandB)));
+				result.reset(new DivideNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::Modulus:
-				result.reset(new ModulusNode(move(operandA), move(operandB)));
+				result.reset(new ModulusNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::LessThan:
-				result.reset(new LessThanNode(move(operandA), move(operandB)));
+				result.reset(new LessThanNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::LessEqual:
-				result.reset(new LessThanEqualNode(move(operandA), move(operandB)));
+				result.reset(new LessThanEqualNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::LeftShift:
-				result.reset(new BitshiftLeftNode(move(operandA), move(operandB)));
+				result.reset(new BitshiftLeftNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::GreaterThan:
-				result.reset(new GreaterThanNode(move(operandA), move(operandB)));
+				result.reset(new GreaterThanNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::GreaterEqual:
-				result.reset(new GreaterThanEqualNode(move(operandA), move(operandB)));
+				result.reset(new GreaterThanEqualNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::RightShift:
-				result.reset(new BitshiftRightNode(move(operandA), move(operandB)));
+				result.reset(new BitshiftRightNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::Equal:
-				result.reset(new EqualNode(move(operandA), move(operandB)));
+				result.reset(new EqualNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::NotEqual:
-				result.reset(new NotEqualNode(move(operandA), move(operandB)));
+				result.reset(new NotEqualNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::BitAnd:
-				result.reset(new BitwiseAndNode(move(operandA), move(operandB)));
+				result.reset(new BitwiseAndNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::BooleanAnd:
-				result.reset(new BooleanAndNode(move(operandA), move(operandB)));
+				result.reset(new BooleanAndNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::BitOr:
-				result.reset(new BitwiseOrNode(move(operandA), move(operandB)));
+				result.reset(new BitwiseOrNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			case Token::BooleanOr:
-				result.reset(new BooleanOrNode(move(operandA), move(operandB)));
+				result.reset(new BooleanOrNode(operatorToken, move(operandA), move(operandB)));
 				break;
 
 			case Token::BitXor:
-				result.reset(new BitwiseXorNode(move(operandA), move(operandB)));
+				result.reset(new BitwiseXorNode(operatorToken, move(operandA), move(operandB)));
 				break;
 			default:
 				throw Exception(binaryOperator, "Invalid binary operator");

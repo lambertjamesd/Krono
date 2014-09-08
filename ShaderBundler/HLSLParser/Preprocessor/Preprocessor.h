@@ -32,7 +32,7 @@ class Preprocessor
 public:
 	~Preprocessor(void);
 
-	static PreprocessResult PreprocessFile(const std::string& filename);
+	static PreprocessResult PreprocessFile(const std::string& filename, const std::map<std::string, std::string>& macros);
 	static std::string PreprocessStream(std::istream& input, MacroStorage& storage, IncludeHandler& includeHandler);
 
 	static std::unique_ptr<ExpressionNode> ParseExpression(const std::string& value);
@@ -80,18 +80,18 @@ private:
 	std::unique_ptr<NodeList> ParseBlock(TokenChecker shouldContinue, const char* eofMessage);
 
 	std::unique_ptr<DirectiveNode> ParseDirective();
-	std::unique_ptr<DefineNode> ParseDefine();
-	std::unique_ptr<IfNode> ParseIf();
-	std::unique_ptr<IfNode> ParseIfDef();
-	std::unique_ptr<IfNode> ParseIfNDef();
+	std::unique_ptr<DefineNode> ParseDefine(const Token& token);
+	std::unique_ptr<IfNode> ParseIf(const Token& token);
+	std::unique_ptr<IfNode> ParseIfDef(const Token& token);
+	std::unique_ptr<IfNode> ParseIfNDef(const Token& token);
 	
-	std::unique_ptr<IfNode> ParseIfBody(std::unique_ptr<Node> expression);
+	std::unique_ptr<IfNode> ParseIfBody(const Token& token, std::unique_ptr<Node> expression);
 
 	void ParseError();
-	std::unique_ptr<IncludeNode> ParseInclude();
-	std::unique_ptr<LineNode> ParseLineDef();
-	std::unique_ptr<PragmaNode> ParsePragma();
-	std::unique_ptr<UnDefNode> ParseUnDef();
+	std::unique_ptr<IncludeNode> ParseInclude(const Token& token);
+	std::unique_ptr<LineNode> ParseLineDef(const Token& token);
+	std::unique_ptr<PragmaNode> ParsePragma(const Token& token);
+	std::unique_ptr<UnDefNode> ParseUnDef(const Token& token);
 	
 	std::unique_ptr<Node> ParseDefinitionValue();
 	

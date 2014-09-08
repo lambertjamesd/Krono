@@ -10,11 +10,15 @@
 #include "Bundle/Bundle.h"
 
 #include "HLSLParser/HLSLTokenizer.h"
+#include "HLSLParser/HLSLParser.h"
 #include "HLSLParser/Preprocessor/Preprocessor.h"
+#include "HLSLParser/GLSLGenerator/GLSLGenerator.h"
 
 #ifdef USE_DX11
 #include "Bundle/HLSLCompiler.h"
 #endif
+
+using namespace std;
 
 std::string GetOutputFilename(const std::string& inputFilename)
 {
@@ -39,7 +43,7 @@ void MakeDependencies(const char* filename)
 		{
 			try
 			{
-				preproc::PreprocessResult includes = preproc::Preprocessor::PreprocessFile(fileName);
+				preproc::PreprocessResult includes = preproc::Preprocessor::PreprocessFile(fileName, map<string,string>());
 
 				for (auto includeIt = includes.includedFiles.begin(); includeIt != includes.includedFiles.end(); ++includeIt)
 				{
@@ -97,8 +101,10 @@ int main(int argc, char* argv[])
 {
 	HLSLTokenizer::Test();
 	preproc::Preprocessor::Test();
+	HLSLParser::Test();
 
-	std::cout << preproc::Preprocessor::PreprocessFile("PreprocessTest.txt").text;
+	std::ofstream fileOutput("CrossCompileTesting.glsl");
+	GLSLGenerator::ProcessFile("CrossCompileTesting.hlsl", fileOutput);
 
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{

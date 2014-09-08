@@ -3,12 +3,15 @@
 #include "HLSLToken.h"
 #include <istream>
 #include <vector>
+#include <set>
 
 class HLSLTokenizer
 {
 public:
 	HLSLTokenizer(std::istream& input);
 	~HLSLTokenizer(void);
+
+	const HLSLToken& GetToken(size_t index) const;
 
 	static void Test();
 private:

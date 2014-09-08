@@ -12,7 +12,7 @@ public:
 
 	ExpressionNode& GetInternalValue();
 protected:
-	UnaryOperatorNode(std::unique_ptr<ExpressionNode> internalValue);
+	UnaryOperatorNode(const Token& token, std::unique_ptr<ExpressionNode> internalValue);
 
 	std::unique_ptr<ExpressionNode> mInternalValue;
 };
@@ -20,7 +20,7 @@ protected:
 class NegateOperatorNode : public UnaryOperatorNode
 {
 public:
-	NegateOperatorNode(std::unique_ptr<ExpressionNode> internalValue);
+	NegateOperatorNode(const Token& token, std::unique_ptr<ExpressionNode> internalValue);
 	
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -29,7 +29,7 @@ private:
 class BitwiseNotOperatorNode : public UnaryOperatorNode
 {
 public:
-	BitwiseNotOperatorNode(std::unique_ptr<ExpressionNode> internalValue);
+	BitwiseNotOperatorNode(const Token& token, std::unique_ptr<ExpressionNode> internalValue);
 	
 	virtual void Accept(NodeVisitor& visitor);
 private:
@@ -38,7 +38,7 @@ private:
 class BooleanNotOperatorNode : public UnaryOperatorNode
 {
 public:
-	BooleanNotOperatorNode(std::unique_ptr<ExpressionNode> internalValue);
+	BooleanNotOperatorNode(const Token& token, std::unique_ptr<ExpressionNode> internalValue);
 	
 	virtual void Accept(NodeVisitor& visitor);
 private:

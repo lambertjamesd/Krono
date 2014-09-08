@@ -5,7 +5,8 @@
 namespace preproc
 {
 
-ExpressionNode::ExpressionNode(void)
+ExpressionNode::ExpressionNode(const Token& token) :
+	Node(token)
 {
 
 }
@@ -16,7 +17,8 @@ ExpressionNode::~ExpressionNode(void)
 
 }
 
-DefinedOperatorNode::DefinedOperatorNode(const std::string& name, bool useParenthesis) :
+DefinedOperatorNode::DefinedOperatorNode(const Token& token, const std::string& name, bool useParenthesis) :
+	ExpressionNode(token),
 	mName(name),
 	mUseParenthesis(useParenthesis)
 {
@@ -43,7 +45,15 @@ bool DefinedOperatorNode::DoesUseParenthesis() const
 	return mUseParenthesis;
 }
 
-IdentifierNode::IdentifierNode(const std::string& value) :
+IdentifierNode::IdentifierNode(const Token& token) :
+	ExpressionNode(token),
+	mValue(token.GetValue())
+{
+
+}
+
+IdentifierNode::IdentifierNode(const Token& token, const std::string& value) :
+	ExpressionNode(token),
 	mValue(value)
 {
 
@@ -59,7 +69,8 @@ const std::string& IdentifierNode::GetValue() const
 	return mValue;
 }
 
-FunctionNode::FunctionNode(const std::string& name) :
+FunctionNode::FunctionNode(const Token& token, const std::string& name) :
+	ExpressionNode(token),
 	mName(name)
 {
 
@@ -97,7 +108,8 @@ Node* FunctionNode::GetParameter(size_t index)
 	}
 }
 
-ConstantNode::ConstantNode(long value) :
+ConstantNode::ConstantNode(const Token& token, long value) :
+	ExpressionNode(token),
 	mNumberValue(value)
 {
 

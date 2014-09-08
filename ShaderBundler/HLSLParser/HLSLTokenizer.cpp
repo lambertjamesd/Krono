@@ -29,6 +29,18 @@ HLSLTokenizer::~HLSLTokenizer(void)
 
 }
 
+const HLSLToken& HLSLTokenizer::GetToken(size_t index) const
+{
+	if (index < mTokenList.size())
+	{
+		return mTokenList[index];
+	}
+	else
+	{
+		return mTokenList.back();
+	}
+}
+
 const char* HLSLTokenizer::gTokenizerTest = 
 	"_id id0 ID 0 1. 1.0 \"string \\\"\"\n"
 	"// this is a comment huzah!\n"
@@ -36,37 +48,24 @@ const char* HLSLTokenizer::gTokenizerTest =
 	"+-*/% =+=-=*=/=%="
 	"~<<>>&|^<<=>>=&=|=^=&&||?:;,"
 	"<> ==!=<=>=++--."
-	"[](){}";
+	"[](){} void";
 
 const HLSLToken HLSLTokenizer::gExpectedTokens[] = {
 	HLSLToken(HLSLTokenType::Identifier, "_id", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	HLSLToken(HLSLTokenType::Identifier, "id0", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	HLSLToken(HLSLTokenType::Identifier, "ID", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 
 	HLSLToken(HLSLTokenType::Number, "0", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	HLSLToken(HLSLTokenType::Number, "1.", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	HLSLToken(HLSLTokenType::Number, "1.0", 0),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 0),
 	
 	HLSLToken(HLSLTokenType::String, "\"string \\\"\"", 0),
-	HLSLToken(HLSLTokenType::Whitespace, "\n", 0),
-	HLSLToken(HLSLTokenType::Comment, "// this is a comment huzah!", 1),
-	HLSLToken(HLSLTokenType::Whitespace, "\n", 1),
-	
-	HLSLToken(HLSLTokenType::Comment, "/* multi \n line \n comment */", 2),
 	
 	HLSLToken(HLSLTokenType::Add, "+", 4),
 	HLSLToken(HLSLTokenType::Minus, "-", 4),
 	HLSLToken(HLSLTokenType::Multiply, "*", 4),
 	HLSLToken(HLSLTokenType::Divide, "/", 4),
 	HLSLToken(HLSLTokenType::Modulus, "%", 4),
-
-	HLSLToken(HLSLTokenType::Whitespace, " ", 1),
 
 	HLSLToken(HLSLTokenType::Assign, "=", 4),
 	HLSLToken(HLSLTokenType::AddEqual, "+=", 4),
@@ -99,7 +98,6 @@ const HLSLToken HLSLTokenizer::gExpectedTokens[] = {
 	
 	HLSLToken(HLSLTokenType::LessThan, "<", 4),
 	HLSLToken(HLSLTokenType::GreaterThan, ">", 4),
-	HLSLToken(HLSLTokenType::Whitespace, " ", 4),
 	HLSLToken(HLSLTokenType::Equal, "==", 4),
 	HLSLToken(HLSLTokenType::NotEqual, "!=", 4),
 	HLSLToken(HLSLTokenType::LessThanEqual, "<=", 4),
@@ -116,6 +114,8 @@ const HLSLToken HLSLTokenizer::gExpectedTokens[] = {
 	HLSLToken(HLSLTokenType::CloseParen, ")", 4),
 	HLSLToken(HLSLTokenType::OpenCurly, "{", 4),
 	HLSLToken(HLSLTokenType::CloseCurly, "}", 4),
+
+	HLSLToken(HLSLTokenType::Keyword, "void", 4),
 
 	HLSLToken(HLSLTokenType::EndOfFile, "\xff", 4),
 };
@@ -149,7 +149,7 @@ void HLSLTokenizer::Tokenize(std::istream& input)
 {
 	bool active = true;
 	std::ostringstream currentToken;
-	size_t lineNumber = 0;
+	size_t lineNumber = 1;
 
 	while (active)
 	{
@@ -158,7 +158,13 @@ void HLSLTokenizer::Tokenize(std::istream& input)
 
 		if (nextState.type != HLSLTokenType::None)
 		{
-			mTokenList.push_back(HLSLToken(nextState.type, currentToken.str(), lineNumber));
+			HLSLToken newToken(nextState.type, currentToken.str(), lineNumber);
+
+			if (newToken.GetType() != HLSLTokenType::Whitespace && newToken.GetType() != HLSLTokenType::Comment)
+			{
+				mTokenList.push_back(newToken);
+			}
+
 			currentToken.str("");
 
 			if (nextState.type == HLSLTokenType::EndOfFile)
