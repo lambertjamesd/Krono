@@ -100,6 +100,7 @@
     <ClInclude Include="HLSLParser\HLSLExpressionNode.h" />
     <ClInclude Include="HLSLParser\HLSLFlowControlNode.h" />
     <ClInclude Include="HLSLParser\HLSLNode.h" />
+    <ClInclude Include="HLSLParser\HLSLType.h" />
     <ClInclude Include="HLSLParser\Preprocessor\EvaluateVisitor.h" />
     <ClInclude Include="HLSLParser\Preprocessor\GenerateOutputVisitor.h" />
     <ClInclude Include="HLSLParser\HLSLParser.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="HLSLParser\HLSLPostfixNode.h" />
     <ClInclude Include="HLSLParser\HLSLTypeNode.h" />
     <ClInclude Include="HLSLParser\HLSLPrefixNode.h" />
+    <ClInclude Include="HLSLParser\HLSLTypeVisitor.h" />
     <ClInclude Include="JSON\json.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -139,6 +141,7 @@
     <ClCompile Include="HLSLParser\HLSLExpressionNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLFlowControlNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLNode.cpp" />
+    <ClCompile Include="HLSLParser\HLSLType.cpp" />
     <ClCompile Include="HLSLParser\Preprocessor\EvaluateVisitor.cpp" />
     <ClCompile Include="HLSLParser\Preprocessor\GenerateOutputVisitor.cpp" />
     <ClCompile Include="HLSLParser\HLSLParser.cpp" />
@@ -161,6 +164,7 @@
     <ClCompile Include="HLSLParser\HLSLPostfixNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLTypeNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLPrefixNode.cpp" />
+    <ClCompile Include="HLSLParser\HLSLTypeVisitor.cpp" />
     <ClCompile Include="JSON\json.cpp" />
     <ClCompile Include="ShaderBundler.cpp" />
   </ItemGroup>

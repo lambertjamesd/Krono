@@ -299,6 +299,10 @@ HLSLTokenizer::NextState HLSLTokenizer::NumberIntegerPart(int nextCharacter)
 	{
 		return &NumberFractionalPart;
 	}
+	else if (tolower(nextCharacter) == 'u' || tolower(nextCharacter) == 'l')
+	{
+		return NextState(&EndState<HLSLTokenType::Number>);
+	}
 	else
 	{
 		return NextState(GetDefaultState(nextCharacter), HLSLTokenType::Number);
@@ -310,6 +314,10 @@ HLSLTokenizer::NextState HLSLTokenizer::NumberFractionalPart(int nextCharacter)
 	if (isdigit(nextCharacter))
 	{
 		return &NumberFractionalPart;
+	}
+	else if (tolower(nextCharacter) == 'h' || tolower(nextCharacter) == 'f' || tolower(nextCharacter) == 'l')
+	{
+		return NextState(&EndState<HLSLTokenType::Number>);
 	}
 	else
 	{

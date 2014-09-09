@@ -159,14 +159,22 @@ public:
 	void SetSemantic(const std::string& value);
 	void SetBody(std::unique_ptr<HLSLStatementBlock> value);
 	
-	HLSLTypeNode& GetReturnType() const;
+	HLSLTypeNode& GetReturnType();
+	const HLSLTypeNode& GetReturnType() const;
 	const std::string& GetName() const;
 	size_t GetParameterCount() const;
 	HLSLFunctionParameter& GetParameter(size_t index);
 	HLSLStatementBlock* GetBody();
 
+	void SetPreviousOverload(HLSLFunctionDefinition* value);
+	HLSLFunctionDefinition* GetPreviousOverload();
+
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
+	// all functions of the same name are put into a linked list
+	// to lookup function overloads
+	HLSLFunctionDefinition *mPreviousOverloadedDefinition;
+
 	std::unique_ptr<HLSLTypeNode> mReturnType;
 	std::string mName;
 
@@ -197,6 +205,7 @@ public:
 	
 	InterpolationMode::Type GetInterpolationMode() const;
 	HLSLTypeNode& GetType();
+	const HLSLTypeNode& GetType() const;
 	const std::string& GetName();
 	const std::string& GetSemantic();
 
@@ -219,6 +228,8 @@ public:
 	const std::string& GetName() const;
 	size_t GetMemberCount() const;
 	HLSLStructureMember& GetMember(size_t index);
+
+	const HLSLStructureMember* GetMemberByName(const std::string& name) const;
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:

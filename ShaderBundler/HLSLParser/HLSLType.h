@@ -1,39 +1,125 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-class HLSLFunctionSignature;
+class HLSLStructDefinition;
+class HLSLFunctionDefinition;
+
+class HLSLType;
+
+class HLSLFunctionInputSignature
+{
+public:
+	HLSLFunctionInputSignature();
+	HLSLFunctionInputSignature(const std::vector<HLSLType>& typeList);
+private:
+	std::vector<HLSLType> mTypeList;
+};
+
 
 class HLSLType
 {
 public:
-	virtual ~HLSLType();
+	enum Type
+	{
+		Unknown,
+		Void,
+		Scalar,
+		Vector,
+		Matrix,
+		Texture,
+		Sampler,
+		Struct,
+		Function
+	};
 
-	virtual HLSLType* Member(const std::string& name) = 0;
-	virtual HLSLType* FunctionCall(const HLSLFunctionSignature& signature);
-	virtual HLSLType* Index();
-	virtual HLSLType* Instance();
-protected:
+	enum ScalarType
+	{
+		Bool,
+		Int,
+		UInt,
+		DWord,
+		Half,
+		Float,
+		Double,
+	};
+
+	enum TextureType
+	{
+		Texture1D,
+		Texture1DArray,
+		Texture2D,
+		Texture2DArray,
+		Texture3D,
+		TextureCube
+	};
+
+	enum Modifier
+	{
+		NoModifier,
+		ArrayModifier,
+		TypeClassModifier
+	};
+
 	HLSLType();
+	HLSLType(Type type);
+	HLSLType(ScalarType scalarType);
+	HLSLType(ScalarType scalarType, size_t vectorSize);
+	HLSLType(ScalarType scalarType, size_t rows, size_t columns);
+	
+	HLSLType(TextureType textureType);
+
+	HLSLType(HLSLStructDefinition& structDefinition);
+	HLSLType(HLSLFunctionDefinition& functionDefinition);
+
+	// variable size array type
+	HLSLType ArrayType() const;
+
+	HLSLType ArrayType(size_t count) const;
+
+	HLSLType TypeClass() const;
+	HLSLType InstanceType() const;
+
+	HLSLType VectorType(size_t count) const;
+	HLSLType MatrixType(size_t rows, size_t columns) const;
+
+	HLSLType ArrayElementType() const;
+	HLSLType SubElement(const std::string& name) const;
+	HLSLType ReturnType(const HLSLFunctionInputSignature& inputSignature) const;
+
+	Type GetType() const;
+	ScalarType GetScalarType() const;
+	TextureType GetTextureType() const;
+
+	bool IsSingleValue() const;
+	bool IsIndexable() const;
+	bool IsArray() const;
+	bool IsTypeClass() const;
+
+	size_t GetArraySize() const;
+	size_t GetVectorSize() const;
+	size_t GetRows() const;
+	size_t GetColumns() const;
+
+	bool StrictlyEqual(const HLSLType& other);
+	bool CanAssignFrom(const HLSLType& other);
 private:
-};
+	Type mType;
+	Modifier mModifier;
 
-class HLSLScalarType : public HLSLType
-{
-public:
-};
+	static const size_t gSizeMask = 0x0FFFFFFF;
+	static const size_t gRowMask = 0x30000000;
+	static const size_t gColMask = 0xC0000000;
 
-class HLSLVectorType : public HLSLType
-{
-public:
-};
+	union
+	{
+		ScalarType mScalarType;
+		TextureType mTextureType;
+		HLSLStructDefinition* mStructDefinition;
+		HLSLFunctionDefinition* mFunctionDefinition;
 
-class HLSLMatrixType : public HLSLType
-{
-public:
-};
+	};
 
-class HLSLArrayType : public HLSLType
-{
-public:
+	size_t mSize;
 };

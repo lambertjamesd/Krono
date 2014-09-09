@@ -1,6 +1,8 @@
 #include "HLSLTypeNode.h"
 #include "HLSLNodeVisitor.h"
 #include "HLSLStatementNode.h"
+#include "HLSLParserException.h"
+#include <cassert>
 
 HLSLTypeNode::HLSLTypeNode(const HLSLToken& token) :
 	HLSLNode(token)
@@ -11,6 +13,17 @@ HLSLTypeNode::HLSLTypeNode(const HLSLToken& token) :
 HLSLTypeNode::~HLSLTypeNode(void)
 {
 
+}
+
+const HLSLType& HLSLTypeNode::GetType() const
+{
+	return mType;
+}
+
+void HLSLTypeNode::ResolveType(const HLSLType& value)
+{
+	assert(mType.GetType() == HLSLType::Unknown);
+	mType = value;
 }
 
 HLSLVoidNode::HLSLVoidNode(const HLSLToken& token) :
@@ -35,6 +48,21 @@ const std::string& HLSLNamedTypeNode::GetName() const
 	return mToken.GetValue();
 }
 
+void HLSLNamedTypeNode::ResolveType(const HLSLType& value)
+{
+	HLSLTypeNode::ResolveType(value);
+}
+
+void HLSLNamedTypeNode::ResolveType(std::shared_ptr<HLSLTypeNode> type)
+{
+	mResolvedType = move(type);
+}
+
+HLSLTypeNode* HLSLNamedTypeNode::GetResolvedType()
+{
+	return mResolvedType.get();
+}
+
 void HLSLNamedTypeNode::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);
@@ -43,7 +71,32 @@ void HLSLNamedTypeNode::Accept(HLSLNodeVisitor& visitor)
 HLSLScalarTypeNode::HLSLScalarTypeNode(const HLSLToken& token) :
 	HLSLTypeNode(token)
 {
-
+	switch (token.GetKeywordType())
+	{
+	case HLSLKeyword::Bool:
+		mType = HLSLType(HLSLType::Bool);
+		break;
+	case HLSLKeyword::Int:
+		mType = HLSLType(HLSLType::Int);
+		break;
+	case HLSLKeyword::Uint:
+		mType = HLSLType(HLSLType::UInt);
+		break;
+	case HLSLKeyword::Dword:
+		mType = HLSLType(HLSLType::DWord);
+		break;
+	case HLSLKeyword::Half:
+		mType = HLSLType(HLSLType::Half);
+		break;
+	case HLSLKeyword::Float:
+		mType = HLSLType(HLSLType::Float);
+		break;
+	case HLSLKeyword::Double:
+		mType = HLSLType(HLSLType::Double);
+		break;
+	default:
+		throw HLSLParserException(token, "Invalid scalar type");
+	}
 }
 
 void HLSLScalarTypeNode::Accept(HLSLNodeVisitor& visitor)

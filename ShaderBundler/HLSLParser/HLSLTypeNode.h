@@ -1,13 +1,19 @@
 #pragma once
 
 #include "HLSLNode.h"
+#include "HLSLType.h"
 
 class HLSLTypeNode : public HLSLNode
 {
 public:
 	~HLSLTypeNode(void);
+
+	const HLSLType& GetType() const;
+	void ResolveType(const HLSLType& value);
 protected:
 	HLSLTypeNode(const HLSLToken& token);
+
+	HLSLType mType;
 };
 
 class HLSLVoidNode : public HLSLTypeNode
@@ -24,8 +30,14 @@ public:
 	HLSLNamedTypeNode(const HLSLToken& token);
 
 	const std::string& GetName() const;
+	
+	void ResolveType(const HLSLType& value);
+	void ResolveType(std::shared_ptr<HLSLTypeNode> type);
+	HLSLTypeNode* GetResolvedType();
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
+private:
+	std::shared_ptr<HLSLTypeNode> mResolvedType;
 };
 
 class HLSLScalarTypeNode : public HLSLTypeNode
@@ -122,8 +134,6 @@ public:
 private:
 	HLSLStructDefinition& mDefinition;
 };
-
-class HLSLFunctionDefinition;
 
 class HLSLFunctionTypeNode : public HLSLTypeNode
 {

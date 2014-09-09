@@ -1,13 +1,20 @@
 #pragma once
 
 #include "HLSLStatementNode.h"
+#include "HLSLType.h"
 
 class HLSLExpressionNode : public HLSLStatementNode
 {
 public:
 	~HLSLExpressionNode(void);
+
+	const HLSLType& GetType() const;
+	void ResolveType(const HLSLType& type);
 protected:
 	HLSLExpressionNode(const HLSLToken& token);
+	HLSLExpressionNode(const HLSLToken& token, const HLSLType& type);
+
+	HLSLType mType;
 };
 
 class HLSLIdentifierNode : public HLSLExpressionNode

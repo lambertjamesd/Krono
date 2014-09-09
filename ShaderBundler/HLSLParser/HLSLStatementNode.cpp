@@ -216,6 +216,7 @@ void HLSLFunctionParameter::Accept(HLSLNodeVisitor& visitor)
 
 HLSLFunctionDefinition::HLSLFunctionDefinition(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> returnType, const std::string& name) :
 	HLSLStatementNode(token),
+	mPreviousOverloadedDefinition(NULL),
 	mReturnType(move(returnType)),
 	mName(name)
 {
@@ -237,7 +238,12 @@ void HLSLFunctionDefinition::SetBody(std::unique_ptr<HLSLStatementBlock> value)
 	mBody = move(value);
 }
 
-HLSLTypeNode& HLSLFunctionDefinition::GetReturnType() const
+HLSLTypeNode& HLSLFunctionDefinition::GetReturnType()
+{
+	return *mReturnType;
+}
+
+const HLSLTypeNode& HLSLFunctionDefinition::GetReturnType() const
 {
 	return *mReturnType;
 }
@@ -260,6 +266,16 @@ HLSLFunctionParameter& HLSLFunctionDefinition::GetParameter(size_t index)
 HLSLStatementBlock* HLSLFunctionDefinition::GetBody()
 {
 	return mBody.get();
+}
+
+void HLSLFunctionDefinition::SetPreviousOverload(HLSLFunctionDefinition* value)
+{
+	mPreviousOverloadedDefinition = value;
+}
+
+HLSLFunctionDefinition* HLSLFunctionDefinition::GetPreviousOverload()
+{
+	return mPreviousOverloadedDefinition;
 }
 
 void HLSLFunctionDefinition::Accept(HLSLNodeVisitor& visitor)
@@ -308,6 +324,11 @@ HLSLTypeNode& HLSLStructureMember::GetType()
 	return *mType;
 }
 
+const HLSLTypeNode& HLSLStructureMember::GetType() const
+{
+	return *mType;
+}
+
 const std::string& HLSLStructureMember::GetName()
 {
 	return mName;
@@ -348,6 +369,19 @@ size_t HLSLStructDefinition::GetMemberCount() const
 HLSLStructureMember& HLSLStructDefinition::GetMember(size_t index)
 {
 	return *mMemberList[index];
+}
+
+const HLSLStructureMember* HLSLStructDefinition::GetMemberByName(const std::string& name) const
+{
+	for (auto it = mMemberList.begin(); it != mMemberList.end(); ++it)
+	{
+		if ((*it)->GetName() == name)
+		{
+			return it->get();
+		}
+	}
+
+	return NULL;
 }
 
 void HLSLStructDefinition::Accept(HLSLNodeVisitor& visitor)

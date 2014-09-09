@@ -1,16 +1,32 @@
 #include "HLSLExpressionNode.h"
 #include "HLSLNodeVisitor.h"
+#include <cassert>
 
 HLSLExpressionNode::HLSLExpressionNode(const HLSLToken& token) :
 	HLSLStatementNode(token)
 {
 }
 
+HLSLExpressionNode::HLSLExpressionNode(const HLSLToken& token, const HLSLType& type) :
+	HLSLStatementNode(token),
+	mType(type)
+{
+}
 
 HLSLExpressionNode::~HLSLExpressionNode(void)
 {
 }
 
+const HLSLType& HLSLExpressionNode::GetType() const
+{
+	return mType;
+}
+
+void HLSLExpressionNode::ResolveType(const HLSLType& type)
+{
+	assert(mType.GetType() == HLSLType::Unknown);
+	mType = type;
+}
 
 HLSLIdentifierNode::HLSLIdentifierNode(const HLSLToken& token) :
 	HLSLExpressionNode(token)

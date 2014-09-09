@@ -131,6 +131,12 @@
     <ClInclude Include="HLSLParser\HLSLPrefixNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLTypeVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderBundler.cpp">
@@ -242,6 +248,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HLSLParser\HLSLPrefixNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLTypeVisitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
