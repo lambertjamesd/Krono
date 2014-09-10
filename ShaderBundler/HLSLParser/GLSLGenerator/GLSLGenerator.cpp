@@ -4,6 +4,8 @@
 #include "HLSLParser/HLSLParserException.h"
 #include "GLSLSamplerPurger.h"
 #include <sstream>
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 
@@ -608,16 +610,74 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 
 void GLSLGenerator::CreateAttributeNames(HLSLStructDefinition& structure, std::map<std::string, HLSLTypeNode*>& names)
 {
-
+	for (size_t i = 0; i < structure.GetMemberCount(); ++i)
+	{
+		HLSLStructureMember& member = structure.GetMember(i);
+		CreateAttributeNames(member.GetType(), member.GetSemantic(), names);
+	}
 }
 
-void GLSLGenerator::GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names)
+void GLSLGenerator::CreateAttributeNames(HLSLFunctionDefinition& function, std::map<std::string, HLSLTypeNode*>& names)
+{
+	for (size_t i = 0; i < function.GetParameterCount(); ++i)
+	{
+		HLSLFunctionParameter& parameter = function.GetParameter(i);
+		CreateAttributeNames(parameter.GetType(), parameter.GetSemantic(), names);
+	}
+}
+
+void GLSLGenerator::CreateAttributeNames(HLSLTypeNode& type, const std::string& semantic, std::map<std::string, HLSLTypeNode*>& names)
+{
+	HLSLType parameterType = type.GetType();
+
+	if (parameterType.IsNumerical() && !parameterType.IsArray())
+	{
+		if (parameterType.GetType() == HLSLType::Struct)
+		{
+			CreateAttributeNames(parameterType.GetStructure(), names);
+		}
+		else
+		{
+			if (semantic.length() == 0)
+			{
+				throw HLSLParserException(type.GetToken(), "no semantic specified");
+			}
+			else
+			{
+				names[semantic] = &type;
+			}
+		}
+	}
+	else
+	{
+		throw HLSLParserException(type.GetToken(), "only numerical values allowed");
+	}
+}
+
+void GLSLGenerator::GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names, bool forceLayout)
 {
 	for (auto it = names.begin(); it != names.end(); ++it)
 	{
-		mOutput << (isInput ? "in" : "out") << ' ' ;
-		it->second->Accept(*this);
-		mOutput << ' ' << prefix << it->first << ';' << endl;
+		if (GetGLSemanticName(it->first) == NULL)
+		{
+			if (forceLayout)
+			{
+				const std::string& semanticName = it->first;
+				std::string::const_iterator digitPosition = std::find_if(semanticName.begin(), semanticName.end(), ::isdigit);
+				size_t index = 0;
+
+				if (digitPosition != semanticName.end())
+				{
+					index = atoi(semanticName.c_str() + (digitPosition - semanticName.begin()));
+				}
+
+				mOutput << "layout(binding = " << index << ") ";
+			}
+
+			mOutput << (isInput ? "in" : "out") << ' ' ;
+			it->second->Accept(*this);
+			mOutput << ' ' << prefix << it->first << ';' << endl;
+		}
 	}
 }
 
@@ -629,37 +689,27 @@ void GLSLGenerator::GenerateEntryPoint()
 	}
 
 	map<string, HLSLTypeNode*> inputNames;
+	CreateAttributeNames(*mEntryPoint, inputNames);
 
-	for (size_t i = 0; i < mEntryPoint->GetParameterCount(); ++i)
+	map<string, HLSLTypeNode*> outputNames;
+	CreateAttributeNames(mEntryPoint->GetReturnType(), mEntryPoint->GetSemantic(), outputNames);
+
+	if (mShaderType == ShaderType::VertexShader)
 	{
-		HLSLFunctionParameter& parameter = mEntryPoint->GetParameter(i);
-		HLSLType parameterType = parameter.GetType().GetType();
-
-		if (parameterType.IsNumerical() && !parameterType.IsArray())
-		{
-			if (parameterType.GetType() == HLSLType::Struct)
-			{
-				CreateAttributeNames(parameterType.GetStructure(), inputNames);
-			}
-			else
-			{
-				if (parameter.GetSemantic().length() == 0)
-				{
-					throw HLSLParserException(parameter.GetToken(), "no semantic specified");
-				}
-				else
-				{
-					inputNames[parameter.GetSemantic()] = &parameter.GetType();;
-				}
-			}
-		}
-		else
-		{
-			throw HLSLParserException(parameter.GetToken(), "only numerical values allowed");
-		}
+		GenerateInOut(true, "attr", inputNames);
+		mOutput << endl;
+		GenerateInOut(false, "varying", outputNames);
 	}
-
-	GenerateInOut(true, "attr", inputNames);
+	else if (mShaderType == ShaderType::PixelShader)
+	{
+		GenerateInOut(true, "varying", inputNames);
+		mOutput << endl;
+		GenerateInOut(false, "target", outputNames, true);
+	}
+	else
+	{
+		throw HLSLParserException(mEntryPoint->GetToken(), "shader type currently not supported");
+	}
 
 	mOutput << "void main()" << endl << '{' << endl;
 	IncreaseIndent();
@@ -669,6 +719,26 @@ void GLSLGenerator::GenerateEntryPoint()
 	mOutput << ");" << endl;
 	DecreaseIndent();
 	mOutput << '}';
+}
+
+const char* GLSLGenerator::GetGLSemanticName(const std::string& semanticName)
+{
+	if (semanticName.compare(0, 3, "SV_") == 0)
+	{
+		std::string lowerName = semanticName;
+		std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+
+		if (lowerName == "sv_position")
+		{
+			return "gl_Position";
+		}
+		else if (lowerName == "sv_depth")
+		{
+			return "gl_Depth";
+		}
+	}
+
+	return NULL;
 }
 
 void GLSLGenerator::OutputIndents()

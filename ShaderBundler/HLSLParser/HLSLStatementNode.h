@@ -168,6 +168,7 @@ public:
 	const std::string& GetName() const;
 	size_t GetParameterCount() const;
 	HLSLFunctionParameter& GetParameter(size_t index);
+	const std::string& GetSemantic() const;
 	HLSLStatementBlock* GetBody();
 
 	void SetPreviousOverload(HLSLFunctionDefinition* value);

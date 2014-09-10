@@ -79,6 +79,7 @@ vec4 Main(vec4 position)
 	return position;
 }
 in vec4 attrPOSITION0;
+
 void main()
 {
 	Main();

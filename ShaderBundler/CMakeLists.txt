@@ -11,7 +11,7 @@ set (SOURCE_FILES
 	Bundle/BundlerFileHelper.cpp
 
 	HLSLParser/GLSLGenerator/GLSLGenerator.cpp
-	HLSLParser/GLSLGenerator/GLSLTypeStorage.cpp
+	HLSLParser/GLSLGenerator/GLSLSamplerPurger.cpp
 
 	HLSLParser/HLSLParser.cpp
 	HLSLParser/HLSLParserException.cpp
@@ -26,7 +26,9 @@ set (SOURCE_FILES
 	HLSLParser/HLSLPostfixNode.cpp
 	HLSLParser/HLSLPrefixNode.cpp
 	HLSLParser/HLSLStatementNode.cpp
+	HLSLParser/HLSLType.cpp
 	HLSLParser/HLSLTypeNode.cpp
+	HLSLParser/HLSLTypeVisitor.cpp
 	HLSLParser/HLSLUnaryOperator.cpp
 
 	HLSLParser/Preprocessor/BinaryOperatorNode.cpp

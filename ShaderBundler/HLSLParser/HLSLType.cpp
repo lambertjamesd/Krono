@@ -254,7 +254,7 @@ HLSLType HLSLType::ResolveReturnType(const HLSLFunctionInputSignature& inputSign
 
 		if (exactMatch != NULL)
 		{
-			const_cast<HLSLFunctionDefinition*>(mFunctionDefinition) = exactMatch;
+			const_cast<HLSLType*>(this)->mFunctionDefinition = exactMatch;
 			return exactMatch->GetReturnType().GetType();
 		}
 		else if (compatableMatch != NULL)
@@ -265,7 +265,7 @@ HLSLType HLSLType::ResolveReturnType(const HLSLFunctionInputSignature& inputSign
 			}
 			else
 			{
-				const_cast<HLSLFunctionDefinition*>(mFunctionDefinition) = compatableMatch;
+				const_cast<HLSLType*>(this)->mFunctionDefinition = compatableMatch;
 				return compatableMatch->GetReturnType().GetType();
 			}
 		}

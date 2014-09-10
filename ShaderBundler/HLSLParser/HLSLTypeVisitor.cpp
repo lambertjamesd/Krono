@@ -1,6 +1,7 @@
 #include "HLSLTypeVisitor.h"
 #include "HLSLParserException.h"
 #include <cassert>
+#include <cstring>
 
 using namespace std;
 

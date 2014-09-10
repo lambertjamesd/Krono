@@ -253,6 +253,11 @@ void HLSLFunctionDefinition::SetSemantic(const std::string& value)
 	mSemantic = value;
 }
 
+const std::string& HLSLFunctionDefinition::GetSemantic() const
+{
+	return mSemantic;
+}
+
 void HLSLFunctionDefinition::SetBody(std::unique_ptr<HLSLStatementBlock> value)
 {
 	mBody = move(value);

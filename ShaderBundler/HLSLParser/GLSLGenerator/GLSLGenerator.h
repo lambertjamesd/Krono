@@ -81,8 +81,13 @@ public:
 	virtual void Visit(HLSLFunctionCallNode& node);
 private:
 	static void CreateAttributeNames(HLSLStructDefinition& structure, std::map<std::string, HLSLTypeNode*>& names);
-	void GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names);
+	static void CreateAttributeNames(HLSLFunctionDefinition& structure, std::map<std::string, HLSLTypeNode*>& names);
+	static void CreateAttributeNames(HLSLTypeNode& type, const std::string& semantic, std::map<std::string, HLSLTypeNode*>& names);
+	void GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names, bool forceLayout = false);
+
 	void GenerateEntryPoint();
+
+	static const char* GetGLSemanticName(const std::string& semanticName);
 
 	void OutputIndents();
 	void IncreaseIndent();
