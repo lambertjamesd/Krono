@@ -284,6 +284,13 @@ public:
 	HLSLToken(HLSLTokenType::Type type, const std::string& value, size_t lineNumber);
 	~HLSLToken(void);
 
+	// is the operator > >= < or <=
+	bool IsComparisonOperator() const;
+	// is the operator == or !=
+	bool IsEqualityOperator() const;
+
+	bool IsBitwiseOperator() const;
+
 	bool IsBinaryOperator() const;
 	bool IsUnaryOperator() const;
 	bool IsPrefixOperator() const;

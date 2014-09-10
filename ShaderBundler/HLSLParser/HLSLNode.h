@@ -29,6 +29,8 @@ public:
 
 	size_t GetSize() const;
 	HLSLNode& GetElement(size_t index);
+	void RemoveElement(size_t index);
+	void ReplaceElement(size_t index, std::unique_ptr<HLSLNode> node);
 	
 	virtual void Accept(HLSLNodeVisitor& visitor);
 protected:

@@ -8,6 +8,7 @@ public:
 	~HLSLPostfixNode(void);
 
 	HLSLExpressionNode& GetLeft();
+	void SetLeft(std::unique_ptr<HLSLExpressionNode> left);
 protected:
 	HLSLPostfixNode(const HLSLToken& token, std::unique_ptr<HLSLExpressionNode> left);
 
@@ -62,6 +63,8 @@ public:
 	HLSLFunctionCallNode(const HLSLToken& token, std::unique_ptr<HLSLExpressionNode> left);
 
 	void AddParameter(std::unique_ptr<HLSLExpressionNode> parameter);
+	void RemoveParameter(size_t index);
+	void ReplaceParameter(size_t index, std::unique_ptr<HLSLExpressionNode> value);
 
 	size_t GetParameterCount() const;
 	HLSLExpressionNode& GetParameter(size_t index);

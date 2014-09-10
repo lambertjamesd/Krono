@@ -37,6 +37,21 @@ HLSLNode& HLSLNodeList::GetElement(size_t index)
 	return *mElementList[index];
 }
 
+void HLSLNodeList::RemoveElement(size_t index)
+{
+	for (size_t i = index + 1; i < mElementList.size(); ++i)
+	{
+		mElementList[i - 1] = move(mElementList[i]);
+	}
+
+	mElementList.pop_back();
+}
+
+void HLSLNodeList::ReplaceElement(size_t index, std::unique_ptr<HLSLNode> node)
+{
+	mElementList[index] = move(node);
+}
+
 void HLSLNodeList::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);

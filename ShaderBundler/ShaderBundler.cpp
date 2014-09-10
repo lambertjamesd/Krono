@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 	HLSLParser::Test();
 
 	std::ofstream fileOutput("CrossCompileTesting.glsl");
-	GLSLGenerator::ProcessFile("CrossCompileTesting.hlsl", fileOutput);
+	GLSLGenerator::ProcessFile("CrossCompileTesting.hlsl", ShaderType::VertexShader, "Main", fileOutput);
 
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{

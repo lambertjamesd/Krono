@@ -38,6 +38,25 @@ HLSLToken::~HLSLToken(void)
 
 }
 
+bool HLSLToken::IsComparisonOperator() const
+{
+	return mType == HLSLTokenType::LessThan ||
+		mType == HLSLTokenType::LessThanEqual ||
+		mType == HLSLTokenType::GreaterThan ||
+		mType == HLSLTokenType::GreaterThanEqual;
+}
+
+bool HLSLToken::IsEqualityOperator() const
+{
+	return mType == HLSLTokenType::Equal ||
+		mType == HLSLTokenType::NotEqual;
+}
+
+bool HLSLToken::IsBitwiseOperator() const
+{
+	return mType >= HLSLTokenType::BitwiseNot && mType <= HLSLTokenType::BitwiseXorEqual;
+}
+
 bool HLSLToken::IsBinaryOperator() const
 {
 	return 

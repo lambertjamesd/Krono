@@ -138,6 +138,8 @@ public:
 	const std::string& GetSemantic() const;
 	InterpolationMode::Type GetInterpolationMode() const;
 	HLSLExpressionNode* GetInitializer();
+
+	bool IsOptional() const;
 	
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
@@ -155,6 +157,8 @@ public:
 	HLSLFunctionDefinition(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> returnType, const std::string& name);
 
 	void AddParameter(std::unique_ptr<HLSLFunctionParameter> value);
+	void RemoveParameter(int index);
+	void ReplaceParameter(int index, std::unique_ptr<HLSLFunctionParameter> value);
 
 	void SetSemantic(const std::string& value);
 	void SetBody(std::unique_ptr<HLSLStatementBlock> value);
@@ -168,6 +172,9 @@ public:
 
 	void SetPreviousOverload(HLSLFunctionDefinition* value);
 	HLSLFunctionDefinition* GetPreviousOverload();
+
+	bool IsCompatibleWith(const HLSLFunctionInputSignature& parameters);
+	bool Matches(const HLSLFunctionInputSignature& parameters);
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
@@ -204,8 +211,8 @@ public:
 	void SetSemantic(const std::string& value);
 	
 	InterpolationMode::Type GetInterpolationMode() const;
-	HLSLTypeNode& GetType();
 	const HLSLTypeNode& GetType() const;
+	HLSLTypeNode& GetType();
 	const std::string& GetName();
 	const std::string& GetSemantic();
 
@@ -224,9 +231,12 @@ public:
 	HLSLStructDefinition(const HLSLToken& token, const std::string& name);
 
 	void AddMember(std::unique_ptr<HLSLStructureMember> member);
+	void RemoveMember(size_t index);
+	void ReplaceMember(size_t index, std::unique_ptr<HLSLStructureMember> member);
 
 	const std::string& GetName() const;
 	size_t GetMemberCount() const;
+	const HLSLStructureMember& GetMember(size_t index) const;
 	HLSLStructureMember& GetMember(size_t index);
 
 	const HLSLStructureMember* GetMemberByName(const std::string& name) const;

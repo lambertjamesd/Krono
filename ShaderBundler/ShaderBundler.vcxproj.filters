@@ -125,9 +125,6 @@
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HLSLParser\HLSLPrefixNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HLSLParser\HLSLType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -244,9 +244,6 @@
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HLSLParser\HLSLPrefixNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -254,6 +251,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HLSLParser\HLSLType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

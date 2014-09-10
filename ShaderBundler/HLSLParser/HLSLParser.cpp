@@ -1,5 +1,6 @@
 #include "HLSLParser.h"
 #include "HLSLParserException.h"
+#include "HLSLTypeVisitor.h"
 #include <cassert>
 #include <sstream>
 
@@ -37,6 +38,9 @@ std::unique_ptr<HLSLNode> HLSLParser::ParseFile()
 	{
 		result->AddNode(move(ParseFileDeclaration()));
 	}
+
+	HLSLTypeVisitor typeGenerator;
+	result->Accept(typeGenerator);
 
 	return move(result);
 }
@@ -259,7 +263,9 @@ std::unique_ptr<HLSLNode> HLSLParser::ParseFileDeclaration()
 	
 	if (MatchesVariableDeclaration())
 	{
-		return move(ParseVariable());
+		std::unique_ptr<HLSLNode> result(move(ParseVariable()));
+		Require(HLSLTokenType::SemiColon);
+		return move(result);
 	}
 	else if (MatchesFunctionDeclaration())
 	{
@@ -656,10 +662,19 @@ std::unique_ptr<HLSLFunctionDefinition> HLSLParser::ParseFunction()
 	Require(HLSLTokenType::OpenParen);
 
 	bool looping = !Optional(HLSLTokenType::CloseParen);
+	bool optionalRequired = false;
 
 	while (looping)
 	{
-		result->AddParameter(move(ParseFunctionParameter()));
+		std::unique_ptr<HLSLFunctionParameter> parameter(move(ParseFunctionParameter()));
+
+		if (optionalRequired && !parameter->IsOptional())
+		{
+			throw HLSLParserException(parameter->GetToken(), "parameter must be optional");
+		}
+
+		optionalRequired = optionalRequired || parameter->IsOptional();
+		result->AddParameter(move(parameter));
 
 		if (!Optional(HLSLTokenType::Comma))
 		{

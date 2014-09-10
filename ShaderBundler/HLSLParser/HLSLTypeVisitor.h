@@ -43,7 +43,6 @@ private:
 	static std::shared_ptr<HLSLTypeNode> CreateVectorType(HLSLKeyword::Type scalarType, size_t size);
 	static std::shared_ptr<HLSLTypeNode> CreateMatrixType(HLSLKeyword::Type scalarType, size_t rows, size_t columns);
 
-
 	std::vector<std::map<std::string, TypeSource> > mCurrentScope;
 	std::map<std::string, HLSLFunctionDefinition*> mFunctionStorage;
 	std::map<std::string, std::stack<HLSLType> > mVariableTypes;
@@ -110,6 +109,16 @@ public:
 	virtual void Visit(HLSLStructureNode& node);
 	virtual void Visit(HLSLFunctionCallNode& node);
 private:
+	static bool IsVectorSwizzle(char character, size_t vectorSize);
+	static bool IsColorSwizzle(char character, size_t vectorSize);
+
+	static bool IsZeroIndexSwizzle(const char* str, size_t rows, size_t columns);
+	static bool IsOneIndexSwizzle(const char* str, size_t rows, size_t columns);
+
+	static HLSLType ParseVectorSwizzle(HLSLType::ScalarType scalar, const std::string& value, size_t vectorSize);
+	static HLSLType ParseMatrixSwizzle(HLSLType::ScalarType scalar, const std::string& value, size_t rows, size_t column);
+
 	HLSLTypeStorage mTypeStorage;
+	HLSLFunctionDefinition* mCurrentFunction;
 };
 

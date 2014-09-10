@@ -71,32 +71,7 @@ void HLSLNamedTypeNode::Accept(HLSLNodeVisitor& visitor)
 HLSLScalarTypeNode::HLSLScalarTypeNode(const HLSLToken& token) :
 	HLSLTypeNode(token)
 {
-	switch (token.GetKeywordType())
-	{
-	case HLSLKeyword::Bool:
-		mType = HLSLType(HLSLType::Bool);
-		break;
-	case HLSLKeyword::Int:
-		mType = HLSLType(HLSLType::Int);
-		break;
-	case HLSLKeyword::Uint:
-		mType = HLSLType(HLSLType::UInt);
-		break;
-	case HLSLKeyword::Dword:
-		mType = HLSLType(HLSLType::DWord);
-		break;
-	case HLSLKeyword::Half:
-		mType = HLSLType(HLSLType::Half);
-		break;
-	case HLSLKeyword::Float:
-		mType = HLSLType(HLSLType::Float);
-		break;
-	case HLSLKeyword::Double:
-		mType = HLSLType(HLSLType::Double);
-		break;
-	default:
-		throw HLSLParserException(token, "Invalid scalar type");
-	}
+
 }
 
 void HLSLScalarTypeNode::Accept(HLSLNodeVisitor& visitor)

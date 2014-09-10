@@ -13,11 +13,12 @@ struct Foo
 };
 layout(binding = 0) uniform ConstantBuffer
 {
-	mat4 projectionMatrix;
-	vec4 color;
-	float arrayTypedef[4];
-	float arrayTestConstant[2];
+	uniform mat4 projectionMatrix;
+	uniform vec4 color;
+	uniform float arrayTypedef[4];
+	uniform float arrayTestConstant[2];
 };
+layout(binding = 0) uniform sampler2D diffuseTexture;
 struct GLSLOnly
 {
 	vec4 huzzah;
@@ -42,15 +43,18 @@ void Test(int foo, in float bar[4], out mat3 output, inout mat2 inOutput)
 		if (foo)
 		{
 		}
-	}	 while (identifier);
-	if (bar)
+	}	 while (foo);
+	if (foo)
+	{
+	}	else
+
 	{
 	}
-	for (float meh; meh; meh)
+	for (float meh = 1.0; meh; ++meh)
 	{
 		continue;
 	}
-	switch (monkey)
+	switch (foo)
 	{
 		
 	case 0:
@@ -65,8 +69,17 @@ void Test(int foo, in float bar[4], out mat3 output, inout mat2 inOutput)
 
 		break;
 	}
-	while (yes)
+	while (foo)
 	{
 	}
 	discard;
+}
+vec4 Main(vec4 position)
+{
+	return position;
+}
+in vec4 attrPOSITION0;
+void main()
+{
+	Main();
 }

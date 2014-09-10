@@ -7,12 +7,6 @@ HLSLExpressionNode::HLSLExpressionNode(const HLSLToken& token) :
 {
 }
 
-HLSLExpressionNode::HLSLExpressionNode(const HLSLToken& token, const HLSLType& type) :
-	HLSLStatementNode(token),
-	mType(type)
-{
-}
-
 HLSLExpressionNode::~HLSLExpressionNode(void)
 {
 }

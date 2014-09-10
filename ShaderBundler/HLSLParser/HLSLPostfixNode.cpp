@@ -17,6 +17,12 @@ HLSLExpressionNode& HLSLPostfixNode::GetLeft()
 	return *mLeft;
 }
 
+
+void HLSLPostfixNode::SetLeft(std::unique_ptr<HLSLExpressionNode> left)
+{
+	mLeft = move(left);
+}
+
 HLSLIndexNode::HLSLIndexNode(const HLSLToken& token, std::unique_ptr<HLSLExpressionNode> left, std::unique_ptr<HLSLExpressionNode> index) :
 	HLSLPostfixNode(token, move(left)),
 	mIndex(move(index))
@@ -82,6 +88,21 @@ HLSLFunctionCallNode::HLSLFunctionCallNode(const HLSLToken& token, std::unique_p
 void HLSLFunctionCallNode::AddParameter(std::unique_ptr<HLSLExpressionNode> parameter)
 {
 	mExpressionList.push_back(move(parameter));
+}
+
+void HLSLFunctionCallNode::RemoveParameter(size_t index)
+{
+	for (size_t i = index + 1; i < mExpressionList.size(); ++i)
+	{
+		mExpressionList[i - 1] = move(mExpressionList[i]);
+	}
+
+	mExpressionList.pop_back();
+}
+
+void HLSLFunctionCallNode::ReplaceParameter(size_t index, std::unique_ptr<HLSLExpressionNode> value)
+{
+	mExpressionList[index] = move(value);
 }
 
 size_t HLSLFunctionCallNode::GetParameterCount() const

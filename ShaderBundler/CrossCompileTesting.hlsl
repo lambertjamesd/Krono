@@ -27,6 +27,9 @@ cbuffer ConstantBuffer : register( b0 )
 	float arrayTestConstant[2];
 };
 
+Texture2D diffuseTexture : register( t0 );
+SamplerState pointSampler : register( s0 );
+
 #ifdef OPENGL
 
 struct GLSLOnly
@@ -45,7 +48,12 @@ struct HLSLOnly
 
 #endif
 
-float4 OtherFunction(float4 yay)
+SamplerState SelectSampler()
+{
+	return pointSampler;
+}
+
+float4 OtherFunction(float4 yay, SamplerState samplerParameter)
 {
 	return 1 - yay;
 }
@@ -63,8 +71,10 @@ void Test(int foo, in float bar[4], out float3x3 output, inout float2x2 inOutput
 	arrayTest[1] = (arrayTest[0]++) + 1;
 	arrayTest[2] = -arrayTest[1];
 	arrayTest[3] = (float)fooBar;
+
+	SamplerState samplerState = SelectSampler();
 	
-	testing = OtherFunction((vector<float,4>)vector<int,4>(1, 2, 3, 4));
+	testing = OtherFunction((vector<float,4>)vector<int,4>(1, 2, 3, 4), SelectSampler());
 
 	do
 	{
@@ -73,9 +83,9 @@ void Test(int foo, in float bar[4], out float3x3 output, inout float2x2 inOutput
 		
 		}
 	}
-	while (identifier);
+	while (foo);
 	
-	if (bar)
+	if (foo)
 	{
 	
 	}
@@ -84,12 +94,12 @@ void Test(int foo, in float bar[4], out float3x3 output, inout float2x2 inOutput
 	
 	}
 	
-	for (float meh; meh; meh)
+	for (float meh = 1.0; meh; ++meh)
 	{
 		continue;
 	}
 	
-	switch (monkey)
+	switch (foo)
 	{
 	case 0:
 		break;
@@ -99,10 +109,15 @@ void Test(int foo, in float bar[4], out float3x3 output, inout float2x2 inOutput
 		break;
 	}
 	
-	while (yes)
+	while (foo)
 	{
 	
 	}
 	
 	discard;
+}
+
+float4 Main(float4 position : POSITION0) : SV_Position
+{
+	return position;
 }

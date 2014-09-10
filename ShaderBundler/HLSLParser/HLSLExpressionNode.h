@@ -12,8 +12,7 @@ public:
 	void ResolveType(const HLSLType& type);
 protected:
 	HLSLExpressionNode(const HLSLToken& token);
-	HLSLExpressionNode(const HLSLToken& token, const HLSLType& type);
-
+private:
 	HLSLType mType;
 };
 

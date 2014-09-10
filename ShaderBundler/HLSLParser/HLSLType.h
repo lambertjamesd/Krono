@@ -13,6 +13,9 @@ class HLSLFunctionInputSignature
 public:
 	HLSLFunctionInputSignature();
 	HLSLFunctionInputSignature(const std::vector<HLSLType>& typeList);
+
+	size_t GetParameterCount() const;
+	HLSLType GetParameter(size_t index) const;
 private:
 	std::vector<HLSLType> mTypeList;
 };
@@ -73,6 +76,8 @@ public:
 	HLSLType(HLSLStructDefinition& structDefinition);
 	HLSLType(HLSLFunctionDefinition& functionDefinition);
 
+	HLSLType BoolType() const;
+
 	// variable size array type
 	HLSLType ArrayType() const;
 
@@ -86,12 +91,17 @@ public:
 
 	HLSLType ArrayElementType() const;
 	HLSLType SubElement(const std::string& name) const;
-	HLSLType ReturnType(const HLSLFunctionInputSignature& inputSignature) const;
+	HLSLType ResolveReturnType(const HLSLFunctionInputSignature& inputSignature) const;
+	HLSLType GetReturnType() const;
 
 	Type GetType() const;
 	ScalarType GetScalarType() const;
 	TextureType GetTextureType() const;
+	HLSLStructDefinition& GetStructure() const;
+	HLSLFunctionDefinition& GetFunction() const;
 
+	bool IsInteger() const;
+	bool IsNumerical() const;
 	bool IsSingleValue() const;
 	bool IsIndexable() const;
 	bool IsArray() const;
@@ -102,8 +112,14 @@ public:
 	size_t GetRows() const;
 	size_t GetColumns() const;
 
-	bool StrictlyEqual(const HLSLType& other);
-	bool CanAssignFrom(const HLSLType& other);
+	bool StrictlyEqual(const HLSLType& other) const;
+	bool CanAssignFromLossless(const HLSLType& other) const;
+	bool CanAssignFrom(const HLSLType& other) const;
+	
+	size_t GetScalarCount() const;
+	bool IsPureNumerical() const;
+	
+	static const size_t NonNumerical = ~0;
 private:
 	Type mType;
 	Modifier mModifier;

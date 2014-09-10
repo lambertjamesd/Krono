@@ -13,6 +13,16 @@ HLSLFunctionInputSignature::HLSLFunctionInputSignature(const std::vector<HLSLTyp
 
 }
 
+size_t HLSLFunctionInputSignature::GetParameterCount() const
+{
+	return mTypeList.size();
+}
+
+HLSLType HLSLFunctionInputSignature::GetParameter(size_t index) const
+{
+	return mTypeList[index];
+}
+
 HLSLType::HLSLType() :
 	mType(Unknown),
 	mModifier(NoModifier),
@@ -86,6 +96,25 @@ HLSLType::HLSLType(HLSLFunctionDefinition& functionDefinition) :
 
 }
 
+
+HLSLType HLSLType::BoolType() const
+{
+	assert(mModifier == NoModifier && "only numerical or object types have boolean values");
+
+	switch (mType)
+	{
+	case Scalar:
+	case Texture:
+	case Sampler:
+		return HLSLType(HLSLType::Bool);
+	case Vector:
+		return HLSLType(HLSLType::Bool, GetVectorSize());
+	case Matrix:
+		return HLSLType(HLSLType::Bool, GetRows(), GetColumns());
+	}
+
+	return HLSLType(HLSLType::Unknown);
+}
 
 // variable size array type
 HLSLType HLSLType::ArrayType() const
@@ -177,7 +206,7 @@ HLSLType HLSLType::SubElement(const std::string& name) const
 	}
 }
 
-HLSLType HLSLType::ReturnType(const HLSLFunctionInputSignature& inputSignature) const
+HLSLType HLSLType::ResolveReturnType(const HLSLFunctionInputSignature& inputSignature) const
 {
 	if (mModifier == TypeClassModifier)
 	{
@@ -188,8 +217,69 @@ HLSLType HLSLType::ReturnType(const HLSLFunctionInputSignature& inputSignature) 
 	else
 	{
 		assert(mType == Function);
-		return mFunctionDefinition->GetReturnType().GetType();
+
+		HLSLFunctionDefinition* exactMatch = NULL;
+		HLSLFunctionDefinition* compatableMatch = NULL;
+		bool isAbigious = false;
+
+		HLSLFunctionDefinition* looper = mFunctionDefinition;
+
+		while (looper != NULL)
+		{
+			if (looper->Matches(inputSignature))
+			{
+				if (exactMatch != NULL)
+				{
+					return HLSLType::Unknown;
+				}
+				else
+				{
+					exactMatch = looper;
+				}
+			}
+			else if (looper->IsCompatibleWith(inputSignature))
+			{
+				if (compatableMatch != NULL)
+				{
+					isAbigious = true;
+				}
+				else
+				{
+					compatableMatch = looper;
+				}
+			}
+
+			looper = looper->GetPreviousOverload();
+		}
+
+		if (exactMatch != NULL)
+		{
+			const_cast<HLSLFunctionDefinition*>(mFunctionDefinition) = exactMatch;
+			return exactMatch->GetReturnType().GetType();
+		}
+		else if (compatableMatch != NULL)
+		{
+			if (isAbigious)
+			{
+				return HLSLType::Unknown;
+			}
+			else
+			{
+				const_cast<HLSLFunctionDefinition*>(mFunctionDefinition) = compatableMatch;
+				return compatableMatch->GetReturnType().GetType();
+			}
+		}
+		else
+		{
+			return HLSLType::Void;
+		}
 	}
+}
+
+HLSLType HLSLType::GetReturnType() const
+{
+	assert(mType == Function);
+	return mFunctionDefinition->GetReturnType().GetType();
 }
 
 HLSLType::Type HLSLType::GetType() const
@@ -207,6 +297,31 @@ HLSLType::TextureType HLSLType::GetTextureType() const
 {
 	assert(mType == Texture);
 	return mTextureType;
+}
+
+HLSLStructDefinition& HLSLType::GetStructure() const
+{
+	assert(mType == Struct);
+	return *mStructDefinition;
+}
+
+HLSLFunctionDefinition& HLSLType::GetFunction() const
+{
+	assert(mType == Function);
+	return *mFunctionDefinition;
+}
+
+bool HLSLType::IsInteger() const
+{
+	return IsNumerical() && (
+		mScalarType == UInt ||
+		mScalarType == Int ||
+		mScalarType == DWord);
+}
+
+bool HLSLType::IsNumerical() const
+{
+	return mType == Scalar || mType == Vector || mType == Matrix;
 }
 
 bool HLSLType::IsSingleValue() const
@@ -255,7 +370,7 @@ size_t HLSLType::GetColumns() const
 	return ((mSize & gColMask) >> 30) + 1;
 }
 
-bool HLSLType::StrictlyEqual(const HLSLType& other)
+bool HLSLType::StrictlyEqual(const HLSLType& other) const
 {
 	if (mType == other.mType && mModifier == other.mModifier && mSize == other.mSize)
 	{
@@ -281,7 +396,169 @@ bool HLSLType::StrictlyEqual(const HLSLType& other)
 	return false;
 }
 
-bool HLSLType::CanAssignFrom(const HLSLType& other)
+bool HLSLType::CanAssignFromLossless(const HLSLType& other) const
 {
-	return true;
+	if (IsArray() && other.IsArray())
+	{
+		return GetArraySize() == other.GetArraySize() && ArrayElementType().CanAssignFrom(other.ArrayElementType());
+	}
+	else if (IsArray() != other.IsArray())
+	{
+		return false;
+	}
+
+	if (IsTypeClass() || other.IsTypeClass())
+	{
+		return false;
+	}
+
+	if (IsNumerical() && other.IsNumerical())
+	{
+		return mScalarType == other.mScalarType && GetScalarCount() == other.GetScalarCount();
+	}
+
+	if (mType != other.mType)
+	{
+		return false;
+	}
+
+	else if (mType == Struct)
+	{
+		if (mStructDefinition->GetMemberCount() != other.mStructDefinition->GetMemberCount())
+		{
+			return false;
+		}
+
+		for (size_t i = 0; i < mStructDefinition->GetMemberCount(); ++i)
+		{
+			if (!mStructDefinition->GetMember(i).GetType().GetType().CanAssignFromLossless(
+				other.mStructDefinition->GetMember(i).GetType().GetType()))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	else if (mType == Texture)
+	{
+		return mTextureType == other.mTextureType;
+	}
+	else if (mType == Sampler)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool HLSLType::CanAssignFrom(const HLSLType& other) const
+{
+	if (IsNumerical() && mModifier == NoModifier && 
+		other.IsNumerical() && other.mModifier == NoModifier)
+	{
+		if (mType == other.mType)
+		{
+			if (mType == Scalar)
+			{
+				return true;
+			}
+			else if (mType == Vector)
+			{
+				return GetVectorSize() <= other.GetVectorSize();
+			}
+			else if (mType == Matrix)
+			{
+				return GetRows() <= other.GetRows() && GetColumns() <= other.GetColumns();
+			}
+			else
+			{
+				assert(false && "Invalid numerical type");
+				return false;
+			}
+		}
+		else
+		{
+			return GetScalarCount() == other.GetScalarCount();
+		}
+	}
+	else
+	{
+		return CanAssignFromLossless(other);
+	}
+}
+
+size_t HLSLType::GetScalarCount() const
+{
+	if (mModifier == NoModifier)
+	{
+		switch (mType)
+		{
+		case Scalar:
+			return 1;
+		case Vector:
+			return GetVectorSize();
+		case Matrix:
+			return GetRows() * GetColumns();
+		case Struct:
+			{
+				size_t result = 0;
+
+				for (size_t i = 0; i < mStructDefinition->GetMemberCount(); ++i)
+				{
+					size_t memberSize = mStructDefinition->GetMember(i).GetType().GetType().GetScalarCount();
+
+					if (memberSize == NonNumerical)
+					{
+						return NonNumerical;
+					}
+					else
+					{
+						result += memberSize;
+					}
+				}
+
+				return result;
+			}
+		}
+	}
+	
+	return NonNumerical;
+}
+
+bool HLSLType::IsPureNumerical() const
+{
+	if (mModifier != NoModifier)
+	{
+		return false;
+	}
+
+	switch (mType)
+	{
+	case Void:
+	case Texture:
+	case Sampler:
+	case Function:
+		return false;
+	case Scalar:
+	case Vector:
+	case Matrix:
+		return true;
+	case Struct:
+		{
+			for (size_t i = 0; i < mStructDefinition->GetMemberCount(); ++i)
+			{
+				if (!mStructDefinition->GetMember(i).GetType().GetType().IsPureNumerical())
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+	default:
+		assert(false && "invalid type");
+	}
+
+	return false;
 }

@@ -35,7 +35,7 @@ public:
 
 	HLSLExpressionNode& GetCondition();
 	HLSLNode& GetBody();
-	HLSLNode& GetElseBody();
+	HLSLNode* GetElseBody();
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:

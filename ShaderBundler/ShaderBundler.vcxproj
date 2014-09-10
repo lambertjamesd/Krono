@@ -93,7 +93,7 @@
     <ClInclude Include="Bundle\FileNotFoundException.h" />
     <ClInclude Include="Bundle\HLSLCompiler.h" />
     <ClInclude Include="Bundle\GLSLBundler.h" />
-    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.h" />
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.h" />
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLGenerator.h" />
     <ClInclude Include="HLSLParser\HLSLNodeVisitor.h" />
     <ClInclude Include="HLSLParser\HLSLBinaryOperatorNode.h" />
@@ -134,7 +134,7 @@
     <ClCompile Include="Bundle\FileNotFoundException.cpp" />
     <ClCompile Include="Bundle\HLSLCompiler.cpp" />
     <ClCompile Include="Bundle\GLSLBundler.cpp" />
-    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTypeStorage.cpp" />
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.cpp" />
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLGenerator.cpp" />
     <ClCompile Include="HLSLParser\HLSLNodeVisitor.cpp" />
     <ClCompile Include="HLSLParser\HLSLBinaryOperatorNode.cpp" />
@@ -179,6 +179,7 @@
     <FxCompile Include="Testing.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

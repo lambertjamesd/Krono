@@ -60,9 +60,9 @@ HLSLNode& HLSLIfNode::GetBody()
 	return *mBody;
 }
 
-HLSLNode& HLSLIfNode::GetElseBody()
+HLSLNode* HLSLIfNode::GetElseBody()
 {
-	return *mElseBody;
+	return mElseBody.get();
 }
 
 void HLSLIfNode::Accept(HLSLNodeVisitor& visitor)

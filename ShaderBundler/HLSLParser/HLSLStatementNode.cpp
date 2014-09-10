@@ -209,6 +209,11 @@ HLSLExpressionNode* HLSLFunctionParameter::GetInitializer()
 	return mInitializer.get();
 }
 
+bool HLSLFunctionParameter::IsOptional() const
+{
+	return mInitializer != NULL;
+}
+
 void HLSLFunctionParameter::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);
@@ -226,6 +231,21 @@ HLSLFunctionDefinition::HLSLFunctionDefinition(const HLSLToken& token, std::uniq
 void HLSLFunctionDefinition::AddParameter(std::unique_ptr<HLSLFunctionParameter> value)
 {
 	mParameters.push_back(move(value));
+}
+
+void HLSLFunctionDefinition::RemoveParameter(int index)
+{
+	for (size_t i = index + 1; i < mParameters.size(); ++i)
+	{
+		mParameters[i - 1] = move(mParameters[i]);
+	}
+
+	mParameters.pop_back();
+}
+
+void HLSLFunctionDefinition::ReplaceParameter(int index, std::unique_ptr<HLSLFunctionParameter> value)
+{
+	mParameters[index] = move(value);
 }
 
 void HLSLFunctionDefinition::SetSemantic(const std::string& value)
@@ -278,6 +298,56 @@ HLSLFunctionDefinition* HLSLFunctionDefinition::GetPreviousOverload()
 	return mPreviousOverloadedDefinition;
 }
 
+bool HLSLFunctionDefinition::IsCompatibleWith(const HLSLFunctionInputSignature& parameters)
+{
+	if (mParameters.size() < parameters.GetParameterCount())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < mParameters.size(); ++i)
+	{
+		if (i < parameters.GetParameterCount())
+		{
+			if (!mParameters[i]->GetType().GetType().CanAssignFrom(parameters.GetParameter(i)))
+			{
+				return false;
+			}
+		}
+		else if (!mParameters[i]->IsOptional())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool HLSLFunctionDefinition::Matches(const HLSLFunctionInputSignature& parameters)
+{
+	if (mParameters.size() < parameters.GetParameterCount())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < mParameters.size(); ++i)
+	{
+		if (i < parameters.GetParameterCount())
+		{
+			if (!mParameters[i]->GetType().GetType().CanAssignFromLossless(parameters.GetParameter(i)))
+			{
+				return false;
+			}
+		}
+		else if (!mParameters[i]->IsOptional())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void HLSLFunctionDefinition::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);
@@ -319,12 +389,13 @@ InterpolationMode::Type HLSLStructureMember::GetInterpolationMode() const
 	return mInterpolationMode;
 }
 
-HLSLTypeNode& HLSLStructureMember::GetType()
+
+const HLSLTypeNode& HLSLStructureMember::GetType() const
 {
 	return *mType;
 }
 
-const HLSLTypeNode& HLSLStructureMember::GetType() const
+HLSLTypeNode& HLSLStructureMember::GetType()
 {
 	return *mType;
 }
@@ -356,6 +427,21 @@ void HLSLStructDefinition::AddMember(std::unique_ptr<HLSLStructureMember> member
 	mMemberList.push_back(move(member));
 }
 
+void HLSLStructDefinition::RemoveMember(size_t index)
+{
+	for (size_t i = index + 1; i < mMemberList.size(); ++i)
+	{
+		mMemberList[i - 1] = move(mMemberList[i]);
+	}
+
+	mMemberList.pop_back();
+}
+
+void HLSLStructDefinition::ReplaceMember(size_t index, std::unique_ptr<HLSLStructureMember> member)
+{
+	mMemberList[index] = move(member);
+}
+
 const std::string& HLSLStructDefinition::GetName() const
 {
 	return mName;
@@ -364,6 +450,11 @@ const std::string& HLSLStructDefinition::GetName() const
 size_t HLSLStructDefinition::GetMemberCount() const
 {
 	return mMemberList.size();
+}
+
+const HLSLStructureMember& HLSLStructDefinition::GetMember(size_t index) const
+{
+	return *mMemberList[index];
 }
 
 HLSLStructureMember& HLSLStructDefinition::GetMember(size_t index)

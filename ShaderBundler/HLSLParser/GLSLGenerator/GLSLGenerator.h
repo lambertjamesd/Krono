@@ -1,32 +1,31 @@
 #pragma once
 
 #include "HLSLParser/HLSLNodeVisitor.h"
+#include "Bundle/BundleDefinition.h"
 #include <iostream>
 #include <map>
-
-class GLSLTypeStorage;
+#include <set>
 
 class GLSLPostIndexGenerator : public HLSLNodeVisitor
 {
 public:
-	GLSLPostIndexGenerator(std::ostream& output, GLSLTypeStorage& typeStorage);
+	GLSLPostIndexGenerator(std::ostream& output);
 	
 	virtual void Visit(HLSLNode& node);
 	virtual void Visit(HLSLNamedTypeNode& node);
 	virtual void Visit(HLSLArrayTypeNode& node);
 private:
 	std::ostream& mOutput;
-	GLSLTypeStorage &mTypeStorage;
 };
 
 class GLSLGenerator : public HLSLNodeVisitor
 {
 public:
-	GLSLGenerator(std::ostream& output);
+	GLSLGenerator(std::ostream& output, ShaderType::Type type, const std::string& entryPoint);
 	~GLSLGenerator(void);
 	
-	static void ProcessFile(const std::string& filename, std::ostream& output);
-	
+	static void ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, std::ostream& output);
+
 	virtual void Visit(HLSLNodeList& node);
 	virtual void Visit(HLSLStatementBlock& node);
 	virtual void Visit(HLSLTypedefDefinition& node);
@@ -48,6 +47,8 @@ public:
 	std::string GetScalarPrefix(HLSLTypeNode& node);
 	virtual void Visit(HLSLVectorTypeNode& node);
 	virtual void Visit(HLSLMatrixTypeNode& node);
+	virtual void Visit(HLSLTextureTypeNode& node);
+	virtual void Visit(HLSLSamplerTypeNode& node);
 	virtual void Visit(HLSLStructTypeNode& node);
 
 	virtual void Visit(HLSLDoNode& node);
@@ -79,18 +80,24 @@ public:
 	virtual void Visit(HLSLStructureNode& node);
 	virtual void Visit(HLSLFunctionCallNode& node);
 private:
-	GLSLGenerator(std::ostream& output, GLSLTypeStorage *typeStorage);
+	static void CreateAttributeNames(HLSLStructDefinition& structure, std::map<std::string, HLSLTypeNode*>& names);
+	void GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names);
+	void GenerateEntryPoint();
 
 	void OutputIndents();
 	void IncreaseIndent();
 	void DecreaseIndent();
 
-	GLSLTypeStorage *mTypeStorage;
 	std::ostream& mOutput;
 	size_t mIndentLevel;
 
 	static std::string gIndentString;
 
 	bool mNoSemiColon;
+	bool mIsInFunction;
+	
+	ShaderType::Type mShaderType;
+	std::string mEntryPointName;
+	HLSLFunctionDefinition* mEntryPoint;
 };
 
