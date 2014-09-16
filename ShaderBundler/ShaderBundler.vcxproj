@@ -93,6 +93,9 @@
     <ClInclude Include="Bundle\FileNotFoundException.h" />
     <ClInclude Include="Bundle\HLSLCompiler.h" />
     <ClInclude Include="Bundle\GLSLBundler.h" />
+    <ClInclude Include="HLSLParser\HLSLBuiltInFunctions.h" />
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTextureClass.h" />
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.h" />
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.h" />
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLGenerator.h" />
     <ClInclude Include="HLSLParser\HLSLNodeVisitor.h" />
@@ -124,6 +127,7 @@
     <ClInclude Include="HLSLParser\HLSLTypeNode.h" />
     <ClInclude Include="HLSLParser\HLSLPrefixNode.h" />
     <ClInclude Include="HLSLParser\HLSLTypeVisitor.h" />
+    <ClInclude Include="HLSLParser\HLSLTextureClass.h" />
     <ClInclude Include="JSON\json.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -134,6 +138,9 @@
     <ClCompile Include="Bundle\FileNotFoundException.cpp" />
     <ClCompile Include="Bundle\HLSLCompiler.cpp" />
     <ClCompile Include="Bundle\GLSLBundler.cpp" />
+    <ClCompile Include="HLSLParser\HLSLBuiltInFunctions.cpp" />
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTextureClass.cpp" />
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.cpp" />
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.cpp" />
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLGenerator.cpp" />
     <ClCompile Include="HLSLParser\HLSLNodeVisitor.cpp" />
@@ -165,6 +172,7 @@
     <ClCompile Include="HLSLParser\HLSLTypeNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLPrefixNode.cpp" />
     <ClCompile Include="HLSLParser\HLSLTypeVisitor.cpp" />
+    <ClCompile Include="HLSLParser\HLSLTextureClass.cpp" />
     <ClCompile Include="JSON\json.cpp" />
     <ClCompile Include="ShaderBundler.cpp" />
   </ItemGroup>

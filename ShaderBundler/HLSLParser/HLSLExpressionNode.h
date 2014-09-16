@@ -23,8 +23,14 @@ public:
 
 	const std::string& GetName() const;
 
+	bool IsTypeName() const;
+
+	void ResolveNamedType(const std::shared_ptr<HLSLTypeNode>& value);
+	const std::shared_ptr<HLSLTypeNode>& GetNamedType() const;
+
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
+	std::shared_ptr<HLSLTypeNode> mNamedType;
 };
 
 class HLSLNumberConstantNode : public HLSLExpressionNode

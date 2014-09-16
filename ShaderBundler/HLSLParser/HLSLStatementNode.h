@@ -79,6 +79,17 @@ namespace VariableTypeModifer
 	};
 }
 
+class HLSLSemantic
+{
+public:
+	HLSLSemantic();
+	HLSLSemantic(const std::string& semantic);
+
+	const std::string& GetValue() const;
+private:
+	std::string mSemantic;
+};
+
 class HLSLVariableDefinition : public HLSLStatementNode
 {
 public:
@@ -88,7 +99,7 @@ public:
 		std::unique_ptr<HLSLTypeNode> type,
 		const std::string& name);
 
-	void SetSemantic(const std::string& semantic);
+	void SetSemantic(const HLSLSemantic& semantic);
 	void SetRegisterLocation(const HLSLRegisterLocation& value);
 	void SetInitialValue(std::unique_ptr<HLSLExpressionNode> value);
 
@@ -98,7 +109,7 @@ public:
 	HLSLTypeNode& GetType();
 	const std::shared_ptr<HLSLTypeNode>& GetTypePtr() const;
 	const std::string& GetName() const;
-	const std::string& GetSemantic() const;
+	const HLSLSemantic& GetSemantic() const;
 	const HLSLRegisterLocation& GetRegisterLocation() const;
 	HLSLExpressionNode* GetInitialValue();
 
@@ -109,7 +120,7 @@ private:
 	std::shared_ptr<HLSLTypeNode> mType;
 	std::string mName;
 
-	std::string mSemantic;
+	HLSLSemantic mSemantic;
 	HLSLRegisterLocation mRegisterLocation;
 	std::unique_ptr<HLSLExpressionNode> mInitialValue;
 };
@@ -128,14 +139,14 @@ public:
 
 	HLSLFunctionParameter(const HLSLToken& token, InputModifier inputModifer, std::unique_ptr<HLSLTypeNode> type, const std::string& name);
 
-	void SetSemantic(const std::string& value);
+	void SetSemantic(const HLSLSemantic& value);
 	void SetInterpolationMode(InterpolationMode::Type value);
 	void SetInitialzier(std::unique_ptr<HLSLExpressionNode> value);
 
 	InputModifier GetInputModifier() const;
 	HLSLTypeNode& GetType();
 	const std::string& GetName() const;
-	const std::string& GetSemantic() const;
+	const HLSLSemantic& GetSemantic() const;
 	InterpolationMode::Type GetInterpolationMode() const;
 	HLSLExpressionNode* GetInitializer();
 
@@ -146,7 +157,7 @@ private:
 	InputModifier mInputModifier;
 	std::unique_ptr<HLSLTypeNode> mType;
 	std::string mName;
-	std::string mSemantic;
+	HLSLSemantic mSemantic;
 	InterpolationMode::Type mInterpolationMode;
 	std::unique_ptr<HLSLExpressionNode> mInitializer;
 };
@@ -160,22 +171,25 @@ public:
 	void RemoveParameter(int index);
 	void ReplaceParameter(int index, std::unique_ptr<HLSLFunctionParameter> value);
 
-	void SetSemantic(const std::string& value);
+	void SetSemantic(const HLSLSemantic& value);
 	void SetBody(std::unique_ptr<HLSLStatementBlock> value);
 	
 	HLSLTypeNode& GetReturnType();
 	const HLSLTypeNode& GetReturnType() const;
+	// resolves the return type based on the parameters
+	bool ResolveReturnType(const HLSLFunctionInputSignature& parameters, HLSLType& result) const;
 	const std::string& GetName() const;
 	size_t GetParameterCount() const;
 	HLSLFunctionParameter& GetParameter(size_t index);
-	const std::string& GetSemantic() const;
+	const HLSLSemantic& GetSemantic() const;
 	HLSLStatementBlock* GetBody();
 
+	bool IsOverload(HLSLFunctionDefinition& value);
 	void SetPreviousOverload(HLSLFunctionDefinition* value);
 	HLSLFunctionDefinition* GetPreviousOverload();
 
-	bool IsCompatibleWith(const HLSLFunctionInputSignature& parameters);
-	bool Matches(const HLSLFunctionInputSignature& parameters);
+	bool IsCompatibleWith(const HLSLFunctionInputSignature& parameters) const;
+	bool Matches(const HLSLFunctionInputSignature& parameters) const;
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
@@ -187,7 +201,7 @@ private:
 	std::string mName;
 
 	std::vector<std::unique_ptr<HLSLFunctionParameter> > mParameters;
-	std::string mSemantic;
+	HLSLSemantic mSemantic;
 
 	std::unique_ptr<HLSLStatementBlock> mBody;
 };
@@ -209,13 +223,13 @@ class HLSLStructureMember : public HLSLNode
 public:
 	HLSLStructureMember(const HLSLToken& token, InterpolationMode::Type interpolationMode, std::unique_ptr<HLSLTypeNode> type, const std::string& name);
 
-	void SetSemantic(const std::string& value);
+	void SetSemantic(const HLSLSemantic& value);
 	
 	InterpolationMode::Type GetInterpolationMode() const;
 	const HLSLTypeNode& GetType() const;
 	HLSLTypeNode& GetType();
 	const std::string& GetName();
-	const std::string& GetSemantic();
+	const HLSLSemantic& GetSemantic();
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
@@ -223,7 +237,7 @@ private:
 	std::unique_ptr<HLSLTypeNode> mType;
 	std::string mName;
 
-	std::string mSemantic;
+	HLSLSemantic mSemantic;
 };
 
 class HLSLStructDefinition : public HLSLStatementNode

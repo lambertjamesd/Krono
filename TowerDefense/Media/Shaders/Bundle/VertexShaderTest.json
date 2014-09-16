@@ -4,5 +4,8 @@
 	"sources" : {
 		"HLSL 5" : "../HLSL/VertexShaderTest.hlsl",
 		"GLSL 4.4" : "../GLSL/VertexShaderTest.vert"
-	}
+	},
+	
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
 }

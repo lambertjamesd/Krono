@@ -2,7 +2,10 @@
 #include "HLSLParser/HLSLParser.h"
 #include "HLSLParser/Preprocessor/Preprocessor.h"
 #include "HLSLParser/HLSLParserException.h"
+#include "HLSLParser/HLSLTypeVisitor.h"
 #include "GLSLSamplerPurger.h"
+#include "GLSLEntryPointBuilder.h"
+#include "GLSLTextureClass.h"
 #include <sstream>
 #include <cstring>
 #include <algorithm>
@@ -49,6 +52,11 @@ GLSLGenerator::~GLSLGenerator(void)
 {
 }
 
+std::ostream& GLSLGenerator::GetOutput()
+{
+	return mOutput;
+}
+
 void GLSLGenerator::ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, std::ostream& output)
 {
 	map<string, string> macros;
@@ -58,15 +66,21 @@ void GLSLGenerator::ProcessFile(const std::string& filename, ShaderType::Type ty
 	std::istringstream input(preprocessResult.text);
 	HLSLParser parser(input);
 
-	output << "#version 440" << endl;
+	output << "#version 420" << endl;
 
 	std::unique_ptr<HLSLNode> file = move(parser.ParseFile());
+
+	HLSLTypeVisitor typeGenerator;
+	typeGenerator.LoadBuiltInFunctions();
+	file->Accept(typeGenerator);
 
 	GLSLSamplerPurger::Purge(*file);
 
 	GLSLGenerator generator(output, type, entryPoint);
 	file->Accept(generator);
-	generator.GenerateEntryPoint();
+
+	GLSLEntryPointBuilder entryPointBuilder(generator, type, generator.mEntryPoint);
+	entryPointBuilder.GenerateEntryPoint();
 }
 
 void GLSLGenerator::Visit(HLSLNodeList& node)
@@ -90,6 +104,7 @@ void GLSLGenerator::Visit(HLSLNodeList& node)
 
 void GLSLGenerator::Visit(HLSLStatementBlock& node)
 {
+	mNoSemiColon = false;
 	mOutput << endl;
 	OutputIndents();
 	mOutput << "{" << endl;
@@ -114,7 +129,7 @@ void GLSLGenerator::Visit(HLSLVariableDefinition& node)
 		if (node.GetType().GetType().GetType() == HLSLType::Texture &&
 			node.GetRegisterLocation().HasValue())
 		{
-			mOutput << "layout(binding = " << node.GetRegisterLocation().GetIndex() << ") ";
+			mOutput << "layout(binding = " << node.GetRegisterLocation().GetRegisterNumber() << ") ";
 		}
 
 		mOutput << "uniform ";
@@ -225,7 +240,7 @@ void GLSLGenerator::Visit(HLSLCBufferDefinition& node)
 {
 	if (node.GetRegisterLocation().HasValue())
 	{
-		mOutput << "layout(binding = " << node.GetRegisterLocation().GetIndex() << ") ";
+		mOutput << "layout(binding = " << node.GetRegisterLocation().GetRegisterNumber() << ") ";
 	}
 
 	mOutput << "uniform " << node.GetName() << endl;
@@ -428,8 +443,9 @@ void GLSLGenerator::Visit(HLSLIfNode& node)
 
 	if (node.GetElseBody() != NULL)
 	{
+		mOutput << endl;
 		OutputIndents();
-		mOutput << "else" << endl;
+		mOutput << "else";
 		node.GetElseBody()->Accept(*this);
 	}
 }
@@ -505,7 +521,14 @@ void GLSLGenerator::Visit(HLSLDiscardNode& node)
 
 void GLSLGenerator::Visit(HLSLIdentifierNode& node)
 {
-	mOutput << node.GetName();
+	if (node.IsTypeName())
+	{
+		node.GetNamedType()->Accept(*this);
+	}
+	else
+	{
+		mOutput << node.GetName();
+	}
 }
 
 void GLSLGenerator::Visit(HLSLNumberConstantNode& node)
@@ -579,17 +602,61 @@ void GLSLGenerator::Visit(HLSLStructureNode& node)
 
 void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 {
-	std::ostringstream stringOutput;
-	GLSLGenerator nameGenerator(stringOutput, mShaderType, mEntryPointName);
-	node.GetLeft().Accept(nameGenerator);
-
-	std::string name = stringOutput.str();
-
-	mOutput << name;
-
+	HLSLStructureNode* structureOperator = dynamic_cast<HLSLStructureNode*>(&node.GetLeft());
+	
 	bool isFirst = true;
 
-	mOutput << '(';
+	if (structureOperator != NULL && structureOperator->GetLeft().GetType().GetType() == HLSLType::Texture)
+	{
+		HLSLType leftType = structureOperator->GetLeft().GetType();
+		string functionName = GLSLTextureClass::GetInstance().GetFunctionMapping(leftType.GetTextureType(), structureOperator->GetRight(), node.GetParameterCount() == 2);
+
+		if (functionName.length() == 0)
+		{
+			throw HLSLParserException(node.GetToken(), "undefined function for sampler");
+		}
+		else
+		{
+			mOutput << functionName << "(";
+			structureOperator->GetLeft().Accept(*this);
+			isFirst = false;
+		}
+	}
+	else
+	{
+		std::ostringstream stringOutput;
+		GLSLGenerator nameGenerator(stringOutput, mShaderType, mEntryPointName);
+		node.GetLeft().Accept(nameGenerator);
+
+		std::string name = stringOutput.str();
+
+		if (name == "mul" && node.GetParameterCount() == 2 && 
+			node.GetParameter(0).GetType().IsNumerical() &&
+			node.GetParameter(0).GetType().IsNumerical())
+		{
+			mOutput << "(";
+			node.GetParameter(0).Accept(*this);
+			mOutput << " * ";
+			node.GetParameter(1).Accept(*this);
+			mOutput << ")";
+			return;
+		}
+		else if (name == "saturate" && node.GetParameterCount() == 1)
+		{
+			mOutput << "clamp(";
+
+			node.GetParameter(0).Accept(*this);
+
+			mOutput << ", 0, 1)";
+
+			return;
+		}
+		else
+		{
+			mOutput << name;
+			mOutput << '(';
+		}
+	}
 
 	for (size_t i = 0; i < node.GetParameterCount(); ++i)
 	{
@@ -606,139 +673,6 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 	}
 
 	mOutput << ')';
-}
-
-void GLSLGenerator::CreateAttributeNames(HLSLStructDefinition& structure, std::map<std::string, HLSLTypeNode*>& names)
-{
-	for (size_t i = 0; i < structure.GetMemberCount(); ++i)
-	{
-		HLSLStructureMember& member = structure.GetMember(i);
-		CreateAttributeNames(member.GetType(), member.GetSemantic(), names);
-	}
-}
-
-void GLSLGenerator::CreateAttributeNames(HLSLFunctionDefinition& function, std::map<std::string, HLSLTypeNode*>& names)
-{
-	for (size_t i = 0; i < function.GetParameterCount(); ++i)
-	{
-		HLSLFunctionParameter& parameter = function.GetParameter(i);
-		CreateAttributeNames(parameter.GetType(), parameter.GetSemantic(), names);
-	}
-}
-
-void GLSLGenerator::CreateAttributeNames(HLSLTypeNode& type, const std::string& semantic, std::map<std::string, HLSLTypeNode*>& names)
-{
-	HLSLType parameterType = type.GetType();
-
-	if (parameterType.IsNumerical() && !parameterType.IsArray())
-	{
-		if (parameterType.GetType() == HLSLType::Struct)
-		{
-			CreateAttributeNames(parameterType.GetStructure(), names);
-		}
-		else
-		{
-			if (semantic.length() == 0)
-			{
-				throw HLSLParserException(type.GetToken(), "no semantic specified");
-			}
-			else
-			{
-				names[semantic] = &type;
-			}
-		}
-	}
-	else
-	{
-		throw HLSLParserException(type.GetToken(), "only numerical values allowed");
-	}
-}
-
-void GLSLGenerator::GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names, bool forceLayout)
-{
-	for (auto it = names.begin(); it != names.end(); ++it)
-	{
-		if (GetGLSemanticName(it->first) == NULL)
-		{
-			if (forceLayout)
-			{
-				const std::string& semanticName = it->first;
-				std::string::const_iterator digitPosition = std::find_if(semanticName.begin(), semanticName.end(), ::isdigit);
-				size_t index = 0;
-
-				if (digitPosition != semanticName.end())
-				{
-					index = atoi(semanticName.c_str() + (digitPosition - semanticName.begin()));
-				}
-
-				mOutput << "layout(binding = " << index << ") ";
-			}
-
-			mOutput << (isInput ? "in" : "out") << ' ' ;
-			it->second->Accept(*this);
-			mOutput << ' ' << prefix << it->first << ';' << endl;
-		}
-	}
-}
-
-void GLSLGenerator::GenerateEntryPoint()
-{
-	if (mEntryPoint == NULL)
-	{
-		throw HLSLParserException(HLSLToken(HLSLTokenType::None, "", 0), "entry point not found");
-	}
-
-	map<string, HLSLTypeNode*> inputNames;
-	CreateAttributeNames(*mEntryPoint, inputNames);
-
-	map<string, HLSLTypeNode*> outputNames;
-	CreateAttributeNames(mEntryPoint->GetReturnType(), mEntryPoint->GetSemantic(), outputNames);
-
-	if (mShaderType == ShaderType::VertexShader)
-	{
-		GenerateInOut(true, "attr", inputNames);
-		mOutput << endl;
-		GenerateInOut(false, "varying", outputNames);
-	}
-	else if (mShaderType == ShaderType::PixelShader)
-	{
-		GenerateInOut(true, "varying", inputNames);
-		mOutput << endl;
-		GenerateInOut(false, "target", outputNames, true);
-	}
-	else
-	{
-		throw HLSLParserException(mEntryPoint->GetToken(), "shader type currently not supported");
-	}
-
-	mOutput << "void main()" << endl << '{' << endl;
-	IncreaseIndent();
-	OutputIndents();
-	mOutput << mEntryPoint->GetName() <<'(';
-
-	mOutput << ");" << endl;
-	DecreaseIndent();
-	mOutput << '}';
-}
-
-const char* GLSLGenerator::GetGLSemanticName(const std::string& semanticName)
-{
-	if (semanticName.compare(0, 3, "SV_") == 0)
-	{
-		std::string lowerName = semanticName;
-		std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
-
-		if (lowerName == "sv_position")
-		{
-			return "gl_Position";
-		}
-		else if (lowerName == "sv_depth")
-		{
-			return "gl_Depth";
-		}
-	}
-
-	return NULL;
 }
 
 void GLSLGenerator::OutputIndents()

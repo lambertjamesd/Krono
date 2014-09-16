@@ -49,11 +49,13 @@ public:
 	std::string GetFilename(ShaderLanguage::Type langauge) const;
 	ShaderType::Type GetType() const;
 	const std::string& GetEntryPoint() const;
+	bool CrossCompileHLSL() const;
 private:
 	std::map<ShaderLanguage::Type, std::string> mSources;
 	ShaderType::Type mType;
 	std::string mEntryPoint;
 	std::string mBaseFilename;
+	bool mCrossCompileHLSL;
 
 	void ParseDefinition(std::istream& input);
 

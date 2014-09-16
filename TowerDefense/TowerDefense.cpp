@@ -15,11 +15,7 @@
 #include <thread>
 
 #include <Krono.h>
-
-#include "GameObject/GameObject.h"
-#include "Scene/Scene.h"
-#include "GameObject/Renderer.h"
-#include "GameObject/Camera.h"
+#include <BasicGameEngine.h>
 
 #include "GameLogic/SpinBehavior.h"
 
@@ -45,7 +41,7 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Graphics::API api = Graphics::DirectX11;
+	Graphics::API api = Graphics::OpenGL;
 
 	Auto<Graphics> graphics;
 	Auto<Window> window = Window::Create(Vector2i(800, 600));

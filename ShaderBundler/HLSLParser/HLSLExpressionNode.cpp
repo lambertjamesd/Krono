@@ -33,6 +33,21 @@ const std::string& HLSLIdentifierNode::GetName() const
 	return mToken.GetValue();
 }
 
+bool HLSLIdentifierNode::IsTypeName() const
+{
+	return mNamedType != NULL;
+}
+
+void HLSLIdentifierNode::ResolveNamedType(const std::shared_ptr<HLSLTypeNode>& value)
+{
+	mNamedType = value;
+}
+
+const std::shared_ptr<HLSLTypeNode>& HLSLIdentifierNode::GetNamedType() const
+{
+	return mNamedType;
+}
+
 void HLSLIdentifierNode::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);

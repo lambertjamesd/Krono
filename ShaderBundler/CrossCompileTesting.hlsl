@@ -117,7 +117,28 @@ void Test(int foo, in float bar[4], out float3x3 output, inout float2x2 inOutput
 	discard;
 }
 
-float4 Main(float4 position : POSITION0) : SV_Position
+struct FooBar
 {
-	return position;
+	float4 meh : TexCoord1;
+};
+
+struct VSOutput
+{
+	float4 position : SV_Position;
+	float2 texCoord : TexCoord0;
+	FooBar meh;
+};
+
+struct PSOutput
+{
+	float4 position : SV_Target0;
+	float2 texCoord : SV_Target1;
+};
+
+PSOutput Main(VSOutput input)
+{
+	PSOutput result;
+	result.position = input.position;
+	result.texCoord = input.texCoord;
+	return result;
 }

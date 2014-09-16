@@ -23,6 +23,8 @@ class GLSLGenerator : public HLSLNodeVisitor
 public:
 	GLSLGenerator(std::ostream& output, ShaderType::Type type, const std::string& entryPoint);
 	~GLSLGenerator(void);
+
+	std::ostream& GetOutput();
 	
 	static void ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, std::ostream& output);
 
@@ -80,14 +82,6 @@ public:
 	virtual void Visit(HLSLStructureNode& node);
 	virtual void Visit(HLSLFunctionCallNode& node);
 private:
-	static void CreateAttributeNames(HLSLStructDefinition& structure, std::map<std::string, HLSLTypeNode*>& names);
-	static void CreateAttributeNames(HLSLFunctionDefinition& structure, std::map<std::string, HLSLTypeNode*>& names);
-	static void CreateAttributeNames(HLSLTypeNode& type, const std::string& semantic, std::map<std::string, HLSLTypeNode*>& names);
-	void GenerateInOut(bool isInput, const std::string& prefix, const std::map<std::string, HLSLTypeNode*>& names, bool forceLayout = false);
-
-	void GenerateEntryPoint();
-
-	static const char* GetGLSemanticName(const std::string& semanticName);
 
 	void OutputIndents();
 	void IncreaseIndent();

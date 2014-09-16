@@ -39,10 +39,12 @@ std::unique_ptr<HLSLNode> HLSLParser::ParseFile()
 		result->AddNode(move(ParseFileDeclaration()));
 	}
 
-	HLSLTypeVisitor typeGenerator;
-	result->Accept(typeGenerator);
-
 	return move(result);
+}
+
+std::unique_ptr<HLSLFunctionDefinition> HLSLParser::ParseFunctionSignature()
+{
+	return move(ParseFunction());
 }
 
 size_t HLSLParser::GetParseLocation() const
@@ -174,6 +176,20 @@ bool HLSLParser::DryParseBasicType()
 			Optional(HLSLTokenType::Number) &&
 			Optional(HLSLTokenType::Comma) &&
 			Optional(HLSLTokenType::Number) &&
+			Optional(HLSLTokenType::GreaterThan);
+	}
+	else if (nextToken.GetKeywordType() == HLSLKeyword::__numerical__)
+	{
+		Advance();
+		return Optional(HLSLTokenType::LessThan) &&
+			DryParseScalarType() &&
+			Optional(HLSLTokenType::GreaterThan);
+	}
+	else if (nextToken.GetKeywordType() == HLSLKeyword::__variable_vector__)
+	{
+		Advance();
+		return Optional(HLSLTokenType::LessThan) &&
+			DryParseScalarType() &&
 			Optional(HLSLTokenType::GreaterThan);
 	}
 	else
@@ -753,6 +769,24 @@ std::unique_ptr<HLSLTypeNode> HLSLParser::ParseBasicType()
 		Require(HLSLTokenType::GreaterThan);
 		
 		return std::unique_ptr<HLSLTypeNode>(new HLSLMatrixTypeNode(nextToken, move(internalType), rows, columns));
+	}
+	else if (nextToken.GetKeywordType() == HLSLKeyword::__numerical__)
+	{
+		Advance();
+		Require(HLSLTokenType::LessThan);
+		std::unique_ptr<HLSLTypeNode> internalType(move(ParseScalarType()));
+		Require(HLSLTokenType::GreaterThan);
+		
+		return std::unique_ptr<HLSLTypeNode>(new HLSLNumericalTypeNode(nextToken, move(internalType)));
+	}
+	else if (nextToken.GetKeywordType() == HLSLKeyword::__variable_vector__)
+	{
+		Advance();
+		Require(HLSLTokenType::LessThan);
+		std::unique_ptr<HLSLTypeNode> internalType(move(ParseScalarType()));
+		Require(HLSLTokenType::GreaterThan);
+		
+		return std::unique_ptr<HLSLTypeNode>(new HLSLVariableVectorTypeNode(nextToken, move(internalType)));
 	}
 	else
 	{

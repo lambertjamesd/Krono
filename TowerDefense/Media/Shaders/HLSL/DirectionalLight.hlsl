@@ -6,8 +6,8 @@ SamplerState samPoint : register( s0 );
 
 Texture2D normal : register( t1 );
 
-float4 main(TexCoordVertex input) : SV_TARGET
+float4 Main(TexCoordVertex shaderInput) : SV_TARGET
 {
-	float diffuseAmount = saturate(dot(normal.Sample(samPoint, input.texCoord), float3(0.0, 0.7, -0.7)));
-	return float4(diffuseAmount * color.Sample(samPoint, input.texCoord).rgb, 1.0);
+	float diffuseAmount = saturate(dot(normal.Sample(samPoint, shaderInput.texCoord).xyz, float3(0.0, 0.7, -0.7)));
+	return float4(diffuseAmount * color.Sample(samPoint, shaderInput.texCoord).rgb, 1.0);
 }

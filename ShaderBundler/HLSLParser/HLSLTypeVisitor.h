@@ -54,6 +54,10 @@ class HLSLTypeVisitor : public HLSLNodeVisitor
 public:
 	HLSLTypeVisitor(void);
 	~HLSLTypeVisitor(void);
+
+	void LoadBuiltInFunctions();
+	
+	void DefineFunction(HLSLFunctionDefinition& value);
 	
 	virtual void Visit(HLSLStatementBlock& node);
 	virtual void Visit(HLSLTypedefDefinition& node);
@@ -72,6 +76,8 @@ public:
 	virtual void Visit(HLSLArrayTypeNode& node);
 	virtual void Visit(HLSLVectorTypeNode& node);
 	virtual void Visit(HLSLMatrixTypeNode& node);
+	virtual void Visit(HLSLNumericalTypeNode& node);
+	virtual void Visit(HLSLVariableVectorTypeNode& node);
 	virtual void Visit(HLSLTextureTypeNode& node);
 	virtual void Visit(HLSLSamplerTypeNode& node);
 	virtual void Visit(HLSLStructTypeNode& node);
@@ -107,8 +113,13 @@ public:
 	virtual void Visit(HLSLPostfixIncr& node);
 	virtual void Visit(HLSLPostfixDecr& node);
 	virtual void Visit(HLSLStructureNode& node);
+	HLSLFunctionDefinition& ResolveFunctionOverload(const HLSLToken& functionCallToken, const std::string& functionName, const HLSLType& functionType, const HLSLFunctionInputSignature& inputSignature) const;
 	virtual void Visit(HLSLFunctionCallNode& node);
+
+	void SetBuiltInDefinitions(std::unique_ptr<HLSLNode> definitionsRoot);
 private:
+	bool CanBeMatrix(const HLSLType& type, int& rows, int& columns, bool columnVector);
+
 	static bool IsVectorSwizzle(char character, size_t vectorSize);
 	static bool IsColorSwizzle(char character, size_t vectorSize);
 
@@ -120,5 +131,6 @@ private:
 
 	HLSLTypeStorage mTypeStorage;
 	HLSLFunctionDefinition* mCurrentFunction;
+	std::unique_ptr<HLSLNode> mDefinitionsRoot;
 };
 

@@ -22,6 +22,7 @@ public:
 	virtual void Visit(HLSLVariableDefinition& node);
 	virtual void Visit(HLSLFunctionParameter& node);
 	virtual void Visit(HLSLFunctionDefinition& node);
+	virtual void Visit(HLSLReturnStatement& node);
 	
 	virtual void Visit(HLSLStructureMember& node);
 	virtual void Visit(HLSLStructDefinition& node);

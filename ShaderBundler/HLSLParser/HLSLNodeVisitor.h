@@ -36,6 +36,8 @@ public:
 	virtual void Visit(HLSLArrayTypeNode& node);
 	virtual void Visit(HLSLVectorTypeNode& node);
 	virtual void Visit(HLSLMatrixTypeNode& node);
+	virtual void Visit(HLSLNumericalTypeNode& node);
+	virtual void Visit(HLSLVariableVectorTypeNode& node);
 	virtual void Visit(HLSLTextureTypeNode& node);
 	virtual void Visit(HLSLSamplerTypeNode& node);
 	virtual void Visit(HLSLStructTypeNode& node);

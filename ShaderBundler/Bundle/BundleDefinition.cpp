@@ -4,7 +4,8 @@
 #include "JSON/json.h"
 
 BundleDefinition::BundleDefinition(const std::string& filename) :
-	mBaseFilename(BundlerFileHelper::RemoveLastPathElement(filename))
+	mBaseFilename(BundlerFileHelper::RemoveLastPathElement(filename)),
+	mCrossCompileHLSL(false)
 {
 	std::ifstream file(filename, std::ios::binary);
 	ParseDefinition(file);
@@ -57,6 +58,11 @@ const std::string& BundleDefinition::GetEntryPoint() const
 	return mEntryPoint;
 }
 
+bool BundleDefinition::CrossCompileHLSL() const
+{
+	return mCrossCompileHLSL;
+}
+
 void BundleDefinition::ParseDefinition(std::istream& input)
 {
 	std::string contents;
@@ -81,6 +87,7 @@ void BundleDefinition::ParseDefinition(std::istream& input)
 
 	mType = ShaderTypeNameToType(root["type"].ToString("invalid"));
 	mEntryPoint = root["entryPoint"].ToString("main");
+	mCrossCompileHLSL = root["crossCompileHLSL"].ToBool(false);
 }
 
 const char* BundleDefinition::gShaderTypes[ShaderType::Count] = {

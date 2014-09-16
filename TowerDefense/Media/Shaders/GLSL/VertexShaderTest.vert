@@ -4,10 +4,8 @@ in vec3 attrPOSITION0;
 in vec3 attrNORMAL0;
 in vec2 attrTEXCOORD0;
 
-out TextureNormal {
-	vec2 texCoord;
-	vec3 normal;
-};
+out	vec2 varyingTexCoord;
+out	vec3 varyingNormal;
 
 layout(binding = 0) uniform SceneViewData
 {
@@ -27,6 +25,6 @@ layout(binding = 1) uniform EntityData
 void main()
 {
 	gl_Position = projectionViewModelMatrix * vec4(attrPOSITION0, 1);
-	normal = (normalMatrix * vec4(attrNORMAL0, 0.0)).xyz;
-	texCoord = attrTEXCOORD0;
+	varyingNormal = (normalMatrix * vec4(attrNORMAL0, 0.0)).xyz;
+	varyingTexCoord = attrTEXCOORD0;
 }

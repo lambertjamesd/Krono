@@ -1,7 +1,11 @@
 #include "HLSLTypeVisitor.h"
 #include "HLSLParserException.h"
+#include "HLSLTextureClass.h"
 #include <cassert>
 #include <cstring>
+#include <sstream>
+#include "HLSLParser.h"
+#include "HLSLBuiltInFunctions.h"
 
 using namespace std;
 
@@ -181,47 +185,82 @@ void HLSLTypeStorage::Define(const std::string& name, const std::shared_ptr<HLSL
 
 std::unique_ptr<HLSLScalarTypeNode> HLSLTypeStorage::CreateScalarType(HLSLKeyword::Type scalarType)
 {
+	std::unique_ptr<HLSLScalarTypeNode> result;
+
 	switch (scalarType)
 	{
 	case HLSLKeyword::Bool:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "bool", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "bool", 0)));
+		result->ResolveType(HLSLType::Bool);
+		break;
 	case HLSLKeyword::Int:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "int", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "int", 0)));
+		result->ResolveType(HLSLType::Int);
+		break;
 	case HLSLKeyword::Uint:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "uint", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "uint", 0)));
+		result->ResolveType(HLSLType::UInt);
+		break;
 	case HLSLKeyword::Dword:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "dword", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "dword", 0)));
+		result->ResolveType(HLSLType::DWord);
+		break;
 	case HLSLKeyword::Half:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "half", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "half", 0)));
+		result->ResolveType(HLSLType::Half);
+		break;
 	case HLSLKeyword::Float:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "float", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "float", 0)));
+		result->ResolveType(HLSLType::Float);
+		break;
 	case HLSLKeyword::Double:
-		return std::unique_ptr<HLSLScalarTypeNode>(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "double", 0)));
+		result.reset(new HLSLScalarTypeNode(HLSLToken(HLSLTokenType::Identifier, "double", 0)));
+		result->ResolveType(HLSLType::Double);
+		break;
 	default:
 		throw HLSLParserException("Invalid scalar type");
 	}
+
+	return move(result);
 }
 
 std::shared_ptr<HLSLTypeNode> HLSLTypeStorage::CreateVectorType(HLSLKeyword::Type scalarType, size_t size)
 {
 	std::unique_ptr<HLSLScalarTypeNode> scalarNode(move(CreateScalarType(scalarType)));
-	return std::shared_ptr<HLSLVectorTypeNode>(new HLSLVectorTypeNode(HLSLToken(HLSLTokenType::Identifier, "vector", 0), move(scalarNode), size));
+	HLSLType vectorType = scalarNode->GetType().VectorType(size);
+	std::shared_ptr<HLSLVectorTypeNode> result(new HLSLVectorTypeNode(HLSLToken(HLSLTokenType::Identifier, "vector", 0), move(scalarNode), size));
+	result->ResolveType(vectorType);
+	return move(result);
 }
 
 std::shared_ptr<HLSLTypeNode> HLSLTypeStorage::CreateMatrixType(HLSLKeyword::Type scalarType, size_t rows, size_t columns)
 {
 	std::unique_ptr<HLSLScalarTypeNode> scalarNode(move(CreateScalarType(scalarType)));
-	return std::shared_ptr<HLSLMatrixTypeNode>(new HLSLMatrixTypeNode(HLSLToken(HLSLTokenType::Identifier, "vector", 0), move(scalarNode), rows, columns));
+	HLSLType matrixType = scalarNode->GetType().MatrixType(rows, columns);
+	std::shared_ptr<HLSLMatrixTypeNode> result(new HLSLMatrixTypeNode(HLSLToken(HLSLTokenType::Identifier, "vector", 0), move(scalarNode), rows, columns));
+	result->ResolveType(matrixType);
+	return move(result);
 }
 
 HLSLTypeVisitor::HLSLTypeVisitor(void) :
 	mCurrentFunction(NULL)
 {
+
 }
 
 
 HLSLTypeVisitor::~HLSLTypeVisitor(void)
 {
+}
+
+void HLSLTypeVisitor::LoadBuiltInFunctions()
+{
+	HLSLBuiltInFunctions::PopulateVisitor(*this);
+}
+
+void HLSLTypeVisitor::DefineFunction(HLSLFunctionDefinition& value)
+{
+	mTypeStorage.DefineFunction(value);
 }
 	
 void HLSLTypeVisitor::Visit(HLSLStatementBlock& node)
@@ -387,6 +426,12 @@ void HLSLTypeVisitor::Visit(HLSLScalarTypeNode& node)
 	case HLSLKeyword::Double:
 		node.ResolveType(HLSLType::Double);
 		break;
+	case HLSLKeyword::__bool_int_float__:
+		node.ResolveType(HLSLType::BoolIntFloat);
+		break;
+	case HLSLKeyword::__int_float__:
+		node.ResolveType(HLSLType::IntFloat);
+		break;
 	default:
 		throw HLSLParserException(node.GetToken(), "scalar type not supported");
 	}
@@ -439,6 +484,36 @@ void HLSLTypeVisitor::Visit(HLSLMatrixTypeNode& node)
 	else
 	{
 		throw HLSLParserException(node.GetInternalType().GetToken(), "matrix must be of scalar type");
+	}
+}
+
+void HLSLTypeVisitor::Visit(HLSLNumericalTypeNode& node)
+{
+	node.GetInternalType().Accept(*this);
+	HLSLType internalType = node.GetInternalType().GetType();
+
+	if (internalType.GetType() == HLSLType::Scalar)
+	{
+		node.ResolveType(HLSLType(HLSLType::Numerical, internalType.GetScalarType()));
+	}
+	else
+	{
+		throw HLSLParserException(node.GetInternalType().GetToken(), "numerical must be of scalar type");
+	}
+}
+
+void HLSLTypeVisitor::Visit(HLSLVariableVectorTypeNode& node)
+{
+	node.GetInternalType().Accept(*this);
+	HLSLType internalType = node.GetInternalType().GetType();
+
+	if (internalType.GetType() == HLSLType::Scalar)
+	{
+		node.ResolveType(HLSLType(HLSLType::VariableVector, internalType.GetScalarType()));
+	}
+	else
+	{
+		throw HLSLParserException(node.GetInternalType().GetToken(), "variable vector must be of scalar type");
 	}
 }
 
@@ -509,7 +584,7 @@ void HLSLTypeVisitor::Visit(HLSLIfNode& node)
 
 	if (node.GetElseBody() != NULL)
 	{
-		node.GetBody().Accept(*this);
+		node.GetElseBody()->Accept(*this);
 	}
 }
 
@@ -577,8 +652,8 @@ void HLSLTypeVisitor::Visit(HLSLIdentifierNode& node)
 	}
 	else if (type == HLSLTypeStorage::DefineType)
 	{
-		HLSLType classType = mTypeStorage.GetDefinedType(node.GetName())->GetType().TypeClass();
-		node.ResolveType(classType);
+		node.ResolveNamedType(mTypeStorage.GetDefinedTypePtr(node.GetName()));
+		node.ResolveType(node.GetNamedType()->GetType().TypeClass());
 	}
 	else
 	{
@@ -692,26 +767,44 @@ void HLSLTypeVisitor::Visit(HLSLBinaryOperatorNode& node)
 			throw HLSLParserException(token, "cannot perform arithmetic on type");
 		}
 
+		if (token.IsComparisonOperator())
+		{
+			if (leftType.CanAssignFrom(rightType))
+			{
+				node.ResolveType(leftType.BoolType());
+			}
+			else if (rightType.CanAssignFrom(leftType))
+			{
+				node.ResolveType(rightType.BoolType());
+			}
+			else
+			{
+				throw HLSLParserException(token, "no comparison operator defined");
+			}
+		} 
+
 		if (token.IsBitwiseOperator() && (!leftType.IsInteger() || rightType.IsInteger()))
 		{
 			throw HLSLParserException(token, "integer type required");
 		}
 
+		HLSLType::ScalarType scalarType = HLSLType::MorePowerfulScalar(leftType.GetScalarType(), rightType.GetScalarType());
+
 		if (leftType.IsSingleValue() && !rightType.IsSingleValue())
 		{
-			node.ResolveType(rightType);
+			node.ResolveType(HLSLType(scalarType));
 		}
 		else if (rightType.IsSingleValue() && !leftType.IsSingleValue())
 		{
-			node.ResolveType(leftType);
+			node.ResolveType(leftType.ChangeScalarType(scalarType));
 		}
 		else if (leftType.CanAssignFrom(rightType))
 		{
-			node.ResolveType(leftType);
+			node.ResolveType(leftType.ChangeScalarType(scalarType));
 		}
 		else if (rightType.CanAssignFrom(leftType))
 		{
-			node.ResolveType(rightType);
+			node.ResolveType(rightType.ChangeScalarType(scalarType));
 		}
 		else
 		{
@@ -812,8 +905,19 @@ void HLSLTypeVisitor::Visit(HLSLStructureNode& node)
 	switch (structureType.GetType())
 	{
 	case HLSLType::Struct:
-		node.ResolveType(structureType.SubElement(node.GetRight()));
+	{
+		HLSLType resolvedType = structureType.SubElement(node.GetRight());
+
+		if (resolvedType.GetType() == HLSLType::Unknown)
+		{
+			throw HLSLParserException(node.GetToken(), "not a member of structure");
+		}
+		else
+		{
+			node.ResolveType(resolvedType);
+		}
 		break;
+	}
 	case HLSLType::Vector:
 		{
 
@@ -844,9 +948,85 @@ void HLSLTypeVisitor::Visit(HLSLStructureNode& node)
 			}
 		} 
 		break;
+	case HLSLType::Texture:
+		{
+			HLSLType resolvedType = HLSLTextureClass::GetInstance().GetMemberType(structureType.GetTextureType(), node.GetRight());
+			
+			if (resolvedType.GetType() == HLSLType::Unknown)
+			{
+				throw HLSLParserException(node.GetToken(), "not a member of texture");
+			}
+			else
+			{
+				node.ResolveType(resolvedType);
+			}
+		}
+		break;
 	default:
 		throw HLSLParserException(node.GetToken(), "Not yet implemented");
 		break;
+	}
+}
+
+HLSLFunctionDefinition& HLSLTypeVisitor::ResolveFunctionOverload(const HLSLToken& functionCallToken, const std::string& functionName, const HLSLType& functionType, const HLSLFunctionInputSignature& inputSignature) const
+{
+	assert(functionType.GetType() == HLSLType::Function);
+
+	HLSLFunctionDefinition* exactMatch = NULL;
+	HLSLFunctionDefinition* compatableMatch = NULL;
+	bool isAbigious = false;
+
+	HLSLFunctionDefinition* looper = &functionType.GetFunction();
+
+	while (looper != NULL)
+	{
+		if (looper->Matches(inputSignature))
+		{
+			if (exactMatch != NULL)
+			{
+				throw HLSLParserException(functionCallToken, "Ambigious function call " + functionName);
+			}
+			else
+			{
+				exactMatch = looper;
+			}
+		}
+		else if (looper->IsCompatibleWith(inputSignature))
+		{
+			if (compatableMatch != NULL)
+			{
+				isAbigious = true;
+			}
+			else
+			{
+				compatableMatch = looper;
+			}
+		}
+
+		looper = looper->GetPreviousOverload();
+	}
+
+
+	if (exactMatch != NULL)
+	{
+		functionType.ResolveFunctionOverload(*exactMatch);
+		return *exactMatch;
+	}
+	else if (compatableMatch != NULL)
+	{
+		if (isAbigious)
+		{
+			throw HLSLParserException(functionCallToken, "Ambigious function call " + functionName);
+		}
+		else
+		{
+			functionType.ResolveFunctionOverload(*compatableMatch);
+			return *compatableMatch;
+		}
+	}
+	else
+	{
+		throw HLSLParserException(functionCallToken, "No overloaded function matches parameters for function named " + functionName);
 	}
 }
 
@@ -866,25 +1046,57 @@ void HLSLTypeVisitor::Visit(HLSLFunctionCallNode& node)
 
 	if (leftType.GetType() == HLSLType::Function)
 	{
-		HLSLFunctionInputSignature inputSignature(types);
-		HLSLType returnType = node.GetLeft().GetType().ResolveReturnType(inputSignature);
+		std::string name = leftType.GetFunction().GetName();
 
-		if (returnType.GetType() == HLSLType::Unknown)
+		if (name == "mul" && node.GetParameterCount() == 2)
 		{
-			throw HLSLParserException(node.GetToken(), "no overloaded function matches parameters");
-		}
-		else if (returnType.GetType() == HLSLType::Void)
-		{
-			throw HLSLParserException(node.GetToken(), "no such function");
+			int leftRows, leftColumns;
+			int rightRows, rightColumns;
+
+			if (CanBeMatrix(types[0], leftRows, leftColumns, true) && CanBeMatrix(types[1], rightRows, rightColumns, false))
+			{
+				if (leftColumns == rightRows)
+				{
+					if (types[0].GetType() == HLSLType::Vector)
+					{
+						node.ResolveType(HLSLType(types[0].GetScalarType(), rightColumns));
+					}
+					else if (types[1].GetType() == HLSLType::Vector)
+					{
+						node.ResolveType(HLSLType(types[0].GetScalarType(), leftRows));
+					}
+					else
+					{
+						node.ResolveType(HLSLType(types[0].GetScalarType(), leftRows, rightColumns));
+					}
+				}
+				else
+				{
+					throw HLSLParserException(node.GetToken(), "row and column mismatch");
+				}
+			}
+			else
+			{
+				throw HLSLParserException(node.GetToken(), "cannot multiply non numerical types");
+			}
 		}
 		else
 		{
+			HLSLFunctionInputSignature inputSignature(types);
+			HLSLFunctionDefinition& functionDefinition = ResolveFunctionOverload(node.GetToken(), name, node.GetLeft().GetType(), inputSignature);
+			HLSLType returnType = functionDefinition.GetReturnType().GetType();
+
+			if (!functionDefinition.ResolveReturnType(inputSignature, returnType))
+			{
+				throw HLSLParserException(node.GetToken(), "Could not resolve return type from parameters");
+			}
+
 			node.ResolveType(returnType);
 		}
 	}
 	else if (leftType.IsTypeClass())
 	{
-		if (leftType.GetType() == HLSLType::Vector)
+		if (leftType.IsNumerical())
 		{
 			// TODO check parameter counts
 			node.ResolveType(leftType.InstanceType());
@@ -898,6 +1110,34 @@ void HLSLTypeVisitor::Visit(HLSLFunctionCallNode& node)
 	{
 		throw HLSLParserException(node.GetToken(), "not a function");
 	}
+}
+
+void HLSLTypeVisitor::SetBuiltInDefinitions(std::unique_ptr<HLSLNode> definitionsRoot)
+{
+	assert(mDefinitionsRoot == NULL && "definitions can only be set once");
+	mDefinitionsRoot = move(definitionsRoot);
+	mDefinitionsRoot->Accept(*this);
+}
+
+bool HLSLTypeVisitor::CanBeMatrix(const HLSLType& type, int& rows, int& columns, bool columnVector)
+{
+	switch (type.GetType())
+	{
+	case HLSLType::Scalar:
+		rows = 1;
+		columns = 1;
+		return true;
+	case HLSLType::Vector:
+		rows = columnVector ? 1 : type.GetVectorSize();
+		columns = columnVector ? type.GetVectorSize() : 1;
+		return true;
+	case HLSLType::Matrix:
+		rows = type.GetRows();
+		columns = type.GetColumns();
+		return true;
+	}
+
+	return false;
 }
 
 bool HLSLTypeVisitor::IsVectorSwizzle(char character, size_t vectorSize)

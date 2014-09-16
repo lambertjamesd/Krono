@@ -20,6 +20,7 @@ public:
 	~HLSLParser(void);
 
 	std::unique_ptr<HLSLNode> ParseFile();
+	std::unique_ptr<HLSLFunctionDefinition> ParseFunctionSignature();
 
 	static void Test();
 private:

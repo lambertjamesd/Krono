@@ -316,7 +316,7 @@ Tokenizer::NextState Tokenizer::NewLineEnd(int nextCharacter)
 
 Tokenizer::NextState Tokenizer::WhitespaceState(int nextCharacter)
 {
-	if (isspace(nextCharacter))
+	if (isspace(nextCharacter) && nextCharacter != '\r' && nextCharacter != '\n')
 	{
 		return &WhitespaceState;
 	}

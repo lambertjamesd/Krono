@@ -34,11 +34,18 @@ public:
 		Texture,
 		Sampler,
 		Struct,
-		Function
+		Function,
+
+		// can be a scalar, vector,
+		// or matrix of any size
+		Numerical,
+		// can be a vector of any size
+		VariableVector,
 	};
 
 	enum ScalarType
 	{
+		NoScalarType,
 		Bool,
 		Int,
 		UInt,
@@ -46,6 +53,12 @@ public:
 		Half,
 		Float,
 		Double,
+
+		// can be any type
+		BoolIntFloat,
+
+		// can by any type but bool
+		IntFloat,
 	};
 
 	enum TextureType
@@ -55,18 +68,21 @@ public:
 		Texture2D,
 		Texture2DArray,
 		Texture3D,
-		TextureCube
+		TextureCube,
+
+		TextureTypeCount
 	};
 
 	enum Modifier
 	{
 		NoModifier,
 		ArrayModifier,
-		TypeClassModifier
+		TypeClassModifier,
 	};
 
 	HLSLType();
 	HLSLType(Type type);
+	HLSLType(Type type, ScalarType scalarType);
 	HLSLType(ScalarType scalarType);
 	HLSLType(ScalarType scalarType, size_t vectorSize);
 	HLSLType(ScalarType scalarType, size_t rows, size_t columns);
@@ -91,14 +107,17 @@ public:
 
 	HLSLType ArrayElementType() const;
 	HLSLType SubElement(const std::string& name) const;
-	HLSLType ResolveReturnType(const HLSLFunctionInputSignature& inputSignature) const;
 	HLSLType GetReturnType() const;
+	
+	HLSLType ChangeScalarType(ScalarType type) const;
 
 	Type GetType() const;
 	ScalarType GetScalarType() const;
 	TextureType GetTextureType() const;
 	HLSLStructDefinition& GetStructure() const;
 	HLSLFunctionDefinition& GetFunction() const;
+
+	void ResolveFunctionOverload(HLSLFunctionDefinition& newValue) const;
 
 	bool IsInteger() const;
 	bool IsNumerical() const;
@@ -118,11 +137,28 @@ public:
 	
 	size_t GetScalarCount() const;
 	bool IsPureNumerical() const;
+
+	bool NeedsTypeResolution() const;
+
+	// if target is ambigious in any way then this method resolves those
+	// ambiguities using input
+	bool ResolveAmbigiousType(HLSLType& target, const HLSLType& input) const;
+	
+	static bool TypeNeedsResolution(Type type);
+	static bool ScalarTypeNeedsResolution(ScalarType scalarType);
+	static ScalarType MorePowerfulScalar(ScalarType a, ScalarType b);
 	
 	static const size_t NonNumerical = ~0;
+	static const size_t MaxVectorSize = 4;
+	
+	static const size_t MaxMatrixRows = 4;
+	static const size_t MaxMatrixColumns = 4;
 private:
 	Type mType;
 	Modifier mModifier;
+	
+	void SetVectorSize(size_t value);
+	void SetMatrixSize(size_t rows, size_t columns);
 
 	static const size_t gSizeMask = 0x0FFFFFFF;
 	static const size_t gRowMask = 0x30000000;

@@ -9,10 +9,13 @@ cbuffer SceneViewData : register(b0)
 	float4x4 projectionMatrixRasterSpace;
 };
 
-TexCoordVertex main( float4 pos : POSITION, float2 texCoord : TEXCOORD)
+TexCoordVertex Main( float3 pos : POSITION0, float2 texCoord : TEXCOORD0)
 {
 	TexCoordVertex result;
-	result.position = mul(compositeTransform, pos);
+	result.position = mul(compositeTransform, float4(pos, 1));
 	result.texCoord = texCoord;
+#ifdef OPENGL
+	result.texCoord.y = 1 - result.texCoord.y;
+#endif
 	return result;
 }

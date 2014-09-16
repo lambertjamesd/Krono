@@ -177,9 +177,12 @@ OpenGLShaderProgram::OpenGLShaderProgram(const OpenGLVertexShader& vertexShader,
 		shaders.push_back(fragmentShader.GetGLShader());
 		mProgram = LinkProgram(shaders);
 
-		PopulateAttributes();
-		PopulateUniforms();
-		PopulateOutputs();
+		if (mProgram)
+		{
+			PopulateAttributes();
+			PopulateUniforms();
+			PopulateOutputs();
+		}
 	}
 	else
 	{

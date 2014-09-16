@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
+#include <sstream>
 
 #include "Bundle/BundleDefinition.h"
 #include "Bundle/GLSLBundler.h"
@@ -13,6 +14,7 @@
 #include "HLSLParser/HLSLParser.h"
 #include "HLSLParser/Preprocessor/Preprocessor.h"
 #include "HLSLParser/GLSLGenerator/GLSLGenerator.h"
+#include "HLSLParser/HLSLParserException.h"
 
 #ifdef USE_DX11
 #include "Bundle/HLSLCompiler.h"
@@ -76,8 +78,23 @@ void ProccessFile(const char* filename)
 			bundle.AddShader(ShaderLanguage::HLSL_5, compiler.Process(bundleDef));
 		}
 #endif
+		if (bundleDef.HasLanguage(ShaderLanguage::HLSL_5) && bundleDef.CrossCompileHLSL())
+		{
+			try
+			{
+				ostringstream result;
+				GLSLGenerator::ProcessFile(bundleDef.GetFilename(ShaderLanguage::HLSL_5), bundleDef.GetType(), bundleDef.GetEntryPoint(), result);
+				string stringResult(result.str());
+				vector<char> vectorResult(stringResult.begin(), stringResult.end());
+				bundle.AddShader(ShaderLanguage::GLSL_4_4, vectorResult);
+			}
+			catch (HLSLParserException& exception)
+			{
+				cerr << exception.what() << endl;
+			}
 
-		if (bundleDef.HasLanguage(ShaderLanguage::GLSL_4_4))
+		}
+		else if (bundleDef.HasLanguage(ShaderLanguage::GLSL_4_4))
 		{
 			GLSLBundler bundler;
 			bundle.AddShader(ShaderLanguage::GLSL_4_4, bundler.Process(bundleDef));
@@ -103,9 +120,6 @@ int main(int argc, char* argv[])
 	preproc::Preprocessor::Test();
 	HLSLParser::Test();
 
-	std::ofstream fileOutput("CrossCompileTesting.glsl");
-	GLSLGenerator::ProcessFile("CrossCompileTesting.hlsl", ShaderType::VertexShader, "Main", fileOutput);
-
 	if (argc > 1 && strcmp(argv[1], "-MM") == 0)
 	{
 		for (int i = 2; i < argc; ++i)
@@ -120,6 +134,8 @@ int main(int argc, char* argv[])
 			ProccessFile(argv[i]);
 		}
 	}
+
+	//ProccessFile("C:\\Users\\James\\Documents\\Visual Studio 2012\\Projects\\DeferredRendering\\TowerDefense\\Media\\Shaders\\Bundle\\DirectionalLight.json");
 
 	return 0;
 }

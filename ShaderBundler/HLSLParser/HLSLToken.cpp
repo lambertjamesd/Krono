@@ -7,7 +7,9 @@ namespace HLSLKeyword
 {
 	bool IsScalarType(Type keyword)
 	{
-		return keyword >= Bool && keyword <= Min16uint;
+		return keyword >= Bool && keyword <= Min16uint || 
+			keyword == HLSLKeyword::__bool_int_float__ ||
+			keyword == HLSLKeyword::__int_float__;
 	}
 
 	bool IsTextureType(Type keyword)
@@ -60,7 +62,7 @@ bool HLSLToken::IsBitwiseOperator() const
 bool HLSLToken::IsBinaryOperator() const
 {
 	return 
-		(mType >= HLSLTokenType::Add && mType <= HLSLTokenType::MinusEqual) ||
+		(mType >= HLSLTokenType::Add && mType <= HLSLTokenType::ModulusEqual) ||
 		(mType >= HLSLTokenType::LeftShift && mType <= HLSLTokenType::BooleanOr) ||
 		(mType >= HLSLTokenType::Comma && mType <= HLSLTokenType::GreaterThanEqual);
 }
@@ -377,6 +379,15 @@ HLSLKeyword::Type HLSLToken::GetKeywordType(const std::string& name)
 		gKeywordMapping->insert(make_pair(string("volatile"), HLSLKeyword::Volatile));
 
 		gKeywordMapping->insert(make_pair(string("while"), HLSLKeyword::While));
+
+		
+		gKeywordMapping->insert(make_pair(string("__numerical__"), HLSLKeyword::__numerical__));
+		gKeywordMapping->insert(make_pair(string("__variable_vector__"), HLSLKeyword::__variable_vector__));
+		gKeywordMapping->insert(make_pair(string("__bool_int_float__"), HLSLKeyword::__bool_int_float__));
+		gKeywordMapping->insert(make_pair(string("__int_float__"), HLSLKeyword::__int_float__));
+
+		// __numerical__<__int_float__> clamp( __numerical__<__int_float__> input, __numerical__<__int_float__> min, __numerical__<__int_float__> max);
+		// bool any(__numerical<__bool_int_float__> value);
 	}
 
 	return (*gKeywordMapping)[name];

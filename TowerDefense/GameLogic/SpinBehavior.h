@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameObject/Behavior.h"
+#include <BasicGameEngine.h>
 #include <Krono.h>
 
 class SpinBehavior : public Behavior

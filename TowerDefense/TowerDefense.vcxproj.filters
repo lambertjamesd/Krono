@@ -24,49 +24,7 @@
     <ClInclude Include="TowerDefense.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Renderable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\RenderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\RenderStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameLogic\SpinBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Behavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\UpdateManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject\Lens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lighting\Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lighting\PositionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,49 +32,7 @@
     <ClCompile Include="TowerDefense.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Renderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\RenderManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\RenderStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameLogic\SpinBehavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Behavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\UpdateManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Lens.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lighting\Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lighting\PositionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,14 +56,7 @@
     <None Include="Media\Shaders\Bundle\VertexShaderTest.shader" />
     <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
     <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
-    <None Include="Media\Shaders\HLSL\DataPassStructures.hlsli" />
     <None Include="Media\Shaders\GLSL\ColorMapper.frag" />
     <None Include="Media\Shaders\GLSL\ScreenComposite.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Media\Shaders\HLSL\PixelShaderTest.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\VertexShaderTest.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ScreenComposite.hlsl" />
-    <FxCompile Include="Media\Shaders\HLSL\ColorMapper.hlsl" />
   </ItemGroup>
 </Project>

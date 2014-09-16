@@ -4,5 +4,7 @@
 	"sources" : {
 		"HLSL 5" : "../HLSL/ColorMapper.hlsl",
 		"GLSL 4.4" : "../GLSL/ColorMapper.frag"
-	}
+	},
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
 }

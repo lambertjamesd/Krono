@@ -11,23 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ED734449-AFD6-4CC2-B3EE-157425288365}</ProjectGuid>
+    <ProjectGuid>{9332F5ED-34A9-4F2B-9788-82397F57EADE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>TowerDefense</RootNamespace>
+    <RootNamespace>BasicGameEngine</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -40,28 +40,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)BasicGameEngine;$(SolutionDir)DeferredRendering;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>C:\lib\lib;$(SolutionDir)Debug;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);$(SolutionDir)DeferredRendering;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)BasicGameEngine;$(SolutionDir)DeferredRendering;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>C:\lib\lib;$(SolutionDir)Release;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(ProjectDir);$(SolutionDir)DeferredRendering;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>BasicGameEngine.lib;DeferredRendering.lib;FreeImage.lib;glew32sd.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,48 +66,53 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BasicGameEngine.lib;DeferredRendering.lib;FreeImage.lib;glew32s.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="GameLogic\SpinBehavior.h" />
-    <ClInclude Include="TowerDefense.h" />
+    <ClInclude Include="BasicGameEngine.h" />
+    <ClInclude Include="GameObject\Behavior.h" />
+    <ClInclude Include="GameObject\Camera.h" />
+    <ClInclude Include="GameObject\Component.h" />
+    <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="GameObject\Lens.h" />
+    <ClInclude Include="GameObject\Renderer.h" />
+    <ClInclude Include="GameObject\Transform.h" />
+    <ClInclude Include="Lighting\Light.h" />
+    <ClInclude Include="Lighting\PositionalLight.h" />
+    <ClInclude Include="Render\Renderable.h" />
+    <ClInclude Include="Render\RenderManager.h" />
+    <ClInclude Include="Render\RenderStage.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\UpdateManager.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameLogic\SpinBehavior.cpp" />
-    <ClCompile Include="TowerDefense.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="TowerDefense.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico" />
-    <Image Include="TowerDefense.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Media\Shaders\Bundle\PixelShaderTest.json" />
-    <None Include="Media\Shaders\Bundle\PixelShaderTest.shader" />
-    <None Include="Media\Shaders\Bundle\VertexShaderTest.json" />
-    <None Include="Media\Shaders\Bundle\VertexShaderTest.shader" />
-    <None Include="Media\Shaders\GLSL\ColorMapper.frag" />
-    <None Include="Media\Shaders\GLSL\PixelShaderTest.frag" />
-    <None Include="Media\Shaders\GLSL\ScreenComposite.vert" />
-    <None Include="Media\Shaders\GLSL\VertexShaderTest.vert" />
+    <ClCompile Include="GameObject\Behavior.cpp" />
+    <ClCompile Include="GameObject\Camera.cpp" />
+    <ClCompile Include="GameObject\Component.cpp" />
+    <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="GameObject\Lens.cpp" />
+    <ClCompile Include="GameObject\Renderer.cpp" />
+    <ClCompile Include="GameObject\Transform.cpp" />
+    <ClCompile Include="Lighting\Light.cpp" />
+    <ClCompile Include="Lighting\PositionalLight.cpp" />
+    <ClCompile Include="Render\Renderable.cpp" />
+    <ClCompile Include="Render\RenderManager.cpp" />
+    <ClCompile Include="Render\RenderStage.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\UpdateManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

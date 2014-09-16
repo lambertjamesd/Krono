@@ -55,6 +55,11 @@ void GLSLSamplerPurger::Visit(HLSLVariableDefinition& node)
 	{
 		RemoveCurrentNode();
 	}
+
+	if (node.GetInitialValue() != NULL)
+	{
+		node.GetInitialValue()->Accept(*this);
+	}
 }
 
 void GLSLSamplerPurger::Visit(HLSLFunctionParameter& node)
@@ -103,6 +108,11 @@ void GLSLSamplerPurger::Visit(HLSLFunctionDefinition& node)
 			node.GetBody()->Accept(*this);
 		}
 	}
+}
+
+void GLSLSamplerPurger::Visit(HLSLReturnStatement& node)
+{
+	node.GetReturnValue().Accept(*this);
 }
 	
 void GLSLSamplerPurger::Visit(HLSLStructureMember& node)

@@ -171,6 +171,40 @@ void HLSLMatrixTypeNode::Accept(HLSLNodeVisitor& visitor)
 	visitor.Visit(*this);
 }
 
+HLSLNumericalTypeNode::HLSLNumericalTypeNode(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> internalType) :
+	HLSLTypeNode(token),
+	mInternalType(move(internalType))
+{
+
+}
+
+HLSLTypeNode& HLSLNumericalTypeNode::GetInternalType()
+{
+	return *mInternalType;
+}
+
+void HLSLNumericalTypeNode::Accept(HLSLNodeVisitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
+HLSLVariableVectorTypeNode::HLSLVariableVectorTypeNode(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> internalType) :
+	HLSLTypeNode(token),
+	mInternalType(move(internalType))
+{
+
+}
+
+HLSLTypeNode& HLSLVariableVectorTypeNode::GetInternalType()
+{
+	return *mInternalType;
+}
+
+void HLSLVariableVectorTypeNode::Accept(HLSLNodeVisitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 HLSLTextureTypeNode::HLSLTextureTypeNode(const HLSLToken& token) :
 	HLSLTypeNode(token)
 {

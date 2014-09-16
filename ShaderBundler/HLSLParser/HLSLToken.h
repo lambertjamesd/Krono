@@ -235,6 +235,17 @@ namespace HLSLKeyword
 		Void,
 		Volatile,
 
+		// custom language keywords for function
+		// definitions
+
+		// represents either a scalar, vector, or matrix of any size
+		__numerical__,
+		// represents a vector of any size
+		__variable_vector__,
+		// repersents a boolean, integer, or float
+		__bool_int_float__,
+		// represents any numerical value
+		__int_float__
 	};
 
 	bool IsScalarType(Type keyword);

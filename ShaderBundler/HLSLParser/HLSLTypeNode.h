@@ -104,6 +104,30 @@ private:
 	size_t mColumns;
 };
 
+class HLSLNumericalTypeNode : public HLSLTypeNode
+{
+public:
+	HLSLNumericalTypeNode(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> internalType);
+
+	HLSLTypeNode& GetInternalType();
+
+	virtual void Accept(HLSLNodeVisitor& visitor);
+private:
+	std::unique_ptr<HLSLTypeNode> mInternalType;
+};
+
+class HLSLVariableVectorTypeNode : public HLSLTypeNode
+{
+public:
+	HLSLVariableVectorTypeNode(const HLSLToken& token, std::unique_ptr<HLSLTypeNode> internalType);
+
+	HLSLTypeNode& GetInternalType();
+
+	virtual void Accept(HLSLNodeVisitor& visitor);
+private:
+	std::unique_ptr<HLSLTypeNode> mInternalType;
+};
+
 class HLSLTextureTypeNode : public HLSLTypeNode
 {
 public:

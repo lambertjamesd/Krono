@@ -113,6 +113,16 @@ void HLSLNodeVisitor::Visit(HLSLMatrixTypeNode& node)
 	Visit(static_cast<HLSLTypeNode&>(node));
 }
 
+void HLSLNodeVisitor::Visit(HLSLNumericalTypeNode& node)
+{
+	Visit(static_cast<HLSLTypeNode&>(node));
+}
+
+void HLSLNodeVisitor::Visit(HLSLVariableVectorTypeNode& node)
+{
+	Visit(static_cast<HLSLTypeNode&>(node));
+}
+
 void HLSLNodeVisitor::Visit(HLSLTextureTypeNode& node)
 {
 	Visit(static_cast<HLSLTypeNode&>(node));

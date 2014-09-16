@@ -1,6 +1,7 @@
 #include "HLSLType.h"
 #include <cassert>
 #include "HLSLStatementNode.h"
+#include <iostream>
 
 HLSLFunctionInputSignature::HLSLFunctionInputSignature()
 {
@@ -26,6 +27,7 @@ HLSLType HLSLFunctionInputSignature::GetParameter(size_t index) const
 HLSLType::HLSLType() :
 	mType(Unknown),
 	mModifier(NoModifier),
+	mScalarType(NoScalarType),
 	mSize(0)
 {
 
@@ -34,6 +36,16 @@ HLSLType::HLSLType() :
 HLSLType::HLSLType(Type type) :
 	mType(type),
 	mModifier(NoModifier),
+	mScalarType(NoScalarType),
+	mSize(0)
+{
+
+}
+
+HLSLType::HLSLType(Type type, ScalarType scalarType) :
+	mType(type),
+	mModifier(NoModifier),
+	mScalarType(scalarType),
 	mSize(0)
 {
 
@@ -54,7 +66,7 @@ HLSLType::HLSLType(ScalarType scalarType, size_t vectorSize) :
 	mScalarType(scalarType),
 	mSize((vectorSize - 1) << 28)
 {
-	assert(vectorSize <= 4 && vectorSize > 0);
+	assert(vectorSize <= MaxVectorSize && vectorSize > 0);
 }
 
 HLSLType::HLSLType(ScalarType scalarType, size_t rows, size_t columns) :
@@ -63,8 +75,8 @@ HLSLType::HLSLType(ScalarType scalarType, size_t rows, size_t columns) :
 	mScalarType(scalarType),
 	mSize((rows - 1) << 28 | (columns - 1) << 30)
 {
-	assert(rows <= 4 && rows > 0);
-	assert(columns <= 4 && columns > 0);
+	assert(rows <= MaxMatrixRows && rows > 0);
+	assert(columns <= MaxMatrixColumns && columns > 0);
 }
 
 	
@@ -154,13 +166,13 @@ HLSLType HLSLType::InstanceType() const
 
 HLSLType HLSLType::VectorType(size_t count) const
 {
-	assert(mType == Vector && GetVectorSize() == 1);
+	assert(mType == Scalar);
 	return HLSLType(mScalarType, count);
 }
 
 HLSLType HLSLType::MatrixType(size_t rows, size_t columns) const
 {
-	assert(mType == Vector && GetVectorSize() == 1);
+	assert(mType == Scalar);
 	return HLSLType(mScalarType, rows, columns);
 }
 
@@ -198,81 +210,11 @@ HLSLType HLSLType::SubElement(const std::string& name) const
 
 	if (member == NULL)
 	{
-		return HLSLType(Void);
+		return HLSLType();
 	}
 	else
 	{
 		return member->GetType().GetType();
-	}
-}
-
-HLSLType HLSLType::ResolveReturnType(const HLSLFunctionInputSignature& inputSignature) const
-{
-	if (mModifier == TypeClassModifier)
-	{
-		HLSLType result(*this);
-		result.mModifier = NoModifier;
-		return result;
-	}
-	else
-	{
-		assert(mType == Function);
-
-		HLSLFunctionDefinition* exactMatch = NULL;
-		HLSLFunctionDefinition* compatableMatch = NULL;
-		bool isAbigious = false;
-
-		HLSLFunctionDefinition* looper = mFunctionDefinition;
-
-		while (looper != NULL)
-		{
-			if (looper->Matches(inputSignature))
-			{
-				if (exactMatch != NULL)
-				{
-					return HLSLType::Unknown;
-				}
-				else
-				{
-					exactMatch = looper;
-				}
-			}
-			else if (looper->IsCompatibleWith(inputSignature))
-			{
-				if (compatableMatch != NULL)
-				{
-					isAbigious = true;
-				}
-				else
-				{
-					compatableMatch = looper;
-				}
-			}
-
-			looper = looper->GetPreviousOverload();
-		}
-
-		if (exactMatch != NULL)
-		{
-			const_cast<HLSLType*>(this)->mFunctionDefinition = exactMatch;
-			return exactMatch->GetReturnType().GetType();
-		}
-		else if (compatableMatch != NULL)
-		{
-			if (isAbigious)
-			{
-				return HLSLType::Unknown;
-			}
-			else
-			{
-				const_cast<HLSLType*>(this)->mFunctionDefinition = compatableMatch;
-				return compatableMatch->GetReturnType().GetType();
-			}
-		}
-		else
-		{
-			return HLSLType::Void;
-		}
 	}
 }
 
@@ -282,6 +224,14 @@ HLSLType HLSLType::GetReturnType() const
 	return mFunctionDefinition->GetReturnType().GetType();
 }
 
+HLSLType HLSLType::ChangeScalarType(ScalarType type) const
+{
+	assert(IsNumerical());
+	HLSLType result(*this);
+	result.mScalarType = type;
+	return result;
+}
+
 HLSLType::Type HLSLType::GetType() const
 {
 	return mType;
@@ -289,7 +239,7 @@ HLSLType::Type HLSLType::GetType() const
 
 HLSLType::ScalarType HLSLType::GetScalarType() const
 {
-	assert(mType == Scalar || mType == Vector || mType == Matrix);
+	assert(mType == Scalar || mType == Vector || mType == Matrix || mType == Numerical || mType == VariableVector);
 	return mScalarType;
 }
 
@@ -309,6 +259,12 @@ HLSLFunctionDefinition& HLSLType::GetFunction() const
 {
 	assert(mType == Function);
 	return *mFunctionDefinition;
+}
+
+void HLSLType::ResolveFunctionOverload(HLSLFunctionDefinition& newValue) const
+{
+	assert(mType == Function && mFunctionDefinition->IsOverload(newValue));
+	const_cast<HLSLType*>(this)->mFunctionDefinition = &newValue;
 }
 
 bool HLSLType::IsInteger() const
@@ -415,6 +371,12 @@ bool HLSLType::CanAssignFromLossless(const HLSLType& other) const
 	if (IsNumerical() && other.IsNumerical())
 	{
 		return mScalarType == other.mScalarType && GetScalarCount() == other.GetScalarCount();
+	}
+
+	if (mType == VariableVector && other.mType == Vector ||
+		mType == Numerical && other.IsNumerical())
+	{
+		return true;
 	}
 
 	if (mType != other.mType)
@@ -543,6 +505,8 @@ bool HLSLType::IsPureNumerical() const
 	case Scalar:
 	case Vector:
 	case Matrix:
+	case Numerical:
+	case VariableVector:
 		return true;
 	case Struct:
 		{
@@ -561,4 +525,129 @@ bool HLSLType::IsPureNumerical() const
 	}
 
 	return false;
+}
+
+bool HLSLType::NeedsTypeResolution() const
+{
+	return TypeNeedsResolution(mType) || ScalarTypeNeedsResolution(mScalarType);
+}
+
+bool HLSLType::ResolveAmbigiousType(HLSLType& target, const HLSLType& input) const
+{
+	if (NeedsTypeResolution())
+	{
+		assert(input.IsNumerical());
+
+		if (ScalarTypeNeedsResolution(mScalarType))
+		{
+			target.mScalarType = MorePowerfulScalar(target.mScalarType, input.mScalarType);
+		}
+
+		if (TypeNeedsResolution(mType))
+		{
+			if (mType == Numerical)
+			{
+				switch (target.mType)
+				{
+				case Scalar:
+					return true;
+				case Vector:
+					if (input.mType != Vector)
+					{
+						return false;
+					}
+					else
+					{
+						target.SetVectorSize(std::min(target.GetVectorSize(), input.GetVectorSize()));
+					}
+					break;
+				case Matrix:
+					if (input.mType != Matrix)
+					{
+						return false;
+					}
+					else
+					{
+						target.SetMatrixSize(
+							std::min(target.GetRows(), input.GetRows()),
+							std::min(target.GetColumns(), input.GetColumns()));
+					}
+					break;
+				case Numerical:
+					target.mType = input.mType;
+					target.mSize = input.mSize;
+					break;
+				case VariableVector:
+					if (input.mType != Vector)
+					{
+						return false;
+					}
+					target.mType = Vector;
+					target.mSize = input.mSize;
+					break;
+				}
+			}
+			else if (mType == VariableVector)
+			{
+				if (input.mType != Vector)
+				{
+					return false;
+				}
+				else
+				{
+					switch (target.GetType())
+					{
+					case Numerical:
+					case VariableVector:
+						target.mType = Vector;
+						target.mSize = input.mSize;
+						break;
+					case Vector:
+						target.SetVectorSize(std::min(target.GetVectorSize(), input.GetVectorSize()));
+						break;
+					default:
+						return false;
+					}
+				}
+			}
+			else
+			{
+				assert(false && "Invalid ambigious type");
+			}
+		}
+	}
+
+	return true;
+}
+
+bool HLSLType::TypeNeedsResolution(Type type)
+{
+	return type == Numerical || type == VariableVector;
+}
+
+bool HLSLType::ScalarTypeNeedsResolution(ScalarType scalarType)
+{
+	return scalarType == BoolIntFloat || scalarType == IntFloat;
+}
+
+HLSLType::ScalarType HLSLType::MorePowerfulScalar(HLSLType::ScalarType a, HLSLType::ScalarType b)
+{
+	if (a > b)
+	{
+		return a;
+	}
+	else
+	{
+		return b;
+	}
+}
+
+void HLSLType::SetVectorSize(size_t value)
+{
+	mSize = (value - 1) << 28;
+}
+
+void HLSLType::SetMatrixSize(size_t rows, size_t columns)
+{
+	mSize = (rows - 1) << 28 | (columns - 1) << 30;
 }

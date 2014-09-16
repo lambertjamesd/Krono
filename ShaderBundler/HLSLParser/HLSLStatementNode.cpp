@@ -2,6 +2,9 @@
 #include "HLSLNodeVisitor.h"
 #include "HLSLExpressionNode.h"
 
+#include <iostream>
+#include <cassert>
+
 HLSLStatementNode::HLSLStatementNode(const HLSLToken& token) :
 	HLSLNode(token)
 {
@@ -94,7 +97,7 @@ HLSLVariableDefinition::HLSLVariableDefinition(const HLSLToken& token,
 
 }
 	
-void HLSLVariableDefinition::SetSemantic(const std::string& semantic)
+void HLSLVariableDefinition::SetSemantic(const HLSLSemantic& semantic)
 {
 	mSemantic = semantic;
 }
@@ -134,7 +137,7 @@ const std::string& HLSLVariableDefinition::GetName() const
 	return mName;
 }
 
-const std::string& HLSLVariableDefinition::GetSemantic() const
+const HLSLSemantic& HLSLVariableDefinition::GetSemantic() const
 {
 	return mSemantic;
 }
@@ -154,6 +157,22 @@ void HLSLVariableDefinition::Accept(HLSLNodeVisitor& visitor)
 	visitor.Visit(*this);
 }
 
+HLSLSemantic::HLSLSemantic()
+{
+
+}
+
+HLSLSemantic::HLSLSemantic(const std::string& value) :
+	mSemantic(value)
+{
+
+}
+
+const std::string& HLSLSemantic::GetValue() const
+{
+	return mSemantic;
+}
+
 HLSLFunctionParameter::HLSLFunctionParameter(const HLSLToken& token, InputModifier inputModifer, std::unique_ptr<HLSLTypeNode> type, const std::string& name) :
 	HLSLNode(token),
 	mInputModifier(inputModifer),
@@ -165,7 +184,7 @@ HLSLFunctionParameter::HLSLFunctionParameter(const HLSLToken& token, InputModifi
 
 }
 
-void HLSLFunctionParameter::SetSemantic(const std::string& value)
+void HLSLFunctionParameter::SetSemantic(const HLSLSemantic& value)
 {
 	mSemantic = value;
 }
@@ -194,7 +213,7 @@ const std::string& HLSLFunctionParameter::GetName() const
 	return mName;
 }
 
-const std::string& HLSLFunctionParameter::GetSemantic() const
+const HLSLSemantic& HLSLFunctionParameter::GetSemantic() const
 {
 	return mSemantic;
 }
@@ -248,12 +267,12 @@ void HLSLFunctionDefinition::ReplaceParameter(int index, std::unique_ptr<HLSLFun
 	mParameters[index] = move(value);
 }
 
-void HLSLFunctionDefinition::SetSemantic(const std::string& value)
+void HLSLFunctionDefinition::SetSemantic(const HLSLSemantic& value)
 {
 	mSemantic = value;
 }
 
-const std::string& HLSLFunctionDefinition::GetSemantic() const
+const HLSLSemantic& HLSLFunctionDefinition::GetSemantic() const
 {
 	return mSemantic;
 }
@@ -271,6 +290,41 @@ HLSLTypeNode& HLSLFunctionDefinition::GetReturnType()
 const HLSLTypeNode& HLSLFunctionDefinition::GetReturnType() const
 {
 	return *mReturnType;
+}
+
+// resolves the return type based on the parameters
+bool HLSLFunctionDefinition::ResolveReturnType(const HLSLFunctionInputSignature& parameters, HLSLType& result) const
+{
+	assert(IsCompatibleWith(parameters) && "function must be compatable");
+
+	HLSLType returnType = mReturnType->GetType();
+
+	if (returnType.NeedsTypeResolution())
+	{
+		HLSLType resolvedType(HLSLType::Numerical, HLSLType::NoScalarType);
+		
+		for (size_t i = 0; i < parameters.GetParameterCount(); ++i)
+		{
+			HLSLType parameterInputType = mParameters[i]->GetType().GetType();
+
+			if (parameterInputType.NeedsTypeResolution())
+			{
+				if (!parameterInputType.ResolveAmbigiousType(resolvedType, parameters.GetParameter(i)))
+				{
+					return false;
+				}
+			}
+		}
+
+		HLSLType returnTypeCopy(returnType);
+		if (!returnTypeCopy.ResolveAmbigiousType(returnType, resolvedType))
+		{
+			return false;
+		}
+	}
+	
+	result = returnType;
+	return true;
 }
 
 const std::string& HLSLFunctionDefinition::GetName() const
@@ -293,6 +347,22 @@ HLSLStatementBlock* HLSLFunctionDefinition::GetBody()
 	return mBody.get();
 }
 
+bool HLSLFunctionDefinition::IsOverload(HLSLFunctionDefinition& value)
+{
+	if (&value == this)
+	{
+		return true;
+	}
+	else if (mPreviousOverloadedDefinition == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return mPreviousOverloadedDefinition->IsOverload(value);
+	}
+}
+
 void HLSLFunctionDefinition::SetPreviousOverload(HLSLFunctionDefinition* value)
 {
 	mPreviousOverloadedDefinition = value;
@@ -303,7 +373,7 @@ HLSLFunctionDefinition* HLSLFunctionDefinition::GetPreviousOverload()
 	return mPreviousOverloadedDefinition;
 }
 
-bool HLSLFunctionDefinition::IsCompatibleWith(const HLSLFunctionInputSignature& parameters)
+bool HLSLFunctionDefinition::IsCompatibleWith(const HLSLFunctionInputSignature& parameters) const
 {
 	if (mParameters.size() < parameters.GetParameterCount())
 	{
@@ -328,7 +398,7 @@ bool HLSLFunctionDefinition::IsCompatibleWith(const HLSLFunctionInputSignature& 
 	return true;
 }
 
-bool HLSLFunctionDefinition::Matches(const HLSLFunctionInputSignature& parameters)
+bool HLSLFunctionDefinition::Matches(const HLSLFunctionInputSignature& parameters) const
 {
 	if (mParameters.size() < parameters.GetParameterCount())
 	{
@@ -384,7 +454,7 @@ HLSLStructureMember::HLSLStructureMember(const HLSLToken& token, InterpolationMo
 
 }
 
-void HLSLStructureMember::SetSemantic(const std::string& value)
+void HLSLStructureMember::SetSemantic(const HLSLSemantic& value)
 {
 	mSemantic = value;
 }
@@ -410,7 +480,7 @@ const std::string& HLSLStructureMember::GetName()
 	return mName;
 }
 
-const std::string& HLSLStructureMember::GetSemantic()
+const HLSLSemantic& HLSLStructureMember::GetSemantic()
 {
 	return mSemantic;
 }

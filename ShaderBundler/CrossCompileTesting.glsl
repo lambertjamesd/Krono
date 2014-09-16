@@ -74,13 +74,40 @@ void Test(int foo, in float bar[4], out mat3 output, inout mat2 inOutput)
 	}
 	discard;
 }
-vec4 Main(vec4 position)
+struct FooBar
 {
-	return position;
+	vec4 meh;
+};
+struct VSOutput
+{
+	vec4 position;
+	vec2 texCoord;
+	FooBar meh;
+};
+struct PSOutput
+{
+	vec4 position;
+	vec2 texCoord;
+};
+PSOutput Main(VSOutput input)
+{
+	PSOutput result;
+	result.position = input.position;
+	result.texCoord = input.texCoord;
+	return result;
 }
-in vec4 attrPOSITION0;
+in vec2 varyingTexCoord0;
+in vec4 varyingTexCoord1;
 
+layout(binding = 0) out vec4 targetSV_Target0;
+layout(binding = 1) out vec2 targetSV_Target1;
 void main()
 {
-	Main();
+	VSOutput input;
+	input.position = gl_FragCoord;
+	input.texCoord = varyingTexCoord0;
+	input.meh.meh = varyingTexCoord1;
+	PSOutput result = Main(input);
+	targetSV_Target0 = result.position;
+	targetSV_Target1 = result.texCoord;
 }

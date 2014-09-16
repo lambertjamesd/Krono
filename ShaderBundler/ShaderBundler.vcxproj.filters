@@ -137,6 +137,18 @@
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLTextureClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTextureClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HLSLParser\HLSLBuiltInFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderBundler.cpp">
@@ -254,6 +266,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLSamplerPurger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLTextureClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTextureClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HLSLParser\HLSLBuiltInFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
