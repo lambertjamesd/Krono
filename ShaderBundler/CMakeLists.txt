@@ -58,3 +58,5 @@ endif (USE_DX11)
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_executable (ShaderBundler ${SOURCE_FILES})
+
+INSTALL_TARGETS(/bin ShaderBundler)
