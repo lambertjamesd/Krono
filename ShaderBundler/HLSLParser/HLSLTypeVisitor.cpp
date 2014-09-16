@@ -781,34 +781,36 @@ void HLSLTypeVisitor::Visit(HLSLBinaryOperatorNode& node)
 			{
 				throw HLSLParserException(token, "no comparison operator defined");
 			}
-		} 
-
-		if (token.IsBitwiseOperator() && (!leftType.IsInteger() || rightType.IsInteger()))
-		{
-			throw HLSLParserException(token, "integer type required");
-		}
-
-		HLSLType::ScalarType scalarType = HLSLType::MorePowerfulScalar(leftType.GetScalarType(), rightType.GetScalarType());
-
-		if (leftType.IsSingleValue() && !rightType.IsSingleValue())
-		{
-			node.ResolveType(HLSLType(scalarType));
-		}
-		else if (rightType.IsSingleValue() && !leftType.IsSingleValue())
-		{
-			node.ResolveType(leftType.ChangeScalarType(scalarType));
-		}
-		else if (leftType.CanAssignFrom(rightType))
-		{
-			node.ResolveType(leftType.ChangeScalarType(scalarType));
-		}
-		else if (rightType.CanAssignFrom(leftType))
-		{
-			node.ResolveType(rightType.ChangeScalarType(scalarType));
 		}
 		else
 		{
-			throw HLSLParserException(token, "no operator defined");
+			if (token.IsBitwiseOperator() && (!leftType.IsInteger() || rightType.IsInteger()))
+			{
+				throw HLSLParserException(token, "integer type required");
+			}
+
+			HLSLType::ScalarType scalarType = HLSLType::MorePowerfulScalar(leftType.GetScalarType(), rightType.GetScalarType());
+
+			if (leftType.IsSingleValue() && !rightType.IsSingleValue())
+			{
+				node.ResolveType(HLSLType(scalarType));
+			}
+			else if (rightType.IsSingleValue() && !leftType.IsSingleValue())
+			{
+				node.ResolveType(leftType.ChangeScalarType(scalarType));
+			}
+			else if (leftType.CanAssignFrom(rightType))
+			{
+				node.ResolveType(leftType.ChangeScalarType(scalarType));
+			}
+			else if (rightType.CanAssignFrom(leftType))
+			{
+				node.ResolveType(rightType.ChangeScalarType(scalarType));
+			}
+			else
+			{
+				throw HLSLParserException(token, "no operator defined");
+			}
 		}
 	}
 	else

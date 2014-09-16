@@ -38,9 +38,11 @@ endif (USE_XLIB)
 
 
 set (DEFERRED_RENDERING_INCLUDE ${PROJECT_SOURCE_DIR}/DeferredRendering)
+set (BASIC_GAME_ENGINE_INCLUDE ${PROJECT_SOURCE_DIR}/BasicGameEngine)
 
 add_subdirectory(ShaderBundler)
 add_subdirectory(DeferredRendering)
+add_subdirectory(BasicGameEngine)
 add_subdirectory(TowerDefense)
 add_custom_target(
 	Shaders
@@ -48,6 +50,4 @@ add_custom_target(
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/TowerDefense/Media/Shaders
 )
 add_dependencies(TowerDefense Shaders)
-
-MESSAGE ( STATUS ${CMAKE_INSTALL_PREFIX} )
 

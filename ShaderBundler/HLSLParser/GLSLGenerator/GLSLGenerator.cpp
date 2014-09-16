@@ -66,7 +66,7 @@ void GLSLGenerator::ProcessFile(const std::string& filename, ShaderType::Type ty
 	std::istringstream input(preprocessResult.text);
 	HLSLParser parser(input);
 
-	output << "#version 420" << endl;
+	output << "#version 440" << endl;
 
 	std::unique_ptr<HLSLNode> file = move(parser.ParseFile());
 

@@ -144,7 +144,7 @@ void GLSLEntryPointBuilder::GenerateInOut(bool isInput, const std::string& prefi
 					index = atoi(semanticName.c_str() + (digitPosition - semanticName.begin()));
 				}
 
-				mOutput << "layout(binding = " << index << ") ";
+				mOutput << "layout(location = " << index << ") ";
 			}
 
 			mOutput << (isInput ? "in" : "out") << ' ' ;

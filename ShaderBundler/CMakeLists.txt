@@ -12,6 +12,8 @@ set (SOURCE_FILES
 
 	HLSLParser/GLSLGenerator/GLSLGenerator.cpp
 	HLSLParser/GLSLGenerator/GLSLSamplerPurger.cpp
+	HLSLParser/GLSLGenerator/GLSLEntryPointBuilder.cpp
+	HLSLParser/GLSLGenerator/GLSLTextureClass.cpp
 
 	HLSLParser/HLSLParser.cpp
 	HLSLParser/HLSLParserException.cpp
@@ -30,6 +32,8 @@ set (SOURCE_FILES
 	HLSLParser/HLSLTypeNode.cpp
 	HLSLParser/HLSLTypeVisitor.cpp
 	HLSLParser/HLSLUnaryOperator.cpp
+	HLSLParser/HLSLTextureClass.cpp
+	HLSLParser/HLSLBuiltInFunctions.cpp
 
 	HLSLParser/Preprocessor/BinaryOperatorNode.cpp
 	HLSLParser/Preprocessor/DirectiveNode.cpp
