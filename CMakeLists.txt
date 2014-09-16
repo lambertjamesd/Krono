@@ -1,4 +1,8 @@
 cmake_minimum_required (VERSION 2.6)
+
+set (Krono_VERSION_MAJOR 0)
+set (Krono_VERSION_MINOR 5)
+
 project (Krono)
 
 set (LINUX UNIX && NOT APPLE)
@@ -44,3 +48,6 @@ add_custom_target(
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/TowerDefense/Media/Shaders
 )
 add_dependencies(TowerDefense Shaders)
+
+MESSAGE ( STATUS ${CMAKE_INSTALL_PREFIX} )
+

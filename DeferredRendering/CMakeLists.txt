@@ -137,6 +137,13 @@ if (USE_OPENGL4_4)
 	)
 endif (USE_OPENGL4_4)
 
+set (HEADER_FILES
+	Krono.h
+	)
+
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_library (DeferredRendering ${SOURCE_FILES})
+
+INSTALL_TARGETS(/lib DeferredRendering)
+INSTALL_FILES(/include/Krono ${HEADER_FILES})
