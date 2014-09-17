@@ -11,6 +11,7 @@
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Matrix.h"
+#include "Math/Angle.h"
 
 #include "Scene/Scene.h"
 #include "Scene/SceneView.h"

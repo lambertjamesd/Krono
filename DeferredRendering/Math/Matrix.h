@@ -21,12 +21,28 @@ public:
 	
 	Matrix(void)
 	{
-
+		for (size_t col = 0; col < Columns; ++col)
+		{
+			for (size_t row = 0; row < Rows; ++row)
+			{
+				mElements[col][row] = (row == col) ? Constant<T>::One : Constant<T>::Zero;
+			}
+		}
 	}
 
 	~Matrix(void)
 	{
 
+	}
+
+	size_t RowCount() const
+	{
+		return Rows;
+	}
+
+	size_t ColumnCount() const
+	{
+		return Columns;
 	}
 	
 	template <size_t ResultColumns>
@@ -51,6 +67,21 @@ public:
 
 		return result;
 	}
+	
+	Matrix<Rows, Columns, T> operator-(const Matrix<Rows, Columns, T>& right) const
+	{
+		Matrix<Rows, Columns, T> result;
+
+		for (size_t row = 0; row < Rows; ++row)
+		{
+			for (size_t col = 0; col < Columns; ++col)
+			{
+				result.mElements[col][row] = mElements[col][row] - right.mElements[col][row];
+			}
+		}
+
+		return result;
+	}
 
 	T& At(size_t row, size_t column)
 	{
@@ -65,7 +96,7 @@ public:
 	template <size_t NewRows, size_t NewColumns>
 	operator Matrix<NewRows, NewColumns, T> () const
 	{
-		Matrix<NewRows, NewColumns, T> result = Matrix<NewRows, NewColumns, T>::Identity();
+		Matrix<NewRows, NewColumns, T> result;
 
 		for (size_t col = 0; col < std::min(Columns, NewColumns); ++col)
 		{
@@ -78,48 +109,32 @@ public:
 		return result;
 	}
 
-	T SubDeterminant(size_t rowSkip, size_t colSkip) const
+	Matrix<Rows - 1, Columns - 1, T> SubMatrix(size_t rowSkip, size_t colSkip) const
 	{
 		static_assert(Rows == Columns, "Can only take determinat of a square matrix");
+		static_assert(Rows > 1 && Columns > 1, "Taking sub matrix of a 1x1 doesn't make sense");
 
-		if (Rows == 2)
-		{
-			return mElements[1 - colSkip][1 - rowSkip];
-		}
-
-		T result = Constant<T>::Zero;
+		Matrix<Rows - 1, Columns - 1, T> result;
 		
 		for (size_t col = 0; col < Columns - 1; ++col)
 		{
-			T positiveSlant = Constant<T>::One;
-			T negativeSlant = Constant<T>::One;
-
-			for (size_t i = 0; i < Columns - 1; ++i)
+			for (size_t row = 0; row < Rows - 1; ++row)
 			{
-				size_t actualColumn = (col + i) % (Columns - 1);
-				size_t actualRow = i;
-				size_t negativeRow = Columns - 2 - i;
+				size_t inputColumn = col;
+				size_t inputRow = row;
 
-				if (actualColumn >= colSkip)
+				if (inputColumn >= colSkip)
 				{
-					++actualColumn;
+					++inputColumn;
 				}
 
-				if (actualRow >= rowSkip)
+				if (inputRow >= rowSkip)
 				{
-					++actualRow;
+					++inputRow;
 				}
 
-				if (negativeRow >= rowSkip)
-				{
-					++negativeRow;
-				}
-
-				positiveSlant *= mElements[actualColumn][actualRow];
-				negativeSlant *= mElements[actualColumn][negativeRow];
+				result.At(row, col) = mElements[inputColumn][inputRow];
 			}
-
-			result += positiveSlant - negativeSlant;
 		}
 
 		return result;
@@ -129,6 +144,11 @@ public:
 	{
 		static_assert(Rows == Columns, "Can only take determinat of a square matrix");
 
+		if (Rows == 2)
+		{
+			return mElements[0][0] * mElements[1][1] - mElements[0][1] * mElements[1][0];
+		}
+
 		T result = 0;
 
 		for (size_t col = 0; col < Columns; ++col)
@@ -136,7 +156,7 @@ public:
 			T subValue = (col & 0x1) ? -Constant<T>::One : Constant<T>::One;
 
 			subValue *= mElements[col][0];
-			subValue *= SubDeterminant(0, col);
+			subValue *= SubMatrix(0, col).Determinant();
 
 			result += subValue;
 		}
@@ -156,7 +176,7 @@ public:
 		{
 			for (size_t row = 0; row < Rows; ++row)
 			{
-				result.mElements[row][col] = SubDeterminant(row, col) * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
+				result.mElements[row][col] = SubMatrix(row, col).Determinant() * (((row ^ col) & 0x1) ? -determinantInv : determinantInv);
 			}
 		}
 
@@ -180,26 +200,70 @@ public:
 
 	static Matrix Identity()
 	{
-		Matrix result;
-		
-		for (size_t col = 0; col < Columns; ++col)
-		{
-			for (size_t row = 0; row < Rows; ++row)
-			{
-				result.mElements[col][row] = (row == col) ? Constant<T>::One : Constant<T>::Zero;
-			}
-		}
-
-		return result;
+		return Matrix();
 	}
 protected:
 	T mElements[Columns][Rows];
+};
+
+template <typename T>
+class Matrix<1,1,T>
+{
+public:
+	Matrix(const T *rowMajorData)
+	{
+		mElement = *rowMajorData;
+	}
+	
+	Matrix(void)
+	{
+		mElement = Constant<T>::One;
+	}
+
+	T& At(size_t row, size_t column)
+	{
+		return mElement;
+	}
+	
+	const T& At(size_t row, size_t column) const
+	{
+		return mElement;
+	}
+
+	size_t RowCount() const
+	{
+		return 1;
+	}
+
+	size_t ColumnCount() const
+	{
+		return 1;
+	}
+
+	T Determinant() const
+	{
+		return mElement;
+	}
+
+	Matrix Inverse() const
+	{
+		Matrix result;
+		result = Constant<T>::One / mElement;
+		return result;
+	}
+private:
+	T mElement;
 };
 
 template <typename T = float>
 class Matrix4 : public Matrix<4, 4, T>
 {
 public:
+	Matrix4()
+	{
+
+	}
+
 	Matrix4(const Matrix<4, 4, T>& other) :
 		Matrix<4, 4, T>(&other.At(0, 0))
 	{
@@ -218,9 +282,71 @@ public:
 		return *this;
 	}
 
+	Vector3<T> TransformPoint(const Vector3<T>& input) const
+	{
+		return (*this * Vector4<T>(input, Constant<T>::One)).XYZ();
+	}
+
+	Vector3<T> TransformDirection(const Vector3<T>& input) const
+	{
+		return (*this * Vector4<T>(input, Constant<T>::Zero)).XYZ();
+	}
+
+	// gets the rotation of an orthonormal matrix
+	// WARNING: this will have undefined behavior for scaled or skewed matrices
+	Quaternion<T> GetRotation() const
+	{
+		return Quaternion<T>(
+			Vector3<T>(this->At(0, 0), this->At(1, 0), this->At(2, 0)),
+			Vector3<T>(this->At(0, 1), this->At(1, 1), this->At(2, 1)),
+			Vector3<T>(this->At(0, 2), this->At(1, 2), this->At(2, 2)));
+	}
+
+	Vector3<T> GetTranslation() const
+	{
+		return Vector3<T>(this->At(0, 3), this->At(1, 3), this->At(2, 3));
+	}
+
+	void Decompose(Vector3<T>& position, Quaternion<T>& rotation, Vector3<T>& scale) const
+	{
+		position = GetTranslation();
+
+		Matrix<3, 3, T> rotationMatrix = (Matrix<3, 3, T>)(*this);
+		int currentIteration = 0;
+		T currentError;
+		T faultTolerance = Constant<T>::One / DecomposeFaultRecep;
+
+		do
+		{
+			Matrix<3, 3, T> nextIteration = rotationMatrix.Inverse().Transpose();
+			
+			currentError = Constant<T>::Zero;
+			for (int col = 0; col < nextIteration.ColumnCount(); ++col)
+			{
+				for (int row = 0; row < nextIteration.RowCount(); ++row)
+				{
+					T lastValue = rotationMatrix.At(row, col);
+					rotationMatrix.At(row, col) = 0.5f * (nextIteration.At(row, col) + rotationMatrix.At(row, col));
+					T difference = lastValue - rotationMatrix.At(row, col);
+					currentError += difference * difference;
+				}
+			}
+			++currentIteration;
+		} while (currentIteration < MaxDecomposeIterations && currentError > faultTolerance * faultTolerance);
+
+		Matrix<3, 3, T> scaleMatrix = rotationMatrix.Inverse() * (Matrix<3, 3, T>)(*this);
+
+		rotation = Quaternion<T>(
+			Vector3<T>(rotationMatrix.At(0, 0), rotationMatrix.At(1, 0), rotationMatrix.At(2, 0)),
+			Vector3<T>(rotationMatrix.At(0, 1), rotationMatrix.At(1, 1), rotationMatrix.At(2, 1)),
+			Vector3<T>(rotationMatrix.At(0, 2), rotationMatrix.At(1, 2), rotationMatrix.At(2, 2)));
+
+		scale = Vector3<T>(scaleMatrix.At(0, 0), scaleMatrix.At(1, 1), scaleMatrix.At(2, 2));
+	}
+
 	static Matrix4 Scale(const Vector3<T>& vector)
 	{
-		Matrix4 result = Matrix4::Identity();
+		Matrix4 result;
 		result.At(0, 0) = vector.x;
 		result.At(1, 1) = vector.y;
 		result.At(2, 2) = vector.z;
@@ -229,7 +355,7 @@ public:
 
 	static Matrix4 Translation(const Vector3<T>& vector)
 	{
-		Matrix4 result = Matrix4::Identity();
+		Matrix4 result;
 		result.At(0, 3) = vector.x;
 		result.At(1, 3) = vector.y;
 		result.At(2, 3) = vector.z;
@@ -238,7 +364,7 @@ public:
 
 	static Matrix4 Rotation(const Quaternion<T>& quat)
 	{
-		Matrix4 result = Matrix4::Identity();
+		Matrix4 result;
 
 		result.At(0, 0) = 1 - 2 * (quat.y * quat.y + quat.z * quat.z);
 		result.At(0, 1) = 2 * (quat.x * quat.y - quat.z * quat.w);
@@ -254,7 +380,15 @@ public:
 
 		return result;
 	}
+
+	static Matrix4 FullTransform(const Vector3<T>& position, const Quaternion<T>& rotation, const Vector3<T>& scale)
+	{
+		return Matrix4::Translation(position) * Matrix4::Rotation(rotation) * Matrix4::Scale(scale);
+	}
 private:
+
+	static const int MaxDecomposeIterations = 20;
+	static const int DecomposeFaultRecep = 10000;
 };
 
 typedef Matrix4<float> Matrix4f;

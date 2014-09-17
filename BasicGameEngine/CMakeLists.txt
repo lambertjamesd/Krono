@@ -27,4 +27,4 @@ include_directories("${DEFERRED_RENDERING_INCLUDE}")
 add_library (BasicGameEngine ${SOURCE_FILES})
 
 INSTALL_TARGETS(/lib BasicGameEngine)
-INSTALL_FILES(/include/BasicGameEngine ${HEADER_FILES})
+INSTALL_HEADERS_WITH_DIRECTORY(BasicGameEngine/ HEADER_FILES)

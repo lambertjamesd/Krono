@@ -18,6 +18,16 @@ public:
 	Vector4(const Vector2<T>& xy, const Vector2<T>& zw) : x(xy.x), y(xy.y), z(zw.x), w(zw.y) {}
 	Vector4(void) : x(T()), y(T()), z(T()), w(T()) {}
 	~Vector4(void) {}
+
+	Vector3<T> XYZ() const
+	{
+		return Vector3<T>(x, y, z); 
+	}
+
+	Vector2<T> XY() const
+	{
+		return Vector2<T>(x, y); 
+	}
 	
 	template <typename R>
 	operator Vector4<R>() const

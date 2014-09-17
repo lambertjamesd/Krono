@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include "Math.h"
+#include "Angle.h"
 #include "Vector2.h"
 
 namespace krono
@@ -15,6 +16,11 @@ public:
 	Vector3(const T& x, const Vector2<T>& yz) : x(x), y(yz.y), z(yz.z) {}
 	Vector3(void) : x(T()), y(T()), z(T()) {}
 	~Vector3(void) {}
+
+	Vector2<T> XY() const
+	{
+		return Vector2<T>(x, y); 
+	}
 
 	bool operator==(const Vector3& other) const
 	{
@@ -51,6 +57,40 @@ public:
 			z = z * lengthInv;
 		}
 	}
+
+	T Length() const
+	{
+		return Math<T>::Sqrt(x * x + y * y + z * z);
+	}
+
+	T LengthSqrd() const
+	{
+		return x * x + y * y + z * z;
+	}
+
+	T Dot(const Vector3& other) const
+	{
+		return x * other.x + y * other.y + z * other.z;
+	}
+
+	Vector3 Cross(const Vector3& other) const
+	{
+		return Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+	}
+
+	Radians<T> AngleBetween(const Vector3& other) const
+	{
+		T cosAngle = Dot(other) / (Length() * other.Length());
+		
+		if (cosAngle >= Constant<T>::One)
+		{
+			return Radians<T>(Constant<T>::Zero);
+		}
+		else
+		{
+			return Radians<T>(Math<T>::ACos(cosAngle));
+		}
+	}
 	
 	template <typename R>
 	operator Vector3<R>() const
@@ -59,6 +99,16 @@ public:
 	}
 
 	T x, y, z;
+
+	static Vector3 Zero()
+	{
+		return Vector3();
+	}
+
+	static Vector3 UnitScale()
+	{
+		return Vector3(Constant<T>::One, Constant<T>::One, Constant<T>::One);
+	}
 };
 
 template <typename T>

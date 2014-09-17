@@ -138,7 +138,64 @@ if (USE_OPENGL4_4)
 endif (USE_OPENGL4_4)
 
 set (HEADER_FILES
-	Krono.h
+	Krono.h 
+	Interface/Graphics.h 
+	Interface/VertexBuffer.h
+	Interface/InputLayout.h 
+	Core/Hash.h 
+	Core/Types.h 
+	Interface/DataFormat.h 
+	Core/Types.h 
+	Core/Memory.h 
+	Interface/Shader.h 
+	Core/Object.h 
+	Interface/Window.h 
+	Math/Vector2.h 
+	Math/Math.h 
+	Interface/RenderTarget.h 
+	Interface/Color.h Interface/Texture2D.h 
+	Interface/Texture.h 
+	Interface/DepthBuffer.h 
+	Math/Rect.h 
+	Math/Range.h 
+	Interface/IndexBuffer.h 
+	Interface/ConstantBuffer.h 
+	Interface/Sampler.h 
+	Interface/DepthState.h 
+	Interface/BlendState.h 
+	Interface/RasterizerState.h 
+	Resource/ResourceManager.h 
+	Resource/ResourceLoader.h 
+	Resource/Resource.h 
+	Resource/LoadException.h 
+	Core/Exception.h 
+	Resource/GeometryCache.h 
+	Resource/Mesh/Mesh.h 
+	Collide/BoundingBox.h 
+	Math/Vector3.h 
+	Resource/Mesh/SubMesh.h 
+	Resource/Material.h 
+	Resource/Technique.h 
+	Compositor/RenderStateParameters.h 
+	Resource/FileHelper.h 
+	Math/Matrix.h 
+	Math/Vector4.h 
+	Math/Quaternion.h 
+	Math/Angle.h 
+	Scene/Scene.h 
+	Scene/SceneIndex.h 
+	Collide/Frustrum.h 
+	Collide/Plane.h 
+	Scene/Entity.h 
+	Scene/SceneView.h 
+	Compositor/Compositor.h 
+	Compositor/CompositeStage.h 
+	Compositor/RenderState.h 
+	Compositor/RenderTargetDatabase.h 
+	Compositor/RenderTargetConfiguration.h 
+	Compositor/RenderSceneCompositeStage.h 
+	Compositor/ScreenQuadCompositeStage.h
+
 	)
 
 include_directories("${PROJECT_SOURCE_DIR}")
@@ -146,4 +203,4 @@ include_directories("${PROJECT_SOURCE_DIR}")
 add_library (DeferredRendering ${SOURCE_FILES})
 
 INSTALL_TARGETS(/lib DeferredRendering)
-INSTALL_FILES(/include/Krono ${HEADER_FILES})
+INSTALL_HEADERS_WITH_DIRECTORY(Krono/ HEADER_FILES)
