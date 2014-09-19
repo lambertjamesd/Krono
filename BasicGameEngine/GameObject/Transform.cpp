@@ -1,5 +1,7 @@
 #include "Transform.h"
 #include <algorithm>
+namespace kge
+{
 
 using namespace krono;
 
@@ -179,4 +181,6 @@ void Transform::SetIsWorldTransformDirty()
 			(*it)->SetIsWorldTransformDirty();
 		}
 	}
+}
+
 }

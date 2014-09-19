@@ -29,6 +29,8 @@ typedef unsigned long WindowHandle;
 class Window
 {
 public:
+	typedef Auto<Window> Ptr;
+
 	virtual ~Window(void);
 
 	Vector2i GetSize() const;

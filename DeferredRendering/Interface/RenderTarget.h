@@ -29,6 +29,8 @@ private:
 class WindowRenderTarget : public RenderTarget
 {
 public:
+	typedef Auto<WindowRenderTarget> Ptr;
+
 	virtual ~WindowRenderTarget(void);
 
 	virtual void Present(void) = 0;

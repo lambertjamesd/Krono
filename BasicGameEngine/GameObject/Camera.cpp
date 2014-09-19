@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Scene/Scene.h"
+namespace kge
+{
 
 Camera::Camera(GameObject& parentGameObject) :
 	Component(parentGameObject),
@@ -37,4 +39,6 @@ void Camera::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarg
 void Camera::SetLens(std::unique_ptr<Lens>& lens)
 {
 	mLens = std::move(lens);
+}
+
 }

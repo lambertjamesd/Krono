@@ -2,6 +2,9 @@
 
 #include <Krono.h>
 
+namespace kge
+{
+
 class RenderStage
 {
 public:
@@ -24,3 +27,4 @@ private:
 	krono::RenderTargetConfiguration mRenderTarget;
 };
 
+}

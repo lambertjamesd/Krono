@@ -1,5 +1,8 @@
 #include "RenderStage.h"
 
+namespace kge
+{
+
 using namespace krono;
 
 RenderStage::RenderStage(Scene& scene, const Compositor::Ptr& compistor) :
@@ -37,4 +40,6 @@ void RenderStage::SetProjectionMatrix(const krono::Matrix4f& value)
 void RenderStage::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget)
 {
 	mRenderTarget = renderTarget;
+}
+
 }

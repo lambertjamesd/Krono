@@ -68,6 +68,16 @@ public:
 		return x * x + y * y + z * z;
 	}
 
+	T Distance(const Vector3& other) const
+	{
+		return (*this - other).Length();
+	}
+
+	T DistanceSqrd(const Vector3& other) const
+	{
+		return (*this - other).LengthSqrd();
+	}
+
 	T Dot(const Vector3& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;

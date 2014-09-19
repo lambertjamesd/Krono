@@ -2,6 +2,7 @@
 #include "GameObject/GameObject.h"
 
 using namespace krono;
+using namespace kge;
 
 SpinBehavior::SpinBehavior(GameObject& parentGameObject) :
 	Behavior(parentGameObject),

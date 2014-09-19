@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <cassert>
 
+namespace kge
+{
+
 using namespace std;
 
 Updatable::Updatable(UpdateManager& updateManager) :
@@ -48,4 +51,6 @@ void UpdateManager::AddUpdatable(Updatable* target)
 void UpdateManager::RemoveUpdatable(Updatable* target)
 {
 	mUpdateList.erase(remove(mUpdateList.begin(), mUpdateList.end(), target), mUpdateList.end());
+}
+
 }

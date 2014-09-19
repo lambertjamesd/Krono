@@ -6,6 +6,9 @@
 #include "RenderStage.h"
 #include <vector>
 
+namespace kge
+{
+
 class RenderManager
 {
 public:
@@ -36,3 +39,4 @@ private:
 	std::vector<RenderStage::Ptr> mRenderStages;
 };
 
+}

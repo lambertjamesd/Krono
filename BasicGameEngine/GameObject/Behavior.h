@@ -2,6 +2,8 @@
 
 #include "Component.h"
 #include "Scene/UpdateManager.h"
+namespace kge
+{
 
 class Behavior : public Component, public Updatable
 {
@@ -13,3 +15,4 @@ protected:
 	Behavior(GameObject& parentGameObject);
 };
 
+}

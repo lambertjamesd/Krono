@@ -47,4 +47,22 @@ private:
 typedef Degrees<float> Degreesf;
 typedef Radians<float> Radiansf;
 
+template <typename T>
+Radians<T> operator*(const Radians<T>& a, const Radians<T>& b)
+{
+	return Radians<T>((T)a * (T)b);
+}
+
+template <typename T>
+Radians<T> operator*(const Radians<T>& a, const T& b)
+{
+	return Radians<T>((T)a * b);
+}
+
+template <typename T>
+Radians<T> operator*(const T& a, const Radians<T>& b)
+{
+	return Radians<T>(a * (T)b);
+}
+
 }

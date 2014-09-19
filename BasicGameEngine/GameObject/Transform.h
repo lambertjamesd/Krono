@@ -2,6 +2,8 @@
 
 #include "Component.h"
 #include <Krono.h>
+namespace kge
+{
 
 class Transform : public Component
 {
@@ -52,4 +54,6 @@ private:
 	krono::Vector3f mPosition;
 	krono::Vector3f mScale;
 };
+
+}
 

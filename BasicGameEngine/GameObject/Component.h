@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+namespace kge
+{
 
 class GameObject;
 
@@ -22,3 +24,4 @@ private:
 	Component& operator=(const Component& other);
 };
 
+}

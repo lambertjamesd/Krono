@@ -83,6 +83,36 @@ public:
 		return result;
 	}
 
+	Matrix<Rows, Columns, T> operator+(const Matrix<Rows, Columns, T>& right) const
+	{
+		Matrix<Rows, Columns, T> result;
+
+		for (size_t row = 0; row < Rows; ++row)
+		{
+			for (size_t col = 0; col < Columns; ++col)
+			{
+				result.mElements[col][row] = mElements[col][row] * right.mElements[col][row];
+			}
+		}
+
+		return result;
+	}
+
+	Matrix<Rows, Columns, T> operator*(const T& right) const
+	{
+		Matrix<Rows, Columns, T> result;
+
+		for (size_t row = 0; row < Rows; ++row)
+		{
+			for (size_t col = 0; col < Columns; ++col)
+			{
+				result.mElements[col][row] = mElements[col][row] * right;
+			}
+		}
+
+		return result;
+	}
+
 	T& At(size_t row, size_t column)
 	{
 		return mElements[column][row];
@@ -326,7 +356,7 @@ public:
 				for (int row = 0; row < nextIteration.RowCount(); ++row)
 				{
 					T lastValue = rotationMatrix.At(row, col);
-					rotationMatrix.At(row, col) = 0.5f * (nextIteration.At(row, col) + rotationMatrix.At(row, col));
+					rotationMatrix.At(row, col) = (nextIteration.At(row, col) + rotationMatrix.At(row, col)) / 2;
 					T difference = lastValue - rotationMatrix.At(row, col);
 					currentError += difference * difference;
 				}
@@ -397,5 +427,20 @@ typedef Matrix<2, 2, float> Matrix2f;
 
 Vector4f operator*(const Matrix4f& lhs, const Vector4f& rhs);
 Vector4f operator*(const Vector4f& lhs, const Matrix4f& rhs);
+
+template <size_t Rows, size_t Columns, typename T>
+Matrix<Rows, Columns, T> operator*(const T& left, const Matrix<Rows, Columns, T>& right)
+{
+	Matrix<Rows, Columns, T> result;
+
+	for (size_t row = 0; row < Rows; ++row)
+	{
+		for (size_t col = 0; col < Columns; ++col)
+		{
+			result.At(row, col) = left * right.At(row, col);
+		}
+	}
+	return result;
+}
 
 }

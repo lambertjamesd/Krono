@@ -21,6 +21,7 @@
 
 using namespace std;
 using namespace krono;
+using namespace kge;
 
 std::string ReadFileContents(const char *filename)
 {
@@ -41,26 +42,14 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Graphics::API api = Graphics::OpenGL;
+	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
 
-	Auto<Graphics> graphics;
-	Auto<Window> window = Window::Create(Vector2i(800, 600));
-
-	if (window == NULL)
-	{
-		std::cerr << "Could not create window" << std::endl;
-		return 1;
-	}
-
-	window->Show();
+	Auto<Graphics> graphics = game.GetGraphics();
+	Auto<ResourceManager> resourceManager = game.GetResourceManager();
+	Auto<WindowRenderTarget> windowRenderTarget = game.GetWindowRenderTarget();
 
 	Auto<VertexShader> vertexShader;
 	Auto<PixelShader> pixelShader;
-
-	Auto<ResourceManager> resourceManager;
-	
-	Auto<WindowRenderTarget> windowRenderTarget;
-	Auto<DepthBuffer> depthBuffer;
 
 	Auto<Mesh> meshTest;
 
@@ -69,33 +58,25 @@ int main(int argc, char* argv[])
 	Auto<Sampler> linearSampler;
 	Auto<Sampler> pointSampler;
 
-	
-	graphics = Graphics::CreateGraphics(api);
-	windowRenderTarget = graphics->CreateWindowRenderTarget(*window);
-	resourceManager = Auto<ResourceManager>(new ResourceManager(graphics.get()));
+	kge::Scene::Ptr scene = game.CreateScene();
 
-	::Scene scene(graphics);
-
-	GameObject::Ref objectReference = scene.CreateGameObject();
+	GameObject::Ref objectReference = scene->CreateGameObject();
 	objectReference.lock()->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
 
-	scene.GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
+	scene->GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 
-	GameObject::Ref cameraObject = scene.CreateGameObject();
+	GameObject::Ref cameraObject = scene->CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
 	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.01f, 10.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
-	GameObject::Ref lightObject = scene.CreateGameObject();
+	GameObject::Ref lightObject = scene->CreateGameObject();
 	lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0, -1.0));
 	Renderer::Ref lightRenderer = lightObject.lock()->AddComponent<Renderer>();
 
 	try
 	{
-
-		depthBuffer = graphics->CreateDepthBuffer(window->GetSize(), DataFormat::Depth24);
-
 		vertexShader = resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/VertexShaderTest.shader");
 		pixelShader = resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/PixelShaderTest.shader");
 		
@@ -139,33 +120,7 @@ int main(int argc, char* argv[])
 	graphics->SetSampler(pointSampler, 0, ShaderStage::PixelShader);
 	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
 	
-	chrono::time_point<chrono::system_clock> lastFrameTime = chrono::system_clock::now();
-
-	chrono::duration<double> frameDuration(1.0 / 60.0);
-
-	while (!window->IsClosed())
-	{
-		chrono::time_point<chrono::system_clock> frameTime = chrono::system_clock::now();
-
-		chrono::duration<float> updateAmount = chrono::duration_cast<chrono::duration<float> >(frameTime - lastFrameTime);
-
-		scene.GetUpdateManager().Update(updateAmount.count());
-		scene.GetRenderManager().Render();
-
-		windowRenderTarget->Present();
-
-		window->Update(true);
-
-		chrono::time_point<chrono::system_clock> endFrameTime = chrono::system_clock::now();
-		chrono::duration<double> sleepTime = frameDuration - (endFrameTime - frameTime);
-		
-		if (sleepTime > chrono::duration<double>(0.0))
-		{
-			this_thread::sleep_for(chrono::milliseconds((long long)(sleepTime.count() * 1000.0)));
-		}
-		
-		lastFrameTime = frameTime;
-	}
+	game.MainLoop();
 
 	return 0;
 }

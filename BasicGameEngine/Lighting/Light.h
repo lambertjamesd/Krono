@@ -3,6 +3,9 @@
 #include "GameObject/Component.h"
 #include "Render/Renderable.h"
 
+namespace kge
+{
+
 class Light : public Component
 {
 public:
@@ -14,3 +17,4 @@ public:
 private:
 };
 
+}

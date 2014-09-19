@@ -1,10 +1,15 @@
 
 #include "Scene.h"
+#include "Game.h"
 
-
-Scene::Scene(const krono::Graphics::Ptr& graphics) : 
-	mRenderManager(graphics)
+namespace kge
 {
+
+Scene::Scene(Game& game) : 
+	mGame(game),
+	mRenderManager(game.GetGraphics())
+{
+
 }
 
 
@@ -28,4 +33,11 @@ RenderManager& Scene::GetRenderManager()
 UpdateManager& Scene::GetUpdateManager()
 {
 	return mUpdateManager;
+}
+
+Game& Scene::GetGame()
+{
+	return mGame;
+}
+
 }

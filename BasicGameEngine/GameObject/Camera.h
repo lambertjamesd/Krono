@@ -6,6 +6,8 @@
 #include "Lens.h"
 #include <Krono.h>
 #include <memory>
+namespace kge
+{
 
 class Camera : public Component, public Renderable
 {
@@ -27,3 +29,5 @@ private:
 	RenderStage::Ptr mRenderStage;
 	std::unique_ptr<Lens> mLens;
 };
+
+}

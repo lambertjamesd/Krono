@@ -4,6 +4,8 @@
 #include "Render/Renderable.h"
 #include "Transform.h"
 #include <Krono.h>
+namespace kge
+{
 
 class Renderer : public Component, public Renderable
 {
@@ -27,3 +29,4 @@ private:
 	krono::Entity& mEntity;
 };
 
+}
