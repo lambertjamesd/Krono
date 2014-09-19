@@ -15,6 +15,7 @@
 #include "HLSLParser/Preprocessor/Preprocessor.h"
 #include "HLSLParser/GLSLGenerator/GLSLGenerator.h"
 #include "HLSLParser/HLSLParserException.h"
+#include "HLSLParser/ShaderInputBuilder.h"
 
 #ifdef USE_DX11
 #include "Bundle/HLSLCompiler.h"
@@ -78,21 +79,32 @@ void ProccessFile(const char* filename)
 			bundle.AddShader(ShaderLanguage::HLSL_5, compiler.Process(bundleDef));
 		}
 #endif
-		if (bundleDef.HasLanguage(ShaderLanguage::HLSL_5) && bundleDef.CrossCompileHLSL())
+		if (bundleDef.HasLanguage(ShaderLanguage::HLSL_5))
 		{
-			try
+			map<string,string> macros;
+			macros["OPENGL"] = "1";
+			unique_ptr<HLSLNode> file = move(HLSLParser::ProcessFile(bundleDef.GetFilename(ShaderLanguage::HLSL_5), bundleDef.GetType(), bundleDef.GetEntryPoint(), macros));
+
+			if (bundleDef.CrossCompileHLSL())
 			{
-				ostringstream result;
-				GLSLGenerator::ProcessFile(bundleDef.GetFilename(ShaderLanguage::HLSL_5), bundleDef.GetType(), bundleDef.GetEntryPoint(), result);
-				string stringResult(result.str());
-				vector<char> vectorResult(stringResult.begin(), stringResult.end());
-				bundle.AddShader(ShaderLanguage::GLSL_4_4, vectorResult);
-			}
-			catch (HLSLParserException& exception)
-			{
-				cerr << exception.what() << endl;
+				try
+				{
+					ostringstream result;
+					GLSLGenerator::ProcessFile(*file, bundleDef.GetType(), bundleDef.GetEntryPoint(), result);
+					string stringResult(result.str());
+					vector<char> vectorResult(stringResult.begin(), stringResult.end());
+					bundle.AddShader(ShaderLanguage::GLSL_4_4, vectorResult);
+				}
+				catch (HLSLParserException& exception)
+				{
+					cerr << exception.what() << endl;
+				}
 			}
 
+			ostringstream inputLayout;
+			ShaderInputBuilder::Process(*file, inputLayout);
+			string layoutAsString = inputLayout.str();
+			bundle.AddShader(ShaderLanguage::ShaderInputLayout, vector<char>(layoutAsString.begin(), layoutAsString.end()));
 		}
 		else if (bundleDef.HasLanguage(ShaderLanguage::GLSL_4_4))
 		{

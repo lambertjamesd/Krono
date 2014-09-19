@@ -131,6 +131,9 @@ public:
 	size_t GetRows() const;
 	size_t GetColumns() const;
 
+	size_t GetScalarSize() const;
+	size_t GetSize() const;
+
 	bool StrictlyEqual(const HLSLType& other) const;
 	bool CanAssignFromLossless(const HLSLType& other) const;
 	bool CanAssignFrom(const HLSLType& other) const;

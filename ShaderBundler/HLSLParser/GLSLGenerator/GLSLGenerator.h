@@ -26,7 +26,7 @@ public:
 
 	std::ostream& GetOutput();
 	
-	static void ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, std::ostream& output);
+	static void ProcessFile(HLSLNode& file, ShaderType::Type type, const std::string& entryPoint, std::ostream& output);
 
 	virtual void Visit(HLSLNodeList& node);
 	virtual void Visit(HLSLStatementBlock& node);

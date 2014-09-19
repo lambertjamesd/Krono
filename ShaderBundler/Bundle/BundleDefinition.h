@@ -31,7 +31,9 @@ namespace ShaderLanguage
 
 		Count,
 
-		Invalid
+		Invalid,
+
+		ShaderInputLayout = 0xFF
 	};
 }
 

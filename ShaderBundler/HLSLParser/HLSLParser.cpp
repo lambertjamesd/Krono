@@ -1,6 +1,7 @@
 #include "HLSLParser.h"
 #include "HLSLParserException.h"
 #include "HLSLTypeVisitor.h"
+#include "Preprocessor/Preprocessor.h"
 #include <cassert>
 #include <sstream>
 
@@ -45,6 +46,21 @@ std::unique_ptr<HLSLNode> HLSLParser::ParseFile()
 std::unique_ptr<HLSLFunctionDefinition> HLSLParser::ParseFunctionSignature()
 {
 	return move(ParseFunction());
+}
+
+std::unique_ptr<HLSLNode> HLSLParser::ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, const std::map<std::string, std::string>& macros)
+{
+	preproc::PreprocessResult preprocessResult = preproc::Preprocessor::PreprocessFile(filename, macros);
+	std::istringstream input(preprocessResult.text);
+	HLSLParser parser(input);
+
+	std::unique_ptr<HLSLNode> file = move(parser.ParseFile());
+
+	HLSLTypeVisitor typeGenerator;
+	typeGenerator.LoadBuiltInFunctions();
+	file->Accept(typeGenerator);
+
+	return move(file);
 }
 
 size_t HLSLParser::GetParseLocation() const

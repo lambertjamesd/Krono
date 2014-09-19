@@ -57,27 +57,14 @@ std::ostream& GLSLGenerator::GetOutput()
 	return mOutput;
 }
 
-void GLSLGenerator::ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, std::ostream& output)
+void GLSLGenerator::ProcessFile(HLSLNode& file, ShaderType::Type type, const std::string& entryPoint, std::ostream& output)
 {
-	map<string, string> macros;
-	macros["OPENGL"] = "1";
-
-	preproc::PreprocessResult preprocessResult = preproc::Preprocessor::PreprocessFile(filename, macros);
-	std::istringstream input(preprocessResult.text);
-	HLSLParser parser(input);
-
 	output << "#version 440" << endl;
 
-	std::unique_ptr<HLSLNode> file = move(parser.ParseFile());
-
-	HLSLTypeVisitor typeGenerator;
-	typeGenerator.LoadBuiltInFunctions();
-	file->Accept(typeGenerator);
-
-	GLSLSamplerPurger::Purge(*file);
+	GLSLSamplerPurger::Purge(file);
 
 	GLSLGenerator generator(output, type, entryPoint);
-	file->Accept(generator);
+	file.Accept(generator);
 
 	GLSLEntryPointBuilder entryPointBuilder(generator, type, generator.mEntryPoint);
 	entryPointBuilder.GenerateEntryPoint();

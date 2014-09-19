@@ -20,6 +20,8 @@ private:
 	static InterpolationMode::Type ParseInterpolatioMode(const std::string& value);
 	static EdgeSampling::Type ParseEdgeSampling(const std::string& value);
 	static SamplingMode::Type ParseSamplingMode(const std::string& value);
+	
+	static const size_t ShaderInputLayout = 0xFF;
 };
 
 }

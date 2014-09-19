@@ -289,7 +289,7 @@ bool HLSLType::IsSingleValue() const
 
 bool HLSLType::IsIndexable() const
 {
-	return mModifier == ArrayModifier || mType == Vector || mType == Matrix;;
+	return mModifier == ArrayModifier || mType == Vector || mType == Matrix;
 }
 
 bool HLSLType::IsArray() const
@@ -324,6 +324,50 @@ size_t HLSLType::GetColumns() const
 {
 	assert(mType == Matrix);
 	return ((mSize & gColMask) >> 30) + 1;
+}
+
+size_t HLSLType::GetScalarSize() const
+{
+	switch (mScalarType)
+	{
+	case Bool:
+	case Int:
+	case UInt:
+	case DWord:
+		return sizeof(long);
+	case Half:
+		return sizeof(float) / 2;
+	case Float:
+		return sizeof(float);
+	case Double:
+		return sizeof(double);
+	default:
+		assert(false);
+		return 0;
+	}
+}
+
+size_t HLSLType::GetSize() const
+{
+	assert(IsNumerical());
+
+	if (mModifier == ArrayModifier)
+	{
+		return ArrayElementType().GetSize() * GetArraySize();
+	}
+
+	switch (mType)
+	{
+	case Scalar:
+		return GetScalarSize();
+	case Vector:
+		return GetScalarSize() * GetVectorSize();
+	case Matrix:
+		return GetScalarSize() * GetRows() * GetColumns();
+	default:
+		assert(false);
+		return 0;
+	}
 }
 
 bool HLSLType::StrictlyEqual(const HLSLType& other) const

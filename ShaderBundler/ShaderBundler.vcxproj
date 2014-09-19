@@ -129,6 +129,7 @@
     <ClInclude Include="HLSLParser\HLSLTypeVisitor.h" />
     <ClInclude Include="HLSLParser\HLSLTextureClass.h" />
     <ClInclude Include="JSON\json.h" />
+    <ClInclude Include="HLSLParser\ShaderInputBuilder.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <ClCompile Include="HLSLParser\HLSLTextureClass.cpp" />
     <ClCompile Include="JSON\json.cpp" />
     <ClCompile Include="ShaderBundler.cpp" />
+    <ClCompile Include="HLSLParser\ShaderInputBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FolderTest\IncludeMe.hlsli" />
