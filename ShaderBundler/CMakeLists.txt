@@ -34,6 +34,7 @@ set (SOURCE_FILES
 	HLSLParser/HLSLUnaryOperator.cpp
 	HLSLParser/HLSLTextureClass.cpp
 	HLSLParser/HLSLBuiltInFunctions.cpp
+	HLSLParser/ShaderInputBuilder.cpp
 
 	HLSLParser/Preprocessor/BinaryOperatorNode.cpp
 	HLSLParser/Preprocessor/DirectiveNode.cpp
