@@ -1,6 +1,8 @@
 
 #include "Lens.h"
 #include <iostream>
+namespace kge
+{
 
 using namespace krono;
 
@@ -64,4 +66,6 @@ Matrix4f OrthographicLens::GetProjectionMatrix() const
 	result.At(2, 3) = mNear / (mNear - mFar);
 
 	return result;
+}
+
 }

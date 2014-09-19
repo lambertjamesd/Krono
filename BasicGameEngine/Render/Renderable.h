@@ -1,5 +1,8 @@
 #pragma once
 
+namespace kge
+{
+
 class RenderManager;
 
 class Renderable
@@ -13,3 +16,4 @@ protected:
 	RenderManager &mRenderManager;
 };
 
+}

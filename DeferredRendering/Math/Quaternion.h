@@ -39,7 +39,7 @@ public:
 		}
 		else if ( right.x > up.y && right.x > look.z )
 		{
-			T s = 2 * Math<T>::Sqrt( 1 + right.x - up.y - look.z);
+			T s = 2 * Math<T>::Sqrt(1 + right.x - up.y - look.z);
 			w = (up.z - look.y ) / s;
 			x = s / 4;
 			y = (up.x + right.y ) / s;
@@ -119,6 +119,16 @@ public:
 		}
 	}
 
+	T LengthSqrd()
+	{
+		return x * x + y * y + z * z + w * w;
+	}
+
+	T Length()
+	{
+		return Math<T>::Sqrt(x * x + y * y + z * z + w * w);
+	}
+
 	void ToAxisAngle(Vector3<T>& axis, Radians<T>& angle) const
 	{
 		axis = Vector3<T>(x, y, z).Normalized();
@@ -136,16 +146,57 @@ public:
 			positiveW = Constant<T>::One;
 		}
 
-		angle = Radians<T>(Math<T>::ACos(positiveW * 2));
+		angle = Radians<T>(Math<T>::ACos(positiveW) * 2);
+	}
+
+	Radians<T> AngleBetween(const Quaternion& other) const
+	{
+		Quaternion difference = Conjugate() * other;
+
+		T positiveW = Math<T>::Abs(difference.w);
+
+		if (positiveW >= Constant<T>::One)
+		{
+			return Radians<T>(Constant<T>::Zero);
+		}
+		else
+		{
+			return Radians<T>(Math<T>::ACos(positiveW) * 2);
+		}
+	}
+
+	Quaternion Exp(T exponent) const
+	{
+		Vector3<T> axis;
+		Radians<T> angle;
+		ToAxisAngle(axis, angle);
+
+		return Quaternion(axis, angle * exponent);
+	}
+
+	bool IsUnitLength() const
+	{
+		T tolerance = Constant<T>::One / RecipUnitLengthTolerance;
+		T lowerBound = (1 - tolerance) * (1 - tolerance);
+		T upperBound = (1 + tolerance) * (1 + tolerance);
+		T lengthSqrd = LengthSqrd();
+
+		return lowerBound < lengthSqrd && lengthSqrd < upperBound;
 	}
 
 	static Quaternion Identity()
 	{
 		return Quaternion();
 	}
+
+	static Quaternion Slerp(const Quaternion& start, const Quaternion& end, T lerpFactor)
+	{
+		return start * (start.Conjugate() * end).Exp(lerpFactor);
+	}
 	
 	T w, x, y, z;
 private:
+	static const int RecipUnitLengthTolerance = 10000;
 };
 
 typedef Quaternion<float> Quaternionf;

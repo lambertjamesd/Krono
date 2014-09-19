@@ -3,6 +3,9 @@
 #include "Light.h"
 #include <Krono.h>
 
+namespace kge
+{
+
 class PositionalLight : public Light, public Renderable
 {
 public:
@@ -14,3 +17,4 @@ private:
 	krono::Entity& mEntity;
 };
 
+}

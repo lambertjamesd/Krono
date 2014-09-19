@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include <vector>
 #include <memory>
+namespace kge
+{
 
 class Scene;
 
@@ -40,21 +42,23 @@ public:
 		return result;
 	}
 
-	::Scene& GetScene();
+	Scene& GetScene();
 
 	Ref GetWeakPointer() const
 	{
 		return mSelfReference;
 	}
 private:
-	friend class ::Scene;
+	friend class Scene;
 
-	GameObject(::Scene* parentScene);
+	GameObject(Scene* parentScene);
 
-	::Scene* mScene;
+	Scene* mScene;
 
 	std::vector<Component::Ptr> mComponents;
 	Transform::Ptr mTransform;
 	Ref mSelfReference;
 };
+
+}
 

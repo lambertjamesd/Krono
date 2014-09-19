@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Scene/Scene.h"
+namespace kge
+{
 
 using namespace krono;
 
@@ -47,4 +49,6 @@ const Material::Ptr& Renderer::GetMaterial(size_t index) const
 void Renderer::SetMaterial(const Material::Ptr& material, size_t index)
 {
 	mEntity.SetMaterial(material, index);
+}
+
 }

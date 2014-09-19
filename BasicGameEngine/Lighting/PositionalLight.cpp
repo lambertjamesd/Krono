@@ -2,6 +2,9 @@
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 
+namespace kge
+{
+
 PositionalLight::PositionalLight(GameObject& parentGameObject) :
 	Light(parentGameObject),
 	Renderable(mGameObject.GetScene().GetRenderManager()),
@@ -19,4 +22,6 @@ PositionalLight::~PositionalLight(void)
 void PositionalLight::PreRender()
 {
 	mEntity.SetTransform(mGameObject.GetTransform()->GetWorldTransform());
+}
+
 }

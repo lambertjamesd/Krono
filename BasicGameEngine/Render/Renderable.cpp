@@ -2,6 +2,8 @@
 #include "Renderable.h"
 #include "RenderManager.h"
 
+namespace kge
+{
 
 Renderable::Renderable(RenderManager& manager) :
 	mRenderManager(manager)
@@ -13,4 +15,6 @@ Renderable::Renderable(RenderManager& manager) :
 Renderable::~Renderable(void)
 {
 	mRenderManager.RemoveRenderable(this);
+}
+
 }

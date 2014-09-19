@@ -1,6 +1,8 @@
 
 #include "GameObject.h"
 #include "Scene/Scene.h"
+namespace kge
+{
 
 GameObject::GameObject(Scene* parentScene) :
 	mScene(parentScene),
@@ -23,4 +25,6 @@ const Transform::Ptr GameObject::GetTransform() const
 Scene& GameObject::GetScene()
 {
 	return *mScene;
+}
+
 }

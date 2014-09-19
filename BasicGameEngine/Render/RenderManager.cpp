@@ -2,6 +2,9 @@
 #include "RenderManager.h"
 #include <algorithm>
 
+namespace kge
+{
+
 using namespace std;
 
 RenderManager::RenderManager(const krono::Graphics::Ptr& graphics) :
@@ -63,4 +66,6 @@ void RenderManager::AddRenderable(Renderable *renderable)
 void RenderManager::RemoveRenderable(Renderable *renderable)
 {
 	mRenderables.erase(std::remove(mRenderables.begin(), mRenderables.end(), renderable), mRenderables.end());
+}
+
 }

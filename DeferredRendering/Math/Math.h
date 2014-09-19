@@ -3,6 +3,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+// in order for a custom numerical type ( eg a fixed point number) to work in the math library
+// it must implement a template specialization for Constant and Math. It should also
+// support the basic math operations such as +-*/% unary -. The type should 
+// also support the basic math operations against signed integers
+
 namespace krono
 {
 
@@ -34,7 +39,8 @@ public:
 	static Type ATan(Type radians);
 	static Type ATan2(Type y, Type x);
 
-	static Type Sqrt(Type radians);
+	static Type Abs(Type value);
+	static Type Sqrt(Type value);
 
 	static Type Min(Type a, Type b);
 	static Type Max(Type a, Type b);
@@ -79,6 +85,11 @@ public:
 	static float ATan2(float y, float x)
 	{
 		return atan2f(y, x);
+	}
+
+	static float Abs(float value)
+	{
+		return fabs(value);
 	}
 
 	static float Sqrt(float value)

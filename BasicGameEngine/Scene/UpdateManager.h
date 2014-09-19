@@ -2,6 +2,9 @@
 
 #include <vector>
 
+namespace kge
+{
+
 class UpdateManager;
 
 class Updatable
@@ -34,3 +37,4 @@ private:
 	bool mIsUpdating;
 };
 
+}

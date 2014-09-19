@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Krono.h>
+namespace kge
+{
 
 class Lens
 {
@@ -36,3 +38,5 @@ public:
 private:
 	float mHeight;
 };
+
+}
