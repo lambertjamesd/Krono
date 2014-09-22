@@ -144,7 +144,7 @@ void Entity::RebuildBuffer(RenderState& renderState)
 
 	mEntityData.viewModelMatrix = renderState.GetViewMatrix() * mEntityData.modelMatrix;
 	mEntityData.projectionViewModelMatrix = renderState.GetProjectionMatrix() * mEntityData.viewModelMatrix;
-	mEntityData.normalMatrix = mEntityData.viewModelMatrix.Inverse().Transpose();
+	mEntityData.normalMatrix = mEntityData.modelMatrix.Inverse().Transpose();
 
 	mEntityBuffer->Set<EntityData>(mEntityData);
 }

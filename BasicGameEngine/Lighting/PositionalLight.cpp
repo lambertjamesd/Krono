@@ -25,6 +25,7 @@ void PositionalLight::PreRender()
 {
 	const Matrix4f& worldTransform = mGameObject.GetTransform()->GetWorldTransform();
 	mEntity.SetTransform(worldTransform.RemoveStretchSkew());
+	SetVariable<Vector3f>("lightPosition", worldTransform.GetTranslation());
 }
 
 }

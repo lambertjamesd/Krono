@@ -10,14 +10,15 @@ SamplerState samPoint : register( s0 );
 cbuffer SceneViewDataPix : register( b0 )
 {
 	float4x4 projectionMatrixPix;
-	float4x4 projectionInvMatrixPix;
+	float4x4 projectionViewInvMatrixPix;
 	float4 screenSizePix;
 };
 
 cbuffer PointLight : register( b1 )
 {
+	float4 lightPosition;
 	float4 lightColor;
-	float radius;
+	float lightRadius;
 };
 
 float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
@@ -37,12 +38,14 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 		normalizedSpace.y = 1.0 - normalizedSpace.y;
 #endif
 		
-		float4 viewPosition = mul(projectionInvMatrixPix, float4(normalizedSpace, 1.0));
-		viewPosition /= viewPosition.w;
+		float4 worldPosiiton = mul(projectionViewInvMatrixPix, float4(normalizedSpace, 1.0));
+		worldPosiiton /= worldPosiiton.w;
+		
+		float offset = 1 - length(lightPosition - worldPosiiton.xyz) / lightRadius;
 	
 		float4 diffuseColor = color.Sample(samPoint, textureCoord.xy);
 
-		return float4(viewPosition.xyz, 1.0);
+		return float4(abs(worldPosiiton.xyz), 1.0);
 	}
 	else
 	{

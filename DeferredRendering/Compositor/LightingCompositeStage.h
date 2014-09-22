@@ -10,7 +10,7 @@ struct LightVertexCompositeData
 	LightVertexCompositeData();
 
 	Matrix4f projectionMatrix;
-	Matrix4f projectionInverseMatrix;
+	Matrix4f projectionViewInverseMatrix;
 	Matrix4f compositeTransform;
 	Matrix4f projectionMatrixRasterSpace;
 };
@@ -20,7 +20,7 @@ struct LightPixelCompositeData
 	LightPixelCompositeData();
 
 	Matrix4f projectionMatrix;
-	Matrix4f projectionInverseMatrix;
+	Matrix4f projectionViewInverseMatrix;
 	Vector4f screenSize;
 };
 

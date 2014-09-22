@@ -920,9 +920,22 @@ void HLSLTypeVisitor::Visit(HLSLStructureNode& node)
 		}
 		break;
 	}
+	case HLSLType::Scalar:
+		{
+			HLSLType type = ParseVectorSwizzle(structureType.GetScalarType(), node.GetRight(), 1);
+
+			if (type.GetType() == HLSLType::Unknown)
+			{
+				throw HLSLParserException(node.GetToken(), "invalid swizzle value");
+			}
+			else
+			{
+				node.ResolveType(type);
+			}
+		}
+		break;
 	case HLSLType::Vector:
 		{
-
 			HLSLType type = ParseVectorSwizzle(structureType.GetScalarType(), node.GetRight(), structureType.GetVectorSize());
 
 			if (type.GetType() == HLSLType::Unknown)
