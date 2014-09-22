@@ -92,6 +92,7 @@
     <ClInclude Include="Interface\BlendState.h" />
     <ClInclude Include="Interface\RasterizerState.h" />
     <ClInclude Include="Compositor\LightingCompositeStage.h" />
+    <ClInclude Include="Interface\MappedConstantBuffer.h" />
     <ClInclude Include="OpenGL\OpenGLDepthState.h" />
     <ClInclude Include="OpenGL\OpenGLBlendState.h" />
     <ClInclude Include="OpenGL\OpenGLRasterizerState.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Resource\Mesh\SubMesh.h" />
     <ClInclude Include="Resource\ShaderLoader.h" />
+    <ClInclude Include="Interface\ShaderInputLayout.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Interface\Texture.h" />
     <ClInclude Include="Interface\Texture2D.h" />
@@ -216,6 +218,7 @@
     <ClCompile Include="Collide\Frustrum.cpp" />
     <ClCompile Include="Interface\RasterizerState.cpp" />
     <ClCompile Include="Compositor\LightingCompositeStage.cpp" />
+    <ClCompile Include="Interface\MappedConstantBuffer.cpp" />
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp" />
     <ClCompile Include="OpenGL\OpenGLBlendState.cpp" />
     <ClCompile Include="OpenGL\OpenGLRasterizerState.cpp" />
@@ -314,6 +317,7 @@
     <ClCompile Include="Resource\Texture2DLoader.cpp" />
     <ClCompile Include="Resource\ShaderLoader.cpp" />
     <ClCompile Include="Resource\TextureLoader.cpp" />
+    <ClCompile Include="Interface\ShaderInputLayout.cpp" />
     <ClCompile Include="Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -32,10 +32,23 @@ public:
 	void SetTexture(const Texture::Ptr& texture, size_t slot, ShaderStage::Type stage);
 
 	UInt32 GetTechniqueMask() const;
+	
+	template <typename T>
+	void SetVariable(const std::string& name, const T& value)
+	{
+		mMappedVariables.SetValue<T>(name, value);
+	}
+
+	template <typename T>
+	void SetArrayVariable(const std::string& name, const T* value, size_t count)
+	{
+		mMappedVariables.SetValue<T>(name, value, count);
+	}
 private:
 	TechniqueMask mTechniqueMask;
 
 	std::unordered_map<UInt32, Technique> mTechniques;
+	MappedConstantBufferRelay mMappedVariables;
 };
 
 }

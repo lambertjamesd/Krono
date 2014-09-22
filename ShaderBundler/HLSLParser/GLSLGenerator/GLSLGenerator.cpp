@@ -59,7 +59,8 @@ std::ostream& GLSLGenerator::GetOutput()
 
 void GLSLGenerator::ProcessFile(HLSLNode& file, ShaderType::Type type, const std::string& entryPoint, std::ostream& output)
 {
-	output << "#version 440" << endl;
+	output << "#version 420" << endl;
+	output << "#extension GL_ARB_explicit_attrib_location : require" << endl;
 
 	GLSLSamplerPurger::Purge(file);
 

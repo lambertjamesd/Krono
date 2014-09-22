@@ -14,19 +14,26 @@ public:
 protected:
 	ShaderLoader(ShaderStage::Type stage);
 
-	virtual Auto<Object> BuildShader(ResourceManager& resourceManager, const std::string& source) = 0;
+	virtual Shader::Ptr BuildShader(ResourceManager& resourceManager, const std::string& source) = 0;
 private:
+	bool LoadShaderOfType(std::istream& inputStream, Graphics::ShaderLanguage language, std::string& output);
+
 	ShaderStage::Type mStage;
 
 	template <typename T>
-	T ReadInt(std::istream& input)
+	static T ReadInt(std::istream& input)
 	{
 		T result;
 		input.read((char*)&result, sizeof(T));
 		return result;
 	}
 
+	static bool ParseInputLayout(std::istream& inputStream, ShaderInputLayout& output);
+	static bool ParseUniformBlockLayout(std::istream& inputStream, ShaderUniformBlockLayout& output);
+	static bool ParseString(std::istream& inputStream, std::string& output);
+
 	static const std::string gHeaderString;
+	static const Graphics::ShaderLanguage ShaderInputLayoutIdentifier = (Graphics::ShaderLanguage)0xFF;
 };
 
 class VertexShaderLoader : public ShaderLoader
@@ -35,7 +42,7 @@ public:
 	VertexShaderLoader(void);
 	~VertexShaderLoader(void);
 protected:
-	virtual Auto<Object> BuildShader(ResourceManager& resourceManager, const std::string& source);
+	virtual Shader::Ptr BuildShader(ResourceManager& resourceManager, const std::string& source);
 };
 
 class PixelShaderLoader : public ShaderLoader
@@ -44,7 +51,7 @@ public:
 	PixelShaderLoader(void);
 	~PixelShaderLoader(void);
 protected:
-	virtual Auto<Object> BuildShader(ResourceManager& resourceManager, const std::string& source);
+	virtual Shader::Ptr BuildShader(ResourceManager& resourceManager, const std::string& source);
 };
 
 }

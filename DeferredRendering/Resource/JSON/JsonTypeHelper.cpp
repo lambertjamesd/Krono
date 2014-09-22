@@ -75,14 +75,20 @@ const char* JsonTypeHelper::gStageName[ShaderStage::TypeCount] = {
 
 void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters)
 {
+	Shader::Ptr shaders[ShaderStage::TypeCount];
+
 	if (stateParameters.HasKey("vertexShader") && stateParameters["vertexShader"].GetType() == StringVal)
 	{
-		result.SetVertexShader(resourceManager.LoadResource<VertexShader>(stateParameters["vertexShader"].ToString()));
+		VertexShader::Ptr vertexShader = resourceManager.LoadResource<VertexShader>(stateParameters["vertexShader"].ToString());
+		shaders[ShaderStage::VertexShader] = vertexShader;
+		result.SetVertexShader(vertexShader);
 	}
 	
 	if (stateParameters.HasKey("pixelShader") && stateParameters["pixelShader"].GetType() == StringVal)
 	{
-		result.SetPixelShader(resourceManager.LoadResource<PixelShader>(stateParameters["pixelShader"].ToString()));
+		PixelShader::Ptr pixelShader = resourceManager.LoadResource<PixelShader>(stateParameters["pixelShader"].ToString());
+		shaders[ShaderStage::PixelShader] = pixelShader;
+		result.SetPixelShader(pixelShader);
 	}
 
 	for (size_t i = 0; i < ShaderStage::TypeCount; ++i)
@@ -127,9 +133,14 @@ void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager
 				}
 			}
 
-			if (stage["uniforms"].GetType() == ArrayVal)
+			if (stage["uniforms"].GetType() == ArrayVal && shaders[stageType] != NULL)
 			{
+				Array samplers = stage["uniforms"].ToArray();
 
+				for (auto it = samplers.begin(); it != samplers.end(); ++it)
+				{
+					result.AddConstantBuffer(ParseMappedConstantBuffer(resourceManager, shaders[i], *it), (ShaderStage::Type)i);
+				}
 			}
 		}
 	}
@@ -432,6 +443,24 @@ RasterizerState::Ptr JsonTypeHelper::ParseRasterizerState(ResourceManager& resou
 	}
 
 	return resourceManager.GetGraphics()->CreateRasterizerState(description);
+}
+
+MappedConstantBuffer::Ptr JsonTypeHelper::ParseMappedConstantBuffer(ResourceManager& resourceManager, const Shader::Ptr& shader, const json::Value& mappedBuffer)
+{
+	int registerLocation = mappedBuffer["registerLocation"].ToInt(-1);
+
+	if (registerLocation != -1)
+	{
+		const ShaderUniformBlockLayout* blockLayout = shader->GetInputLayout().GetUniformBlock(registerLocation);
+
+		if (blockLayout != NULL)
+		{
+			ConstantBufferLayout layout;
+			return MappedConstantBuffer::Ptr(new MappedConstantBuffer(resourceManager.GetGraphics()->CreateConstantBuffer(layout), *blockLayout));
+		}
+	}
+	
+	return MappedConstantBuffer::Ptr();
 }
 
 }

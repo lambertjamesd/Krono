@@ -1,0 +1,9 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "PointLight.hlsl"
+	},
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

@@ -13,7 +13,19 @@ public:
 	~PositionalLight(void);
 
 	virtual void PreRender();
-private:
+
+	template <typename T>
+	void SetVariable(const std::string& name, const T& value)
+	{
+		mEntity.GetMaterial(0)->SetVariable<T>(name, value);
+	}
+
+	template <typename T>
+	void SetArray(const std::string& name, const T* value, size_t count)
+	{
+		mEntity.GetMaterial(0)->SetArrayVariable<T>(name, value, count);
+	}
+protected:
 	krono::Entity& mEntity;
 };
 

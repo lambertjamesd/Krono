@@ -36,14 +36,24 @@ void RenderStateParameters::SetSampler(const Sampler::Ptr& texture, size_t index
 	mSamplers[stage][index] = texture;
 }
 
-void RenderStateParameters::SetConstantBuffer(const ConstantBuffer::Ptr& buffer, size_t index, ShaderStage::Type stage)
+void RenderStateParameters::SetConstantBuffer(const MappedConstantBuffer::Ptr& buffer, size_t index, ShaderStage::Type stage)
 {
 	if (mUniforms[stage].size() < index + 1)
 	{
 		mUniforms[stage].resize(index + 1);
 	}
+
+	if (mUniforms[stage][index] != NULL)
+	{
+		mMappedVariables.RemoveBuffer(mUniforms[stage][index]);
+	}
 	
 	mUniforms[stage][index] = buffer;
+
+	if (buffer != NULL)
+	{
+		mMappedVariables.AddBuffer(buffer);
+	}
 }
 
 void RenderStateParameters::AddTexture(const Texture::Ptr& texture, ShaderStage::Type stage)
@@ -56,9 +66,14 @@ void RenderStateParameters::AddSampler(const Sampler::Ptr& texture, ShaderStage:
 	mSamplers[stage].push_back(texture);
 }
 
-void RenderStateParameters::AddConstantBuffer(const ConstantBuffer::Ptr& buffer, ShaderStage::Type stage)
+void RenderStateParameters::AddConstantBuffer(const MappedConstantBuffer::Ptr& buffer, ShaderStage::Type stage)
 {
 	mUniforms[stage].push_back(buffer);
+
+	if (buffer != NULL)
+	{
+		mMappedVariables.AddBuffer(buffer);
+	}
 }
 
 size_t RenderStateParameters::GetTextureCount(ShaderStage::Type stage) const
@@ -86,7 +101,7 @@ size_t RenderStateParameters::GetConstantBufferCount(ShaderStage::Type stage) co
 	return mUniforms[stage].size();
 }
 
-const ConstantBuffer::Ptr& RenderStateParameters::GetConstantBuffer(ShaderStage::Type stage, size_t index) const
+const MappedConstantBuffer::Ptr& RenderStateParameters::GetConstantBuffer(ShaderStage::Type stage, size_t index) const
 {
 	return mUniforms[stage][index];
 }
@@ -119,6 +134,11 @@ void RenderStateParameters::SetStencilReference(UInt32 reference)
 void RenderStateParameters::SetRasterizerState(const RasterizerState::Ptr& rasterizerState)
 {
 	mRasterizerState = rasterizerState;
+}
+
+const MappedConstantBufferRelay& RenderStateParameters::GetMappedVariables() const
+{
+	return mMappedVariables;
 }
 
 }

@@ -2,6 +2,8 @@
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 
+using namespace krono;
+
 namespace kge
 {
 
@@ -21,7 +23,8 @@ PositionalLight::~PositionalLight(void)
 
 void PositionalLight::PreRender()
 {
-	mEntity.SetTransform(mGameObject.GetTransform()->GetWorldTransform());
+	const Matrix4f& worldTransform = mGameObject.GetTransform()->GetWorldTransform();
+	mEntity.SetTransform(worldTransform.RemoveStretchSkew());
 }
 
 }

@@ -20,6 +20,9 @@ private:
 	void CleanUp();
 	void Resize(size_t newSize);
 
+	static size_t AlignSize(size_t size);
+	static const size_t AlignmentSize = 16;
+
 	ID3D11Buffer *mBuffer;
 	ID3D11Device *mDevice;
 	size_t mCurrentSize;

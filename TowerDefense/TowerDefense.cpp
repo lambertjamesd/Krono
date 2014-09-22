@@ -42,7 +42,7 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 
 	GameObject::Ref lightObject = scene->CreateGameObject();
 	lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0, -1.0));
-	Renderer::Ref lightRenderer = lightObject.lock()->AddComponent<Renderer>();
+	PointLight::Ptr lightRenderer = lightObject.lock()->AddComponent<PointLight>().lock();
 
 	try
 	{
@@ -99,10 +99,6 @@ int main(int argc, char* argv[])
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json"), 0);
 
-		Renderer::Ptr lightPtr = lightRenderer.lock();
-		lightPtr->SetMesh(resourceManager->GetSphere());
-		lightPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/PointLight.json"), 0);
-
 		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(1.0f, 1.0f, 1.0f));
 		
 		RenderTargetConfiguration renderTarget;
@@ -119,6 +115,8 @@ int main(int argc, char* argv[])
 
 	graphics->SetSampler(pointSampler, 0, ShaderStage::PixelShader);
 	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
+
+	game.SetCurrentScene(scene);
 	
 	game.MainLoop();
 

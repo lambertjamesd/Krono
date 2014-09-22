@@ -17,8 +17,15 @@ Material::~Material(void)
 
 void Material::AddTechnique(UInt32 id, const Technique& technique)
 {
+	if (mTechniques.find(id) != mTechniques.end())
+	{
+		mMappedVariables.RemoveAllFrom(mTechniques[id].GetRenderStateParameters().GetMappedVariables());
+	}
+
 	mTechniques[id] = technique;
 	mTechniqueMask |= 1 << id;
+
+	mMappedVariables.AddAllFrom(mTechniques[id].GetRenderStateParameters().GetMappedVariables());
 }
 
 bool Material::HasTechnique(size_t technique)

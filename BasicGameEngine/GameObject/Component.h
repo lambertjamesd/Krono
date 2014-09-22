@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Krono.h>
+
 #include <memory>
 namespace kge
 {
@@ -15,6 +17,7 @@ public:
 	typedef std::weak_ptr<Component> Ref;
 
 	GameObject& GetGameObject();
+	krono::ResourceManager& GetResourceManager();
 protected:
 	Component(GameObject& parentGameObject);
 	

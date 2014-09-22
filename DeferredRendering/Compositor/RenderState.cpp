@@ -113,7 +113,17 @@ void RenderState::PushParameters(const RenderStateParameters& parameters)
 
 		for (size_t i = 0; i < parameters.GetConstantBufferCount(stage); ++i)
 		{
-			PushConstantBuffer(parameters.GetConstantBuffer(stage, i), stage);
+			const MappedConstantBuffer::Ptr buffer = parameters.GetConstantBuffer(stage, i);
+
+			if (buffer != NULL)
+			{
+				buffer->UpdateConstantBuffer();
+				PushConstantBuffer(buffer->GetConstantBuffer(), stage);
+			}
+			else
+			{
+				PushConstantBuffer(ConstantBuffer::Ptr(), stage);
+			}
 		}
 	}
 

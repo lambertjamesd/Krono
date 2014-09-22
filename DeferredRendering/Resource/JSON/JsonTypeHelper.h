@@ -8,6 +8,7 @@
 #include "Interface/BlendState.h"
 #include "Interface/DepthState.h"
 #include "Interface/RasterizerState.h"
+#include "Interface/MappedConstantBuffer.h"
 
 namespace krono
 {
@@ -33,6 +34,7 @@ public:
 	static BlendState::Ptr ParseBlendState(ResourceManager& resourceManager, const json::Value& blendState);
 	static DepthState::Ptr ParseDepthState(ResourceManager& resourceManager, const json::Value& depthState);
 	static RasterizerState::Ptr ParseRasterizerState(ResourceManager& resourceManager, const json::Value& rasterizerState);
+	static MappedConstantBuffer::Ptr ParseMappedConstantBuffer(ResourceManager& resourceManager, const Shader::Ptr& shader, const json::Value& mappedBuffer);
 private:
 	static const char* gStageName[ShaderStage::TypeCount];
 };

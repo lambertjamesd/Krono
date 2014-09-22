@@ -29,9 +29,11 @@ void DX11ConstantBuffer::CleanUp()
 
 void DX11ConstantBuffer::Set(const void* data, size_t size)
 {
-	if (size != mCurrentSize)
+	size_t alignedSize = AlignSize(size);
+
+	if (alignedSize != mCurrentSize)
 	{
-		Resize(size);
+		Resize(alignedSize);
 	}
 	
 	ID3D11DeviceContext *context;
@@ -77,6 +79,13 @@ void DX11ConstantBuffer::Resize(size_t newSize)
 	
 	mBuffer = newBuffer;
 	mCurrentSize = newSize;
+}
+
+// buffer size must be a multiple of 16
+size_t DX11ConstantBuffer::AlignSize(size_t size)
+{
+	size_t blockSize = (size + AlignmentSize - 1) / AlignmentSize;
+	return blockSize * AlignmentSize;
 }
 
 }

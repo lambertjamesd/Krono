@@ -13,7 +13,7 @@ public:
 	typedef std::weak_ptr<Light> Ref;
 
 	Light(GameObject& parentGameObject);
-	~Light(void);
+	virtual ~Light(void);
 private:
 };
 

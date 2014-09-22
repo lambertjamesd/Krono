@@ -3,6 +3,7 @@
 
 #include "Core/Object.h"
 #include "Core/Memory.h"
+#include "ShaderInputLayout.h"
 
 namespace krono
 {
@@ -24,8 +25,16 @@ namespace ShaderStage
 class Shader : public Object
 {
 public:
+	typedef Auto<Shader> Ptr;
+
+	void SetInputLayout(const ShaderInputLayout& inputLayout);
+	const ShaderInputLayout& GetInputLayout();
+	bool HasInputLayout() const;
+
 protected:
 	Shader(void);
+
+	ShaderInputLayout mInputLayout;
 };
 
 class VertexShader : public Shader

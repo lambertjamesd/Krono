@@ -128,11 +128,18 @@ public:
 	{
 		Matrix<NewRows, NewColumns, T> result;
 
-		for (size_t col = 0; col < std::min(Columns, NewColumns); ++col)
+		for (size_t col = 0; col < NewColumns; ++col)
 		{
-			for (size_t row = 0; row < std::min(Rows, NewRows); ++row)
+			for (size_t row = 0; row < NewRows; ++row)
 			{
-				result.At(row, col) = mElements[col][row];
+				if (row < Rows && col < Columns)
+				{
+					result.At(row, col) = mElements[col][row];
+				}
+				else
+				{
+					result.At(row, col) = (row == col) ? Constant<T>::One : Constant<T>::Zero;
+				}
 			}
 		}
 
@@ -228,12 +235,43 @@ public:
 		return result;
 	}
 
+	void DecomposeRotation(Matrix& rotation, Matrix& scaleSkew) const
+	{
+		rotation = *this;
+		int currentIteration = 0;
+		T currentError;
+		T faultTolerance = Constant<T>::One / DecomposeFaultRecep;
+
+		do
+		{
+			Matrix nextIteration = rotation.Inverse().Transpose();
+			
+			currentError = Constant<T>::Zero;
+			for (size_t col = 0; col < nextIteration.ColumnCount(); ++col)
+			{
+				for (size_t row = 0; row < nextIteration.RowCount(); ++row)
+				{
+					T lastValue = rotation.At(row, col);
+					rotation.At(row, col) = (nextIteration.At(row, col) + rotation.At(row, col)) / 2;
+					T difference = lastValue - rotation.At(row, col);
+					currentError += difference * difference;
+				}
+			}
+			++currentIteration;
+		} while (currentIteration < MaxDecomposeIterations && currentError > faultTolerance * faultTolerance);
+
+		scaleSkew = rotation.Inverse() * (Matrix<3, 3, T>)(*this);
+	}
+
 	static Matrix Identity()
 	{
 		return Matrix();
 	}
 protected:
 	T mElements[Columns][Rows];
+	
+	static const int MaxDecomposeIterations = 20;
+	static const int DecomposeFaultRecep = 10000;
 };
 
 template <typename T>
@@ -341,30 +379,10 @@ public:
 	{
 		position = GetTranslation();
 
-		Matrix<3, 3, T> rotationMatrix = (Matrix<3, 3, T>)(*this);
-		int currentIteration = 0;
-		T currentError;
-		T faultTolerance = Constant<T>::One / DecomposeFaultRecep;
+		Matrix<3, 3, T> rotationMatrix;
+		Matrix<3, 3, T> scaleMatrix;
 
-		do
-		{
-			Matrix<3, 3, T> nextIteration = rotationMatrix.Inverse().Transpose();
-			
-			currentError = Constant<T>::Zero;
-			for (int col = 0; col < nextIteration.ColumnCount(); ++col)
-			{
-				for (int row = 0; row < nextIteration.RowCount(); ++row)
-				{
-					T lastValue = rotationMatrix.At(row, col);
-					rotationMatrix.At(row, col) = (nextIteration.At(row, col) + rotationMatrix.At(row, col)) / 2;
-					T difference = lastValue - rotationMatrix.At(row, col);
-					currentError += difference * difference;
-				}
-			}
-			++currentIteration;
-		} while (currentIteration < MaxDecomposeIterations && currentError > faultTolerance * faultTolerance);
-
-		Matrix<3, 3, T> scaleMatrix = rotationMatrix.Inverse() * (Matrix<3, 3, T>)(*this);
+		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
 
 		rotation = Quaternion<T>(
 			Vector3<T>(rotationMatrix.At(0, 0), rotationMatrix.At(1, 0), rotationMatrix.At(2, 0)),
@@ -372,6 +390,32 @@ public:
 			Vector3<T>(rotationMatrix.At(0, 2), rotationMatrix.At(1, 2), rotationMatrix.At(2, 2)));
 
 		scale = Vector3<T>(scaleMatrix.At(0, 0), scaleMatrix.At(1, 1), scaleMatrix.At(2, 2));
+	}
+
+	Matrix4 RemoveStretchSkew() const
+	{
+		Vector3<T> position = GetTranslation();
+
+		Matrix<3, 3, T> rotationMatrix;
+		Matrix<3, 3, T> scaleMatrix;
+
+		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
+
+		T uniformScale = Math<T>::Pow(scaleMatrix.At(0, 0) * scaleMatrix.At(1, 1) * scaleMatrix.At(2, 2), Constant<T>::One / 3);
+
+		return Translation(position) * (Matrix4)(rotationMatrix) * Scale(Vector3<T>(uniformScale, uniformScale, uniformScale));
+	}
+
+	Matrix4 RemoveScale() const
+	{
+		Vector3<T> position = GetTranslation();
+
+		Matrix<3, 3, T> rotationMatrix;
+		Matrix<3, 3, T> scaleMatrix;
+
+		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
+
+		return Translation(position) * (Matrix4)(rotationMatrix);
 	}
 
 	static Matrix4 Scale(const Vector3<T>& vector)
@@ -416,9 +460,6 @@ public:
 		return Matrix4::Translation(position) * Matrix4::Rotation(rotation) * Matrix4::Scale(scale);
 	}
 private:
-
-	static const int MaxDecomposeIterations = 20;
-	static const int DecomposeFaultRecep = 10000;
 };
 
 typedef Matrix4<float> Matrix4f;

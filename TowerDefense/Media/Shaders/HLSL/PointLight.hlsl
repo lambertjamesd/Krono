@@ -7,11 +7,17 @@ Texture2D depth : register( t2 );
 
 SamplerState samPoint : register( s0 );
 
-cbuffer SceneViewDataPix : register(b0)
+cbuffer SceneViewDataPix : register( b0 )
 {
 	float4x4 projectionMatrixPix;
 	float4x4 projectionInvMatrixPix;
 	float4 screenSizePix;
+};
+
+cbuffer PointLight : register( b1 )
+{
+	float4 lightPosition;
+	float4 lightColor;
 };
 
 float4 Main(ScreenPositionVertex pixelInput) : SV_TARGET
@@ -47,6 +53,6 @@ float4 Main(ScreenPositionVertex pixelInput) : SV_TARGET
 		// simple attenuation
 		lightFactor *= max(1 - lightDistance, 0) * 10;
 	
-		return float4(color.Sample(samPoint, textureCoord.xy).xyz * lightFactor , 1.0);	
+		return float4(color.Sample(samPoint, textureCoord.xy).xyz * lightColor.rgb * lightFactor , 1.0);	
 	}
 }

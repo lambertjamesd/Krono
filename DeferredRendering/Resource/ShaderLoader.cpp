@@ -4,6 +4,10 @@
 #include "FormatException.h"
 #include "NotFoundException.h"
 
+#include <sstream>
+
+using namespace std;
+
 namespace krono
 {
 
@@ -32,12 +36,41 @@ Auto<Object> ShaderLoader::LoadResource(ResourceManager& resourceManager, std::i
 	}
 
 	ShaderStage::Type stage = static_cast<ShaderStage::Type>(ReadInt<short>(inputStream));
-	short languageCount = ReadInt<short>(inputStream);
 
 	if (stage != mStage)
 	{
 		throw FormatException("Expected shader stage did not match type in file");
 	}
+
+	streamoff streamPosition = inputStream.tellg();
+
+	std::string buffer;
+	if (!LoadShaderOfType(inputStream, resourceManager.GetGraphics()->ExpectedShaderLanguage(), buffer))
+	{
+		throw NotFoundException("Expected shader language not found in file");
+	}
+
+	Shader::Ptr result = BuildShader(resourceManager, buffer);
+
+	inputStream.seekg(streamPosition, std::ios_base::beg);
+	
+	std::string layoutBuffer;
+	if (LoadShaderOfType(inputStream, ShaderInputLayoutIdentifier, layoutBuffer))
+	{
+		istringstream layoutStream(layoutBuffer);
+		ShaderInputLayout inputLayout;
+		if (ParseInputLayout(layoutStream, inputLayout))
+		{
+			result->SetInputLayout(inputLayout);
+		}
+	}
+
+	return result;
+}
+
+bool ShaderLoader::LoadShaderOfType(std::istream& inputStream, Graphics::ShaderLanguage language, std::string& output)
+{
+	short languageCount = ReadInt<short>(inputStream);
 
 	for (short i = 0; i < languageCount; ++i)
 	{
@@ -49,18 +82,83 @@ Auto<Object> ShaderLoader::LoadResource(ResourceManager& resourceManager, std::i
 		inputStream.read((char*)&fileOffset, sizeof(long));
 		inputStream.read((char*)&fileLength, sizeof(long));
 
-		if ((Graphics::ShaderLanguage)shaderLanguage == resourceManager.GetGraphics()->ExpectedShaderLanguage())
+		if ((Graphics::ShaderLanguage)shaderLanguage == language)
 		{
 			inputStream.seekg(fileOffset, std::ios_base::beg);
-			std::string buffer;
-			buffer.resize(fileLength);
-			inputStream.read(&buffer.front(), fileLength);
-
-			return BuildShader(resourceManager, buffer);
+			output.resize(fileLength);
+			inputStream.read(&output.front(), fileLength);
+			return true;
 		}
 	}
 
-	throw NotFoundException("Expected shader language not found in file");
+	return false;
+}
+
+
+bool ShaderLoader::ParseInputLayout(std::istream& inputStream, ShaderInputLayout& output)
+{
+	short uniformBufferCount = ReadInt<short>(inputStream);
+
+	for (short i = 0; i < uniformBufferCount; ++i)
+	{
+		std::string name;
+
+		if (!ParseString(inputStream, name))
+		{
+			return false;
+		}
+			
+		ShaderUniformBlockLayout uniformBlock;
+
+		if (!ParseUniformBlockLayout(inputStream, uniformBlock))
+		{
+			return false;
+		}
+
+		output.AddUniformBlock(name, uniformBlock);
+	}
+
+	return true;
+}
+
+bool ShaderLoader::ParseUniformBlockLayout(std::istream& inputStream, ShaderUniformBlockLayout& output)
+{
+	size_t sizeRegister = ReadInt<size_t>(inputStream);
+	size_t uniformCount = sizeRegister & 0xFFFF;
+	size_t registerIndex = (sizeRegister >> 16) & 0xFFFF;
+
+	output = ShaderUniformBlockLayout(registerIndex);
+
+	for (size_t i = 0; i < uniformCount; ++i)
+	{
+		std::string name;
+
+		if (!ParseString(inputStream, name))
+		{
+			return false;
+		}
+		
+		size_t sizeOffset = ReadInt<size_t>(inputStream);
+		output.AddUniform(name, (sizeOffset >> 16) & 0xFFFF, sizeOffset & 0xFFFF);
+	}
+
+	return true;
+}
+
+bool ShaderLoader::ParseString(std::istream& inputStream, std::string& output)
+{
+	short length = ReadInt<short>(inputStream);
+	short lengthDoubleCheck = ReadInt<short>(inputStream);
+
+	if (length != lengthDoubleCheck)
+	{
+		return false;
+	}
+
+	output.resize(length);
+	inputStream.read(&output.front(), length);
+
+	return true;
 }
 
 VertexShaderLoader::VertexShaderLoader(void) :
@@ -73,7 +171,7 @@ VertexShaderLoader::~VertexShaderLoader(void)
 {
 }
 
-Auto<Object> VertexShaderLoader::BuildShader(ResourceManager& resourceManager, const std::string& source)
+Shader::Ptr VertexShaderLoader::BuildShader(ResourceManager& resourceManager, const std::string& source)
 {
 	return resourceManager.GetGraphics()->CreateVertexShader(source);
 }
@@ -89,7 +187,7 @@ PixelShaderLoader::~PixelShaderLoader(void)
 {
 }
 
-Auto<Object> PixelShaderLoader::BuildShader(ResourceManager& resourceManager, const std::string& source)
+Shader::Ptr PixelShaderLoader::BuildShader(ResourceManager& resourceManager, const std::string& source)
 {
 	return resourceManager.GetGraphics()->CreatePixelShader(source);
 }

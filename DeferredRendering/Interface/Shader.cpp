@@ -5,6 +5,16 @@
 
 namespace krono
 {
+
+void Shader::SetInputLayout(const ShaderInputLayout& inputLayout)
+{
+	mInputLayout = inputLayout;
+}
+
+const ShaderInputLayout& Shader::GetInputLayout()
+{
+	return mInputLayout;
+}
 	
 Shader::Shader(void)
 {

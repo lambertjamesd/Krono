@@ -147,10 +147,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//ProccessFile("C:\\Users\\James\\Documents\\Visual Studio 2012\\Projects\\DeferredRendering\\TowerDefense\\Media\\Shaders\\Bundle\\DirectionalLight.json");
+	//ProccessFile("C:\\Users\\James\\Documents\\Visual Studio 2012\\Projects\\DeferredRendering\\TowerDefense\\Media\\Engine\\Shaders\\VertexShader.json");
 
 	//ProccessFile("/home/lambertjamesd/Documents/Krono/TowerDefense/Media/Shaders/Bundle/PointLight.json");
 
 	return 0;
 }
-

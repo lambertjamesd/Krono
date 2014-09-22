@@ -91,9 +91,11 @@
     <ClInclude Include="GameObject\Transform.h" />
     <ClInclude Include="Lighting\Light.h" />
     <ClInclude Include="Lighting\PositionalLight.h" />
+    <ClInclude Include="Lighting\PointLight.h" />
     <ClInclude Include="Render\Renderable.h" />
     <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Render\RenderStage.h" />
+    <ClInclude Include="Scene\Game.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\UpdateManager.h" />
     <ClInclude Include="targetver.h" />
@@ -108,9 +110,11 @@
     <ClCompile Include="GameObject\Transform.cpp" />
     <ClCompile Include="Lighting\Light.cpp" />
     <ClCompile Include="Lighting\PositionalLight.cpp" />
+    <ClCompile Include="Lighting\PointLight.cpp" />
     <ClCompile Include="Render\Renderable.cpp" />
     <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Render\RenderStage.cpp" />
+    <ClCompile Include="Scene\Game.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\UpdateManager.cpp" />
   </ItemGroup>

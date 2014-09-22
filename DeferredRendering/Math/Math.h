@@ -41,6 +41,8 @@ public:
 
 	static Type Abs(Type value);
 	static Type Sqrt(Type value);
+	static Type Exp(Type value);
+	static Type Pow(Type base, Type exponent);
 
 	static Type Min(Type a, Type b);
 	static Type Max(Type a, Type b);
@@ -95,6 +97,16 @@ public:
 	static float Sqrt(float value)
 	{
 		return sqrtf(value);
+	}
+
+	static float Exp(float value)
+	{
+		return expf(value);
+	}
+
+	static float Pow(float base, float exponent)
+	{
+		return powf(base, exponent);
 	}
 
 	static float Min(float a, float b)

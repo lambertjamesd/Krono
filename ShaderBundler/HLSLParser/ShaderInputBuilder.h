@@ -26,7 +26,8 @@ class ShaderUniformBufferDefinition
 {
 public:
 	ShaderUniformBufferDefinition(const std::string& name, size_t registerIndex);
-
+	
+	void AddUniform(const std::string& name, size_t offset, size_t size);
 	void AddUniform(const std::string& name, size_t size);
 
 	size_t GetUniformCount() const;

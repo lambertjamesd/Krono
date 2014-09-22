@@ -40,6 +40,12 @@ ShaderUniformBufferDefinition::ShaderUniformBufferDefinition(const std::string& 
 
 }
 
+void ShaderUniformBufferDefinition::AddUniform(const std::string& name, size_t offset, size_t size)
+{
+	mUniforms.push_back(ShaderUniformDefinition(name, offset, size));
+	mSize = std::max(mSize, offset + size);
+}
+
 void ShaderUniformBufferDefinition::AddUniform(const std::string& name, size_t size)
 {
 	if (RemainingRegisterMemory() < size)
@@ -106,10 +112,10 @@ const ShaderUniformBufferDefinition& ShaderInputDefinition::GetBufferDefinition(
 
 void ShaderInputDefinition::WriteDefinition(std::ostream& output)
 {
-	size_t bufferCount = mUniformBuffers.size();
-	output.write((char*)&bufferCount, sizeof(size_t));
+	short bufferCount = mUniformBuffers.size();
+	output.write((char*)&bufferCount, sizeof(short));
 
-	for (size_t i = 0; i < bufferCount; ++i)
+	for (short i = 0; i < bufferCount; ++i)
 	{
 		mUniformBuffers[i].WriteDefinition(output);
 	}
@@ -173,7 +179,16 @@ void ShaderInputBuilder::Visit(HLSLVariableDefinition& node)
 
 		if (type.IsNumerical())
 		{
-			mCurrentUniformBuffer->AddUniform(node.GetName(), type.GetSize());
+			HLSLRegisterLocation location = node.GetRegisterLocation();
+
+			if (location.HasValue())
+			{
+				mCurrentUniformBuffer->AddUniform(node.GetName(), (location.GetRegisterNumber() * 4 + location.GetIndex()) * sizeof(float), type.GetSize());
+			}
+			else
+			{
+				mCurrentUniformBuffer->AddUniform(node.GetName(), type.GetSize());
+			}
 		}
 		else if (type.GetType() == HLSLType::Struct)
 		{
@@ -211,6 +226,9 @@ void ShaderInputBuilder::Visit(HLSLCBufferDefinition& node)
 void ShaderInputBuilder::WriteString(std::ostream& output, const std::string& value)
 {
 	unsigned short length = value.length();
+	// write the value twice to be able 
+	// to detect a corrupt or invalid file
+	output.write((char*)&length, sizeof(unsigned short));
 	output.write((char*)&length, sizeof(unsigned short));
 	output.write(&value.front(), value.length());
 }
