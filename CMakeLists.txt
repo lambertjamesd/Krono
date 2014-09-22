@@ -53,10 +53,4 @@ add_subdirectory(ShaderBundler)
 add_subdirectory(DeferredRendering)
 add_subdirectory(BasicGameEngine)
 add_subdirectory(TowerDefense)
-add_custom_target(
-	Shaders
-	COMMAND make
-	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/TowerDefense/Media/Shaders
-)
-add_dependencies(TowerDefense Shaders)
 

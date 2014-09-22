@@ -30,3 +30,17 @@ endif (USE_OPENGL4_4)
 
 add_executable (TowerDefense ${SOURCE_FILES})
 target_link_libraries (TowerDefense ${EXTRA_LIBS})
+
+add_custom_target(
+	Shaders
+	COMMAND make
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Media/Shaders
+)
+add_dependencies(TowerDefense Shaders)
+
+add_custom_target(
+	EngineShaders
+	COMMAND make
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Media/Engine/
+)
+add_dependencies(TowerDefense EngineShaders)

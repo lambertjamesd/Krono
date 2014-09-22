@@ -1,6 +1,7 @@
 #include "MappedConstantBuffer.h"
 #include <cassert>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;
 

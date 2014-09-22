@@ -33,19 +33,29 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 
 	if (screenZ < textureCoord.z)
 	{
-		float3 normalizedSpace = float3(textureCoord.xy, screenZ);
-#ifdef OPENGL
-		normalizedSpace.y = 1.0 - normalizedSpace.y;
-#endif
+		float3 normalizedSpace = float3(textureCoord.xy * 2 - 1, screenZ);
 		
 		float4 worldPosiiton = mul(projectionViewInvMatrixPix, float4(normalizedSpace, 1.0));
 		worldPosiiton /= worldPosiiton.w;
 		
-		float offset = 1 - length(lightPosition - worldPosiiton.xyz) / lightRadius;
+		float3 offset = lightPosition.xyz - worldPosiiton.xyz;
+		float lightDistance = length(offset);
+
+		if (lightDistance > lightRadius)
+		{
+			discard;
+		}
+
+		float falloff = 1 - lightDistance / lightRadius;
 	
 		float4 diffuseColor = color.Sample(samPoint, textureCoord.xy);
 
-		return float4(abs(worldPosiiton.xyz), 1.0);
+		float3 pointNormal = normal.Sample(samPoint, textureCoord.xy).xyz;
+		float3 lightDirection = offset / lightDistance;
+
+		float diffuseFactor = saturate(dot(pointNormal, lightDirection));
+
+		return float4(diffuseColor.xyz * diffuseFactor, 1.0);
 	}
 	else
 	{

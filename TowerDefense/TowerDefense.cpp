@@ -42,7 +42,7 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 
 	GameObject::Ref cameraObject = scene->CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
-	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.01f, 10.0f, Degreesf(90.0f)));
+	unique_ptr<Lens> cameraLens(new PerspectiveLens(1.0f, 4.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
 	GameObject::Ref lightObject = scene->CreateGameObject();
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 		vertexShader = resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/VertexShaderTest.shader");
 		pixelShader = resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/PixelShaderTest.shader");
 		
-		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
+		meshTest = resourceManager->GetSphere();//->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 
 		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
 		textureTest->GenerateMipmaps();

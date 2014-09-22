@@ -15,6 +15,12 @@ Exception::Exception(const char* message) :
 
 }
 
+Exception::Exception(const std::string& message) :
+	mConstantMessage(message)
+{
+
+}
+
 Exception::~Exception(void) throw()
 {
 }

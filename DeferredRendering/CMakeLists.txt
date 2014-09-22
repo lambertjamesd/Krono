@@ -14,6 +14,7 @@ set (SOURCE_FILES
 	Interface/BlendState.cpp
 	Interface/IndexBuffer.cpp
 	Interface/Shader.cpp
+	Interface/ShaderInputLayout.cpp
 	Interface/VertexBuffer.cpp
 	Interface/Graphics.cpp
 	Interface/RasterizerState.cpp
@@ -22,6 +23,7 @@ set (SOURCE_FILES
 	Interface/Sampler.cpp
 	Interface/InvalidEnumException.cpp
 	Interface/ConstantBuffer.cpp
+	Interface/MappedConstantBuffer.cpp
 	Interface/DepthBuffer.cpp
 	Interface/DepthState.cpp
 	Interface/InputLayout.cpp
@@ -148,6 +150,7 @@ set (HEADER_FILES
 	Core/Types.h 
 	Core/Memory.h 
 	Interface/Shader.h 
+	Interface/ShaderInputLayout.h
 	Core/Object.h 
 	Interface/Window.h 
 	Math/Vector2.h 
@@ -160,6 +163,7 @@ set (HEADER_FILES
 	Math/Range.h 
 	Interface/IndexBuffer.h 
 	Interface/ConstantBuffer.h 
+	Interface/MappedConstantBuffer.h 
 	Interface/Sampler.h 
 	Interface/DepthState.h 
 	Interface/BlendState.h 

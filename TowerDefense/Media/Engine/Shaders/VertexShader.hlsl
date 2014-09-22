@@ -20,7 +20,7 @@ PositionNormalTexture Main(StandardVertexInput vertexInput)
 {
 	PositionNormalTexture result;
 	result.position = mul(projectionViewModelMatrix, float4(vertexInput.position, 1.0));
-	result.normal - mul(normalMatrix, float4(vertexInput.normal, 0.0));
+	result.normal = mul(normalMatrix, float4(vertexInput.normal, 0.0));
 	result.texCoord = vertexInput.texCoord;
 	return result;
 }

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "Core/Exception.h"
 
 namespace krono
 {
@@ -42,14 +43,12 @@ GLuint OpenGLVertexShader::CompileShader(GLenum type, const std::string& source)
 	{
 		GLint maxLength = 0;
 		glGetShaderiv(result, GL_INFO_LOG_LENGTH, &maxLength);
-        std::vector<char> errorLog(maxLength);
-        glGetShaderInfoLog(result, maxLength, &maxLength, &errorLog[0]);
-        glDeleteShader(result);
+			std::vector<char> errorLog(maxLength);
+			glGetShaderInfoLog(result, maxLength, &maxLength, &errorLog[0]);
+			glDeleteShader(result);
 
 		std::string errorString(errorLog.begin(), errorLog.end());
-		std::cerr << "Error compiling shader source: " << errorString << std::endl;
-
-		return 0;
+		throw Exception("Error compiling shader source: " + errorString);
 	}
 
 	return result;

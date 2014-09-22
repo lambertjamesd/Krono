@@ -9,6 +9,10 @@ set (SOURCE_FILES
 	GameObject/Renderer.cpp
 	GameObject/Transform.cpp
 
+	Lighting/Light.cpp
+	Lighting/PositionalLight.cpp
+	Lighting/PointLight.cpp
+
 	Render/Renderable.cpp
 	Render/RenderManager.cpp
 	Render/RenderStage.cpp
@@ -31,6 +35,7 @@ set (HEADER_FILES
 
 	Lighting/Light.h
 	Lighting/PositionalLight.h
+	Lighting/PointLight.h
 
 	Render/Renderable.h
 	Render/RenderManager.h

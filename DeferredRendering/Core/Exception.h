@@ -10,13 +10,14 @@ class Exception : public std::exception
 public:
 	Exception(void);
 	Exception(const char* message);
+	Exception(const std::string& message);
 	virtual ~Exception(void) throw();
 
 	virtual const char* what() const throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:
-	const char* mConstantMessage;
+	std::string mConstantMessage;
 	std::string mWhatMessage;
 };
 

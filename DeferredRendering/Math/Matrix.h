@@ -308,6 +308,11 @@ public:
 		return 1;
 	}
 
+	Matrix<1, 1, T> SubMatrix(size_t rowSkip, size_t colSkip) const
+	{
+		return *this;
+	}
+
 	T Determinant() const
 	{
 		return mElement;
@@ -382,7 +387,7 @@ public:
 		Matrix<3, 3, T> rotationMatrix;
 		Matrix<3, 3, T> scaleMatrix;
 
-		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
+		Matrix<4, 4, T>::SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
 
 		rotation = Quaternion<T>(
 			Vector3<T>(rotationMatrix.At(0, 0), rotationMatrix.At(1, 0), rotationMatrix.At(2, 0)),
@@ -399,7 +404,7 @@ public:
 		Matrix<3, 3, T> rotationMatrix;
 		Matrix<3, 3, T> scaleMatrix;
 
-		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
+		Matrix<4, 4, T>::SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
 
 		T uniformScale = Math<T>::Pow(scaleMatrix.At(0, 0) * scaleMatrix.At(1, 1) * scaleMatrix.At(2, 2), Constant<T>::One / 3);
 
@@ -413,7 +418,7 @@ public:
 		Matrix<3, 3, T> rotationMatrix;
 		Matrix<3, 3, T> scaleMatrix;
 
-		SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
+		Matrix<4, 4, T>::SubMatrix(3, 3).DecomposeRotation(rotationMatrix, scaleMatrix);
 
 		return Translation(position) * (Matrix4)(rotationMatrix);
 	}
