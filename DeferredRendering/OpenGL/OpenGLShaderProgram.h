@@ -32,8 +32,8 @@ public:
 	};
 
 	ShaderVariable();
-	ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index);
-	ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint index);
+	ShaderVariable(const std::string& name, int size, Type type, int count, GLuint location);
+	ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint location);
 
 	const std::string& GetName() const;
 	short GetWidth() const;
@@ -41,7 +41,7 @@ public:
 
 	Type GetType() const;
 	int GetCount() const;
-	int GetIndex() const;
+	int GetLocation() const;
 
 	bool IsTexture() const;
 private:
@@ -50,17 +50,18 @@ private:
 	short mHeight;
 	Type mType;
 	int mCount;
-	GLuint mIndex;
+	GLuint mLocation;
 };
 
 class OpenGLVertexLayoutData
 {
 public:
 	OpenGLVertexLayoutData(void);
-	OpenGLVertexLayoutData(const Attribute& attribute, GLsizei offset);
+	OpenGLVertexLayoutData(const Attribute& attribute, GLuint attributeIndex, GLsizei offset);
 	~OpenGLVertexLayoutData(void);
 
 	bool GetIsActive() const;
+	GLuint GetAttributeIndex() const;
 	GLuint GetSize() const;
 	GLenum GetType() const;
 	GLsizei GetByteSize() const;
@@ -69,6 +70,7 @@ private:
 	static GLenum gTypeMapping[];
 
 	bool mIsActive;
+	GLuint mAttributeIndex;
 	GLuint mSize;
 	GLenum mType;
 	GLsizei mByteSize; 

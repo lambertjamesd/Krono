@@ -1,0 +1,22 @@
+{
+	"documentType" : "material",
+	
+	"techniques" : [
+		{
+			"techniqueID" : 1,
+		
+			"vertexShader" : "../Shaders/PreTransformedVertexShader.shader",
+			"pixelShader" : "DirectionalLight.shader",
+			
+			"pixelStage" : 
+			{
+				"uniforms" :
+				[
+					{
+						"registerLocation" : 1
+					}
+				]
+			}
+		}
+	]
+}

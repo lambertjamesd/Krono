@@ -19,24 +19,24 @@ ShaderVariable::ShaderVariable()
 
 }
 
-ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count, GLuint index) :
+ShaderVariable::ShaderVariable(const std::string& name, int size, Type type, int count, GLuint location) :
 		mName(name),
 		mWidth(size),
 		mHeight(1),
 		mType(type),
 		mCount(count),
-		mIndex(index)
+		mLocation(location)
 {
 
 }
 
-ShaderVariable::ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint index) :
+ShaderVariable::ShaderVariable(const std::string& name, short width, short height, Type type, int count, GLuint location) :
 		mName(name),
 		mWidth(width),
 		mHeight(height),
 		mType(type),
 		mCount(count),
-		mIndex(index)
+		mLocation(location)
 {
 
 }
@@ -66,6 +66,11 @@ int ShaderVariable::GetCount() const
 	return mCount;
 }
 
+int ShaderVariable::GetLocation() const
+{
+	return mLocation;
+}
+
 bool ShaderVariable::IsTexture() const
 {
 	return mType >= Texture1D && mType <= TextureCube;
@@ -77,6 +82,7 @@ GLenum OpenGLVertexLayoutData::gTypeMapping[] = {GL_FLOAT, GL_UNSIGNED_BYTE};
 
 OpenGLVertexLayoutData::OpenGLVertexLayoutData(void) :
 	mIsActive(false),
+	mAttributeIndex(0),
 	mSize(0),
 	mType(0),
 	mByteSize(0),
@@ -85,8 +91,9 @@ OpenGLVertexLayoutData::OpenGLVertexLayoutData(void) :
 
 }
 
-OpenGLVertexLayoutData::OpenGLVertexLayoutData(const Attribute& attribute, GLsizei offset) :
+OpenGLVertexLayoutData::OpenGLVertexLayoutData(const Attribute& attribute, GLuint attributeIndex, GLsizei offset) :
 	mIsActive(true),
+	mAttributeIndex(attributeIndex),
 	mSize(attribute.GetFormat().count),
 	mType(OpenGLGraphics::GetGLType(attribute.GetFormat().type)),
 	mByteSize(attribute.GetFormat().GetSize()),
@@ -103,6 +110,11 @@ OpenGLVertexLayoutData::~OpenGLVertexLayoutData(void)
 bool OpenGLVertexLayoutData::GetIsActive() const
 {
 	return mIsActive;
+}
+
+GLuint OpenGLVertexLayoutData::GetAttributeIndex() const
+{
+	return mAttributeIndex;
 }
 
 GLuint OpenGLVertexLayoutData::GetSize() const
@@ -151,9 +163,10 @@ void OpenGLVertexLayout::AddVertexData(const OpenGLVertexLayoutData& value)
 
 void OpenGLVertexLayout::Use() const
 {
-	GLuint index = 0;
-	for (auto it = mLayoutData.cbegin(); it != mLayoutData.cend(); ++it, ++index)
+	for (auto it = mLayoutData.cbegin(); it != mLayoutData.cend(); ++it)
 	{
+		GLuint index = it->GetAttributeIndex();
+
 		if (it->GetIsActive())
 		{
 			glEnableVertexAttribArray(index);
@@ -236,10 +249,11 @@ const OpenGLVertexLayout& OpenGLShaderProgram::GetLayoutMapping(const InputLayou
 
 				attrName << "attr" << attrib.GetName() << attrib.GetIndex();
 
+
 				if (attrName.str() == shaderVar->GetName())
 				{
 					foundAttrib = true;
-					layoutMapping.AddVertexData(OpenGLVertexLayoutData(attrib, offset));
+					layoutMapping.AddVertexData(OpenGLVertexLayoutData(attrib, shaderVar->GetLocation(), offset));
 					break;
 				}
 				else
@@ -293,12 +307,12 @@ void OpenGLShaderProgram::PopulateVariables(std::vector<ShaderVariable>& target,
 		std::string name(nameData);
 
 		int index = values[3];
-		if (index < 0 || index >= count)
+		if (index < 0)
 		{
 			index = i;
 		}
 
-		target[index] = VariableFromGLType(name, values[1], values[2], i);
+		target[i] = VariableFromGLType(name, values[1], values[2], index);
 	}
 }
 

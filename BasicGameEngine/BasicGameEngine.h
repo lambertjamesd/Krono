@@ -6,4 +6,5 @@
 #include "GameObject/Renderer.h"
 #include "GameObject/Camera.h"
 #include "Lighting/PointLight.h"
+#include "Lighting/DirectionalLight.h"
 

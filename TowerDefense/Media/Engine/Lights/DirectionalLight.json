@@ -1,0 +1,9 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "DirectionalLight.hlsl"
+	},
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

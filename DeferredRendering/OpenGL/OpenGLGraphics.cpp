@@ -217,7 +217,6 @@ void OpenGLGraphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 void OpenGLGraphics::SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer)
 {
 	mCurrentVertexBuffer = std::dynamic_pointer_cast<OpenGLVertexBuffer>(vertexBuffer);
-	mCurrentVertexBuffer->Use();
 	mNeedVertexRebind = true;
 }
 
@@ -307,6 +306,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 		mCurrentShaderProgram != NULL &&
 		mCurrentVertexBuffer != NULL)
 	{
+		mCurrentVertexBuffer->Use();
 		mCurrentShaderProgram->BindVertexBuffer(*mCurrentVertexBuffer);
 	}
 

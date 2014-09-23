@@ -10,7 +10,6 @@ Light::Light(GameObject& parentGameObject) :
 
 }
 
-
 Light::~Light(void)
 {
 

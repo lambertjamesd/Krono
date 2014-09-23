@@ -76,15 +76,22 @@ int main(int argc, char* argv[])
 		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0f, -3.0f));
 		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
 		pointLight->SetRange(4.0f);
-		pointLight->SetColor(Colorf(0.5f, 0.6f, 10.9f));
+		pointLight->SetColor(Colorf(0.5f, 0.6f, 1.9f));
 	}
 	
 	{
 		GameObject::Ref lightObject = scene->CreateGameObject();
-		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(-4.0f, -1.0f, 4.0f));
+		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(-2.0f, -1.0f, 2.0f));
 		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
 		pointLight->SetRange(6.0f);
-		pointLight->SetColor(Colorf(0.7f, 0.6f, 0.3f));
+		pointLight->SetColor(Colorf(0.5f, 0.4f, 0.1f));
+	}
+
+	{
+		GameObject::Ref lightObject = scene->CreateGameObject();
+		DirectionalLight::Ptr directionalLight = lightObject.lock()->AddComponent<DirectionalLight>().lock();
+		directionalLight->SetColor(Colorf(0.3f, 1.4f, 0.4f));
+		directionalLight->SetDirection(Vector3f(0.0f, -1.0f, 0.0f));
 	}
 
 	try
@@ -110,8 +117,6 @@ int main(int argc, char* argv[])
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);
 		rendererPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json"), 0);
-
-		objectReference.lock()->GetTransform()->SetLocalScale(Vector3f(1.0f, 1.0f, 1.0f));
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);

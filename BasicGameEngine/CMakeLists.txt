@@ -10,6 +10,7 @@ set (SOURCE_FILES
 	GameObject/Transform.cpp
 
 	Lighting/Light.cpp
+	Lighting/DirectionalLight.cpp
 	Lighting/PositionalLight.cpp
 	Lighting/PointLight.cpp
 
@@ -34,6 +35,7 @@ set (HEADER_FILES
 	GameObject/Transform.h
 
 	Lighting/Light.h
+	Lighting/DirectionalLight.h
 	Lighting/PositionalLight.h
 	Lighting/PointLight.h
 

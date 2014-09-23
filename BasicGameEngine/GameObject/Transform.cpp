@@ -1,5 +1,7 @@
 #include "Transform.h"
 #include <algorithm>
+#include <iostream>
+
 namespace kge
 {
 
@@ -104,7 +106,7 @@ const Matrix4f& Transform::GetLocalTransform() const
 {
 	if (mIsTransformDirty)
 	{
-		const_cast<Matrix4f&>(mTransform) = Matrix4f::Translation(mPosition) * Matrix4f::Scale(mScale) * Matrix4f::Rotation(mOrientation);
+		const_cast<Matrix4f&>(mTransform) = Matrix4f::Translation(mPosition)* Matrix4f::Rotation(mOrientation) * Matrix4f::Scale(mScale);
 		const_cast<bool&>(mIsTransformDirty) = false;
 	}
 
