@@ -22,7 +22,7 @@ Camera::~Camera(void)
 
 void Camera::PreRender()
 {
-	mRenderStage->SetViewMatrix(mGameObject.GetTransform()->GetInverseWorldTransform());
+	mRenderStage->SetViewMatrix(mGameObject.GetTransform()->GetInverseWorldTransform().RemoveScale());
 	mRenderStage->SetProjectionMatrix(mLens->GetProjectionMatrix());
 }
 

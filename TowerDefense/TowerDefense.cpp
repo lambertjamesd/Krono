@@ -68,19 +68,31 @@ int main(int argc, char* argv[])
 
 	GameObject::Ref cameraObject = scene->CreateGameObject();
 	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
-	unique_ptr<Lens> cameraLens(new PerspectiveLens(1.0f, 4.0f, Degreesf(90.0f)));
+	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.5f, 20.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
-	GameObject::Ref lightObject = scene->CreateGameObject();
-	lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0, -1.0));
-	PointLight::Ptr lightRenderer = lightObject.lock()->AddComponent<PointLight>().lock();
+	{
+		GameObject::Ref lightObject = scene->CreateGameObject();
+		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0f, -3.0f));
+		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
+		pointLight->SetRange(4.0f);
+		pointLight->SetColor(Colorf(0.5f, 0.6f, 10.9f));
+	}
+	
+	{
+		GameObject::Ref lightObject = scene->CreateGameObject();
+		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(-4.0f, -1.0f, 4.0f));
+		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
+		pointLight->SetRange(6.0f);
+		pointLight->SetColor(Colorf(0.7f, 0.6f, 0.3f));
+	}
 
 	try
 	{
 		vertexShader = resourceManager->LoadResource<VertexShader>("Media/Shaders/Bundle/VertexShaderTest.shader");
 		pixelShader = resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/PixelShaderTest.shader");
 		
-		meshTest = resourceManager->GetSphere();//->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
+		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
 
 		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
 		textureTest->GenerateMipmaps();

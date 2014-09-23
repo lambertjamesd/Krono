@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Math/Math.h"
+
 namespace krono
 {
 
@@ -9,6 +11,7 @@ class Color
 public:
 	Color() : r(), g(), b(), a() {}
 	Color(const T& r, const T& g, const T& b, const T& a) : r(r), g(g), b(b), a(a) {}
+	Color(const T& r, const T& g, const T& b) : r(r), g(g), b(b), a(Constant<T>::One) {}
 	~Color(void) {}
 
 	T r, g, b, a;

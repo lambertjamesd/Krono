@@ -8,8 +8,7 @@ namespace kge
 {
 
 PointLight::PointLight(GameObject& parentGameObject) :
-	PositionalLight(parentGameObject),
-	mRadius(1.0f)
+	PositionalLight(parentGameObject)
 {
 	mEntity.SetMesh(GetResourceManager().GetSphere());
 	mEntity.SetMaterial(GetResourceManager().LoadResource<Material>("Media/Engine/Lights/PointLightMaterial.json"), 0);
@@ -19,15 +18,6 @@ PointLight::PointLight(GameObject& parentGameObject) :
 
 PointLight::~PointLight(void)
 {
-}
-
-
-void PointLight::PreRender()
-{
-	PositionalLight::PreRender();
-	Vector3f scale = mGameObject.GetTransform()->GetWorldTransform().TransformDirection(Vector3f::UnitScale());
-	float scaledRadius = mRadius * Math<float>::Pow(scale.x * scale.y * scale.z, Constant<float>::One / 3);
-	SetVariable<float>("lightRadius", scaledRadius);
 }
 
 }

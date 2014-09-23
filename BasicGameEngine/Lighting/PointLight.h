@@ -14,10 +14,7 @@ public:
 	PointLight(GameObject& parentGameObject);
 	~PointLight(void);
 	
-	virtual void PreRender();
 private:
-
-	float mRadius;
 };
 
 }

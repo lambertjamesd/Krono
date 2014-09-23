@@ -25,8 +25,12 @@ public:
 	{
 		mEntity.GetMaterial(0)->SetArrayVariable<T>(name, value, count);
 	}
+
+	void SetRange(float value);
+	void SetColor(const krono::Colorf& value);
 protected:
 	krono::Entity& mEntity;
+	float mRange;
 };
 
 }

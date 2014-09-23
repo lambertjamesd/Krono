@@ -18,7 +18,7 @@ cbuffer PointLight : register( b1 )
 {
 	float4 lightPosition;
 	float4 lightColor;
-	float lightRadius;
+	float lightRange;
 };
 
 float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
@@ -41,12 +41,12 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 		float3 offset = lightPosition.xyz - worldPosiiton.xyz;
 		float lightDistance = length(offset);
 
-		if (lightDistance > lightRadius)
+		if (lightDistance > lightRange)
 		{
 			discard;
 		}
 
-		float falloff = 1 - lightDistance / lightRadius;
+		float falloff = 1 - lightDistance / lightRange;
 	
 		float4 diffuseColor = color.Sample(samPoint, textureCoord.xy);
 
@@ -54,8 +54,9 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 		float3 lightDirection = offset / lightDistance;
 
 		float diffuseFactor = saturate(dot(pointNormal, lightDirection));
+		float attenuationFactor = 1.0 / (lightDistance * lightDistance) - 1.0 / (lightRange * lightRange);
 
-		return float4(diffuseColor.xyz * diffuseFactor, 1.0);
+		return float4(lightColor.xyz * diffuseColor.xyz * diffuseFactor * attenuationFactor, 1.0);
 	}
 	else
 	{
