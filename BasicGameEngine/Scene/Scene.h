@@ -23,6 +23,7 @@ public:
 	UpdateManager& GetUpdateManager();
 
 	Game& GetGame();
+	krono::ResourceManager& GetResourceManager();
 private:
 	friend class Game;
 
