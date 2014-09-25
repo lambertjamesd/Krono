@@ -16,6 +16,14 @@
 			"type" : "depth32f",
 			"clearDepth" : 1.0
 		},
+		"ssao" : {
+			"type" : "int8UNorm", 
+			"count" : 1
+		},
+		"ssaoblur" : {
+			"type" : "int8UNorm",
+			"count" : 1
+		},
 		"combined" : {
 			"type" : "float", 
 			"count" : 4,
@@ -31,20 +39,39 @@
 			"depthBuffer" : "depth"
 		},
 		{
-			"disabled" : true,
-		
-			"stage" : "DirectionalLight.json",
-			
-			"input" : ["color", "normal"],
-			"output" : ["combined"]
-		},
-		{
 			"stage" : "PositionalLights.json",
 			
 			"input" : ["color", "normal", "depth"],
 			"output" : ["combined"]
 		},
 		{
+			"disabled" : false,
+			
+			"stage" : "../Engine/Compositor/SSAO/SSAOStage.json",
+			"input" : ["depth", "normal"],
+			"output" : ["ssao"]
+		},
+		{
+			"stage" : "../Engine/Compositor/Blur/SpacialBlurStage.json",
+			"input" : ["ssao", "depth"],
+			"output" : ["ssaoblur"],
+		
+			"shaderValues" : [
+				{"type":"float2", "name":"direction", "value":{"x":1,"y":0}}
+			]
+		},
+		{
+			"stage" : "../Engine/Compositor/Blur/SpacialBlurStage.json",
+			"input" : ["ssaoblur", "depth"],
+			"output" : ["output0"],
+		
+			"shaderValues" : [
+				{"type":"float2", "name":"direction", "value":{"x":0,"y":1}}
+			]
+		},
+		{
+			"disabled" : true,
+			
 			"stage" : "ToneMapper.json",
 			
 			"input" : ["combined"],

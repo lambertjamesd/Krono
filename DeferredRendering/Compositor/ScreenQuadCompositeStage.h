@@ -12,8 +12,8 @@ struct VertexCompositeData
 {
 	VertexCompositeData();
 
-	Matrix4f projectionMatrix;
-	Matrix4f projectionInverseMatrix;
+	Matrix4f projectionViewMatrix;
+	Matrix4f projectionViewInverseMatrix;
 	Matrix4f compositeTransform;
 	Matrix4f projectionMatrixRasterSpace;
 };
@@ -22,8 +22,8 @@ struct PixelCompositeData
 {
 	PixelCompositeData();
 
-	Matrix4f projectionMatrix;
-	Matrix4f projectionInverseMatrix;
+	Matrix4f projectionViewMatrix;
+	Matrix4f projectionViewInverseMatrix;
 	Vector4f screenSize;
 };
 

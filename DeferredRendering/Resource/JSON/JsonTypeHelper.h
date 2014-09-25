@@ -9,6 +9,7 @@
 #include "Interface/DepthState.h"
 #include "Interface/RasterizerState.h"
 #include "Interface/MappedConstantBuffer.h"
+#include "Math/Vector4.h"
 
 namespace krono
 {
@@ -22,6 +23,8 @@ public:
 	static DataFormat ParseDataFormat(const json::Value& data);
 	static void ParseRenderStateParameters(ResourceManager& resourceManager, RenderStateParameters& result, const json::Value& stateParameters);
 	static Colorf ParseColor(const json::Value& color);
+	static Vector4f ParseFloatVector(const json::Value& vector);
+	static Vector4i ParseIntVector(const json::Value& vector);
 
 	static CompareFunction::Type ParseCompareFunction(const std::string& value);
 	static StencilOperation::Type ParseStencilOperation(const std::string& value);
@@ -35,6 +38,8 @@ public:
 	static DepthState::Ptr ParseDepthState(ResourceManager& resourceManager, const json::Value& depthState);
 	static RasterizerState::Ptr ParseRasterizerState(ResourceManager& resourceManager, const json::Value& rasterizerState);
 	static MappedConstantBuffer::Ptr ParseMappedConstantBuffer(ResourceManager& resourceManager, const Shader::Ptr& shader, const json::Value& mappedBuffer);
+
+	static void ParseValueIntoParameters(RenderStateParameters& target, const json::Value& value);
 private:
 	static const char* gStageName[ShaderStage::TypeCount];
 };

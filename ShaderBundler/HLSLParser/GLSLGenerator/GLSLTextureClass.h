@@ -9,7 +9,7 @@ class GLSLTextureClass
 public:
 	~GLSLTextureClass(void);
 
-	std::string GetFunctionMapping(HLSLType::TextureType textureType, const std::string& functionName, bool useOffset);
+	std::string GetFunctionMapping(HLSLType::TextureType textureType, const std::string& functionName, size_t parameterCount);
 
 	static GLSLTextureClass& GetInstance();
 private:

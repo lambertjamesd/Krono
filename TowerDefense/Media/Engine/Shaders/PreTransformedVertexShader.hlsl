@@ -5,9 +5,10 @@ PositionNormalTexture Main(StandardVertexInput vertexInput)
 {
 	PositionNormalTexture result;
 	result.position = float4(vertexInput.position, 1.0);
+	
+	result.position.y = -result.position.y;
 
 #ifdef OPENGL
-	result.position.y = -result.position.y;
 	result.position.z = result.position.z * 2 - 1;
 #endif
 

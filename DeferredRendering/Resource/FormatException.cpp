@@ -9,6 +9,10 @@ FormatException::FormatException(const char* message) :
 {
 }
 
+FormatException::FormatException(const std::string& message) :
+	mMessage(message)
+{
+}
 
 FormatException::~FormatException(void) throw()
 {

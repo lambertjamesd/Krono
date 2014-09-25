@@ -160,6 +160,16 @@ void JsonTypeHelper::ParseRenderStateParameters(ResourceManager& resourceManager
 	{
 		result.SetRasterizerState(ParseRasterizerState(resourceManager, stateParameters["rasterizerState"]));
 	}
+
+	if (stateParameters.HasKey("shaderValues"))
+	{
+		Array defaultValues = stateParameters["shaderValues"].ToArray();
+
+		for (auto it = defaultValues.begin(); it != defaultValues.end(); ++it)
+		{
+			ParseValueIntoParameters(result, *it);
+		}
+	}
 }
 
 
@@ -170,6 +180,26 @@ Colorf JsonTypeHelper::ParseColor(const json::Value& color)
 		color["g"].ToFloat(0.0f),
 		color["b"].ToFloat(0.0f),
 		color["a"].ToFloat(1.0f)
+		);
+}
+
+Vector4f JsonTypeHelper::ParseFloatVector(const json::Value& vector)
+{
+	return Vector4f(
+		vector["x"].ToFloat(0.0f),
+		vector["y"].ToFloat(0.0f),
+		vector["z"].ToFloat(0.0f),
+		vector["w"].ToFloat(0.0f)
+		);
+}
+
+Vector4i JsonTypeHelper::ParseIntVector(const json::Value& vector)
+{
+	return Vector4i(
+		vector["x"].ToInt(0),
+		vector["y"].ToInt(0),
+		vector["z"].ToInt(0),
+		vector["w"].ToInt(0)
 		);
 }
 
@@ -461,6 +491,59 @@ MappedConstantBuffer::Ptr JsonTypeHelper::ParseMappedConstantBuffer(ResourceMana
 	}
 	
 	return MappedConstantBuffer::Ptr();
+}
+
+void JsonTypeHelper::ParseValueIntoParameters(RenderStateParameters& target, const json::Value& value)
+{
+	std::string type = value["type"].ToString("no type found");
+	std::string name = value["name"].ToString("no name");
+
+	if (name == "no name")
+	{
+		throw FormatException("Value has no name specified");
+	}
+	
+	if (type == "float")
+	{
+		target.SetVariable<float>(name, value["value"].ToFloat(0.0f));
+	}
+	else if (type == "float2")
+	{
+		target.SetVariable<Vector2f>(name, ParseFloatVector(value["value"]).XY());
+	}
+	else if (type == "float3")
+	{
+		target.SetVariable<Vector3f>(name, ParseFloatVector(value["value"]).XYZ());
+	}
+	else if (type == "float4")
+	{
+		target.SetVariable<Vector4f>(name, ParseFloatVector(value["value"]));
+	}
+	else if (type == "color")
+	{
+		target.SetVariable<Colorf>(name, ParseColor(value["value"]));
+	}
+	else if (type == "int")
+	{
+		target.SetVariable<int>(name, value["value"].ToInt(0));
+	}
+	else if (type == "int2")
+	{
+		target.SetVariable<Vector2i>(name, ParseIntVector(value["value"]).XY());
+	}
+	else if (type == "int3")
+	{
+		target.SetVariable<Vector3i>(name, ParseIntVector(value["value"]).XYZ());
+	}
+	else if (type == "int4")
+	{
+		target.SetVariable<Vector4i>(name, ParseIntVector(value["value"]));
+	}
+	else
+	{
+		std::string message("unrecognized type: ");
+		throw FormatException(message + type);
+	}
 }
 
 }

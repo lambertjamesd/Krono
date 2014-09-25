@@ -1,0 +1,20 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "screenQuad",
+	
+	"inputCount" : 1,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "../../Shaders/CompositorVertexShader.shader",
+		"pixelShader" : "BasicBlur.shader",
+		
+		"blendState" : {
+			"renderTargets" : "disabled"
+		},
+		
+		"depthState" : "disabled",
+		"rasterizerState" : "default"
+	}
+}

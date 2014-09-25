@@ -23,6 +23,18 @@ public:
 
 	void SetExpectedTargetInputCount(size_t value);
 	size_t GetExpectedTargetInputCount() const;
+
+	template <typename T>
+	void SetVariable(const std::string& name, const T& value)
+	{
+		mStateParameters.SetVariable<T>(name, value);
+	}
+	
+	template <typename T>
+	void SetArray(const std::string& name, const T* value, size_t count)
+	{
+		mStateParameters.SetArrayVariable(name, value, count);
+	}
 protected:
 	CompositeStage(void);
 

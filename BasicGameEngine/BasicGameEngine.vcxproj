@@ -89,6 +89,7 @@
     <ClInclude Include="GameObject\Lens.h" />
     <ClInclude Include="GameObject\Renderer.h" />
     <ClInclude Include="GameObject\Transform.h" />
+    <ClInclude Include="Lighting\DirectionalLight.h" />
     <ClInclude Include="Lighting\Light.h" />
     <ClInclude Include="Lighting\PositionalLight.h" />
     <ClInclude Include="Lighting\PointLight.h" />
@@ -108,6 +109,7 @@
     <ClCompile Include="GameObject\Lens.cpp" />
     <ClCompile Include="GameObject\Renderer.cpp" />
     <ClCompile Include="GameObject\Transform.cpp" />
+    <ClCompile Include="Lighting\DirectionalLight.cpp" />
     <ClCompile Include="Lighting\Light.cpp" />
     <ClCompile Include="Lighting\PositionalLight.cpp" />
     <ClCompile Include="Lighting\PointLight.cpp" />

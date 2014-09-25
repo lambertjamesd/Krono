@@ -1,0 +1,32 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "screenQuad",
+	
+	"inputCount" : 2,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "../../Shaders/CompositorVertexShader.shader",
+		"pixelShader" : "SSAO.shader",
+		
+		"blendState" : {
+			"renderTargets" : "disabled"
+		},
+		
+		"depthState" : "disabled",
+		"rasterizerState" : "default",
+		
+		"pixelStage" : {
+			"uniforms" : [
+				{"registerLocation" : 1}
+			],
+			"textures" : ["Noise.png"]
+		},
+		
+		"shaderValues" : [
+			{"type":"int", "name":"numberOfSamples", "value":16},
+			{"type":"float", "name":"maxRadius", "value":0.25}
+		]
+	}
+}

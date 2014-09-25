@@ -1,0 +1,31 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "screenQuad",
+	
+	"inputCount" : 2,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "../../Shaders/CompositorVertexShader.shader",
+		"pixelShader" : "SpacialBlur.shader",
+		
+		"blendState" : {
+			"renderTargets" : "disabled"
+		},
+		
+		"depthState" : "disabled",
+		"rasterizerState" : "default",
+		
+		"pixelStage" : {
+			"uniforms" : [
+				{"registerLocation" : 1}
+			]
+		},
+		
+		"shaderValues" : [
+			{"type":"int", "name":"maxSampleCount", "value":8},
+			{"type":"float", "name":"maxDistance", "value":0.1}
+		]
+	}
+}

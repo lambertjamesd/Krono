@@ -1,0 +1,9 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "SpacialBlur.hlsl"
+	},
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

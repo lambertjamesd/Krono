@@ -10,11 +10,12 @@ class FormatException :
 {
 public:
 	FormatException(const char* message);
+	FormatException(const std::string& message);
 	~FormatException(void) throw();
 protected:
 	virtual std::string BuildWhat() const;
 private:
-	const char* mMessage;
+	std::string mMessage;
 };
 
 }

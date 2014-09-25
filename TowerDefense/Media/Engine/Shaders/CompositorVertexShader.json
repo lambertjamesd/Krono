@@ -1,0 +1,10 @@
+{
+	"type" : "vertex",
+
+	"sources" : {
+		"HLSL 5" : "CompositorVertexShader.hlsl"
+	},
+	
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

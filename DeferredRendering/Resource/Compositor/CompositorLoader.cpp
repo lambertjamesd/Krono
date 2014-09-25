@@ -108,6 +108,17 @@ void CompositorLoader::ParseStage(ResourceManager& resourceManager, Compositor::
 
 	std::string stageFilename = stageJson["stage"].ToString();
 	CompositeStage::Ptr stage = resourceManager.LoadResource<CompositeStage>(stageFilename);
+
+	if (stageJson.HasKey("shaderValues"))
+	{
+		Array defaultValues = stageJson["shaderValues"].ToArray();
+
+		for (auto it = defaultValues.begin(); it != defaultValues.end(); ++it)
+		{
+			JsonTypeHelper::ParseValueIntoParameters(stage->GetStateParameters(), *it);
+		}
+	}
+
 	compositor->AddCompositeStage(stage, connections);
 }
 

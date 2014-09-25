@@ -24,6 +24,7 @@ private:
 	HLSLTypeVisitor mTypeResolver;
 
 	HLSLFunctionDefinition* CreateSamplerDefinition(int dimentionality, bool includeOffset);
+	HLSLFunctionDefinition* CreateSamplerLevelDefinition(int dimentionality, bool includeOffset);
 
 	std::map<std::string, HLSLFunctionDefinition*> mFunctionDefinitions[HLSLType::TextureTypeCount];
 };

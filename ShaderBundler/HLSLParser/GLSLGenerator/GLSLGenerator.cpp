@@ -597,7 +597,7 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 	if (structureOperator != NULL && structureOperator->GetLeft().GetType().GetType() == HLSLType::Texture)
 	{
 		HLSLType leftType = structureOperator->GetLeft().GetType();
-		string functionName = GLSLTextureClass::GetInstance().GetFunctionMapping(leftType.GetTextureType(), structureOperator->GetRight(), node.GetParameterCount() == 2);
+		string functionName = GLSLTextureClass::GetInstance().GetFunctionMapping(leftType.GetTextureType(), structureOperator->GetRight(), node.GetParameterCount());
 
 		if (functionName.length() == 0)
 		{

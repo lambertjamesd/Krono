@@ -1,0 +1,10 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "CompositorCopy.hlsl"
+	},
+	
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

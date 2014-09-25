@@ -42,7 +42,7 @@ std::string ReadFileContents(const char *filename)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();

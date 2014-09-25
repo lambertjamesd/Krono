@@ -9,7 +9,7 @@ SamplerState samPoint : register( s0 );
 
 cbuffer SceneViewDataPix : register( b0 )
 {
-	float4x4 projectionMatrixPix;
+	float4x4 projectionViewMatrixPix;
 	float4x4 projectionViewInvMatrixPix;
 	float4 screenSizePix;
 };
