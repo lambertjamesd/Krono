@@ -40,4 +40,9 @@ Game& Scene::GetGame()
 	return mGame;
 }
 
+krono::ResourceManager& Scene::GetResourceManager()
+{
+	return *mGame.GetResourceManager();
+}
+
 }
