@@ -40,6 +40,17 @@ std::string ReadFileContents(const char *filename)
 	throw(errno);
 }
 
+GameObject::Ptr AddObject(const kge::Scene::Ptr& scene, const std::string& mesh, const std::string& material)
+{
+	GameObject::Ptr result = scene->CreateGameObject().lock();
+	Renderer::Ptr renderer = result->AddComponent<Renderer>().lock();
+
+	renderer->SetMesh(scene->GetResourceManager().LoadResource<Mesh>(mesh));
+	renderer->SetMaterial(scene->GetResourceManager().LoadResource<Material>(material), 0);
+
+	return result;
+}
+
 int main(int argc, char* argv[])
 {
 	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
@@ -52,17 +63,21 @@ int main(int argc, char* argv[])
 	Auto<PixelShader> pixelShader;
 
 	Auto<Mesh> meshTest;
-
-	Auto<Texture2D> textureTest;
 	
 	Auto<Sampler> linearSampler;
 	Auto<Sampler> pointSampler;
 
 	kge::Scene::Ptr scene = game.CreateScene();
 
-	GameObject::Ref objectReference = scene->CreateGameObject();
-	objectReference.lock()->AddComponent<SpinBehavior>();
-	Renderer::Ref renderer = objectReference.lock()->AddComponent<Renderer>();
+	GameObject::Ptr conrellBox = AddObject(scene, "Media/Meshes/CornellBox.obj#Cube", "Media/Materials/CornellBox.json");
+	conrellBox->GetTransform()->SetLocalOrientation(Quaternionf(Vector3f(0.0f, 1.0f, 0.0f), Degreesf(180.0f)));
+
+	GameObject::Ptr suzanne = scene->CreateGameObject().lock();
+	suzanne->GetTransform()->SetLocalOrientation(Quaternionf(Vector3f(0.0f, 1.0f, 0.0f), Degreesf(225.0f)));
+	suzanne->GetTransform()->SetLocalScale(Vector3f(0.75f, 0.75f, 0.75f));
+	suzanne->GetTransform()->SetLocalPosition(Vector3f(0.0f, -1.0f, 0.0f));
+	//suzanne->AddComponent<SpinBehavior>();
+	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
 	scene->GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 
@@ -73,25 +88,10 @@ int main(int argc, char* argv[])
 
 	{
 		GameObject::Ref lightObject = scene->CreateGameObject();
-		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0f, -3.0f));
+		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.9f, 0.0f));
 		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
 		pointLight->SetRange(4.0f);
-		pointLight->SetColor(Colorf(0.5f, 0.6f, 0.9f));
-	}
-	
-	{
-		GameObject::Ref lightObject = scene->CreateGameObject();
-		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(-2.0f, -1.0f, 2.0f));
-		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
-		pointLight->SetRange(6.0f);
-		pointLight->SetColor(Colorf(0.5f, 0.4f, 0.1f));
-	}
-
-	{
-		GameObject::Ref lightObject = scene->CreateGameObject();
-		DirectionalLight::Ptr directionalLight = lightObject.lock()->AddComponent<DirectionalLight>().lock();
-		directionalLight->SetColor(Colorf(0.1f, 0.5f, 0.3f));
-		directionalLight->SetDirection(Vector3f(-1.0f, -1.0f, 1.0f));
+		pointLight->SetColor(Colorf(1.5f, 1.5f, 1.5f));
 	}
 
 	try
@@ -100,9 +100,6 @@ int main(int argc, char* argv[])
 		pixelShader = resourceManager->LoadResource<PixelShader>("Media/Shaders/Bundle/PixelShaderTest.shader");
 		
 		meshTest = resourceManager->LoadResource<Mesh>("Media/Meshes/Suzanne.obj#Suzanne");
-
-		textureTest = resourceManager->LoadResource<Texture2D>("Media/Textures/Test.png");
-		textureTest->GenerateMipmaps();
 
 		SamplerDescription samplerDesc;
 

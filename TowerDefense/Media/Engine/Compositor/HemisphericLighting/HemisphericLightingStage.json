@@ -3,7 +3,7 @@
 	
 	"type" : "screenQuad",
 	
-	"inputCount" : 2,
+	"inputCount" : 3,
 	
 	"renderStateParameters" :
 	{

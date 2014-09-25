@@ -32,5 +32,5 @@ Auto<Mesh>& MeshGroup::GetMesh(const std::string& name)
 		return result->second;
 	}
 }
-
+	
 }

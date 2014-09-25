@@ -114,6 +114,7 @@ Auto<Object> Texture2DLoader::LoadResource(ResourceManager& resourceManager, ist
 	Auto<Texture2D> result = resourceManager.GetGraphics()->CreateTexture2D(size, DataFormat(formatType, channelCount));
 
 	result->LoadMemory(&textureData.front());
+	result->GenerateMipmaps();
 
 	if (bitmap != NULL)
 	{

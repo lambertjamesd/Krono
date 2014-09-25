@@ -72,12 +72,13 @@
 		{
 			"disabled" : false,
 			"stage" : "../Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
-			"input" : ["ssao", "normal"],
+			"input" : ["ssao", "normal", "color"],
 			"output" : ["combined"],
 		
 			"shaderValues" : [
-				{"type":"color", "name":"skyColor", "value":{"r":0.3, "g":0.4, "b":0.5}},
-				{"type":"color", "name":"groundColor", "value":{"r":0.3, "g":0.2, "b":0.1}}
+				{"type":"color", "name":"skyColor", "value":{"r":0.4, "g":0.3, "b":0.3}},
+				{"type":"color", "name":"groundColor", "value":{"r":0.3, "g":0.4, "b":0.3}},
+				{"type":"float3", "name":"up", "value":{"x":1,"y":0,"z":0}}
 			]
 		},
 		{

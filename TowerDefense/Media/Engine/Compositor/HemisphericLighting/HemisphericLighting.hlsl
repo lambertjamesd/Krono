@@ -3,6 +3,7 @@
 
 Texture2D occlusionTexture : register( t0 );
 Texture2D normalTexture : register( t1 );
+Texture2D colorTexture : register( t2 );
 
 SamplerState samPoint : register( s0 );
 
@@ -25,6 +26,7 @@ float4 Main(PositionNormalTexture shaderInput) : SV_TARGET
 	float2 texCoord = shaderInput.position.xy * screenSize.zw;
 	float occlusion = occlusionTexture.Sample(samPoint, texCoord).r;
 	float3 worldNormal = normalTexture.SampleLevel(samPoint, texCoord, 0).xyz;
+	float4 worldColor = colorTexture.SampleLevel(samPoint, texCoord, 0);
 	float lerpFactor = dot(up, worldNormal) * 0.5 + 0.5;
-	return lerp(groundColor, skyColor, float4(lerpFactor, lerpFactor, lerpFactor, lerpFactor)) * occlusion;
+	return worldColor * lerp(groundColor, skyColor, float4(lerpFactor, lerpFactor, lerpFactor, lerpFactor)) * occlusion;
 }
