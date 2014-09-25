@@ -90,7 +90,7 @@ float Main(PositionNormalTexture shaderInput) : SV_TARGET
 	
 	if (depth == 1.0)
 	{
-		return 1.0;
+		return 0.0;
 	}
 	
 	float3 worldPosition = WorldPosition(float3(TexToNorm(texCoord), depth));

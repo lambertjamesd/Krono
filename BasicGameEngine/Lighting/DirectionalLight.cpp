@@ -32,7 +32,7 @@ void DirectionalLight::PreRender()
 
 void DirectionalLight::SetDirection(const krono::Vector3f& direction)
 {
-	SetVariable<Vector3f>("lightDirection", direction);
+	SetVariable<Vector3f>("lightDirection", direction.Normalized());
 }
 
 void DirectionalLight::SetColor(const krono::Colorf& value)

@@ -8,10 +8,10 @@
 	"renderStateParameters" :
 	{
 		"vertexShader" : "../../Shaders/CompositorVertexShader.shader",
-		"pixelShader" : "SpacialBlur.shader",
+		"pixelShader" : "HemisphericLighting.shader",
 		
 		"blendState" : {
-			"renderTargets" : "disabled"
+			"renderTargets" : "add"
 		},
 		
 		"depthState" : "disabled",
@@ -24,8 +24,9 @@
 		},
 		
 		"shaderValues" : [
-			{"type":"int", "name":"maxSampleCount", "value":8},
-			{"type":"float", "name":"maxDistance", "value":0.25}
+			{"type":"color", "name":"skyColor", "value":{"r":0.4, "g":0.7, "b":0.9}},
+			{"type":"color", "name":"groundColor", "value":{"r":0.5, "g":0.4, "b":0.3}},
+			{"type":"float3", "name":"up", "value":{"x":0, "y":1, "z":0}}
 		]
 	}
 }

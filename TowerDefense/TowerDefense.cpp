@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(1.0f, 0.0f, -3.0f));
 		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
 		pointLight->SetRange(4.0f);
-		pointLight->SetColor(Colorf(0.5f, 0.6f, 1.9f));
+		pointLight->SetColor(Colorf(0.5f, 0.6f, 0.9f));
 	}
 	
 	{
@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
 	{
 		GameObject::Ref lightObject = scene->CreateGameObject();
 		DirectionalLight::Ptr directionalLight = lightObject.lock()->AddComponent<DirectionalLight>().lock();
-		directionalLight->SetColor(Colorf(0.3f, 1.4f, 0.4f));
-		directionalLight->SetDirection(Vector3f(0.0f, -1.0f, 0.0f));
+		directionalLight->SetColor(Colorf(0.1f, 0.5f, 0.3f));
+		directionalLight->SetDirection(Vector3f(-1.0f, -1.0f, 1.0f));
 	}
 
 	try

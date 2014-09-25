@@ -63,14 +63,25 @@
 		{
 			"stage" : "../Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssaoblur", "depth"],
-			"output" : ["output0"],
+			"output" : ["ssao"],
 		
 			"shaderValues" : [
 				{"type":"float2", "name":"direction", "value":{"x":0,"y":1}}
 			]
 		},
 		{
-			"disabled" : true,
+			"disabled" : false,
+			"stage" : "../Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
+			"input" : ["ssao", "normal"],
+			"output" : ["combined"],
+		
+			"shaderValues" : [
+				{"type":"color", "name":"skyColor", "value":{"r":0.3, "g":0.4, "b":0.5}},
+				{"type":"color", "name":"groundColor", "value":{"r":0.3, "g":0.2, "b":0.1}}
+			]
+		},
+		{
+			"disabled" : false,
 			
 			"stage" : "ToneMapper.json",
 			

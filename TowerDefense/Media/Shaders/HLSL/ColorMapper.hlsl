@@ -8,5 +8,5 @@ float4 Main(TexCoordVertex shaderInput) : SV_TARGET
 {
 	float3 inputColor = textureTest.Sample(samPoint, shaderInput.texCoord).rgb;
 	float gray = dot(inputColor, float3(0.299, 0.587, 0.114));
-	return float4(inputColor / (0.1 + gray), 1.0);
+	return float4(inputColor / (1.0 + gray), 1.0);
 }

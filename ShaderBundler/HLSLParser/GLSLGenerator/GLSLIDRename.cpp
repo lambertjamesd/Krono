@@ -33,6 +33,7 @@ void GLSLIDRename::AddRename(const std::string& oldName, const std::string& newN
 void GLSLIDRename::PopulateNames()
 {
 	mRenameMap["frac"] = "fract";
+	mRenameMap["lerp"] = "mix";
 	mRenameMap["main"] = "main__rename__";
 	mRenameMap["input"] = "input__rename__";
 }
