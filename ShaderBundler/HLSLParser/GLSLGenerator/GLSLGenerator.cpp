@@ -41,6 +41,7 @@ GLSLGenerator::GLSLGenerator(std::ostream& output, ShaderType::Type type, const 
 	mIndentLevel(0),
 	mNoSemiColon(false),
 	mIsInFunction(false),
+	mIsInsideCBuffer(false),
 	mShaderType(type),
 	mEntryPointName(entryPoint),
 	mEntryPoint(NULL)
@@ -123,6 +124,11 @@ void GLSLGenerator::Visit(HLSLVariableDefinition& node)
 		mOutput << "uniform ";
 	}
 
+	if (mIsInsideCBuffer)
+	{
+		mIDRename.AddRename(node.GetName(), node.GetName() + gUniformBufferSuffix[mShaderType]);
+	}
+
 	OutputVariableDeclaration(node.GetName(), node.GetType());
 
 	if (node.GetInitialValue() != NULL)
@@ -150,7 +156,7 @@ void GLSLGenerator::Visit(HLSLFunctionParameter& node)
 void GLSLGenerator::Visit(HLSLFunctionDefinition& node)
 {
 	OutputVariableDeclaration("", node.GetReturnType());
-	mOutput << node.GetName() << "(";
+	mOutput << mIDRename.RenameID(node.GetName()) << "(";
 
 	if (node.GetName() == mEntryPointName)
 	{
@@ -203,7 +209,7 @@ void GLSLGenerator::Visit(HLSLStructureMember& node)
 
 void GLSLGenerator::Visit(HLSLStructDefinition& node)
 {
-	mOutput << "struct " << node.GetName() << endl;
+	mOutput << "struct " << mIDRename.RenameID(node.GetName()) << endl;
 	OutputIndents();
 	mOutput << "{" << endl;
 
@@ -231,13 +237,16 @@ void GLSLGenerator::Visit(HLSLCBufferDefinition& node)
 		mOutput << "layout(binding = " << node.GetRegisterLocation().GetRegisterNumber() << ") ";
 	}
 
-	mOutput << "uniform " << node.GetName() << endl;
+	mIDRename.AddRename(node.GetName(), node.GetName() + gUniformBufferSuffix[mShaderType]);
+
+	mOutput << "uniform " << mIDRename.RenameID(node.GetName()) << endl;
 
 	OutputIndents();
 
 	mOutput << "{" << endl;
 
 	IncreaseIndent();
+	mIsInsideCBuffer = true;
 
 	for (size_t i = 0; i < node.GetMemberCount(); ++i)
 	{
@@ -246,6 +255,7 @@ void GLSLGenerator::Visit(HLSLCBufferDefinition& node)
 		mOutput << ";" << endl;
 	}
 
+	mIsInsideCBuffer = false;
 	DecreaseIndent();
 
 	OutputIndents();
@@ -256,9 +266,8 @@ void GLSLGenerator::Visit(HLSLCBufferDefinition& node)
 
 void GLSLGenerator::OutputVariableDeclaration(const std::string& variableName, HLSLTypeNode& type)
 {
-	
 	type.Accept(*this);
-	mOutput << " " << variableName;
+	mOutput << " " << mIDRename.RenameID(variableName);
 	GLSLPostIndexGenerator indexGenerator(mOutput);
 	type.Accept(indexGenerator);
 }
@@ -515,7 +524,7 @@ void GLSLGenerator::Visit(HLSLIdentifierNode& node)
 	}
 	else
 	{
-		mOutput << node.GetName();
+		mOutput << mIDRename.RenameID(node.GetName());
 	}
 }
 
@@ -663,6 +672,11 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 	mOutput << ')';
 }
 
+const GLSLIDRename& GLSLGenerator::GetIDRename() const
+{
+	return mIDRename;
+}
+
 void GLSLGenerator::OutputIndents()
 {
 	for (size_t i = 0; i < mIndentLevel; ++i)
@@ -682,3 +696,12 @@ void GLSLGenerator::DecreaseIndent()
 }
 
 string GLSLGenerator::gIndentString = "\t";
+
+const char* GLSLGenerator::gUniformBufferSuffix[ShaderType::Count] = {
+	"Vert",
+	"Hull",
+	"Dom",
+	"Geo",
+	"Pix",
+	"Comp"
+};

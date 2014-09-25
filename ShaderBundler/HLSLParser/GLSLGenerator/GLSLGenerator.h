@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include "GLSLIDRename.h"
 
 class GLSLPostIndexGenerator : public HLSLNodeVisitor
 {
@@ -81,6 +82,8 @@ public:
 	virtual void Visit(HLSLIndexNode& node);
 	virtual void Visit(HLSLStructureNode& node);
 	virtual void Visit(HLSLFunctionCallNode& node);
+
+	const GLSLIDRename& GetIDRename() const;
 private:
 
 	void OutputIndents();
@@ -92,11 +95,16 @@ private:
 
 	static std::string gIndentString;
 
+	static const char* gUniformBufferSuffix[ShaderType::Count];
+
 	bool mNoSemiColon;
 	bool mIsInFunction;
+	bool mIsInsideCBuffer;
 	
 	ShaderType::Type mShaderType;
 	std::string mEntryPointName;
 	HLSLFunctionDefinition* mEntryPoint;
+
+	GLSLIDRename mIDRename;
 };
 

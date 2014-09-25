@@ -6,11 +6,11 @@ Texture2D inputTexture : register( t0 );
 Texture2D depthTexture : register( t1 );
 SamplerState samPoint : register( s0 );
 
-cbuffer SceneViewDataPix : register( b0 )
+cbuffer SceneViewData : register( b0 )
 {
-	float4x4 projectionViewMatrixPix;
-	float4x4 projectionViewInvMatrixPix;
-	float4 screenSizePix;
+	float4x4 projectionViewMatrix;
+	float4x4 projectionViewInvMatrix;
+	float4 screenSize;
 };
 
 cbuffer BlurParameters : register( b1 )
@@ -29,7 +29,7 @@ float4 SampleDirection(float2 texCoord, float2 direction, float3 worldPos, inout
 	while (currentSample < maxSampleCount)
 	{
 		float depth = depthTexture.SampleLevel(samPoint, texCoord, 0).r;
-		float3 samplePos = WorldPosition(projectionViewInvMatrixPix, float3(TexToNorm(texCoord), depth));
+		float3 samplePos = WorldPosition(projectionViewInvMatrix, float3(TexToNorm(texCoord), depth));
 		
 		float distance = length(worldPos - samplePos);
 		
@@ -51,11 +51,11 @@ float4 SampleDirection(float2 texCoord, float2 direction, float3 worldPos, inout
 
 float4 Main(PositionNormalTexture shaderInput) : SV_TARGET
 {
-	float2 texCoord = shaderInput.position.xy * screenSizePix.zw;
-	float2 step = direction * screenSizePix.zw;
+	float2 texCoord = shaderInput.position.xy * screenSize.zw;
+	float2 step = direction * screenSize.zw;
 	float4 result = inputTexture.SampleLevel(samPoint, texCoord, 0);
 	float depth = depthTexture.SampleLevel(samPoint, texCoord, 0).r;
-	float3 worldPos = WorldPosition(projectionViewInvMatrixPix, float3(TexToNorm(texCoord), depth));
+	float3 worldPos = WorldPosition(projectionViewInvMatrix, float3(TexToNorm(texCoord), depth));
 	float weight = 1.0;
 	result += SampleDirection(texCoord + step, step, worldPos, weight);
 	result += SampleDirection(texCoord - step, -step, worldPos, weight);

@@ -29,7 +29,7 @@ GLenum OpenGLTexture::GetTextureFormat(DataFormat format)
 }
 
 GLenum OpenGLTexture::gTextureChannelMapping[] = {
-	GL_R,
+	GL_RED,
 	GL_RG,
 	GL_RGB,
 	GL_RGBA

@@ -93,6 +93,7 @@
     <ClInclude Include="Bundle\FileNotFoundException.h" />
     <ClInclude Include="Bundle\HLSLCompiler.h" />
     <ClInclude Include="Bundle\GLSLBundler.h" />
+    <ClInclude Include="HLSLParser\GLSLGenerator\GLSLIDRename.h" />
     <ClInclude Include="HLSLParser\HLSLBuiltInFunctions.h" />
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLTextureClass.h" />
     <ClInclude Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="Bundle\FileNotFoundException.cpp" />
     <ClCompile Include="Bundle\HLSLCompiler.cpp" />
     <ClCompile Include="Bundle\GLSLBundler.cpp" />
+    <ClCompile Include="HLSLParser\GLSLGenerator\GLSLIDRename.cpp" />
     <ClCompile Include="HLSLParser\HLSLBuiltInFunctions.cpp" />
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLTextureClass.cpp" />
     <ClCompile Include="HLSLParser\GLSLGenerator\GLSLEntryPointBuilder.cpp" />

@@ -1,6 +1,7 @@
 
 #include "OpenGLOffscreenRenderTarget.h"
 #include "OpenGLGraphics.h"
+#include "OpenGLException.h"
 
 #include <cassert>
 
@@ -17,8 +18,10 @@ OpenGLOffscreenRenderTarget::OpenGLOffscreenRenderTarget(Vector2i size, DataForm
 	glGenTextures(1, &mGLTexture);
 	glBindTexture(GL_TEXTURE_2D, mGLTexture);
 
+	OpenGLException::ClearErrorFlag();
 	glTexImage2D(GL_TEXTURE_2D, 0, OpenGLTexture::GetTextureFormat(format), size.x, size.y, 0, OpenGLTexture::GetTextureChannelType(format.count), OpenGLGraphics::GetGLType(format.type), NULL);
-	
+	OpenGLException::CheckError("Could not create texture");
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

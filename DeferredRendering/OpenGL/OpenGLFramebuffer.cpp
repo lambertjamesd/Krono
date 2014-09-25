@@ -1,5 +1,6 @@
 
 #include "OpenGLFramebuffer.h"
+#include "OpenGLException.h"
 #include <iostream>
 
 namespace krono
@@ -60,7 +61,7 @@ OpenGLFramebuffer::OpenGLFramebuffer(const std::vector<Auto<OpenGLRenderTarget> 
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
-			std::cerr << "Error creating frame buffer";
+			OpenGLException::CheckError("Error creating frame buffer");
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, existingBuffer);

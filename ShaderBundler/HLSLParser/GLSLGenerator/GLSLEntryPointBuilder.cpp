@@ -230,7 +230,7 @@ void GLSLEntryPointBuilder::GenerateEntryPoint()
 		}
 	}
 	
-	mOutput << mEntryPoint->GetName() <<'(';
+	mOutput << mGenerator.GetIDRename().RenameID(mEntryPoint->GetName()) <<'(';
 
 	OutputParameterInput(inputPrefix, *mEntryPoint);
 

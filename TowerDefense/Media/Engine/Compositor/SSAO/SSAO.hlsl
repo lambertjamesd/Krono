@@ -8,11 +8,11 @@ Texture2D noiseTexture : register( t2 );
 
 SamplerState samPoint : register( s0 );
 
-cbuffer SceneViewDataPix : register( b0 )
+cbuffer SceneViewData : register( b0 )
 {
-	float4x4 projectionViewMatrixPix;
-	float4x4 projectionViewInvMatrixPix;
-	float4 screenSizePix;
+	float4x4 projectionViewMatrix;
+	float4x4 projectionViewInvMatrix;
+	float4 screenSize;
 };
 
 cbuffer SSAOParameters : register( b1 )
@@ -49,14 +49,14 @@ float3 WorldPosition(float3 normalizedPos)
 #ifdef OPENGL
 	normalizedPos.z = normalizedPos.z * 2 - 1;
 #endif
-	float4 result = mul(projectionViewInvMatrixPix, float4(normalizedPos, 1.0));
+	float4 result = mul(projectionViewInvMatrix, float4(normalizedPos, 1.0));
 	result /= result.w;
 	return result.xyz;
 }
 
 float3 NormalizedPosition(float3 worldPosition)
 {
-	float4 result = mul(projectionViewMatrixPix, float4(worldPosition, 1.0));
+	float4 result = mul(projectionViewMatrix, float4(worldPosition, 1.0));
 	result /= result.w;
 #ifdef OPENGL
 	result.z = (result.z + 1) * 0.5;
@@ -84,7 +84,7 @@ float2 NormToTex(float2 normXY)
 
 float Main(PositionNormalTexture shaderInput) : SV_TARGET
 {
-	float2 texCoord = shaderInput.position.xy * screenSizePix.zw;
+	float2 texCoord = shaderInput.position.xy * screenSize.zw;
 
 	float depth = depthTexture.Sample(samPoint, texCoord).r;
 	
