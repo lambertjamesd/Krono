@@ -69,6 +69,8 @@ public:
 	size_t GetSize() const;
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
+
+	const static size_t NoSize = ~0;
 private:
 	std::unique_ptr<HLSLTypeNode> mInternalType;
 	size_t mSize;

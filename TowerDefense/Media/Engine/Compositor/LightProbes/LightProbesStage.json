@@ -1,0 +1,32 @@
+{
+	"documentType" : "compositeStage",
+	
+	"type" : "screenQuad",
+	
+	"inputCount" : 3,
+	
+	"renderStateParameters" :
+	{
+		"vertexShader" : "../../Shaders/CompositorVertexShader.shader",
+		"pixelShader" : "LightProbes.shader",
+		
+		"blendState" : {
+			"renderTargets" : "add"
+		},
+		
+		"depthState" : "disabled",
+		"rasterizerState" : "default",
+		
+		"pixelStage" : {
+			"uniforms" : [
+				{"registerLocation" : 1}
+			]
+		},
+		
+		"shaderValues" : [
+			{"type":"color", "name":"skyColor", "value":{"r":0.4, "g":0.7, "b":0.9}},
+			{"type":"color", "name":"groundColor", "value":{"r":0.5, "g":0.4, "b":0.3}},
+			{"type":"float3", "name":"up", "value":{"x":0, "y":1, "z":0}}
+		]
+	}
+}

@@ -128,9 +128,27 @@ Vector3<T> operator+ (const Vector3<T>& a, const Vector3<T>& b)
 }
 
 template <typename T>
+Vector3<T>& operator+= (Vector3<T>& left, const Vector3<T>& right)
+{
+	left.x += right.x;
+	left.y += right.y;
+	left.z += right.z;
+	return left;
+}
+
+template <typename T>
 Vector3<T> operator- (const Vector3<T>& a, const Vector3<T>& b)
 {
 	return Vector3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+template <typename T>
+Vector3<T>& operator-= (Vector3<T>& left, const Vector3<T>& right)
+{
+	left.x -= right.x;
+	left.y -= right.y;
+	left.z -= right.z;
+	return left;
 }
 
 template <typename T>
@@ -155,6 +173,24 @@ template <typename T>
 Vector3<T> operator* (const Vector3<T>& a, const T& b)
 {
 	return Vector3<T>(a.x * b, a.y * b, a.z * b);
+}
+
+template <typename T>
+Vector3<T>& operator*= (Vector3<T>& left, const Vector3<T>& right)
+{
+	left.x *= right.x;
+	left.y *= right.y;
+	left.z *= right.z;
+	return left;
+}
+
+template <typename T>
+Vector3<T>& operator*= (Vector3<T>& left, const T& right)
+{
+	left.x *= right;
+	left.y *= right;
+	left.z *= right;
+	return left;
 }
 
 typedef Vector3<int> Vector3i;

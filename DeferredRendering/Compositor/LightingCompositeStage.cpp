@@ -77,6 +77,8 @@ void LightingCompositeStage::RebuildBuffer(RenderState& renderState)
 	pixelData.projectionMatrix = projectionMatrix;
 	pixelData.projectionViewInverseMatrix = vertexData.projectionViewInverseMatrix;
 	pixelData.screenSize = Vector4f(screenSize, 1.0f / screenSize);
+	pixelData.viewDireciton = Vector4f(0.0f, 0.0f, 1.0f, 0.0f) * viewMatrix;
+	pixelData.viewPosition = viewMatrix.Inverse() *  Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mPixelContantBuffer->Set<LightPixelCompositeData>(pixelData);
 }
 

@@ -1,17 +1,17 @@
 
-float3 WorldPosition(float4x4 projectionViewInvMatrixPix, float3 normalizedPos)
+float3 WorldPosition(float4x4 projectionViewInvMatrix, float3 normalizedPos)
 {
 #ifdef OPENGL
 	normalizedPos.z = normalizedPos.z * 2 - 1;
 #endif
-	float4 result = mul(projectionViewInvMatrixPix, float4(normalizedPos, 1.0));
+	float4 result = mul(projectionViewInvMatrix, float4(normalizedPos, 1.0));
 	result /= result.w;
 	return result.xyz;
 }
 
-float3 NormalizedPosition(float4x4 projectionViewMatrixPix, float3 worldPosition)
+float3 NormalizedPosition(float4x4 projectionViewMatrix, float3 worldPosition)
 {
-	float4 result = mul(projectionViewMatrixPix, float4(worldPosition, 1.0));
+	float4 result = mul(projectionViewMatrix, float4(worldPosition, 1.0));
 	result /= result.w;
 #ifdef OPENGL
 	result.z = (result.z + 1) * 0.5;

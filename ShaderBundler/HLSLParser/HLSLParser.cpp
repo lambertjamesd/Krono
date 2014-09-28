@@ -510,11 +510,19 @@ void HLSLParser::CheckForArrayType(std::unique_ptr<HLSLTypeNode>& type)
 {
 	if (Optional(HLSLTokenType::OpenSquare))
 	{
-		const HLSLToken& size = Require(HLSLTokenType::Number);
-		std::unique_ptr<HLSLTypeNode> arrayType(new HLSLArrayTypeNode(size, move(type), size.GetIntValue()));
-		Require(HLSLTokenType::CloseSquare);
+		if (Peek(0).GetType() == HLSLTokenType::CloseSquare)
+		{
+			std::unique_ptr<HLSLTypeNode> arrayType(new HLSLArrayTypeNode(Advance(), move(type), HLSLArrayTypeNode::NoSize));
+			type = move(arrayType);
+		}
+		else
+		{
+			const HLSLToken& size = Require(HLSLTokenType::Number);
+			std::unique_ptr<HLSLTypeNode> arrayType(new HLSLArrayTypeNode(size, move(type), size.GetIntValue()));
+			Require(HLSLTokenType::CloseSquare);
 
-		type = move(arrayType);
+			type = move(arrayType);
+		}
 	}
 }
 

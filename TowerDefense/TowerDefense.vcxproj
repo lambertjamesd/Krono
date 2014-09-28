@@ -86,11 +86,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameLogic\FlyCamera.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="GameLogic\SpinBehavior.h" />
     <ClInclude Include="TowerDefense.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameLogic\FlyCamera.cpp" />
     <ClCompile Include="GameLogic\SpinBehavior.cpp" />
     <ClCompile Include="TowerDefense.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

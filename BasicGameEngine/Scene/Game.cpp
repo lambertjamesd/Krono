@@ -19,7 +19,7 @@ Game::Game(Graphics::API api, Vector2i windowSize, float targetFramerate) :
 
 void Game::Initialize(Graphics::API api, Vector2i windowSize)
 {
-	mWindow = Window::Create(Vector2i(800, 600));
+	mWindow = Window::Create(windowSize);
 
 	mGraphics = Graphics::CreateGraphics(api);
 	mResourceManager = ResourceManager::Ptr(new ResourceManager(mGraphics.get()));
@@ -84,6 +84,11 @@ const krono::ResourceManager::Ptr& Game::GetResourceManager() const
 const krono::WindowRenderTarget::Ptr& Game::GetWindowRenderTarget() const
 {
 	return mWindowRenderTarget;
+}
+
+const krono::InputState& Game::GetInputState() const
+{
+	return mWindow->CurrentInputState();
 }
 
 }

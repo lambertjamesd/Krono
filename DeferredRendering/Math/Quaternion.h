@@ -82,6 +82,15 @@ public:
 		return Quaternion(w - other.w, x - other.x, y - other.y, z - other.z);
 	}
 
+	Vector3<T> Rotate(const Vector3<T>& input) const
+	{
+		Quaternion result = *this *
+			Quaternion(Constant<T>::Zero, input.x, input.y, input.z) *
+			Conjugate();
+
+		return Vector3<T>(result.x, result.y, result.z);
+	}
+
 	Quaternion Conjugate() const
 	{
 		return Quaternion(w, -x, -y, -z);

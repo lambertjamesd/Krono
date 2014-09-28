@@ -1,0 +1,9 @@
+{
+	"type" : "pixel",
+
+	"sources" : {
+		"HLSL 5" : "LightProbes.hlsl"
+	},
+	"entryPoint" : "Main",
+	"crossCompileHLSL" : true
+}

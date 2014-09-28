@@ -1,0 +1,22 @@
+{
+	"documentType" : "material",
+	
+	"techniques" : [
+		{
+			"vertexShader" : "Media/Shaders/Bundle/VertexShaderTest.shader",
+			"pixelShader" : "Media/Shaders/Bundle/EmmisiveColor.shader",
+			
+			"pixelStage" : {
+				"uniforms" : [
+					{"registerLocation" : 0}
+				]
+			},
+		
+			"shaderValues" : [
+				{"name" : "diffuseColor", "type" : "color", "value" : {"r" : 1, "g" : 1, "b" : 1}},
+				{"name" : "specularColor", "type" : "color", "value" : {"r" : 1, "g" : 1, "b" : 1, "a" : 0.2}},
+				{"name" : "emmisiveColor", "type" : "color", "value" : {"r" : 0.5, "g" : 0.9, "b" : 4}}
+			]
+		}
+	]
+}

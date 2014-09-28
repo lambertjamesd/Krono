@@ -22,6 +22,7 @@ public:
 	const krono::Graphics::Ptr& GetGraphics() const;
 	const krono::ResourceManager::Ptr& GetResourceManager() const;
 	const krono::WindowRenderTarget::Ptr& GetWindowRenderTarget() const;
+	const krono::InputState& GetInputState() const;
 private:
 	void Initialize(krono::Graphics::API api, krono::Vector2i windowSize);
 

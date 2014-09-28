@@ -22,6 +22,8 @@ struct LightPixelCompositeData
 	Matrix4f projectionMatrix;
 	Matrix4f projectionViewInverseMatrix;
 	Vector4f screenSize;
+	Vector4f viewDireciton;
+	Vector4f viewPosition;
 };
 
 class LightingCompositeStage : public CompositeStage

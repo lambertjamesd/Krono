@@ -18,6 +18,7 @@
 #include <BasicGameEngine.h>
 
 #include "GameLogic/SpinBehavior.h"
+#include "GameLogic/FlyCamera.h"
 
 using namespace std;
 using namespace krono;
@@ -51,9 +52,24 @@ GameObject::Ptr AddObject(const kge::Scene::Ptr& scene, const std::string& mesh,
 	return result;
 }
 
+void AddEmmisiveSphere(const kge::Scene::Ptr& scene, const Vector3f& location, const Colorf& color)
+{
+	GameObject::Ptr emmisiveSphere = scene->CreateGameObject().lock();
+	emmisiveSphere->GetTransform()->SetLocalScale(Vector3f(0.1f, 0.1f, 0.1f));
+	emmisiveSphere->GetTransform()->SetLocalPosition(location);
+	Renderer::Ptr lightRender = emmisiveSphere->AddComponent<Renderer>().lock();
+	lightRender->SetMesh(scene->GetResourceManager().GetSphere());
+	Material::Ptr material = scene->GetResourceManager().LoadResource<Material>("Media/Materials/Emmisive.json");
+	material->SetVariable<Colorf>("emmisiveColor", color);
+	lightRender->SetMaterial(material, 0);
+	PointLight::Ptr sphereGlow = emmisiveSphere->AddComponent<PointLight>().lock();
+	sphereGlow->SetRange(8.0f);
+	sphereGlow->SetColor(color * 0.02f);
+}
+
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -74,24 +90,30 @@ int main(int argc, char* argv[])
 
 	GameObject::Ptr suzanne = scene->CreateGameObject().lock();
 	suzanne->GetTransform()->SetLocalOrientation(Quaternionf(Vector3f(0.0f, 1.0f, 0.0f), Degreesf(225.0f)));
-	suzanne->GetTransform()->SetLocalScale(Vector3f(0.75f, 0.75f, 0.75f));
+	suzanne->GetTransform()->SetLocalScale(Vector3f(0.6f, 0.6f, 0.6f));
 	suzanne->GetTransform()->SetLocalPosition(Vector3f(0.0f, -1.0f, 0.0f));
-	//suzanne->AddComponent<SpinBehavior>();
+	suzanne->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
 	scene->GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 
-	GameObject::Ref cameraObject = scene->CreateGameObject();
-	Camera::Ref camera = cameraObject.lock()->AddComponent<Camera>();
-	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.5f, 20.0f, Degreesf(90.0f)));
+	GameObject::Ptr cameraObject = scene->CreateGameObject().lock();
+	cameraObject->AddComponent<FlyCamera>();
+	Camera::Ref camera = cameraObject->AddComponent<Camera>();
+	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.05f, 20.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
 	{
-		GameObject::Ref lightObject = scene->CreateGameObject();
-		lightObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.9f, 0.0f));
-		PointLight::Ptr pointLight = lightObject.lock()->AddComponent<PointLight>().lock();
+		GameObject::Ptr lightObject = scene->CreateGameObject().lock();
+		lightObject->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.9f, 0.0f));
+		PointLight::Ptr pointLight = lightObject->AddComponent<PointLight>().lock();
 		pointLight->SetRange(4.0f);
-		pointLight->SetColor(Colorf(1.5f, 1.5f, 1.5f));
+		pointLight->SetColor(Colorf(1.0f, 1.0f, 1.0f));
+	}
+
+	for (int i = 1; i <= 5; ++i)
+	{
+		AddEmmisiveSphere(scene, Vector3f(0.4f * i - 1.2f, -0.9f, -0.8f), Colorf(0.3f, 0.5f + i * 0.3f, 2.0f - i * 0.3f));
 	}
 
 	try
@@ -118,7 +140,7 @@ int main(int argc, char* argv[])
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
 		camera.lock()->SetRenderTargets(renderTarget);
-		cameraObject.lock()->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -2.0f));
+		cameraObject->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -2.0f));
 	}
 	catch (Exception& exception)
 	{

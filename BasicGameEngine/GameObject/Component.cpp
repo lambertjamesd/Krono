@@ -27,4 +27,9 @@ krono::ResourceManager& Component::GetResourceManager()
 	return *mGameObject.GetScene().GetGame().GetResourceManager();
 }
 
+const krono::InputState& Component::GetInputState() const
+{
+	return mGameObject.GetScene().GetGame().GetInputState();
+}
+
 }

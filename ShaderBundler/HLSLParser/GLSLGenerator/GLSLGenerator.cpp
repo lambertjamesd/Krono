@@ -9,6 +9,7 @@
 #include <sstream>
 #include <cstring>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 
@@ -30,7 +31,14 @@ void GLSLPostIndexGenerator::Visit(HLSLNamedTypeNode& node)
 
 void GLSLPostIndexGenerator::Visit(HLSLArrayTypeNode& node)
 {
-	mOutput << '[' << node.GetSize() << ']';
+	if (node.GetSize() == HLSLArrayTypeNode::NoSize)
+	{
+		mOutput << "[]";
+	}
+	else
+	{
+		mOutput << '[' << node.GetSize() << ']';
+	}
 }
 
 
@@ -552,9 +560,45 @@ void GLSLGenerator::Visit(HLSLParenthesisNode& node)
 	
 void GLSLGenerator::Visit(HLSLBinaryOperatorNode& node)
 {
-	node.GetLeft().Accept(*this);
-	mOutput << " " << node.GetToken().GetValue() << " ";
-	node.GetRight().Accept(*this);
+	if (node.GetType().GetType() != HLSLType::Scalar && (node.GetToken().IsComparisonOperator() || node.GetToken().IsEqualityOperator()))
+	{
+		std::string functionName;
+		switch (node.GetToken().GetType())
+		{
+		case HLSLTokenType::LessThan:
+			functionName = "lessThan";
+			break;
+		case HLSLTokenType::LessThanEqual:
+			functionName = "lessThanEqual";
+			break;
+		case HLSLTokenType::GreaterThan:
+			functionName = "greaterThan";
+			break;
+		case HLSLTokenType::GreaterThanEqual:
+			functionName = "greaterThanEqual";
+			break;
+		case HLSLTokenType::Equal:
+			functionName = "equal";
+			break;
+		case HLSLTokenType::NotEqual:
+			functionName = "notEqual";
+			break;
+		default:
+			assert(false && "unimplimented comparison operator");
+		}
+
+		mOutput << functionName << "(";
+		node.GetLeft().Accept(*this);
+		mOutput << ", ";
+		node.GetRight().Accept(*this);
+		mOutput << ")";
+	}
+	else
+	{
+		node.GetLeft().Accept(*this);
+		mOutput << " " << node.GetToken().GetValue() << " ";
+		node.GetRight().Accept(*this);
+	}
 }
 	
 void GLSLGenerator::Visit(HLSLUnaryOperator& node)

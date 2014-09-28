@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="DX11\DX11DepthState.h" />
     <ClInclude Include="DX11\DX11RasterizerState.h" />
+    <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Interface\DepthState.h" />
     <ClInclude Include="DX11\DX11BlendState.h" />
     <ClInclude Include="Interface\BlendState.h" />
@@ -213,6 +214,7 @@
   <ItemGroup>
     <ClCompile Include="DX11\DX11DepthState.cpp" />
     <ClCompile Include="DX11\DX11RasterizerState.cpp" />
+    <ClCompile Include="Input\InputState.cpp" />
     <ClCompile Include="Interface\DepthState.cpp" />
     <ClCompile Include="DX11\DX11BlendState.cpp" />
     <ClCompile Include="Interface\BlendState.cpp" />

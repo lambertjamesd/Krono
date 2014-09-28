@@ -35,11 +35,11 @@ void OpenGLRasterizerState::Use()
 
 	if (mDescription.depthClipEnable)
 	{
-		glEnable(GL_DEPTH_CLAMP);
+		glDisable(GL_DEPTH_CLAMP);
 	}
 	else
 	{
-		glDisable(GL_DEPTH_CLAMP);
+		glEnable(GL_DEPTH_CLAMP);
 	}
 
 	if (mDescription.scissorEnable)

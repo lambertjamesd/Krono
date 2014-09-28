@@ -141,7 +141,8 @@ HLSLType HLSLType::ArrayType(size_t count) const
 	
 	HLSLType result(*this);
 	result.mModifier = ArrayModifier;
-	result.mSize |= (~0) & gSizeMask;
+	result.mSize &= ~gSizeMask;
+	result.mSize |= (gSizeMask & count);
 
 	return result;
 }
@@ -305,7 +306,16 @@ bool HLSLType::IsTypeClass() const
 size_t HLSLType::GetArraySize() const
 {
 	assert(mModifier == ArrayModifier);
-	return (mSize & gSizeMask) + 1;
+	size_t result = mSize & gSizeMask;
+
+	if (result == gSizeMask)
+	{
+		return NoSize;
+	}
+	else
+	{
+		return result;
+	}
 }
 
 size_t HLSLType::GetVectorSize() const

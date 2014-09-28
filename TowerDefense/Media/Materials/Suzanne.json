@@ -7,7 +7,7 @@
 			"pixelShader" : "Media/Shaders/Bundle/PixelShaderTest.shader",
 			
 			"pixelStage" : {
-				"textures" : ["Media/Textures/Blue.png"],
+				"textures" : ["Media/Textures/Blue.png", "Media/Textures/White.png"],
 				"samplers" : [{}]
 			}
 		}

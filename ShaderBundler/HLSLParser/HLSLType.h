@@ -126,6 +126,7 @@ public:
 	bool IsArray() const;
 	bool IsTypeClass() const;
 
+	static const size_t NoSize = ~0;
 	size_t GetArraySize() const;
 	size_t GetVectorSize() const;
 	size_t GetRows() const;

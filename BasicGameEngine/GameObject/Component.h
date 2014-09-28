@@ -18,6 +18,7 @@ public:
 
 	GameObject& GetGameObject();
 	krono::ResourceManager& GetResourceManager();
+	const krono::InputState& GetInputState() const;
 protected:
 	Component(GameObject& parentGameObject);
 	

@@ -20,4 +20,10 @@ private:
 
 typedef Color<float> Colorf;
 
+template <typename T>
+Color<T> operator*(const Color<T>& color, const T& scalar)
+{
+	return Color<T>(color.r * scalar, color.g * scalar, color.b * scalar, color.a * scalar);
+}
+
 }

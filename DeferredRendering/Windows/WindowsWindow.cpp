@@ -1,6 +1,6 @@
 
-
 #include "WindowsWindow.h"
+#include <iostream>
 
 namespace krono
 {
@@ -45,19 +45,23 @@ void WindowsWindow::Show()
 void WindowsWindow::Update(bool async)
 {
 	MSG message;
-	BOOL messageResult = false;
 
 	if (async)
 	{
-		messageResult = PeekMessage(&message, mWindowHandle, 0, 0, PM_REMOVE);
+		while (PeekMessage(&message, mWindowHandle, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&message);
+			DispatchMessage(&message);
+		}
 	}
 	else
 	{
-		messageResult = GetMessage(&message, mWindowHandle, 0, 0);
+		GetMessage(&message, mWindowHandle, 0, 0);
+		TranslateMessage(&message);
+		DispatchMessage(&message);
 	}
 
-	TranslateMessage(&message);
-	DispatchMessage(&message);
+	CommitCurrentInputState();
 }
 
 bool WindowsWindow::IsClosed() const
@@ -86,6 +90,7 @@ void WindowsWindow::InitializeClass()
 		gWindowClass.lpfnWndProc   = WindowsProcedure;
 		gWindowClass.hInstance     = GetModuleHandle(NULL);
 		gWindowClass.lpszClassName = gWindowClassName;
+		gWindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);;
 
 		RegisterClass(&gWindowClass);
 
@@ -117,6 +122,36 @@ LRESULT CALLBACK  WindowsWindow::WindowsProcedure(HWND windowHandle, UINT messag
         case WM_DESTROY:
             PostQuitMessage(0);
         break;
+		case WM_KEYDOWN:
+			window->mCurrentInputState.SetKey((KeyCode::Type)wParameter, true);
+			break;
+		case WM_KEYUP:
+			window->mCurrentInputState.SetKey((KeyCode::Type)wParameter, false);
+			break;
+		case WM_MOUSEMOVE:
+			window->mCurrentInputState.SetMousePosition(Vector2i(LOWORD(lParameter), HIWORD(lParameter)));
+			break;
+		case WM_LBUTTONDOWN:
+			window->mCurrentInputState.SetMouseButon(MouseButton::LeftButton, true);
+			break;
+		case WM_LBUTTONUP:
+			window->mCurrentInputState.SetMouseButon(MouseButton::LeftButton, false);
+			break;
+		case WM_RBUTTONDOWN:
+			window->mCurrentInputState.SetMouseButon(MouseButton::RightButton, true);
+			break;
+		case WM_RBUTTONUP:
+			window->mCurrentInputState.SetMouseButon(MouseButton::RightButton, false);
+			break;
+		case WM_MBUTTONDOWN:
+			window->mCurrentInputState.SetMouseButon(MouseButton::MiddleButton, true);
+			break;
+		case WM_MBUTTONUP:
+			window->mCurrentInputState.SetMouseButon(MouseButton::MiddleButton, false);
+			break;
+		case WM_SIZE:
+			window->mCurrentInputState.SetScreenSize(Vector2i(LOWORD(lParameter), HIWORD(lParameter)));
+			break;
         default:
             return DefWindowProc(windowHandle, message, wParameter, lParameter);
     }
