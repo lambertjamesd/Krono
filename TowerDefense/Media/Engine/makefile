@@ -1,7 +1,7 @@
 
 Bundler = ../../../Debug/ShaderBundler/ShaderBundler
 BundlerDependencies = ../../../Debug/ShaderBundler/ShaderBundler -MM 
-ShaderDefinitions = Lights/PointLight.json Lights/DirectionalLight.json Shaders/VertexShader.json Shaders/PreTransformedVertexShader.json
+ShaderDefinitions = Lights/PointLight.json Lights/DirectionalLight.json Shaders/VertexShader.json Shaders/VertexShaderTangent.json Shaders/PreTransformedVertexShader.json Shaders/CompositorVertexShader.json Shaders/NormalMapped.json Shaders/CompositorVertexShader.json Shaders/CompositorCopy.json Compositor/Blur/BasicBlur.json Compositor/Blur/SpacialBlur.json Compositor/HemisphericLighting/HemisphericLighting.json Compositor/LightProbes/LightProbes.json Compositor/SSAO/SSAO.json
 Shaders = $(ShaderDefinitions:.json=.shader)
 
 DEPENDTMP = depend.mk

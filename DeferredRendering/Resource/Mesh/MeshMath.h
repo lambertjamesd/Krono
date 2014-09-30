@@ -4,6 +4,8 @@
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 
+#include "Core/Types.h"
+
 namespace krono
 {
 

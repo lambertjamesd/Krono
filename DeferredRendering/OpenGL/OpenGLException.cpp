@@ -9,7 +9,7 @@ OpenGLException::OpenGLException(GLenum error, const std::string& message) :
 }
 
 
-OpenGLException::~OpenGLException(void)
+OpenGLException::~OpenGLException(void) throw ()
 {
 }
 

@@ -69,7 +69,7 @@ void AddEmmisiveSphere(const kge::Scene::Ptr& scene, const Vector3f& location, c
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();

@@ -5,3 +5,4 @@ Bundle/ScreenComposite.json: HLSL/ScreenComposite.hlsl HLSL/DataPassStructures.h
 Bundle/VertexShaderTest.json: HLSL/VertexShaderTest.hlsl HLSL/DataPassStructures.hlsli GLSL/VertexShaderTest.vert 
 Bundle/PointLight.json: HLSL/PointLight.hlsl HLSL/DataPassStructures.hlsli GLSL/PointLight.frag 
 Bundle/LightVertexShader.json: HLSL/LightVertexShader.hlsl HLSL/DataPassStructures.hlsli GLSL/LightVertexShader.vert 
+Bundle/EmmisiveColor.json: HLSL/EmmisiveColor.hlsl HLSL/DataPassStructures.hlsli 

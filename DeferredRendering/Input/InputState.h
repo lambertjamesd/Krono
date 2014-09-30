@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Math/Vector2.h"
+#include "Core/Types.h"
 
 namespace krono
 {

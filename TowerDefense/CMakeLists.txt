@@ -4,6 +4,7 @@ set (SOURCE_FILES
 	TowerDefense.cpp
 
 	GameLogic/SpinBehavior.cpp
+	GameLogic/FlyCamera.cpp
 )
 
 include_directories("${PROJECT_SOURCE_DIR}")

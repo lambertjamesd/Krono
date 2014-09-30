@@ -1,7 +1,7 @@
 
 Bundler = ../../../Debug/ShaderBundler/ShaderBundler
 BundlerDependencies = ../../../Debug/ShaderBundler/ShaderBundler -MM 
-ShaderDefinitions = Bundle/ColorMapper.json Bundle/DirectionalLight.json Bundle/PixelShaderTest.json Bundle/ScreenComposite.json Bundle/VertexShaderTest.json Bundle/PointLight.json Bundle/LightVertexShader.json
+ShaderDefinitions = Bundle/ColorMapper.json Bundle/DirectionalLight.json Bundle/PixelShaderTest.json Bundle/ScreenComposite.json Bundle/VertexShaderTest.json Bundle/PointLight.json Bundle/LightVertexShader.json Bundle/EmmisiveColor.json
 Shaders = $(ShaderDefinitions:.json=.shader)
 
 DEPENDTMP = depend.mk

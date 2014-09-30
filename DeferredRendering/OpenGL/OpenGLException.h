@@ -10,7 +10,7 @@ class OpenGLException: public Exception
 {
 public:
 	OpenGLException(GLenum error, const std::string& message);
-	virtual ~OpenGLException(void);
+	virtual ~OpenGLException(void) throw ();
 
 	static void CheckError(const char* message);
 	static void ClearErrorFlag();

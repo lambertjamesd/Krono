@@ -41,6 +41,7 @@ set (SOURCE_FILES
 	Resource/Mesh/Mesh.cpp
 	Resource/Mesh/MeshGroup.cpp
 	Resource/Mesh/SubMesh.cpp
+	Resource/Mesh/MeshMath.cpp
 	Resource/Mesh/MeshLoader.cpp
 	Resource/Mesh/ObjMeshGroupLoader.cpp
 	Resource/Technique.cpp
@@ -63,6 +64,7 @@ set (SOURCE_FILES
 	Core/Hash.cpp
 	Core/Exception.cpp
 	Core/Object.cpp
+	Input/InputState.cpp
 	Collide/Plane.cpp
 	Collide/BoundingBox.cpp
 	Collide/Frustrum.cpp
@@ -136,6 +138,7 @@ if (USE_OPENGL4_4)
 		OpenGL/OpenGLShaderDatabase.cpp
 		OpenGL/OpenGLShaderProgram.cpp
 		OpenGL/OpenGLOffscreenRenderTarget.cpp
+		OpenGL/OpenGLException.cpp
 	)
 endif (USE_OPENGL4_4)
 
@@ -178,6 +181,7 @@ set (HEADER_FILES
 	Collide/BoundingBox.h 
 	Math/Vector3.h 
 	Resource/Mesh/SubMesh.h 
+	Resource/Mesh/MeshMath.h 
 	Resource/Material.h 
 	Resource/Technique.h 
 	Compositor/RenderStateParameters.h 
@@ -192,6 +196,7 @@ set (HEADER_FILES
 	Collide/Plane.h 
 	Scene/Entity.h 
 	Scene/SceneView.h 
+	Input/InputState.h
 	Compositor/Compositor.h 
 	Compositor/CompositeStage.h 
 	Compositor/RenderState.h 

@@ -14,6 +14,7 @@ set (SOURCE_FILES
 	HLSLParser/GLSLGenerator/GLSLSamplerPurger.cpp
 	HLSLParser/GLSLGenerator/GLSLEntryPointBuilder.cpp
 	HLSLParser/GLSLGenerator/GLSLTextureClass.cpp
+	HLSLParser/GLSLGenerator/GLSLIDRename.cpp
 
 	HLSLParser/HLSLParser.cpp
 	HLSLParser/HLSLParserException.cpp
