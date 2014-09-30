@@ -646,6 +646,7 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 	HLSLStructureNode* structureOperator = dynamic_cast<HLSLStructureNode*>(&node.GetLeft());
 	
 	bool isFirst = true;
+	bool needExtraFunctionClose = false;
 
 	if (structureOperator != NULL && structureOperator->GetLeft().GetType().GetType() == HLSLType::Texture)
 	{
@@ -692,6 +693,26 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 
 			return;
 		}
+		else if (node.GetLeft().GetType().IsTypeClass() && node.GetLeft().GetType().GetType() == HLSLType::Matrix)
+		{
+			needExtraFunctionClose = true;
+
+			mOutput << "transpose(mat";
+
+			size_t rows = node.GetLeft().GetType().GetRows();
+			size_t columns = node.GetLeft().GetType().GetColumns();
+
+			if (rows == columns)
+			{
+				mOutput << columns;
+			}
+			else
+			{
+				mOutput << columns << "x" << rows;
+			}
+
+			mOutput << "(";
+		}
 		else
 		{
 			mOutput << name;
@@ -714,6 +735,11 @@ void GLSLGenerator::Visit(HLSLFunctionCallNode& node)
 	}
 
 	mOutput << ')';
+
+	if (needExtraFunctionClose)
+	{
+		mOutput << ')';
+	}
 }
 
 const GLSLIDRename& GLSLGenerator::GetIDRename() const

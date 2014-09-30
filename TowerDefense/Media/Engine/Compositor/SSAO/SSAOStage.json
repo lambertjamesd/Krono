@@ -21,7 +21,7 @@
 			"uniforms" : [
 				{"registerLocation" : 1}
 			],
-			"textures" : ["Noise.png"]
+			"textures" : ["../../Textures/Noise.png"]
 		},
 		
 		"shaderValues" : [

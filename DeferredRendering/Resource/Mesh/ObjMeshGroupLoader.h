@@ -4,6 +4,7 @@
 #include "Interface/Graphics.h"
 #include <vector>
 #include <unordered_map>
+#include "Math/Vector4.h"
 #include "Math/Vector3.h"
 #include "Math/Vector2.h"
 #include "Core/Types.h"
@@ -17,6 +18,7 @@ struct ObjMeshVertex
 
 	Vector3f position;
 	Vector3f normal;
+	Vector4f tangent;
 	Vector2f texCoord;
 };
 
@@ -30,7 +32,10 @@ public:
 	void AddTexCoord(const Vector2f& texCoord);
 	void AddNormal(const Vector3f& normal);
 
-	UInt16 GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoordIndex, UInt16 normalIndex); 
+	UInt16 GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoordIndex, UInt16 normalIndex);
+
+	void CalculateTangents(const UInt16* indexBuffer, size_t indexCount);
+	void NormalizeTangents();
 
 	void PopulateVertexBuffer(VertexBuffer& vertexBuffer) const;
 private:

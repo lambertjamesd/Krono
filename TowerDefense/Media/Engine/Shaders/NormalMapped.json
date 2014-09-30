@@ -1,8 +1,8 @@
 {
-	"type" : "vertex",
+	"type" : "pixel",
 
 	"sources" : {
-		"HLSL 5" : "VertexShaderTangent.hlsl"
+		"HLSL 5" : "NormalMapped.hlsl"
 	},
 	
 	"entryPoint" : "Main",

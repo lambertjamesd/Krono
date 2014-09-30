@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "Core/Hash.h"
 #include "Resource/ResourceManager.h"
+#include "MeshMath.h"
+#include <cstddef>
 
 using namespace std;
 
@@ -63,6 +65,25 @@ UInt16 ObjMeshVertexData::GetVertexBufferIndex(UInt16 vertexIndex, UInt16 texCoo
 	}
 }
 
+void ObjMeshVertexData::CalculateTangents(const UInt16* indexBuffer, size_t indexCount)
+{
+	AttributeArray<Vector4f> tangentArray(&mVertexData.front(), offsetof(ObjMeshVertex, tangent), sizeof(ObjMeshVertex));
+
+	MeshMath::AppendTangents<UInt16>(
+		tangentArray,
+		AttributeArray<Vector3f>(&mVertexData.front(), offsetof(ObjMeshVertex, position), sizeof(ObjMeshVertex)),
+		AttributeArray<Vector2f>(&mVertexData.front(), offsetof(ObjMeshVertex, texCoord), sizeof(ObjMeshVertex)),
+		AttributeArray<Vector3f>(&mVertexData.front(), offsetof(ObjMeshVertex, normal), sizeof(ObjMeshVertex)),
+		indexBuffer, indexCount);
+
+}
+
+void ObjMeshVertexData::NormalizeTangents()
+{
+	AttributeArray<Vector4f> tangentArray(&mVertexData.front(), offsetof(ObjMeshVertex, tangent), sizeof(ObjMeshVertex));
+	MeshMath::NormalizeTangents(tangentArray, AttributeArray<Vector3f>(&mVertexData.front(), offsetof(ObjMeshVertex, normal), sizeof(ObjMeshVertex)), mVertexData.size());
+}
+
 void ObjMeshVertexData::PopulateVertexBuffer(VertexBuffer& vertexBuffer) const
 {	
 	DataIterator it = vertexBuffer.Lock(mVertexData.size());
@@ -87,6 +108,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 	InputLayout inputLayout;
 	inputLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
 	inputLayout.AddAttribute(Attribute("NORMAL", DataFormat(DataFormat::Float, 3)));
+	inputLayout.AddAttribute(Attribute("TANGENT", DataFormat(DataFormat::Float, 4)));
 	inputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
 	Auto<VertexBuffer> vertexBuffer = Auto<VertexBuffer>(resourceManager.GetGraphics()->CreateVertexBuffer(inputLayout));
 	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16));
@@ -149,6 +171,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 
 		if (indexData.size() > indexStart && (checkSubmeshRebuild || inputStream.eof()))
 		{
+			vertexData.CalculateTangents(&indexData.front() + indexStart, indexData.size() - indexStart);
 			currentMesh->AddSubMesh(vertexBuffer, currentIndexBuffer, indexStart, indexData.size() - indexStart);
 			indexStart = indexData.size();
 		}
@@ -160,6 +183,7 @@ Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, 
 		}
 	}
 
+	vertexData.NormalizeTangents();
 	vertexData.PopulateVertexBuffer(*vertexBuffer);
 	
 	DataIterator it = currentIndexBuffer->Lock(indexData.size());

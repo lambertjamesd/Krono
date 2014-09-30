@@ -41,4 +41,20 @@ public:
 typedef Vector4<int> Vector4i;
 typedef Vector4<float> Vector4f;
 
+template <typename T>
+Vector4<T> operator+(const Vector4<T>& a, const Vector4<T>& b)
+{
+	return Vector4<T>(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+}
+
+template <typename T>
+Vector4<T>& operator+=(Vector4<T>& a, const Vector4<T>& b)
+{
+	a.x += b.x;
+	a.y += b.y;
+	a.z += b.z;
+	a.w += b.w;
+	return a;
+}
+
 }

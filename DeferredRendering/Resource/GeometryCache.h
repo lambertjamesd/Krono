@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mesh/Mesh.h"
+#include "Math/Vector4.h"
 #include "Math/Vector3.h"
 #include "Math/Vector2.h"
 
@@ -22,10 +23,12 @@ private:
 		GeometryVertex(
 			const Vector3f& position,
 			const Vector3f& normal,
+			const Vector4f& tangent,
 			const Vector2f& textureCoord);
 
 		Vector3f position;
 		Vector3f normal;
+		Vector4f tangent;
 		Vector2f textureCoord;
 	};
 

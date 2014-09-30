@@ -25,3 +25,13 @@ void SpinBehavior::Update(float deltaTime)
 	Quaternionf newOriention = mGameObject.GetTransform()->GetLocalOrientation() * rotationAmount;
 	mGameObject.GetTransform()->SetLocalOrientation(newOriention);
 }
+
+void SpinBehavior::SetAxis(const krono::Vector3f& axis)
+{
+	mAxis = axis;
+}
+
+void SpinBehavior::SetRotationRate(krono::Degreesf radsPerSec)
+{
+	mRotationRate = (float)radsPerSec;
+}

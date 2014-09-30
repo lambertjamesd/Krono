@@ -36,4 +36,7 @@ void GLSLIDRename::PopulateNames()
 	mRenameMap["lerp"] = "mix";
 	mRenameMap["main"] = "main__rename__";
 	mRenameMap["input"] = "input__rename__";
+	
+	mRenameMap["ddx"] = "dFdx";
+	mRenameMap["ddy"] = "dFdy";
 }

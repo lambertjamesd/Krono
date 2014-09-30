@@ -103,6 +103,16 @@ int main(int argc, char* argv[])
 	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.05f, 20.0f, Degreesf(90.0f)));
 	camera.lock()->SetLens(cameraLens);
 
+	GameObject::Ptr cubeTest = AddObject(scene, "Media/Meshes/Cube.obj#Cube", "Media/Materials/Cube.json");
+	cubeTest->GetTransform()->SetLocalScale(Vector3f(0.1f, 0.1f, 0.1f));
+	cubeTest->GetTransform()->SetLocalPosition(Vector3f(0.0f, -0.5f, -0.8f));
+	SpinBehavior::Ptr cubeSpin = cubeTest->AddComponent<SpinBehavior>().lock();
+	cubeSpin->SetAxis(Vector3f(1.0f, 0.0f, 0.0f));
+
+	cubeSpin = cubeTest->AddComponent<SpinBehavior>().lock();
+	cubeSpin->SetAxis(Vector3f(0.0f, 1.0f, 0.0f));
+	cubeSpin->SetRotationRate(Degreesf(7.0f));
+
 	{
 		GameObject::Ptr lightObject = scene->CreateGameObject().lock();
 		lightObject->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.9f, 0.0f));

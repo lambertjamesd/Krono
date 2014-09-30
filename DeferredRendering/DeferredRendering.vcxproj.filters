@@ -393,6 +393,9 @@
     <ClInclude Include="Input\InputState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Mesh\MeshMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Object.cpp">
@@ -726,6 +729,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\InputState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Mesh\MeshMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

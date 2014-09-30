@@ -21,22 +21,26 @@ const Mesh::Ptr& GeometryCache::GetPlane()
 
 		data.Write<GeometryVertex>(GeometryVertex(
 			Vector3f(-1.0f, -1.0f, 0.0f),
-			Vector3f(0.0f, 0.0f, 1.0f),
+			Vector3f(0.0f, 0.0f, -1.0f),
+			Vector4f(1.0f, 0.0f, 0.0f, 1.0f),
 			Vector2f(0.0f, 1.0f)));
 
 		data.Write<GeometryVertex>(GeometryVertex(
 			Vector3f(-1.0f, 1.0f, 0.0f),
-			Vector3f(0.0f, 0.0f, 1.0f),
+			Vector3f(0.0f, 0.0f, -1.0f),
+			Vector4f(1.0f, 0.0f, 0.0f, 1.0f),
 			Vector2f(0.0f, 0.0f)));
 
 		data.Write<GeometryVertex>(GeometryVertex(
 			Vector3f(1.0f, 1.0f, 0.0f),
-			Vector3f(0.0f, 0.0f, 1.0f),
+			Vector3f(0.0f, 0.0f, -1.0f),
+			Vector4f(1.0f, 0.0f, 0.0f, 1.0f),
 			Vector2f(1.0f, 0.0f)));
 
 		data.Write<GeometryVertex>(GeometryVertex(
 			Vector3f(1.0f, -1.0f, 0.0f),
-			Vector3f(0.0f, 0.0f, 1.0f),
+			Vector3f(0.0f, 0.0f, -1.0f),
+			Vector4f(1.0f, 0.0f, 0.0f, 1.0f),
 			Vector2f(1.0f, 1.0f)));
 
 		vertexBuffer->Unlock();
@@ -82,6 +86,7 @@ const Mesh::Ptr& GeometryCache::GetSphere()
 			vertexData.Write<GeometryVertex>(GeometryVertex(
 				Vector3f(0.0f, 1.0f, 0.0f),
 				Vector3f(0.0f, 1.0f, 0.0),
+				Vector4f(-Math<float>::Sin(uStep * x), 0.0f, Math<float>::Cos(uStep * x), 1.0f),
 				Vector2f(uCoordiate, 0.0f)));
 
 			uCoordiate += uStep;
@@ -101,7 +106,9 @@ const Mesh::Ptr& GeometryCache::GetSphere()
 					Math<float>::Cos(latitude),
 					Math<float>::Sin(longitude) * Math<float>::Sin(latitude));
 
-				GeometryVertex vertex(position, position, Vector2f(uCoordiate, vCoordinate));
+				GeometryVertex vertex(position, position,
+					Vector4f(-Math<float>::Sin(longitude), 0.0f, Math<float>::Cos(longitude), 1.0f),
+					Vector2f(uCoordiate, vCoordinate));
 
 				vertexData.Write<GeometryVertex>(vertex);
 
@@ -119,6 +126,7 @@ const Mesh::Ptr& GeometryCache::GetSphere()
 			vertexData.Write<GeometryVertex>(GeometryVertex(
 				Vector3f(0.0f, -1.0f, 0.0f),
 				Vector3f(0.0f, -1.0f, 0.0),
+				Vector4f(-Math<float>::Sin(uStep * x), 0.0f, Math<float>::Cos(uStep * x), 1.0f),
 				Vector2f(uCoordiate, 1.0f)));
 
 			uCoordiate += uStep;
@@ -189,6 +197,7 @@ VertexBuffer::Ptr GeometryCache::BuildVertexBuffer()
 	InputLayout inputLayout;
 	inputLayout.AddAttribute(Attribute("POSITION", DataFormat(DataFormat::Float, 3)));
 	inputLayout.AddAttribute(Attribute("NORMAL", DataFormat(DataFormat::Float, 3)));
+	inputLayout.AddAttribute(Attribute("TANGENT", DataFormat(DataFormat::Float, 4)));
 	inputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
 	return mGraphics.CreateVertexBuffer(inputLayout);
 }
@@ -197,9 +206,11 @@ VertexBuffer::Ptr GeometryCache::BuildVertexBuffer()
 GeometryCache::GeometryVertex::GeometryVertex(
 	const Vector3f& position,
 	const Vector3f& normal,
+	const Vector4f& tangent,
 	const Vector2f& textureCoord) :
 	position(position),
 	normal(normal),
+	tangent(tangent),
 	textureCoord(textureCoord)
 {
 

@@ -1,0 +1,31 @@
+{
+	"documentType" : "material",
+	
+	"techniques" : [
+		{
+			"vertexShader" : "Media/Engine/Shaders/VertexShaderTangent.shader",
+			"pixelShader" : "Media/Engine/Shaders/NormalMapped.shader",
+			
+			"pixelStage" : {
+				"textures" : [
+					"Media/Textures/Blue.png", 
+					"Media/Textures/Black.png", 
+					"Media/Textures/NormalmapTest.jpg",
+					"Media/Engine/Textures/Noise.png"
+				],
+				"samplers" : [
+					{
+						"anisotropicEnabled" : true,
+						"maxAnisotropy" : 16
+						
+					},
+					{
+						"uWrap" : "repeat",
+						"vWrap" : "repeat",
+						"useMipMap" : true
+					}
+				]
+			}
+		}
+	]
+}

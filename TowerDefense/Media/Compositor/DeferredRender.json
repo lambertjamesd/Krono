@@ -29,7 +29,7 @@
 		"combined" : {
 			"type" : "float", 
 			"count" : 4,
-			"clearColor" : {"r" : 0.0, "g" : 1.0, "b" : 0.0, "a" : 0.0}
+			"clearColor" : {"r" : 0.0, "g" : 0.0, "b" : 0.0, "a" : 0.0}
 		}
 	},
 

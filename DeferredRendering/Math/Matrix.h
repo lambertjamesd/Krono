@@ -58,10 +58,10 @@ public:
 
 				for (size_t i = 0; i < Columns; ++i)
 				{
-					value += mElements[i][row] * right.mElements[col][i];
+					value += mElements[i][row] * right.At(i, col);
 				}
 
-				result.mElements[col][row] = value;
+				result.At(row, col) = value;
 			}
 		}
 
@@ -486,6 +486,7 @@ Matrix<Rows, Columns, T> operator*(const T& left, const Matrix<Rows, Columns, T>
 			result.At(row, col) = left * right.At(row, col);
 		}
 	}
+
 	return result;
 }
 

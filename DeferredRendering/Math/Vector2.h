@@ -23,6 +23,46 @@ public:
 		return x != other.x || y != other.y;
 	}
 
+	T Length() const
+	{
+		return Math<T>::Sqrt(x * x + y * y);
+	}
+
+	T LengthSqrd() const
+	{
+		return x * x + y * y;
+	}
+
+	Vector2 Normalized() const
+	{
+		Vector2 result(*this);
+		result.Normalize();
+		return result;
+	}
+
+	void Normalize()
+	{
+		T lengthSqrd = x * x + y * y;
+
+		if (lengthSqrd > Constant<T>::Zero)
+		{
+			T lengthInv = Constant<T>::One / Math<T>::Sqrt(lengthSqrd);
+
+			x = x * lengthInv;
+			y = y * lengthInv;
+		}
+	}
+
+	T Dot(const Vector2& other) const
+	{
+		return x * other.x + y * other.y;
+	}
+
+	Vector2 ProjectOnto(const Vector2& normal) const
+	{
+		return normal * Dot(normal) / normal.LengthSqrd();
+	}
+
 	bool IsZero() const
 	{
 		return x == Constant<T>::Zero && y == Constant<T>::Zero;
@@ -43,9 +83,25 @@ Vector2<T> operator+ (const Vector2<T>& a, const Vector2<T>& b)
 }
 
 template <typename T>
+Vector2<T>& operator+= (Vector2<T>& a, const Vector2<T>& b)
+{
+	a.x += b.x;
+	a.y += b.y;
+	return a;
+}
+
+template <typename T>
 Vector2<T> operator- (const Vector2<T>& a, const Vector2<T>& b)
 {
 	return Vector2<T>(a.x - b.x, a.y - b.y);
+}
+
+template <typename T>
+Vector2<T>& operator-= (Vector2<T>& a, const Vector2<T>& b)
+{
+	a.x -= b.x;
+	a.y -= b.y;
+	return a;
 }
 
 template <typename T>
@@ -58,6 +114,22 @@ template <typename T>
 Vector2<T> operator* (const Vector2<T>& a, const Vector2<T>& b)
 {
 	return Vector2<T>(a.x * b.x, a.y * b.y);
+}
+
+template <typename T>
+Vector2<T>& operator*= (Vector2<T>& a, const Vector2<T>& b)
+{
+	a.x *= b.x;
+	a.y *= b.y;
+	return a;
+}
+
+template <typename T>
+Vector2<T>& operator*= (Vector2<T>& a, const T& b)
+{
+	a.x *= b;
+	a.y *= b;
+	return a;
 }
 
 template <typename T>
@@ -76,6 +148,24 @@ template <typename T>
 Vector2<T> operator/ (const Vector2<T>& a, const Vector2<T>& b)
 {
 	return Vector2<T>(a.x / b.x, a.y / b.y);
+}
+
+template <typename T>
+Vector2<T>& operator/= (Vector2<T>& a, const Vector2<T>& b)
+{
+	a.x /= b.x;
+	a.y /= b.y;
+	return a;
+}
+
+template <typename T>
+Vector2<T>& operator/= (Vector2<T>& a, const T& b)
+{
+	T invB = Constant<T>::One / b;
+
+	a.x *= invB;
+	a.y *= invB;
+	return a;
 }
 
 template <typename T>

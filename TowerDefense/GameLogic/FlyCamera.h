@@ -6,6 +6,9 @@
 class FlyCamera : public kge::Behavior
 {
 public:
+	typedef std::shared_ptr<FlyCamera> Ptr;
+	typedef std::unique_ptr<FlyCamera> Ref;
+
 	FlyCamera(kge::GameObject& parentGameObject);
 	~FlyCamera(void);
 	

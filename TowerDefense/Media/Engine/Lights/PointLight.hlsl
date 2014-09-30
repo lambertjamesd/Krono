@@ -64,7 +64,7 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 		
 		if (diffuseFactor > 0)
 		{
-			float3 halfVector = normalize(lightDirection + normalize(viewPosition - worldPosiiton));
+			float3 halfVector = normalize(lightDirection + normalize(viewPosition - worldPosiiton.xyz));
 			specularFactor = pow(saturate(dot(pointNormal, halfVector)), specularColor.a * 256);
 		}
 		

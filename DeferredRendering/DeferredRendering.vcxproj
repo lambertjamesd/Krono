@@ -94,6 +94,7 @@
     <ClInclude Include="Interface\RasterizerState.h" />
     <ClInclude Include="Compositor\LightingCompositeStage.h" />
     <ClInclude Include="Interface\MappedConstantBuffer.h" />
+    <ClInclude Include="Resource\Mesh\MeshMath.h" />
     <ClInclude Include="OpenGL\OpenGLException.h" />
     <ClInclude Include="OpenGL\OpenGLDepthState.h" />
     <ClInclude Include="OpenGL\OpenGLBlendState.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="Interface\RasterizerState.cpp" />
     <ClCompile Include="Compositor\LightingCompositeStage.cpp" />
     <ClCompile Include="Interface\MappedConstantBuffer.cpp" />
+    <ClCompile Include="Resource\Mesh\MeshMath.cpp" />
     <ClCompile Include="OpenGL\OpenGLException.cpp" />
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp" />
     <ClCompile Include="OpenGL\OpenGLBlendState.cpp" />
