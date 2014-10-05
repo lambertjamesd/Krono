@@ -83,7 +83,7 @@ void ProccessFile(const char* filename)
 		{
 			map<string,string> macros;
 			macros["OPENGL"] = "1";
-			unique_ptr<HLSLNode> file = move(HLSLParser::ProcessFile(bundleDef.GetFilename(ShaderLanguage::HLSL_5), bundleDef.GetType(), bundleDef.GetEntryPoint(), macros));
+			unique_ptr<HLSLNode> file = move(HLSLParser::ProcessFile(bundleDef.GetFilename(ShaderLanguage::HLSL_5), macros));
 
 			if (bundleDef.CrossCompileHLSL())
 			{

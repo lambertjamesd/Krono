@@ -90,11 +90,23 @@ HLSLType HLSLTypeStorage::GetVariableType(const std::string& name)
 {
 	if (GetTypeSource(name) == VariableType)
 	{
-		return mVariableTypes[name].top();
+		return mVariableTypes[name].top()->GetType().GetType();
 	}
 	else
 	{
 		return HLSLType::Void;
+	}
+}
+
+HLSLVariableDefinition* HLSLTypeStorage::GetVariableDefinition(const std::string& name)
+{
+	if (GetTypeSource(name) == VariableType)
+	{
+		return mVariableTypes[name].top();
+	}
+	else
+	{
+		return NULL;
 	}
 }
 
@@ -123,16 +135,16 @@ void HLSLTypeStorage::Define(const HLSLToken& startToken, const std::string& nam
 	}
 }
 
-void HLSLTypeStorage::DefineVariable(const HLSLToken& startToken, const std::string& name, const HLSLType& type)
+void HLSLTypeStorage::DefineVariable(HLSLVariableDefinition& variableDefinition)
 {
-	if (IsDefinedInScope(name))
+	if (IsDefinedInScope(variableDefinition.GetName()))
 	{
-		throw HLSLParserException(startToken, "redefinition of type");
+		throw HLSLParserException(variableDefinition.GetToken(), "redefinition of type");
 	}
 	else
 	{
-		mCurrentScope.back()[name] = VariableType;
-		mVariableTypes[name].push(type);
+		mCurrentScope.back()[variableDefinition.GetName()] = VariableType;
+		mVariableTypes[variableDefinition.GetName()].push(&variableDefinition);
 	}
 }
 
@@ -287,7 +299,7 @@ void HLSLTypeVisitor::Visit(HLSLVariableDefinition& node)
 		throw HLSLParserException(node.GetToken(), "cannot have variable of type void");
 	}
 
-	mTypeStorage.DefineVariable(node.GetToken(), node.GetName(), node.GetType().GetType());
+	mTypeStorage.DefineVariable(node);
 	
 	if (node.GetInitialValue() != NULL)
 	{
@@ -304,7 +316,7 @@ void HLSLTypeVisitor::Visit(HLSLFunctionParameter& node)
 		throw HLSLParserException(node.GetToken(), "cannot have variable of type void");
 	}
 
-	mTypeStorage.DefineVariable(node.GetToken(), node.GetName(), node.GetType().GetType());
+	mTypeStorage.DefineVariable(node.GetVariableDefinition());
 
 	if (node.GetInitializer() != NULL)
 	{
@@ -647,8 +659,7 @@ void HLSLTypeVisitor::Visit(HLSLIdentifierNode& node)
 	}
 	else if (type == HLSLTypeStorage::VariableType)
 	{
-		HLSLType variableType = mTypeStorage.GetVariableType(node.GetName());
-		node.ResolveType(variableType);
+		node.ResolveVariableDefinition(mTypeStorage.GetVariableDefinition(node.GetName()));
 	}
 	else if (type == HLSLTypeStorage::DefineType)
 	{

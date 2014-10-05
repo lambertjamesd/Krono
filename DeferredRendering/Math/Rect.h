@@ -9,6 +9,7 @@ class Rect
 {
 public:
 	Rect(const Vector2<T>& topLeft, const Vector2<T>& size) : topLeft(topLeft), size(size) {};
+	Rect(const T& left, const T& top, const T& width, const T& height) : topLeft(left, top), size(width, height) {};
 	Rect(void) {};
 	~Rect(void) {};
 	

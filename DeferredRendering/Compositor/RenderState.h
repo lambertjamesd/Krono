@@ -26,6 +26,7 @@ public:
 	void PushParameters(const RenderStateParameters& parameters);
 	void PopState();
 
+	Vector2i GetCurrentRenderTargetSize() const;
 	const Vector2i& GetRenderTargetSize() const;
 
 	void SetViewport(const Rectf& viewport, const Rangef& depthRange);

@@ -25,9 +25,11 @@ cbuffer PointLight : register( b1 )
 	float lightRange;
 };
 
-float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
+float4 Main(PSCompositeInput pixelInput) : SV_TARGET
 {
-	float3 textureCoord = float3(pixelInput.position.xy * screenSizePix.zw, pixelInput.position.z);	
+	float3 textureCoord = float3(pixelInput.position.xy * screenSizePix.zw, pixelInput.position.z);
+	
+	float2 normalizedPosition = pixelInput.normalizedPosition.xy / pixelInput.normalizedPosition.w;
 	
 	float screenZ = depth.Sample(samPoint, textureCoord.xy).r;
 	
@@ -41,7 +43,7 @@ float4 Main(PositionNormalTexture pixelInput) : SV_TARGET
 		float3 pointNormal = normal.Sample(samPoint, textureCoord.xy).xyz;
 		float4 specularColor = specular.Sample(samPoint, textureCoord.xy);
 		
-		float3 normalizedSpace = float3(TexToNorm(textureCoord.xy), screenZ);
+		float3 normalizedSpace = float3(normalizedPosition, screenZ);
 		
 		float4 worldPosiiton = mul(projectionViewInvMatrix, float4(normalizedSpace, 1.0));
 		worldPosiiton /= worldPosiiton.w;

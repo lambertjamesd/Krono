@@ -44,10 +44,14 @@ public:
 	const DepthBuffer::Ptr& GetDepthBuffer(UInt32 targetID);
 	Texture2D::Ptr GetRenderTexture(UInt32 targetID);
 
+	const Vector2i& GetCurrentTargetSize() const;
 	const Vector2i& GetRenderSize() const;
 	
 	void SetDataFormat(UInt32 targetID, const DataFormat& format);
 	DataFormat GetDataFormat(UInt32 targetID) const;
+
+	void SetTargetScale(UInt32 targetID, const Vector2f& value);
+	Vector2f GetTargetScale(UInt32 targetID) const;
 
 	void UseRenderTargets(const RenderTargetDescription& descrpition);
 
@@ -55,10 +59,12 @@ public:
 private:
 	void Resize(const Vector2i& renderSize);
 
+	Vector2i mCurrentTargetSize;
 	Vector2i mRenderSize;
 	Graphics* mGraphics;
 
 	std::map<UInt32, DataFormat> mTargetFormats;
+	std::map<UInt32, Vector2f> mTargetScale;
 
 	std::map<UInt32, RenderTarget::Ptr> mRenderTargets;
 	std::map<UInt32, DepthBuffer::Ptr> mDepthBuffers;

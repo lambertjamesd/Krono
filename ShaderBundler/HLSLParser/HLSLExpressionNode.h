@@ -28,9 +28,13 @@ public:
 	void ResolveNamedType(const std::shared_ptr<HLSLTypeNode>& value);
 	const std::shared_ptr<HLSLTypeNode>& GetNamedType() const;
 
+	void ResolveVariableDefinition(HLSLVariableDefinition* variableDefinition);
+	HLSLVariableDefinition* GetVariableDefinition();
+
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
 	std::shared_ptr<HLSLTypeNode> mNamedType;
+	HLSLVariableDefinition* mVariableDefintion;
 };
 
 class HLSLNumberConstantNode : public HLSLExpressionNode

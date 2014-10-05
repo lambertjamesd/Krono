@@ -1,10 +1,9 @@
 {
-	"type" : "vertex",
+	"type" : "pixel",
 
 	"sources" : {
-		"HLSL 5" : "VertexShader.hlsl"
+		"HLSL 5" : "ToneMapper.hlsl"
 	},
-	
 	"entryPoint" : "Main",
 	"crossCompileHLSL" : true
 }

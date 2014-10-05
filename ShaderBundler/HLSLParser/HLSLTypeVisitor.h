@@ -26,10 +26,11 @@ public:
 	HLSLTypeNode* GetDefinedType(const std::string& name);
 	std::shared_ptr<HLSLTypeNode> GetDefinedTypePtr(const std::string& name);
 	HLSLType GetVariableType(const std::string& name);
+	HLSLVariableDefinition* GetVariableDefinition(const std::string& name);
 	HLSLType GetFunction(const std::string& name);
 
 	void Define(const HLSLToken& startToken, const std::string& name, const std::shared_ptr<HLSLTypeNode>& value);
-	void DefineVariable(const HLSLToken& startToken, const std::string& name, const HLSLType& type);
+	void DefineVariable(HLSLVariableDefinition& variableDefinition);
 	void DefineFunction(HLSLFunctionDefinition& value);
 
 	bool IsDefinedInScope(const std::string& name);
@@ -45,7 +46,7 @@ private:
 
 	std::vector<std::map<std::string, TypeSource> > mCurrentScope;
 	std::map<std::string, HLSLFunctionDefinition*> mFunctionStorage;
-	std::map<std::string, std::stack<HLSLType> > mVariableTypes;
+	std::map<std::string, std::stack<HLSLVariableDefinition*> > mVariableTypes;
 	std::map<std::string, std::stack<std::shared_ptr<HLSLTypeNode> > > mDefinedTypes;
 };
 

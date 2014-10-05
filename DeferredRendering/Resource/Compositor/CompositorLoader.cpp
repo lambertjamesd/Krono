@@ -73,6 +73,11 @@ void CompositorLoader::ParseRenderTargets(Compositor::Ptr& compositor, const jso
 		DataFormat dataFormat = JsonTypeHelper::ParseDataFormat(data);
 		compositor->AddRenderTarget(it->first, dataFormat);
 
+		if (data.HasKey("scale"))
+		{
+			compositor->SetRenderTargetScale(it->first, JsonTypeHelper::ParseFloatVector(data["scale"]).XY());
+		}
+
 		if (dataFormat.IsDepthFormat())
 		{
 			if (data.HasKey("clearDepth"))

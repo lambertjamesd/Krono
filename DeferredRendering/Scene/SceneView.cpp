@@ -62,9 +62,9 @@ const Matrix4f& SceneView::GetProjectionMatrix() const
 	return mProjectionMatrix;
 }
 
-Matrix4f SceneView::CalculateProjectionMatrix(const Vector2f& renderTargetSize) const
+Matrix4f SceneView::CalculateProjectionMatrix(const Vector2f& viewportSize) const
 {
-	float aspectRatio = (renderTargetSize.y * mNormalizedViewport.size.y) / (renderTargetSize.x * mNormalizedViewport.size.x);
+	float aspectRatio = viewportSize.y / viewportSize.x;
 	return Matrix4f::Scale(Vector3f(aspectRatio, 1.0f, 1.0f)) * mProjectionMatrix;
 }
 

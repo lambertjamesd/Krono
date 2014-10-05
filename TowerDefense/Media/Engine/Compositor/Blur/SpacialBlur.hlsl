@@ -49,7 +49,7 @@ float4 SampleDirection(float2 texCoord, float2 direction, float3 worldPos, inout
 	return result;
 }
 
-float4 Main(PositionNormalTexture shaderInput) : SV_TARGET
+float4 Main(PSCompositeInput shaderInput) : SV_TARGET
 {
 	float2 texCoord = shaderInput.position.xy * screenSize.zw;
 	float2 step = direction * screenSize.zw;

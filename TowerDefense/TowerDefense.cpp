@@ -67,9 +67,19 @@ void AddEmmisiveSphere(const kge::Scene::Ptr& scene, const Vector3f& location, c
 	sphereGlow->SetColor(color * 0.02f);
 }
 
+Camera::Ptr AddCamera(kge::Scene& scene, const Rectf& viewport)
+{
+	GameObject::Ptr gameObject = scene.CreateGameObject().lock();
+	Camera::Ptr camera = gameObject->AddComponent<Camera>().lock();
+	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.05f, 20.0f, Degreesf(90.0f)));
+	camera->SetLens(cameraLens);
+	camera->SetViewport(viewport, Rangef(0.0f, 1.0f));
+	return camera;
+}
+
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -95,13 +105,18 @@ int main(int argc, char* argv[])
 	suzanne->AddComponent<SpinBehavior>();
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
-	scene->GetRenderManager().SetDefaultCompositor(resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
-
+	scene->GetRenderManager().SetCompositor(RenderManager::DefaultCompositor, resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
+	
+	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0, 0.5f, 1.0f));
+	Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.5f, 0.0, 0.5f, 1.0f));
+	
 	GameObject::Ptr cameraObject = scene->CreateGameObject().lock();
 	cameraObject->AddComponent<FlyCamera>();
-	Camera::Ref camera = cameraObject->AddComponent<Camera>();
-	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.05f, 20.0f, Degreesf(90.0f)));
-	camera.lock()->SetLens(cameraLens);
+
+	leftEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
+	leftEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(-0.05f, 0.0f, 0.0f));
+	rightEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
+	rightEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(0.05f, 0.0f, 0.0f));
 
 	GameObject::Ptr cubeTest = AddObject(scene, "Media/Meshes/Cube.obj#Cube", "Media/Materials/Cube.json");
 	cubeTest->GetTransform()->SetLocalScale(Vector3f(0.1f, 0.1f, 0.1f));
@@ -149,7 +164,8 @@ int main(int argc, char* argv[])
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
-		camera.lock()->SetRenderTargets(renderTarget);
+		leftEye->SetRenderTargets(renderTarget);
+		rightEye->SetRenderTargets(renderTarget);
 		cameraObject->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -2.0f));
 	}
 	catch (Exception& exception)

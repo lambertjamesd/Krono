@@ -204,6 +204,11 @@ void RenderState::PopState()
 	mSavedStates.pop_back();
 }
 
+Vector2i RenderState::GetCurrentRenderTargetSize() const
+{
+	return mTargetDatabase.GetCurrentTargetSize();
+}
+
 const Vector2i& RenderState::GetRenderTargetSize() const
 {
 	return mTargetDatabase.GetRenderSize();

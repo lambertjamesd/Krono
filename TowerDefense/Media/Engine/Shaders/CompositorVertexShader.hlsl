@@ -9,13 +9,10 @@ cbuffer SceneViewData : register(b0)
 	float4x4 projectionMatrixRasterSpace;
 };
 
-PositionNormalTexture Main( float3 pos : POSITION0, float2 texCoord : TEXCOORD0)
+PSCompositeInput Main( float3 pos : POSITION0, float2 texCoord : TEXCOORD0)
 {
-	PositionNormalTexture result;
+	PSCompositeInput result;
 	result.position = mul(compositeTransform, float4(pos, 1));
-	result.texCoord = texCoord;
-#ifdef OPENGL
-	result.texCoord.y = 1 - result.texCoord.y;
-#endif
+	result.normalizedPosition = result.position;
 	return result;
 }

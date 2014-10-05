@@ -152,6 +152,11 @@ HLSLExpressionNode* HLSLVariableDefinition::GetInitialValue()
 	return mInitialValue.get();
 }
 
+bool HLSLVariableDefinition::HasInitialValue() const
+{
+	return mInitialValue != NULL;
+}
+
 void HLSLVariableDefinition::Accept(HLSLNodeVisitor& visitor)
 {
 	visitor.Visit(*this);
@@ -176,17 +181,16 @@ const std::string& HLSLSemantic::GetValue() const
 HLSLFunctionParameter::HLSLFunctionParameter(const HLSLToken& token, InputModifier inputModifer, std::unique_ptr<HLSLTypeNode> type, const std::string& name) :
 	HLSLNode(token),
 	mInputModifier(inputModifer),
-	mType(move(type)),
-	mName(name),
+	mInterpolationMode(InterpolationMode::None),
+	mVariableDefinition(token, VariableStorageClass::None, VariableTypeModifer::None, move(type), name)
 
-	mInterpolationMode(InterpolationMode::None)
 {
 
 }
 
 void HLSLFunctionParameter::SetSemantic(const HLSLSemantic& value)
 {
-	mSemantic = value;
+	mVariableDefinition.SetSemantic(value);
 }
 
 void HLSLFunctionParameter::SetInterpolationMode(InterpolationMode::Type value)
@@ -196,7 +200,7 @@ void HLSLFunctionParameter::SetInterpolationMode(InterpolationMode::Type value)
 
 void HLSLFunctionParameter::SetInitialzier(std::unique_ptr<HLSLExpressionNode> value)
 {
-	mInitializer = move(value);
+	mVariableDefinition.SetInitialValue(move(value));
 }
 
 HLSLFunctionParameter::InputModifier HLSLFunctionParameter::GetInputModifier() const
@@ -206,16 +210,16 @@ HLSLFunctionParameter::InputModifier HLSLFunctionParameter::GetInputModifier() c
 
 HLSLTypeNode& HLSLFunctionParameter::GetType()
 {
-	return *mType;
+	return mVariableDefinition.GetType();
 }
 const std::string& HLSLFunctionParameter::GetName() const
 {
-	return mName;
+	return mVariableDefinition.GetName();
 }
 
 const HLSLSemantic& HLSLFunctionParameter::GetSemantic() const
 {
-	return mSemantic;
+	return mVariableDefinition.GetSemantic();
 }
 
 InterpolationMode::Type HLSLFunctionParameter::GetInterpolationMode() const
@@ -225,12 +229,17 @@ InterpolationMode::Type HLSLFunctionParameter::GetInterpolationMode() const
 
 HLSLExpressionNode* HLSLFunctionParameter::GetInitializer()
 {
-	return mInitializer.get();
+	return mVariableDefinition.GetInitialValue();
 }
 
 bool HLSLFunctionParameter::IsOptional() const
 {
-	return mInitializer != NULL;
+	return mVariableDefinition.HasInitialValue();
+}
+
+HLSLVariableDefinition& HLSLFunctionParameter::GetVariableDefinition()
+{
+	return mVariableDefinition;
 }
 
 void HLSLFunctionParameter::Accept(HLSLNodeVisitor& visitor)
@@ -433,6 +442,11 @@ HLSLReturnStatement::HLSLReturnStatement(const HLSLToken& token, std::unique_ptr
 	mReturnValue(move(returnValue))
 {
 
+}
+
+bool HLSLReturnStatement::HasReturnValue() const
+{
+	return mReturnValue != NULL;
 }
 
 HLSLExpressionNode& HLSLReturnStatement::GetReturnValue()

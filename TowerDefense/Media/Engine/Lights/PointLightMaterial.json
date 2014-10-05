@@ -5,7 +5,7 @@
 		{
 			"techniqueID" : 1,
 		
-			"vertexShader" : "../Shaders/VertexShader.shader",
+			"vertexShader" : "LightVertexShader.shader",
 			"pixelShader" : "PointLight.shader",
 			
 			"pixelStage" : 

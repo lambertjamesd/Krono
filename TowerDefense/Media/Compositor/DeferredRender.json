@@ -20,11 +20,15 @@
 		},
 		"ssao" : {
 			"type" : "int8UNorm", 
-			"count" : 1
+			"count" : 1,
+			
+			"scales" : {"x" : 0.5, "y" : 0.5}
 		},
 		"ssaoblur" : {
 			"type" : "int8UNorm",
-			"count" : 1
+			"count" : 1,
+			
+			"scales" : {"x" : 0.5, "y" : 0.5}
 		},
 		"combined" : {
 			"type" : "float", 
@@ -86,7 +90,7 @@
 		{
 			"disabled" : false,
 			
-			"stage" : "ToneMapper.json",
+			"stage" : "../Engine/Compositor/ToneMapper/ToneMapperStage.json",
 			
 			"input" : ["combined"],
 			"output" : ["output0"]

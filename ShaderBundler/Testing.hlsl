@@ -22,5 +22,5 @@ cbuffer BufferTest : register ( b0 )
 
 float4 main( float4 pos : POSITION ) : SV_POSITION
 {
-	return saturate(pos);
+	return saturate(pos + diffuse.Load(int3(0, 0, 0)));
 }

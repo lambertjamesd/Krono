@@ -5,9 +5,9 @@ namespace kge
 
 using namespace krono;
 
-RenderStage::RenderStage(Scene& scene, const Compositor::Ptr& compistor) :
+RenderStage::RenderStage(Scene& scene, const std::string& compistor) :
 	mSceneView(scene),
-	mCompositor(compistor)
+	mCompositorName(compistor)
 {
 
 }
@@ -17,9 +17,9 @@ RenderStage::~RenderStage(void)
 
 }
 
-void RenderStage::Render(Graphics& graphics)
+void RenderStage::Render(Graphics& graphics, const krono::Compositor::Ptr& compositor)
 {
-	mCompositor->Render(graphics, mRenderTarget, mSceneView);
+	compositor->Render(graphics, mRenderTarget, mSceneView);
 }
 
 void RenderStage::SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange)
@@ -40,6 +40,11 @@ void RenderStage::SetProjectionMatrix(const krono::Matrix4f& value)
 void RenderStage::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget)
 {
 	mRenderTarget = renderTarget;
+}
+
+const std::string& RenderStage::GetCompositorName() const
+{
+	return mCompositorName;
 }
 
 }

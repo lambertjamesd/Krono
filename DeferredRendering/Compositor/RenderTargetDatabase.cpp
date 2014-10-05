@@ -71,6 +71,7 @@ const RenderTarget::Ptr& RenderTargetDatabase::GetRenderTarget(UInt32 targetID)
 	if (result == mRenderTargets.end())
 	{
 		DataFormat dataFormat = GetDataFormat(targetID);
+		Vector2i scaledSize = (Vector2i)((Vector2f)mRenderSize * GetTargetScale(targetID));
 
 		if (dataFormat.type == DataFormat::TypeCount)
 		{
@@ -78,7 +79,7 @@ const RenderTarget::Ptr& RenderTargetDatabase::GetRenderTarget(UInt32 targetID)
 		}
 		else
 		{
-			RenderTarget::Ptr result = mGraphics->CreateOffscreenRenderTarget(mRenderSize, dataFormat);
+			RenderTarget::Ptr result = mGraphics->CreateOffscreenRenderTarget(scaledSize, dataFormat);
 			mRenderTargets[targetID] = result;
 			return mRenderTargets[targetID];
 		}
@@ -96,6 +97,7 @@ const DepthBuffer::Ptr& RenderTargetDatabase::GetDepthBuffer(UInt32 targetID)
 	if (result == mDepthBuffers.end())
 	{
 		DataFormat dataFormat = GetDataFormat(targetID);
+		Vector2i scaledSize = (Vector2i)((Vector2f)mRenderSize * GetTargetScale(targetID));
 
 		if (dataFormat.type == DataFormat::TypeCount)
 		{
@@ -103,7 +105,7 @@ const DepthBuffer::Ptr& RenderTargetDatabase::GetDepthBuffer(UInt32 targetID)
 		}
 		else
 		{
-			DepthBuffer::Ptr result = mGraphics->CreateDepthBuffer(mRenderSize, dataFormat.type);
+			DepthBuffer::Ptr result = mGraphics->CreateDepthBuffer(scaledSize, dataFormat.type);
 			mDepthBuffers[targetID] = result;
 			return mDepthBuffers[targetID];
 		}
@@ -133,6 +135,11 @@ Texture2D::Ptr RenderTargetDatabase::GetRenderTexture(UInt32 targetID)
 	return Texture2D::Null;
 }
 
+const Vector2i& RenderTargetDatabase::GetCurrentTargetSize() const
+{
+	return mCurrentTargetSize;
+}
+
 const Vector2i& RenderTargetDatabase::GetRenderSize() const
 {
 	return mRenderSize;
@@ -157,16 +164,48 @@ DataFormat RenderTargetDatabase::GetDataFormat(UInt32 targetID) const
 	}
 }
 
+void RenderTargetDatabase::SetTargetScale(UInt32 targetID, const Vector2f& value)
+{
+	mTargetScale[targetID] = value;
+}
+
+Vector2f RenderTargetDatabase::GetTargetScale(UInt32 targetID) const
+{
+	auto result = mTargetScale.find(targetID);
+
+	if (result == mTargetScale.end())
+	{
+		return Vector2f(1.0f, 1.0f);
+	}
+	else
+	{
+		return result->second;
+	}
+}
+
 void RenderTargetDatabase::UseRenderTargets(const RenderTargetDescription& descrpition)
 {
 	std::vector<RenderTarget::Ptr> renderTargets;
 
 	for (auto it = descrpition.mRenderTargets.cbegin(); it != descrpition.mRenderTargets.cend(); ++it)
 	{
-		renderTargets.push_back(GetRenderTarget(*it));
+		RenderTarget::Ptr renderTarget = GetRenderTarget(*it);
+
+		if (renderTarget != NULL)
+		{
+			mCurrentTargetSize = renderTarget->GetSize();
+		}
+
+		renderTargets.push_back(renderTarget);
 	}
 
-	mGraphics->SetRenderTargets(renderTargets, GetDepthBuffer(descrpition.mDepthBuffer));
+	DepthBuffer::Ptr depthBuffer = GetDepthBuffer(descrpition.mDepthBuffer);
+	mGraphics->SetRenderTargets(renderTargets, depthBuffer);
+
+	if (depthBuffer != NULL)
+	{
+		mCurrentTargetSize = depthBuffer->GetSize();
+	}
 }
 
 UInt32 RenderTargetDatabase::GetTargetID(const std::string& targetName)

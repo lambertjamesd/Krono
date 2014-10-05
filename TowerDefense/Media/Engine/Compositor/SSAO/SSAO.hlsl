@@ -82,19 +82,22 @@ float2 NormToTex(float2 normXY)
 #endif
 }
 
-float Main(PositionNormalTexture shaderInput) : SV_TARGET
+float Main(PSCompositeInput shaderInput) : SV_TARGET
 {
-	float2 texCoord = shaderInput.position.xy * screenSize.zw;
+	int2 texCoord = (int2)shaderInput.position.xy;
 
-	float depth = depthTexture.Sample(samPoint, texCoord).r;
+	float depth = depthTexture.Load(int3(texCoord, 0)).r;
+	
+	float2 normalizedPosition = shaderInput.normalizedPosition.xy / shaderInput.normalizedPosition.w;
+	float2 dPixdNorm = float2(1, 1) / float2(ddx(normalizedPosition.x), ddy(normalizedPosition.y));
 	
 	if (depth == 1.0)
 	{
 		return 0.0;
 	}
 	
-	float3 worldPosition = WorldPosition(float3(TexToNorm(texCoord), depth));
-	float3 worldNormal = normalTexture.SampleLevel(samPoint, texCoord, 0).xyz;
+	float3 worldPosition = WorldPosition(float3(normalizedPosition, depth));
+	float3 worldNormal = normalTexture.Load(int3(texCoord, 0)).xyz;
 	
 	float oclussionFactor = 0.0;
 	
@@ -110,11 +113,22 @@ float Main(PositionNormalTexture shaderInput) : SV_TARGET
 			hemisphere -= 2 * worldNormal * hemisphereSide;
 		}
 		
-		float3 sampleWorldPos = NormalizedPosition(worldPosition + hemisphere * maxRadius);
-		float2 sampleTexCoord = NormToTex(sampleWorldPos.xy);
-		float depthOffset = depthTexture.SampleLevel(samPoint, sampleTexCoord, 0).r - sampleWorldPos.z;
+		float3 sampleWorldPosition = worldPosition + hemisphere * maxRadius;
+		float3 sampleNormalizedPos = NormalizedPosition(sampleWorldPosition);
 		
-		if (depthOffset > 0 || depthOffset < -maxRadius)
+		if (any(float4(sampleNormalizedPos.xy, -sampleNormalizedPos.xy) < float4(-1, -1, -1, -1)))
+		{
+			oclussionFactor += 1.0;
+			continue;
+		}
+		
+		float2 sampleTexCoord = (sampleNormalizedPos.xy - normalizedPosition) * dPixdNorm;
+		float sampleDepth = depthTexture.Load(int3(texCoord + sampleTexCoord + 0.5, 0)).r;
+		
+		float depthOffset = sampleDepth - sampleNormalizedPos.z;
+		float sampleDistance = length(WorldPosition(float3(sampleNormalizedPos.xy, sampleDepth)) - sampleWorldPosition);
+		
+		if (depthOffset > 0 || sampleDistance > maxRadius)
 		{
 			oclussionFactor += 1.0;
 		}

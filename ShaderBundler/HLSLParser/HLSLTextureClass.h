@@ -22,7 +22,8 @@ private:
 	static HLSLTextureClass *gInstance;
 
 	HLSLTypeVisitor mTypeResolver;
-
+	
+	HLSLFunctionDefinition* CreateLoadDefintion(int dimentionality, bool multisampled);
 	HLSLFunctionDefinition* CreateSamplerDefinition(int dimentionality, bool includeOffset);
 	HLSLFunctionDefinition* CreateSamplerLevelDefinition(int dimentionality, bool includeOffset);
 

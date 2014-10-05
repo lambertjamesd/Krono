@@ -70,6 +70,7 @@ void GLSLGenerator::ProcessFile(HLSLNode& file, ShaderType::Type type, const std
 {
 	output << "#version 420" << endl;
 	output << "#extension GL_ARB_explicit_attrib_location : require" << endl;
+	output << GLSLTextureClass::GetBuiltInFunctions() << endl;
 
 	GLSLSamplerPurger::Purge(file);
 

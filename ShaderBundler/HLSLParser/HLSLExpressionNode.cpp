@@ -23,7 +23,8 @@ void HLSLExpressionNode::ResolveType(const HLSLType& type)
 }
 
 HLSLIdentifierNode::HLSLIdentifierNode(const HLSLToken& token) :
-	HLSLExpressionNode(token)
+	HLSLExpressionNode(token),
+	mVariableDefintion(NULL)
 {
 
 }
@@ -46,6 +47,18 @@ void HLSLIdentifierNode::ResolveNamedType(const std::shared_ptr<HLSLTypeNode>& v
 const std::shared_ptr<HLSLTypeNode>& HLSLIdentifierNode::GetNamedType() const
 {
 	return mNamedType;
+}
+
+void HLSLIdentifierNode::ResolveVariableDefinition(HLSLVariableDefinition* variableDefinition)
+{
+	assert(mVariableDefintion == NULL);
+	mVariableDefintion = variableDefinition;
+	ResolveType(variableDefinition->GetType().GetType());
+}
+
+HLSLVariableDefinition* HLSLIdentifierNode::GetVariableDefinition()
+{
+	return mVariableDefintion;
 }
 
 void HLSLIdentifierNode::Accept(HLSLNodeVisitor& visitor)

@@ -1,8 +1,7 @@
 
-#include "DataPassStructures.hlsli"
+#include "../../Shaders/DataTypes.hlsli"
 
 Texture2D textureTest : register( t0 );
-SamplerState samPoint : register( s0 );
 
 cbuffer SceneViewData : register( b0 )
 {
@@ -11,11 +10,9 @@ cbuffer SceneViewData : register( b0 )
 	float4 screenSize;
 };
 
-float4 Main(TexCoordVertex shaderInput) : SV_TARGET
-{
-	float2 texCoord = shaderInput.position.xy * screenSize.zw;
-	
-	float3 inputColor = textureTest.Sample(samPoint, shaderInput.texCoord).rgb;
+float4 Main(PSCompositeInput shaderInput) : SV_TARGET
+{	
+	float3 inputColor = textureTest.Load(int3(shaderInput.position.xy, 0)).rgb;
 	float gray = dot(inputColor, float3(0.299, 0.587, 0.114));
 	return float4(inputColor / (1.0 + gray), 1.0);
 }

@@ -2,6 +2,8 @@
 #include "RenderManager.h"
 #include <algorithm>
 
+using namespace krono;
+
 namespace kge
 {
 
@@ -30,7 +32,7 @@ void RenderManager::RemoveEntity(krono::Entity* entity)
 
 RenderStage::Ptr RenderManager::CreateRenderStage()
 {
-	RenderStage::Ptr result(new RenderStage(mScene, mDefaultCompositor));
+	RenderStage::Ptr result(new RenderStage(mScene, DefaultCompositor));
 	mRenderStages.push_back(result);
 	return result;
 }
@@ -40,10 +42,26 @@ void RenderManager::RemoveRenderStage(const RenderStage::Ptr& stage)
 	mRenderStages.erase(remove(mRenderStages.begin(), mRenderStages.end(), stage), mRenderStages.end());
 }
 
-void RenderManager::SetDefaultCompositor(const krono::Compositor::Ptr& compositor)
+void RenderManager::SetCompositor(const std::string& name, const krono::Compositor::Ptr& compositor)
 {
-	mDefaultCompositor = compositor;
+	mCompositors[name] = compositor;
 }
+
+const krono::Compositor::Ptr& RenderManager::GetCompositor(const std::string& name) const
+{
+	auto result = mCompositors.find(name);
+
+	if (result == mCompositors.end())
+	{
+		return Compositor::Null;
+	}
+	else
+	{
+		return result->second;
+	}
+}
+
+const std::string RenderManager::DefaultCompositor = "default";
 
 void RenderManager::Render()
 {
@@ -54,7 +72,16 @@ void RenderManager::Render()
 
 	for (auto it = mRenderStages.begin(); it != mRenderStages.end(); ++it)
 	{
-		(*it)->Render(*mGraphics);
+		Compositor::Ptr compositor = mCompositors[(*it)->GetCompositorName()];
+
+		if (compositor == NULL)
+		{
+			throw Exception(std::string("Could not find compositor named " + (*it)->GetCompositorName()));
+		}
+		else
+		{
+			(*it)->Render(*mGraphics, compositor);
+		}
 	}
 }
 

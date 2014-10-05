@@ -11,7 +11,7 @@ cbuffer SceneViewData : register( b0 )
 	float4 screenSize;
 };
 
-float4 Main(PositionNormalTexture shaderInput) : SV_TARGET
+float4 Main(PSCompositeInput shaderInput) : SV_TARGET
 {
 	float2 texCoord = shaderInput.position.xy * screenSize.zw;
 	float4 result = inputTexture.SampleLevel(samPoint, texCoord, 0);

@@ -46,7 +46,11 @@ public:
 	void Render(Graphics& graphics, const RenderTargetConfiguration& renderTargetConfig, SceneView& sceneView);
 
 	void AddRenderTarget(const std::string& name, const DataFormat& dataFormat);
+	void SetRenderTargetScale(const std::string& name, const Vector2f& scale);
 	void AddCompositeStage(const CompositeStage::Ptr& compositeStage, const CompositeStageConnections& connections);
+
+	static Ptr Null;
+
 private:
 	struct CompositeStageEntry
 	{

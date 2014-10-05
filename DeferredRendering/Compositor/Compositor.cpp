@@ -79,13 +79,12 @@ void Compositor::Render(Graphics& graphics, const RenderTargetConfiguration& ren
 
 	RenderState renderState(graphics, mRenderTargetDatabase, sceneView);
 
-	renderState.SetViewport(sceneView.CalculateViewport(renderTargetConfig.GetSize()), sceneView.GetDepthRange());
-
 	for (size_t i = 0; i < mCompositeStages.size(); ++i)
 	{
 		CompositeStageEntry& entry = mCompositeStages[i];
 
 		mRenderTargetDatabase.UseRenderTargets(entry.connections.GetTargetDescription());
+		renderState.SetViewport(sceneView.CalculateViewport(mRenderTargetDatabase.GetCurrentTargetSize()), sceneView.GetDepthRange());
 
 		if (entry.connections.GetInputCount() != entry.compositeStage->GetExpectedTargetInputCount())
 		{
@@ -106,6 +105,11 @@ void Compositor::AddRenderTarget(const std::string& name, const DataFormat& data
 	mRenderTargetDatabase.SetDataFormat(RenderTargetDatabase::GetTargetID(name), dataFormat);
 }
 
+void Compositor::SetRenderTargetScale(const std::string& name, const Vector2f& scale)
+{
+	mRenderTargetDatabase.SetTargetScale(RenderTargetDatabase::GetTargetID(name), scale);
+}
+
 void Compositor::AddCompositeStage(const CompositeStage::Ptr& compositeStage, const CompositeStageConnections& connections)
 {
 	CompositeStageEntry entry;
@@ -113,5 +117,7 @@ void Compositor::AddCompositeStage(const CompositeStage::Ptr& compositeStage, co
 	entry.connections = connections;
 	mCompositeStages.push_back(entry);
 }
+
+Compositor::Ptr Compositor::Null = NULL;
 
 }

@@ -48,7 +48,7 @@ std::unique_ptr<HLSLFunctionDefinition> HLSLParser::ParseFunctionSignature()
 	return move(ParseFunction());
 }
 
-std::unique_ptr<HLSLNode> HLSLParser::ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, const std::map<std::string, std::string>& macros)
+std::unique_ptr<HLSLNode> HLSLParser::ProcessFile(const std::string& filename, const std::map<std::string, std::string>& macros)
 {
 	preproc::PreprocessResult preprocessResult = preproc::Preprocessor::PreprocessFile(filename, macros);
 	std::istringstream input(preprocessResult.text);
@@ -567,7 +567,7 @@ std::unique_ptr<HLSLVariableDefinition> HLSLParser::ParseVariable()
 
 	if (Optional(HLSLTokenType::Assign))
 	{
-		result->SetInitialValue(move(ParseExpression()));
+		result->SetInitialValue(move(ParseBinaryOperator(OperatorPrecedence::Assign)));
 	}
 
 	return move(result);
@@ -685,7 +685,7 @@ std::unique_ptr<HLSLFunctionParameter> HLSLParser::ParseFunctionParameter()
 
 	if (Optional(HLSLTokenType::Assign))
 	{
-		result->SetInitialzier(move(ParseExpression()));
+		result->SetInitialzier(move(ParseBinaryOperator(OperatorPrecedence::Assign)));
 	}
 
 	return result;

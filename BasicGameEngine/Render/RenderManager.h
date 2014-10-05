@@ -5,6 +5,8 @@
 #include "Renderable.h"
 #include "RenderStage.h"
 #include <vector>
+#include <string>
+#include <map>
 
 namespace kge
 {
@@ -21,7 +23,10 @@ public:
 	RenderStage::Ptr CreateRenderStage();
 	void RemoveRenderStage(const RenderStage::Ptr& stage);
 
-	void SetDefaultCompositor(const krono::Compositor::Ptr& compositor);
+	void SetCompositor(const std::string& name, const krono::Compositor::Ptr& compositor);
+	const krono::Compositor::Ptr& GetCompositor(const std::string& name) const;
+
+	static const std::string DefaultCompositor;
 
 	void Render();
 private:
@@ -31,7 +36,7 @@ private:
 	void RemoveRenderable(Renderable *renderable);
 
 	krono::Graphics::Ptr mGraphics;
-	krono::Compositor::Ptr mDefaultCompositor;
+	std::map<std::string, krono::Compositor::Ptr> mCompositors;
 
 	krono::Scene mScene;
 

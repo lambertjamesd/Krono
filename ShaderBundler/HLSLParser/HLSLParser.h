@@ -23,7 +23,7 @@ public:
 	std::unique_ptr<HLSLNode> ParseFile();
 	std::unique_ptr<HLSLFunctionDefinition> ParseFunctionSignature();
 
-	static std::unique_ptr<HLSLNode> ProcessFile(const std::string& filename, ShaderType::Type type, const std::string& entryPoint, const std::map<std::string, std::string>& macros);
+	static std::unique_ptr<HLSLNode> ProcessFile(const std::string& filename, const std::map<std::string, std::string>& macros);
 
 	static void Test();
 private:

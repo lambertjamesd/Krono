@@ -21,12 +21,12 @@ cbuffer SSAOParameters : register( b1 )
 	float3 up;
 };
 
-float4 Main(PositionNormalTexture shaderInput) : SV_TARGET
+float4 Main(PSCompositeInput shaderInput) : SV_TARGET
 {
-	float2 texCoord = shaderInput.position.xy * screenSize.zw;
-	float occlusion = occlusionTexture.Sample(samPoint, texCoord).r;
-	float3 worldNormal = normalTexture.SampleLevel(samPoint, texCoord, 0).xyz;
-	float4 worldColor = colorTexture.SampleLevel(samPoint, texCoord, 0);
+	int3 texCoord = int3(shaderInput.position.xy, 0);
+	float occlusion = occlusionTexture.Load(texCoord).r;
+	float3 worldNormal = normalTexture.Load(texCoord).xyz;
+	float4 worldColor = colorTexture.Load(texCoord);
 	float lerpFactor = dot(up, worldNormal) * 0.5 + 0.5;
 	return worldColor * lerp(groundColor, skyColor, float4(lerpFactor, lerpFactor, lerpFactor, lerpFactor)) * occlusion;
 }

@@ -14,6 +14,12 @@ struct TangentVertexInput
 	float2 texCoord : TEXCOORD0;
 };
 
+struct PSCompositeInput
+{
+	float4 position : SV_Position;
+	float4 normalizedPosition : POSITION;
+};
+
 struct PositionNormalTexture
 {
 	float4 position : SV_Position;

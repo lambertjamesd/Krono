@@ -48,7 +48,7 @@ void LightingCompositeStage::RebuildBuffer(RenderState& renderState)
 	Matrix4f projectionMatrix = renderState.GetProjectionMatrix();
 	Matrix4f viewMatrix = renderState.GetViewMatrix();
 	Rectf viewport = renderState.GetViewport();
-	Vector2f screenSize = renderState.GetRenderTargetSize();
+	Vector2f screenSize = renderState.GetCurrentRenderTargetSize();
 	Matrix4f compositeTransform = Matrix4f::Scale(Vector3f(screenSize / viewport.size, 1.0f)) * Matrix4f::Translation(Vector3f(-viewport.topLeft / viewport.size, 0.0f));
 
 	if (mVertexContantBuffer == NULL)

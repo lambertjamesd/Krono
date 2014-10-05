@@ -112,6 +112,7 @@ public:
 	const HLSLSemantic& GetSemantic() const;
 	const HLSLRegisterLocation& GetRegisterLocation() const;
 	HLSLExpressionNode* GetInitialValue();
+	bool HasInitialValue() const;
 
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
@@ -151,15 +152,14 @@ public:
 	HLSLExpressionNode* GetInitializer();
 
 	bool IsOptional() const;
+
+	HLSLVariableDefinition& GetVariableDefinition();
 	
 	virtual void Accept(HLSLNodeVisitor& visitor);
 private:
 	InputModifier mInputModifier;
-	std::unique_ptr<HLSLTypeNode> mType;
-	std::string mName;
-	HLSLSemantic mSemantic;
 	InterpolationMode::Type mInterpolationMode;
-	std::unique_ptr<HLSLExpressionNode> mInitializer;
+	HLSLVariableDefinition mVariableDefinition;
 };
 
 class HLSLFunctionDefinition : public HLSLStatementNode
@@ -211,6 +211,7 @@ class HLSLReturnStatement : public HLSLStatementNode
 public:
 	HLSLReturnStatement(const HLSLToken& token, std::unique_ptr<HLSLExpressionNode> returnValue);
 
+	bool HasReturnValue() const;
 	HLSLExpressionNode& GetReturnValue();
 	
 	virtual void Accept(HLSLNodeVisitor& visitor);
