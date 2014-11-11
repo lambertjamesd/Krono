@@ -5,6 +5,7 @@
 #include "Core/Types.h"
 #include "Color.h"
 #include "DepthState.h"
+#include "Resource/Resource.h"
 
 namespace krono
 {
@@ -72,7 +73,7 @@ struct SamplerDescription
 	Colorf borderColor;
 };
 
-class Sampler : public Object
+class Sampler : public Resource
 {
 public:
 	typedef Auto<Sampler> Ptr;

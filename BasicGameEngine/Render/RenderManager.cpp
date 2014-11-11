@@ -2,6 +2,8 @@
 #include "RenderManager.h"
 #include <algorithm>
 
+#include "Serialization/SceneSerializer.h"
+
 using namespace krono;
 
 namespace kge
@@ -9,8 +11,9 @@ namespace kge
 
 using namespace std;
 
-RenderManager::RenderManager(const krono::Graphics::Ptr& graphics) :
-	mGraphics(graphics)
+RenderManager::RenderManager(const krono::Graphics::Ptr& graphics, Scene& gameObjectScene) :
+	mGraphics(graphics),
+	mGameObjectScene(gameObjectScene)
 {
 
 }
@@ -59,6 +62,16 @@ const krono::Compositor::Ptr& RenderManager::GetCompositor(const std::string& na
 	{
 		return result->second;
 	}
+}
+
+const krono::Graphics::Ptr& RenderManager::GetGraphics() const
+{
+	return mGraphics;
+}
+
+Scene& RenderManager::GetGameObjectScene()
+{
+	return mGameObjectScene;
 }
 
 const std::string RenderManager::DefaultCompositor = "default";

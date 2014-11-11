@@ -4,18 +4,25 @@
 #include "Transform.h"
 #include <vector>
 #include <memory>
+#include <functional>
+
 namespace kge
 {
 
 class Scene;
 
-class GameObject
+class GameObject : public krono::Object
 {
 public:
 	typedef std::shared_ptr<GameObject> Ptr;
 	typedef std::weak_ptr<GameObject> Ref;
+	
+	typedef std::function<void (GameObject&)> IteratorCallback;
 
-	~GameObject(void);
+	virtual ~GameObject(void);
+
+	size_t GetComponentCount() const;
+	Component::Ref GetComponent(size_t index) const;
 
 	template <typename T>
 	std::weak_ptr<T> GetComponent() const
@@ -38,22 +45,24 @@ public:
 	std::weak_ptr<T> AddComponent()
 	{
 		std::shared_ptr<T> result(new T(*this));
+		result->mSelfReference = result;
 		mComponents.push_back(result);
 		return result;
 	}
 
 	Scene& GetScene();
 
-	Ref GetWeakPointer() const
-	{
-		return mSelfReference;
-	}
+	Ref GetWeakPointer() const;
+
+	void VisitSelfAndDecendants(IteratorCallback callback);
+
+	void Destroy();
 private:
 	friend class Scene;
 
-	GameObject(Scene* parentScene);
+	GameObject(Scene& parentScene);
 
-	Scene* mScene;
+	Scene& mScene;
 
 	std::vector<Component::Ptr> mComponents;
 	Transform::Ptr mTransform;

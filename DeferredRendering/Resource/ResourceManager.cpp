@@ -15,8 +15,7 @@ namespace krono
 {
 
 ResourceManager::ResourceManager(Graphics* graphics) :
-	mGraphics(graphics),
-	mGeometryCache(*graphics)
+	mGraphics(graphics)
 {
 	AddDefaultLoaders();
 	mPathStack.push_back("");
@@ -32,14 +31,14 @@ Graphics* ResourceManager::GetGraphics()
 	return mGraphics;
 }
 
-const Mesh::Ptr& ResourceManager::GetPlane()
+Mesh::Ptr ResourceManager::GetPlane()
 {
-	return mGeometryCache.GetPlane();
+	return LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Plane");
 }
 
-const Mesh::Ptr& ResourceManager::GetSphere()
+Mesh::Ptr ResourceManager::GetSphere()
 {
-	return mGeometryCache.GetSphere();
+	return LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Sphere");
 }
 
 void ResourceManager::AddDefaultLoaders()

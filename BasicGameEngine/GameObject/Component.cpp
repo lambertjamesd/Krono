@@ -32,4 +32,19 @@ const krono::InputState& Component::GetInputState() const
 	return mGameObject.GetScene().GetGame().GetInputState();
 }
 
+void Component::Serialize(SceneSerializer& serializer)
+{
+	// do nothing
+}
+
+void Component::Deserialize(SceneDeserializer& deserializer)
+{
+	// do nothing
+}
+
+Component::Ref Component::GetWeakPointer() const
+{
+	return mSelfReference;
+}
+
 }

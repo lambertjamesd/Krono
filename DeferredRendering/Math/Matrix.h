@@ -464,6 +464,41 @@ public:
 	{
 		return Matrix4::Translation(position) * Matrix4::Rotation(rotation) * Matrix4::Scale(scale);
 	}
+
+	static Matrix4 PerspectiveProjection(T nearPlane, T farPlane, const krono::Radians<T>& verticalFov, T aspectRatio)
+	{
+		Matrix4 result;
+
+		T tanFov = Math<T>::Tan(verticalFov / 2);
+
+		T cotFov = Constant<T>::One / tanFov;
+		T zScale = farPlane / (farPlane - nearPlane);
+
+		result.At(0, 0) = cotFov / aspectRatio;
+		result.At(1, 1) = cotFov;
+		result.At(2, 2) = zScale;
+
+		result.At(2, 3) = -nearPlane * zScale;
+		result.At(3, 2) = Constant<T>::One;
+
+		result.At(3, 3) = Constant<T>::Zero;
+
+		return result;
+	}
+	
+	static Matrix4 OrthoProjection(T nearPlane, T farPlane, T height, T aspectRatio)
+	{
+		Matrix4 result;
+
+		result.At(0, 0) = 2.0f / (height * aspectRatio);
+		result.At(1, 1) = 2.0f / height;
+		result.At(2, 2) = 1.0f / (farPlane - nearPlane);
+
+		result.At(2, 3) = nearPlane / (nearPlane - farPlane);
+
+		return result;
+	}
+
 private:
 };
 

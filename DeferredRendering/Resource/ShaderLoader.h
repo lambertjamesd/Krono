@@ -10,7 +10,7 @@ class ShaderLoader : public ResourceLoader
 public:
 	~ShaderLoader();
 	
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 protected:
 	ShaderLoader(ShaderStage::Type stage);
 

@@ -34,4 +34,14 @@ size_t Mesh::GetSubMeshCount() const
 	return mSubMeshes.size();
 }
 
+const BoundingBoxf& Mesh::GetBoundingBox() const
+{
+	return mBoundingBox;
+}
+
+void Mesh::SetBoundingBox(const BoundingBoxf& boundingBox)
+{
+	mBoundingBox = boundingBox;
+}
+
 }

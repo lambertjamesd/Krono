@@ -84,6 +84,11 @@ void ObjMeshVertexData::NormalizeTangents()
 	MeshMath::NormalizeTangents(tangentArray, AttributeArray<Vector3f>(&mVertexData.front(), offsetof(ObjMeshVertex, normal), sizeof(ObjMeshVertex)), mVertexData.size());
 }
 
+BoundingBoxf ObjMeshVertexData::CalculateBoundingBox() const
+{
+	return MeshMath::CalculateBoundingBox(AttributeArray<Vector3f>((void*)(&mVertexData.front()), offsetof(ObjMeshVertex, position), sizeof(ObjMeshVertex)), mVertexData.size());
+}
+
 void ObjMeshVertexData::PopulateVertexBuffer(VertexBuffer& vertexBuffer) const
 {	
 	DataIterator it = vertexBuffer.Lock(mVertexData.size());
@@ -101,7 +106,7 @@ ObjMeshGroupLoader::~ObjMeshGroupLoader(void)
 
 }
 
-Auto<Object> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	ObjMeshVertexData vertexData;
 

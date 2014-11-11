@@ -20,6 +20,11 @@ Shader::Shader(void)
 {
 
 }
+	
+Shader::~Shader(void)
+{
+
+}
 
 VertexShader::VertexShader(void)
 {

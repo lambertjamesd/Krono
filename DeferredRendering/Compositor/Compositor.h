@@ -30,13 +30,13 @@ private:
 	std::vector<UInt32> mTargetInputs;
 };
 
-class Compositor : public Object
+class Compositor : public Resource
 {
 public:
 	typedef Auto<Compositor> Ptr;
 
 	Compositor(void);
-	~Compositor(void);
+	virtual ~Compositor(void);
 
 	void ClearRenderTargets();
 

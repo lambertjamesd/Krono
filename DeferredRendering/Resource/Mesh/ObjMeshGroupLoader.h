@@ -37,6 +37,8 @@ public:
 	void CalculateTangents(const UInt16* indexBuffer, size_t indexCount);
 	void NormalizeTangents();
 
+	BoundingBoxf CalculateBoundingBox() const;
+
 	void PopulateVertexBuffer(VertexBuffer& vertexBuffer) const;
 private:
 	std::vector<Vector3f> mPositions;
@@ -54,7 +56,7 @@ public:
 	ObjMeshGroupLoader();
 	~ObjMeshGroupLoader(void);
 	
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 private:
 	static void SplitIndices(const std::string& input, size_t indices[3]);
 	static void ParseLine(std::istream& inputStream, std::vector<std::string>& tokens);

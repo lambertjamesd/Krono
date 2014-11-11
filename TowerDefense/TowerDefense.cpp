@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 #include <Krono.h>
 #include <BasicGameEngine.h>
@@ -71,15 +72,14 @@ Camera::Ptr AddCamera(kge::Scene& scene, const Rectf& viewport)
 {
 	GameObject::Ptr gameObject = scene.CreateGameObject().lock();
 	Camera::Ptr camera = gameObject->AddComponent<Camera>().lock();
-	unique_ptr<Lens> cameraLens(new PerspectiveLens(0.05f, 20.0f, Degreesf(90.0f)));
-	camera->SetLens(cameraLens);
+	camera->SetPerspectiveLens(0.05f, 20.0f, Degreesf(90.0f));
 	camera->SetViewport(viewport, Rangef(0.0f, 1.0f));
 	return camera;
 }
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(1280, 800), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -103,6 +103,10 @@ int main(int argc, char* argv[])
 	suzanne->GetTransform()->SetLocalScale(Vector3f(0.6f, 0.6f, 0.6f));
 	suzanne->GetTransform()->SetLocalPosition(Vector3f(0.0f, -1.0f, 0.0f));
 	suzanne->AddComponent<SpinBehavior>();
+	LuaScript::Ptr behavior = resourceManager->LoadResource<LuaScript>("Media/Scripts/Test.lua");
+	game.GetLuaContext().RunScript(*behavior);
+	suzanne->AddComponent<LuaBehavior>().lock()->SetLuaClassName("Test");
+
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
 	scene->GetRenderManager().SetCompositor(RenderManager::DefaultCompositor, resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
@@ -179,6 +183,27 @@ int main(int argc, char* argv[])
 	graphics->SetSampler(linearSampler, 1, ShaderStage::PixelShader);
 
 	game.SetCurrentScene(scene);
+	/*
+	std::ofstream sceneOutput("TestScene.json", std::ios_base::binary);
+	kge::ComponentFactory factory;
+	kge::SceneJsonSerializer serializer(factory, sceneOutput);
+	serializer.SerializeScene(*scene);
+	sceneOutput.close();
+
+	std::ostringstream objectStream(std::ios_base::binary);
+
+	kge::SceneJsonSerializer objectSerialize(factory, objectStream);
+	objectSerialize.SerializePrefab(*suzanne);
+
+	std::string objectJson = objectStream.str();
+	std::istringstream inputStream(objectJson, std::ios_base::binary);
+
+	kge::SceneJsonDeserializer objectDeserialize(factory, *game.GetResourceManager(), inputStream);
+
+	objectDeserialize.DeserializePrefab(*scene);
+	*/
+
+	suzanne.reset();
 	
 	game.MainLoop();
 

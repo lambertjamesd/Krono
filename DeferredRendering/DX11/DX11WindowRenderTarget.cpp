@@ -7,7 +7,7 @@ namespace krono
 {
 
 DX11WindowRenderTarget::DX11WindowRenderTarget(DX11Graphics& graphics, Window& window) :
-	WindowRenderTarget(window.GetSize()),
+	WindowRenderTarget(window.GetSize(), DataFormat(DataFormat::Int8UNorm, 4)),
 	mDeviceContext(graphics.GetContext())
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;

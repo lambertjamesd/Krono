@@ -22,13 +22,13 @@
 			"type" : "int8UNorm", 
 			"count" : 1,
 			
-			"scales" : {"x" : 0.5, "y" : 0.5}
+			"scale" : {"x" : 0.5, "y" : 0.5}
 		},
 		"ssaoblur" : {
 			"type" : "int8UNorm",
 			"count" : 1,
 			
-			"scales" : {"x" : 0.5, "y" : 0.5}
+			"scale" : {"x" : 0.5, "y" : 0.5}
 		},
 		"combined" : {
 			"type" : "float", 
@@ -53,12 +53,12 @@
 		{
 			"disabled" : false,
 			
-			"stage" : "../Engine/Compositor/SSAO/SSAOStage.json",
+			"stage" : "Engine/Compositor/SSAO/SSAOStage.json",
 			"input" : ["depth", "normal"],
 			"output" : ["ssao"]
 		},
 		{
-			"stage" : "../Engine/Compositor/Blur/SpacialBlurStage.json",
+			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssao", "depth"],
 			"output" : ["ssaoblur"],
 		
@@ -67,7 +67,7 @@
 			]
 		},
 		{
-			"stage" : "../Engine/Compositor/Blur/SpacialBlurStage.json",
+			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssaoblur", "depth"],
 			"output" : ["ssao"],
 		
@@ -77,7 +77,7 @@
 		},
 		{
 			"disabled" : false,
-			"stage" : "../Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
+			"stage" : "Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
 			"input" : ["ssao", "normal", "color"],
 			"output" : ["combined"],
 		
@@ -90,7 +90,7 @@
 		{
 			"disabled" : false,
 			
-			"stage" : "../Engine/Compositor/ToneMapper/ToneMapperStage.json",
+			"stage" : "Engine/Compositor/ToneMapper/ToneMapperStage.json",
 			
 			"input" : ["combined"],
 			"output" : ["output0"]

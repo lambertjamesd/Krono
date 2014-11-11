@@ -12,7 +12,7 @@ public:
 	JsonDocumentLoader(void);
 	~JsonDocumentLoader(void);
 	
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 
 	static json::Value LoadJson(std::istream& inputStream);
 	static bool IsJsonDocument(std::istream& inputStream);

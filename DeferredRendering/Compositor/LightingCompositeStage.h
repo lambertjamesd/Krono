@@ -32,7 +32,7 @@ public:
 	typedef Auto<LightingCompositeStage> Ptr;
 
 	LightingCompositeStage(size_t technique);
-	~LightingCompositeStage(void);
+	virtual ~LightingCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
 private:

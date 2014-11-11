@@ -198,6 +198,24 @@ Vector3<T>& operator*= (Vector3<T>& left, const T& right)
 	return left;
 }
 
+template <typename T>
+Vector3<T> Max(const Vector3<T>& a, const Vector3<T>& b)
+{
+	return Vector3<T>(
+		std::max(a.x, b.x),
+		std::max(a.y, b.y),
+		std::max(a.z, b.z));
+}
+
+template <typename T>
+Vector3<T> Min(const Vector3<T>& a, const Vector3<T>& b)
+{
+	return Vector3<T>(
+		std::min(a.x, b.x),
+		std::min(a.y, b.y),
+		std::min(a.z, b.z));
+}
+
 typedef Vector3<int> Vector3i;
 typedef Vector3<float> Vector3f;
 

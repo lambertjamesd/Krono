@@ -17,7 +17,7 @@ CompositorLoader::CompositorLoader(void)
 CompositorLoader::~CompositorLoader(void)
 {
 }
-Auto<Object> CompositorLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> CompositorLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	if (!JsonDocumentLoader::IsJsonDocument(inputStream))
 	{

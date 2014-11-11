@@ -4,6 +4,7 @@
 #include "Core/Object.h"
 #include "Core/Memory.h"
 #include "ShaderInputLayout.h"
+#include "Resource/Resource.h"
 
 namespace krono
 {
@@ -22,10 +23,12 @@ namespace ShaderStage
 	};
 }
 
-class Shader : public Object
+class Shader : public Resource
 {
 public:
 	typedef Auto<Shader> Ptr;
+
+	virtual ~Shader();
 
 	void SetInputLayout(const ShaderInputLayout& inputLayout);
 	const ShaderInputLayout& GetInputLayout();

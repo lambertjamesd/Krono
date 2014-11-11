@@ -15,7 +15,7 @@ public:
 	MeshGroupLoader(void);
 	virtual ~MeshGroupLoader(void);
 	
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName) = 0;
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName) = 0;
 private:
 };
 

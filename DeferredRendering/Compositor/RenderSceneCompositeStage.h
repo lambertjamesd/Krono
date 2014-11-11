@@ -21,7 +21,7 @@ public:
 	typedef Auto<RenderSceneCompositeStage> Ptr;
 
 	RenderSceneCompositeStage(size_t technique);
-	~RenderSceneCompositeStage(void);
+	virtual ~RenderSceneCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
 private:

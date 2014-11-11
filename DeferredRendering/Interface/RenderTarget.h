@@ -3,11 +3,13 @@
 #include "Math/Vector2.h"
 #include "Texture2D.h"
 #include "Core/Memory.h"
+#include "Core/Object.h"
+#include "DataFormat.h"
 
 namespace krono
 {
 
-class RenderTarget
+class RenderTarget : public Object
 {
 public:
 	typedef Auto<RenderTarget> Ptr;
@@ -18,12 +20,14 @@ public:
 	virtual ~RenderTarget(void);
 
 	Vector2i GetSize() const;
+	const DataFormat& GetDataFormat() const;
 
 	static const Ptr Null;
 protected:
-	RenderTarget(const Vector2i& size);
+	RenderTarget(const Vector2i& size, const DataFormat& dataFormat);
 private:
 	Vector2i mSize;
+	DataFormat mDataFormat;
 };
 
 class WindowRenderTarget : public RenderTarget
@@ -35,7 +39,7 @@ public:
 
 	virtual void Present(void) = 0;
 protected:
-	WindowRenderTarget(const Vector2i& size);
+	WindowRenderTarget(const Vector2i& size, const DataFormat& dataFormat);
 private:
 
 };

@@ -4,17 +4,21 @@
 namespace krono
 {
 
-Plane::Plane(void) :
-	mDistance(0.0f)
+Plane::Plane(void)
 {
 
 }
 
 Plane::Plane(const Vector3f& normal, float distance) :
-	mNormal(normal),
-	mDistance(distance)
+	mVectorValue(normal, distance)
 {
 	
+}
+
+Plane::Plane(const Vector4f& vectorValue) :
+	mVectorValue(vectorValue)
+{
+
 }
 
 Plane::~Plane(void)

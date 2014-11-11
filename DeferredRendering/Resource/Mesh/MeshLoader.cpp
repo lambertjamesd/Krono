@@ -15,7 +15,7 @@ MeshLoader::~MeshLoader(void)
 {
 }
 
-Auto<Object> MeshLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> MeshLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	return resourceManager.LoadResource<MeshGroup>(inputStream, "")->GetMesh(internalName);
 }

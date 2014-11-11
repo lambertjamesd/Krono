@@ -13,7 +13,7 @@ public:
 	SamplerLoader(void);
 	~SamplerLoader(void);
 
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 
 	static Sampler::Ptr ParseSampler(ResourceManager& resourceManager, const json::Value& root);
 private:

@@ -31,6 +31,9 @@ public:
 
 	void SetDirection(const krono::Vector3f& direction);
 	void SetColor(const krono::Colorf& value);
+	
+	virtual void Serialize(SceneSerializer& serializer);
+	virtual void Deserialize(SceneDeserializer& deserializer);
 protected:
 	krono::Entity& mEntity;
 };

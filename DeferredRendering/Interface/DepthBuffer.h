@@ -4,11 +4,12 @@
 #include "Texture2D.h"
 #include "Core/Memory.h"
 #include "DataFormat.h"
+#include "Core/Object.h"
 
 namespace krono
 {
 
-class DepthBuffer
+class DepthBuffer : public Object
 {
 public:
 	typedef Auto<DepthBuffer> Ptr;

@@ -15,9 +15,9 @@ JsonDocumentLoader::~JsonDocumentLoader(void)
 {
 }
 
-Auto<Object> JsonDocumentLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> JsonDocumentLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
-	return Auto<Object>(new JsonDocument(StringFromIStream(inputStream)));
+	return Auto<Resource>(new JsonDocument(StringFromIStream(inputStream)));
 }
 
 json::Value JsonDocumentLoader::LoadJson(std::istream& inputStream)

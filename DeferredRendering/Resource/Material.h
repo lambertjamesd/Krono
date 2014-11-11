@@ -22,7 +22,7 @@ public:
 	typedef UInt32 TechniqueMask;
 
 	Material(void);
-	~Material(void);
+	virtual ~Material(void);
 
 	void AddTechnique(UInt32 id, const Technique& technique);
 

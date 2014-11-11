@@ -25,6 +25,19 @@ void MeshMath::CalculateTangent(const Vector3f* positions, const Vector2f* texCo
 	binormal = rightPosition * rightTex.y + upPosition * upTex.y;
 }
 
+BoundingBoxf MeshMath::CalculateBoundingBox(const AttributeArray<Vector3f>& positions, size_t vertexCount)
+{
+	BoundingBoxf result(positions[0], positions[0]);
+
+	for (size_t i = 1; i < vertexCount; ++i)
+	{
+		result.minimum = Min(result.minimum, positions[i]);
+		result.maximum = Max(result.maximum, positions[i]);
+	}
+
+	return result;
+}
+
 void MeshMath::NormalizeTangents(AttributeArray<Vector4f>& tangents, const AttributeArray<Vector3f>& normals, size_t vertexCount)
 {
 	for (size_t vertexIndex = 0; vertexIndex < vertexCount; ++vertexIndex)

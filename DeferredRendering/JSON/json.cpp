@@ -305,6 +305,22 @@ Value::operator Array() const
 	return mArrayVal;
 }
 
+Object& Value::ObjectValue()
+{
+	if (mValueType != ObjectVal)
+		throw std::runtime_error("json mValueType==ObjectVal required");
+	
+	return mObjectVal;
+}
+
+Array& Value::ArrayValue()
+{
+	if (mValueType != ArrayVal)
+		throw std::runtime_error("json mValueType==ArrayVal required");
+	
+	return mArrayVal;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Array::Array()

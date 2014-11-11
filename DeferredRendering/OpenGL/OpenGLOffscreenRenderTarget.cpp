@@ -9,7 +9,7 @@ namespace krono
 {
 
 OpenGLOffscreenRenderTarget::OpenGLOffscreenRenderTarget(Vector2i size, DataFormat format) :
-	RenderTarget(size)
+	RenderTarget(size, format)
 {
 	GLuint existingTexture;
 

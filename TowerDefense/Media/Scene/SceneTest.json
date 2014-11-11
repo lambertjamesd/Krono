@@ -1,0 +1,16 @@
+{
+	"gameObjects" " [
+		{
+			"id" : 11798479210914236,
+			
+			"components" : [
+				{
+					"id" : 249701970923479374,
+					"class" : "Transform",
+					
+					"position" : {"x" : 0, "y" : 0, "z" : 0},
+				}
+			]
+		}
+	]
+}

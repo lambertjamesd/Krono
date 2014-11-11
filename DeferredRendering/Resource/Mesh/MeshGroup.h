@@ -12,7 +12,7 @@ class MeshGroup : public Resource
 {
 public:
 	MeshGroup(void);
-	~MeshGroup(void);
+	virtual ~MeshGroup(void);
 
 	void AddMesh(const std::string& name, Auto<Mesh>& mesh);
 	Auto<Mesh>& GetMesh(const std::string& name);

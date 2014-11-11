@@ -19,7 +19,7 @@ Texture2DLoader::~Texture2DLoader(void)
 }
 
 
-Auto<Object> Texture2DLoader::LoadResource(ResourceManager& resourceManager, istream& inputStream, const std::string& internalName)
+Auto<Resource> Texture2DLoader::LoadResource(ResourceManager& resourceManager, istream& inputStream, const std::string& internalName)
 {
 	FreeImageIO io;
 	fi_handle handle = (fi_handle)(&inputStream);

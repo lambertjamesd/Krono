@@ -2,6 +2,12 @@
 
 #include "GameObject.h"
 #include "Scene/Scene.h"
+
+#include "Serialization/SceneSerializer.h"
+#include "Serialization/RenderSerialization.h"
+
+using namespace krono;
+
 namespace kge
 {
 
@@ -10,7 +16,10 @@ Camera::Camera(GameObject& parentGameObject) :
 	Renderable(mGameObject.GetScene().GetRenderManager()),
 
 	mRenderStage(mRenderManager.CreateRenderStage()),
-	mLens(new OrthographicLens(0.0f, 1.0f, 2.0f))
+	mIsPerspective(false),
+	mNearPlane(0.0f),
+	mFarPlane(1.0f),
+	mHeight(2.0f)
 {
 
 }
@@ -23,7 +32,15 @@ Camera::~Camera(void)
 void Camera::PreRender()
 {
 	mRenderStage->SetViewMatrix(mGameObject.GetTransform()->GetInverseWorldTransform().RemoveScale());
-	mRenderStage->SetProjectionMatrix(mLens->GetProjectionMatrix());
+
+	if (mIsPerspective)
+	{
+		mRenderStage->SetProjectionMatrix(Matrix4f::PerspectiveProjection(mNearPlane, mFarPlane, Degreesf(mHeight), 1.0f));
+	}
+	else
+	{
+		mRenderStage->SetProjectionMatrix(Matrix4f::OrthoProjection(mNearPlane, mFarPlane, mHeight, 1.0f));
+	}
 }
 
 void Camera::SetViewport(const krono::Rectf& viewport, const krono::Rangef& depthRange)
@@ -36,9 +53,42 @@ void Camera::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarg
 	mRenderStage->SetRenderTargets(renderTarget);
 }
 
-void Camera::SetLens(std::unique_ptr<Lens>& lens)
+void Camera::SetOrthoLens(float nearPlane, float farPlane, float height)
 {
-	mLens = std::move(lens);
+	mIsPerspective = false;
+	mNearPlane = nearPlane;
+	mFarPlane = farPlane;
+	mHeight = height;
+}
+
+void Camera::SetPerspectiveLens(float nearPlane, float farPlane, const krono::Degreesf& vFov)
+{
+	mIsPerspective = true;
+	mNearPlane = nearPlane;
+	mFarPlane = farPlane;
+	mHeight = vFov;
+}
+
+void Camera::Serialize(SceneSerializer& serializer)
+{
+	serializer.WriteKey("renderStage");
+	RenderSerialization(mRenderManager).SerializeRenderStage(serializer, mRenderStage);
+
+	serializer.WriteBool("perspective", mIsPerspective);
+	serializer.WriteFloat("near", mNearPlane);
+	serializer.WriteFloat("far", mFarPlane);
+	serializer.WriteFloat("height", mHeight);
+}
+
+void Camera::Deserialize(SceneDeserializer& deserializer)
+{
+	deserializer.ReadKey("renderStage");
+	RenderSerialization(mRenderManager).DeserializeRenderStage(deserializer, mRenderStage);
+
+	mIsPerspective = deserializer.ReadBool("perspective", mIsPerspective);
+	mNearPlane = deserializer.ReadFloat("near", mNearPlane);
+	mFarPlane = deserializer.ReadFloat("far", mFarPlane);
+	mHeight = deserializer.ReadFloat("height", mHeight);
 }
 
 }

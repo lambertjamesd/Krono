@@ -27,6 +27,16 @@ void RenderStage::SetViewport(const krono::Rectf& viewport, const krono::Rangef&
 	mSceneView.SetViewport(viewport, depthRange);
 }
 
+const krono::Rectf& RenderStage::GetViewportRect() const
+{
+	return mSceneView.GetViewport();
+}
+
+const krono::Rangef& RenderStage::GetViewportDepth() const
+{
+	return mSceneView.GetDepthRange();
+}
+
 void RenderStage::SetViewMatrix(const krono::Matrix4f& value)
 {
 	mSceneView.SetViewMatrix(value);
@@ -40,6 +50,16 @@ void RenderStage::SetProjectionMatrix(const krono::Matrix4f& value)
 void RenderStage::SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget)
 {
 	mRenderTarget = renderTarget;
+}
+
+const krono::RenderTargetConfiguration& RenderStage::GetRenderTargets() const
+{
+	return mRenderTarget;
+}
+
+void RenderStage::SetCompositorName(const std::string& name)
+{
+	mCompositorName = name;
 }
 
 const std::string& RenderStage::GetCompositorName() const

@@ -18,7 +18,7 @@ SamplerLoader::~SamplerLoader(void)
 {
 }
 
-Auto<Object> SamplerLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> SamplerLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	if (!JsonDocumentLoader::IsJsonDocument(inputStream))
 	{

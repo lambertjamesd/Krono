@@ -3,6 +3,7 @@
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
+#include "Collide/BoundingBox.h"
 
 #include "Core/Types.h"
 
@@ -46,6 +47,8 @@ class MeshMath
 public:
 	// position and texCoords should each have a length of 3
 	static void CalculateTangent(const Vector3f* positions, const Vector2f* texCoords, Vector3f& tangent, Vector3f& binormal);
+
+	static BoundingBoxf CalculateBoundingBox(const AttributeArray<Vector3f>& positions, size_t vertexCount);
 
 	template <typename T>
 	static void AppendTangents(AttributeArray<Vector4f>& tangents, const AttributeArray<Vector3f>& positions, const AttributeArray<Vector2f>& texCoords, const AttributeArray<Vector3f>& normals, const T* indexArray, size_t indexCount)

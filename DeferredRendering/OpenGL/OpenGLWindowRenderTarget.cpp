@@ -16,7 +16,7 @@ namespace krono
 
 
 OpenGLWindowRenderTarget::OpenGLWindowRenderTarget(Window& window) :
-	WindowRenderTarget(window.GetSize()),
+	WindowRenderTarget(window.GetSize(), DataFormat(DataFormat::Int8UNorm, 4)),
 	mHDC(GetDC(window.GetWindowHandle()))
 {
 	PIXELFORMATDESCRIPTOR pfd;

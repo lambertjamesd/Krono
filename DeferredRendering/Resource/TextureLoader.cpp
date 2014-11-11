@@ -16,7 +16,7 @@ TextureLoader::~TextureLoader(void)
 }
 
 
-Auto<Object> TextureLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> TextureLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	if (internalName == "2D" || internalName == "")
 	{

@@ -7,4 +7,7 @@
 #include "GameObject/Camera.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionalLight.h"
+#include "Scripting/LuaBehavior.h"
+#include "Scripting/LuaScript.h"
 
+#include "Serialization/JsonSerialization.h"

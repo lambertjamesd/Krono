@@ -10,7 +10,7 @@
 namespace krono
 {
 
-class CompositeStage : public Object
+class CompositeStage : public Resource
 {
 public:
 	typedef std::shared_ptr<CompositeStage> Ptr;

@@ -1,6 +1,8 @@
 #include "PositionalLight.h"
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
+#include "GameObject/Renderer.h"
+#include "Serialization/SceneSerializer.h"
 
 using namespace krono;
 
@@ -40,5 +42,18 @@ void PositionalLight::SetColor(const Colorf& value)
 {
 	SetVariable<Colorf>("lightColor", value);
 }
+
+void PositionalLight::Serialize(SceneSerializer& serializer)
+{
+	Renderer::SerializeEntity(serializer, mEntity);
+	serializer.WriteFloat("range", mRange);
+}
+
+void PositionalLight::Deserialize(SceneDeserializer& deserializer)
+{
+	Renderer::DeserializeEntity(deserializer, mEntity);
+	mRange = deserializer.ReadFloat("range", mRange);
+}
+
 
 }

@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include <algorithm>
 #include <iostream>
+#include "Serialization/SceneSerializer.h"
 
 namespace kge
 {
@@ -102,6 +103,22 @@ const Transform::Ref& Transform::GetParent() const
 	return mParent;
 }
 
+size_t Transform::GetChildrenCount() const
+{
+	return mChildren.size();
+}
+
+const Transform& Transform::GetChild(size_t index) const
+{
+	return *mChildren[index];
+}
+
+Transform& Transform::GetChild(size_t index)
+{
+	return *mChildren[index];
+}
+
+
 const Matrix4f& Transform::GetLocalTransform() const
 {
 	if (mIsTransformDirty)
@@ -152,6 +169,24 @@ const krono::Matrix4f& Transform::GetInverseWorldTransform() const
 	}
 
 	return mInverseWorldTransform;
+}
+
+void Transform::Serialize(SceneSerializer& serializer)
+{
+	serializer.WriteVector3("position", mPosition);
+	serializer.WriteQuaternion("rotation", mOrientation);
+	serializer.WriteVector3("scale", mScale);
+	serializer.WriteComponentReference("parent", mParent);
+}
+
+void Transform::Deserialize(SceneDeserializer& deserializer)
+{
+	mPosition = deserializer.ReadVector3("position", Vector3f());
+	mOrientation = deserializer.ReadQuaternion("rotation", Quaternionf());
+	mScale = deserializer.ReadVector3("scale", Vector3f());
+	SetParent(deserializer.ReadComponentReference<Transform>("parent"));
+
+	SetIsTransformDirty();
 }
 
 void Transform::RemoveChild(Transform* child)

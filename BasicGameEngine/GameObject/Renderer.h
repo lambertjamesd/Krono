@@ -25,6 +25,12 @@ public:
 
 	const krono::Material::Ptr& GetMaterial(size_t index) const;
 	void SetMaterial(const krono::Material::Ptr& material, size_t index);
+	
+	virtual void Serialize(SceneSerializer& serializer);
+	virtual void Deserialize(SceneDeserializer& deserializer);
+
+	static void SerializeEntity(SceneSerializer& serializer, krono::Entity& entity);
+	static void DeserializeEntity(SceneDeserializer& deserializer, krono::Entity& entity);
 private:
 	krono::Entity& mEntity;
 };

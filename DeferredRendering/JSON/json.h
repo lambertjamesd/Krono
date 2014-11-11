@@ -436,6 +436,9 @@ namespace json
 			operator Object() const;
 			operator Array() const;			
 
+			Object& ObjectValue();
+			Array& ArrayValue();
+
 			// Returns 1 for anything not an Array/ObjectVal
 			size_t size() const;
 

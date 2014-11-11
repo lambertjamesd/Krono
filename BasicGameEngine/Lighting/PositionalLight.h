@@ -28,6 +28,9 @@ public:
 
 	void SetRange(float value);
 	void SetColor(const krono::Colorf& value);
+	
+	virtual void Serialize(SceneSerializer& serializer);
+	virtual void Deserialize(SceneDeserializer& deserializer);
 protected:
 	krono::Entity& mEntity;
 	float mRange;

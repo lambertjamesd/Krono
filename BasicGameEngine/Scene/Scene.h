@@ -18,6 +18,10 @@ public:
 	~Scene(void);
 
 	GameObject::Ref CreateGameObject();
+	void RemoveGameObject(GameObject& gameObject);
+
+	size_t GetGameObjectCount() const;
+	GameObject::Ref GetGameObject(size_t index) const;
 
 	RenderManager& GetRenderManager();
 	UpdateManager& GetUpdateManager();

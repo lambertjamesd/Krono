@@ -24,7 +24,7 @@ ShaderLoader::~ShaderLoader()
 
 }
 
-Auto<Object> ShaderLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> ShaderLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	std::string headerRead;
 	headerRead.resize(gHeaderString.length());

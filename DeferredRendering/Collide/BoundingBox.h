@@ -10,10 +10,16 @@ class BoundingBox
 {
 public:
 	BoundingBox(void) {};
+	BoundingBox(const Vector3<T>& minimum, const Vector3<T>& maximum) : minimum(minimum), maximum(maximum) {};
 	~BoundingBox(void) {};
 
-	Vector3<T> min;
-	Vector3<T> max;
+	BoundingBox Union(const BoundingBox& other)
+	{
+		return BoundingBox(Min(minimum, other.minimum), Max(maximum, other.maximum));
+	}
+
+	Vector3<T> minimum;
+	Vector3<T> maximum;
 };
 
 typedef BoundingBox<float> BoundingBoxf;

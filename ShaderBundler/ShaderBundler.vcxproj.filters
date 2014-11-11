@@ -306,7 +306,4 @@
     <None Include="FolderTest\IncludeMe.hlsli" />
     <None Include="FolderTest\SubInclude.hlsli" />
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Testing.hlsl" />
-  </ItemGroup>
 </Project>

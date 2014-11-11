@@ -3,7 +3,6 @@
 #include "Render/Renderable.h"
 #include "Render/RenderStage.h"
 #include "Transform.h"
-#include "Lens.h"
 #include <Krono.h>
 #include <memory>
 namespace kge
@@ -24,10 +23,20 @@ public:
 
 	void SetRenderTargets(const krono::RenderTargetConfiguration& renderTarget);
 
-	void SetLens(std::unique_ptr<Lens>& lens);
+	void SetOrthoLens(float near, float far, float height);
+	void SetPerspectiveLens(float near, float far, const krono::Degreesf& vFov);
+	
+	virtual void Serialize(SceneSerializer& serializer);
+	virtual void Deserialize(SceneDeserializer& deserializer);
 private:
 	RenderStage::Ptr mRenderStage;
-	std::unique_ptr<Lens> mLens;
+
+	bool mIsPerspective;
+	float mNearPlane;
+	float mFarPlane;
+	// this is the height for orthographic
+	// and the vertical fov in degrees for perspective
+	float mHeight;
 };
 
 }

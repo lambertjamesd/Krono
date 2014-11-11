@@ -3,6 +3,7 @@
 #include <chrono>
 #include <Krono.h>
 #include "Scene.h"
+#include "Scripting/LuaContext.h"
 
 namespace kge
 {
@@ -21,6 +22,7 @@ public:
 
 	const krono::Graphics::Ptr& GetGraphics() const;
 	const krono::ResourceManager::Ptr& GetResourceManager() const;
+	LuaContext& GetLuaContext();
 	const krono::WindowRenderTarget::Ptr& GetWindowRenderTarget() const;
 	const krono::InputState& GetInputState() const;
 private:
@@ -31,6 +33,7 @@ private:
 
 	krono::Graphics::Ptr mGraphics;
 	krono::ResourceManager::Ptr mResourceManager;
+	LuaContext mLuaContext;
 
 	Scene::Ptr mCurrentScene;
 

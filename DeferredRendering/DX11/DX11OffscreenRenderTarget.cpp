@@ -8,7 +8,7 @@ namespace krono
 {
 
 DX11OffscreenRenderTarget::DX11OffscreenRenderTarget(ID3D11Device* device, Vector2i size, DataFormat format) :
-	RenderTarget(size),
+	RenderTarget(size, format),
 	mDevice(device)
 {
 	D3D11_TEXTURE2D_DESC textureDescription;

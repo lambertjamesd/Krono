@@ -33,7 +33,7 @@ public:
 	typedef Auto<ScreenQuadCompositeStage> Ptr;
 
 	ScreenQuadCompositeStage(const Mesh::Ptr& screenMesh);
-	~ScreenQuadCompositeStage(void);
+	virtual ~ScreenQuadCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
 private:

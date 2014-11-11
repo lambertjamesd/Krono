@@ -3,15 +3,15 @@
 	
 	"techniques" : [
 		{
-			"vertexShader" : "Media/Engine/Shaders/VertexShaderTangent.shader",
-			"pixelShader" : "Media/Engine/Shaders/NormalMapped.shader",
+			"vertexShader" : "Engine/Shaders/VertexShaderTangent.shader",
+			"pixelShader" : "Engine/Shaders/NormalMapped.shader",
 			
 			"pixelStage" : {
 				"textures" : [
 					"Media/Textures/Blue.png", 
 					"Media/Textures/Black.png", 
 					"Media/Textures/NormalmapTest.jpg",
-					"Media/Engine/Textures/Noise.png"
+					"Engine/Textures/Noise.png"
 				],
 				"samplers" : [
 					{

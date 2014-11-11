@@ -10,7 +10,7 @@ class JsonDocument : public Resource
 {
 public:
 	JsonDocument(const std::string& source);
-	~JsonDocument(void);
+	virtual ~JsonDocument(void);
 
 	json::Value& GetRoot();
 	const json::Value& GetRoot() const;

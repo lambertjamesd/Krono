@@ -11,10 +11,12 @@
 namespace kge
 {
 
+class Scene;
+
 class RenderManager
 {
 public:
-	RenderManager(const krono::Graphics::Ptr& graphics);
+	RenderManager(const krono::Graphics::Ptr& graphics, Scene& gameObjectScene);
 	~RenderManager(void);
 
 	krono::Entity* CreateEntity();
@@ -25,6 +27,10 @@ public:
 
 	void SetCompositor(const std::string& name, const krono::Compositor::Ptr& compositor);
 	const krono::Compositor::Ptr& GetCompositor(const std::string& name) const;
+
+	const krono::Graphics::Ptr& GetGraphics() const;
+	
+	Scene& GetGameObjectScene();
 
 	static const std::string DefaultCompositor;
 
@@ -38,6 +44,7 @@ private:
 	krono::Graphics::Ptr mGraphics;
 	std::map<std::string, krono::Compositor::Ptr> mCompositors;
 
+	Scene& mGameObjectScene;
 	krono::Scene mScene;
 
 	std::vector<Renderable*> mRenderables;

@@ -3,10 +3,12 @@
 #include "Core/Object.h"
 #include "Core/Memory.h"
 
+#include "Resource/Resource.h"
+
 namespace krono
 {
 
-class Texture : public Object
+class Texture : public Resource
 {
 public:
 	typedef Auto<Texture> Ptr;

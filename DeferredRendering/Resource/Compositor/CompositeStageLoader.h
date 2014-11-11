@@ -13,7 +13,7 @@ public:
 	CompositeStageLoader(void);
 	~CompositeStageLoader(void);
 
-	virtual Auto<Object> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
+	virtual Auto<Resource> LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName);
 
 	static CompositeStage::Ptr ParseStage(ResourceManager& resourceManager, const json::Value& stage);
 	

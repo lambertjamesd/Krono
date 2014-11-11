@@ -6,8 +6,8 @@
 #include "ResourceLoader.h"
 #include <fstream>
 #include "LoadException.h"
-#include "GeometryCache.h"
 #include "FileHelper.h"
+#include "Mesh/Mesh.h"
 
 namespace krono
 {
@@ -60,6 +60,14 @@ public:
 		{
 			mPathStack.push_back(FileHelper::RemoveLastPathElement(path));
 			Auto<T> result = LoadResource<T>(fileInput, internalName);
+			if (internalName.length() > 0)
+			{
+				result->ResolveSource(path + "#" + internalName);
+			}
+			else
+			{
+				result->ResolveSource(path);
+			}
 			mPathStack.pop_back();
 			return result;
 		}
@@ -85,14 +93,13 @@ public:
 		}
 	}
 
-	const Mesh::Ptr& GetPlane();
-	const Mesh::Ptr& GetSphere();
+	Mesh::Ptr GetPlane();
+	Mesh::Ptr GetSphere();
 
 	Graphics* GetGraphics();
 private:
 	Graphics* mGraphics;
 	std::unordered_map<size_t, Auto<ResourceLoader> > mLoaders;
-	GeometryCache mGeometryCache;
 
 	std::vector<std::string> mPathStack;
 

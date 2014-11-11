@@ -1,5 +1,6 @@
 
 #include "Game.h"
+#include "Scripting/LuaScriptLoader.h"
 
 #include <thread>
 
@@ -26,6 +27,8 @@ void Game::Initialize(Graphics::API api, Vector2i windowSize)
 
 	mWindow->Show();
 	mWindowRenderTarget = mGraphics->CreateWindowRenderTarget(*mWindow);
+
+	mResourceManager->AddLoader<LuaScript>(ResourceLoader::Ptr(new LuaScriptLoader()));
 }
 
 void Game::MainLoop()
@@ -79,6 +82,11 @@ const krono::Graphics::Ptr& Game::GetGraphics() const
 const krono::ResourceManager::Ptr& Game::GetResourceManager() const
 {
 	return mResourceManager;
+}
+
+LuaContext& Game::GetLuaContext()
+{
+	return mLuaContext;
 }
 
 const krono::WindowRenderTarget::Ptr& Game::GetWindowRenderTarget() const

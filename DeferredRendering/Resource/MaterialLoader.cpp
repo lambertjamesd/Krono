@@ -18,7 +18,7 @@ MaterialLoader::~MaterialLoader(void)
 {
 }
 
-Auto<Object> MaterialLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
+Auto<Resource> MaterialLoader::LoadResource(ResourceManager& resourceManager, std::istream& inputStream, const std::string& internalName)
 {
 	if (!JsonDocumentLoader::IsJsonDocument(inputStream))
 	{

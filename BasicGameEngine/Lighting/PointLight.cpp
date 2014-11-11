@@ -11,7 +11,7 @@ PointLight::PointLight(GameObject& parentGameObject) :
 	PositionalLight(parentGameObject)
 {
 	mEntity.SetMesh(GetResourceManager().GetSphere());
-	mEntity.SetMaterial(GetResourceManager().LoadResource<Material>("Media/Engine/Lights/PointLightMaterial.json"), 0);
+	mEntity.SetMaterial(GetResourceManager().LoadResource<Material>("Engine/Lights/PointLightMaterial.json"), 0);
 	SetVariable("lightColor", Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 }
 

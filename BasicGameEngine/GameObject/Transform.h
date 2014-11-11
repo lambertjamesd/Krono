@@ -26,10 +26,17 @@ public:
 	void SetParent(const Transform::Ref& value);
 	const Transform::Ref& GetParent() const;
 
+	size_t GetChildrenCount() const;
+	const Transform& GetChild(size_t index) const;
+	Transform& GetChild(size_t index);
+
 	const krono::Matrix4f& GetLocalTransform() const;
 	const krono::Matrix4f& GetInverseLocalTransform() const;
 	const krono::Matrix4f& GetWorldTransform() const;
 	const krono::Matrix4f& GetInverseWorldTransform() const;
+	
+	virtual void Serialize(SceneSerializer& serializer);
+	virtual void Deserialize(SceneDeserializer& deserializer);
 private:
 	void RemoveChild(Transform* child);
 	void AddChild(Transform* child);
