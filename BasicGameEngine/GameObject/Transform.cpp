@@ -38,34 +38,34 @@ Transform::~Transform(void)
 	ClearParent();
 }
 
-const Quaternionf& Transform::GetLocalOrientation() const
+Quaternionf Transform::GetLocalOrientation() const
 {
 	return mOrientation;
 }
 
-const Vector3f& Transform::GetLocalPosition() const
+Vector3f Transform::GetLocalPosition() const
 {
 	return mPosition;
 }
 
-const Vector3f& Transform::GetLocalScale() const
+Vector3f Transform::GetLocalScale() const
 {
 	return mScale;
 }
 
-void Transform::SetLocalOrientation(const Quaternionf& value)
+void Transform::SetLocalOrientation(Quaternionf value)
 {
 	mOrientation = value;
 	SetIsTransformDirty();
 }
 
-void Transform::SetLocalPosition(const Vector3f& value)
+void Transform::SetLocalPosition(Vector3f value)
 {
 	mPosition = value;
 	SetIsTransformDirty();
 }
 
-void Transform::SetLocalScale(const Vector3f& value)
+void Transform::SetLocalScale(Vector3f value)
 {
 	mScale = value;
 	SetIsTransformDirty();

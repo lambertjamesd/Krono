@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LuaContext.h"
+#include "GameObject/Transform.h"
 
 #define LUA_WEAK_REF_NAME		"WeakRef"
 #define LUA_SHARED_PTR_NAME		"SharedPtr"
@@ -30,15 +31,11 @@ private:
 	static int BuildKGEModule(lua_State* state);
 
 	static void BuildGameObjectClass(LuaContext& context);
-	static int GameObjectTransformGetter(lua_State* state);
-	static int GameObjectDestroy(lua_State* state);
 
 	static void BuildComponentClass(LuaContext& context);
 	static int ComponentGameObjectGetter(lua_State* state);
 
 	static void BuildTransformClass(LuaContext& context);
-	static int TransformLocalPositionGetter(lua_State* state);
-	static int TransformLocalPositionSetter(lua_State* state);
 	
 	static void BuildBehaviorClass(LuaContext& context);
 

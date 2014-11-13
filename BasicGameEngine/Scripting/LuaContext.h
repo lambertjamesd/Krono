@@ -1,12 +1,18 @@
 #pragma once
 
-#include "Lua/lua.hpp"
+#include "Lua.h"
+#include "LuaFunctionBase.h"
 #include "LuaScript.h"
 #include <string>
 #include <map>
 #include <Krono.h>
 #include <cassert>
 #include <unordered_map>
+#include <tuple>
+
+#include "GameObject/Transform.h"
+
+#include "LuaFunctionBase.h"
 
 namespace kge
 {
@@ -20,13 +26,113 @@ struct LuaWeakRefUserData
 	void* ptr;
 };
 
+class LuaErrorException : public krono::Exception
+{
+public:
+	LuaErrorException(const std::string& message);
+private:
+};
+
+class LuaMethodNotFoundException : public krono::Exception
+{
+public:
+	LuaMethodNotFoundException(const std::string& message);
+};
+
+class LuaFunctionCall
+{
+public:
+	template <typename ReturnType, typename... Args>
+	static ReturnType CallMethod(lua_State* state, const char* methodName, Args&&... parameters)
+	{
+		return Call<ReturnType, Args&&...>(state, methodName, false, parameters...);
+	}
+	
+	template <typename ReturnType, typename... Args>
+	static ReturnType CallStaticMethod(lua_State* state, const char* methodName, Args&&... parameters)
+	{
+		return Call<ReturnType, Args&&...>(state, methodName, true, parameters...);
+	}
+private:
+	template <typename ReturnType>
+	static ReturnType Return(lua_State* state)
+	{
+		ReturnType result = LuaCppConvert::ConvertToCpp<ReturnType>(state, -1);
+		lua_pop(state, 1);
+		return result;
+	}
+
+	template <>
+	static void Return(lua_State* state)
+	{
+
+	}
+
+	static void Pass(lua_State* state)
+	{
+
+	}
+
+	template<typename First, typename... Remaining>
+	static void Pass(lua_State* state, const First& first, Remaining&&... parameters)
+	{
+		LuaCppConvert::ConvertToLua(state, first);
+		Pass(state, parameters...);
+	}
+
+	template <typename ReturnType, typename... Args>
+	static ReturnType Call(lua_State* state, const char* methodName, bool isStatic, Args&&... parameters)
+	{
+		lua_getfield(state, -1, methodName);
+
+		int parameterCount = sizeof...(Args);
+		
+		if (!isStatic)
+		{
+			lua_pushvalue(state, -2);
+			++parameterCount;
+		}
+
+		Pass(state, parameters...);
+
+		int callResult = lua_pcall(state, parameterCount, LuaCppConvert::ReturnTypeCount<ReturnType>::Value, 0);
+		
+		if (callResult != 0)
+		{
+			std::string message("Error running method ");
+			message += methodName;
+			message += ": ";
+			message += lua_tostring(state, -1);
+			lua_pop(state, 1);
+			
+			throw LuaErrorException(message);
+		}
+
+		return Return<ReturnType>(state);
+	}
+};
+
 class LuaContext
 {
 public:
 	LuaContext(void);
 	~LuaContext(void);
 
+	bool Require(const char* moduleName);
+
 	lua_State* GetState();
+	
+	template <typename ReturnType, typename... Args>
+	ReturnType CallMethod(const char* methodName, Args&&... parameters)
+	{
+		return LuaFunctionCall::CallMethod<ReturnType>(mLuaState, methodName, parameters...);
+	}
+	
+	template <typename ReturnType, typename... Args>
+	ReturnType CallStaticMethod(const char* methodName, Args&&... parameters)
+	{
+		return LuaFunctionCall::CallStaticMethod<ReturnType>(mLuaState, methodName, parameters...);
+	}
 
 	template<typename T>
 	void BeginUserDataClass(const std::string& name, const std::string& baseClass)
@@ -40,6 +146,11 @@ public:
 	void AddMethod(const std::string& name, lua_CFunction method);
 	void AddProperty(const std::string& name, lua_CFunction getter, lua_CFunction setter);
 	void AddMetaMethod(const std::string& name, lua_CFunction method);
+	
+	void SetMethod(const std::string& name);
+	void SetGetter(const std::string& name);
+	void SetSetter(const std::string& name);
+
 	void EndClass();
 
 	static int PositiveIndex(lua_State* state, int index);
@@ -70,6 +181,8 @@ public:
 	size_t PushPointer(const krono::Object::Ptr& value, const std::string& luaClassName);
 	void PushExistingPointer(size_t id);
 
+	static bool IsWeakPointer(lua_State* state, int index);
+
 	template <typename T>
 	static std::shared_ptr<T> GetPointer(lua_State* state, int index)
 	{
@@ -97,7 +210,8 @@ public:
 			return PushReference(value, "");
 		}
 	}
-
+	
+	size_t PushReference(const krono::Object::Ref& value);
 	size_t PushReference(const krono::Object::Ref& value, const std::string& luaClassName);
 	void PushExistingReference(size_t id);
 
@@ -122,6 +236,43 @@ public:
 	static int SharedPtrGC(lua_State* state);
 
 	static void GetKGEField(lua_State* state, const char* fieldName);
+	
+	template <typename ReturnType, typename... Args>
+	void PushCFunction(ReturnType(*function)(Args...))
+	{
+		std::unique_ptr<LuaFunctionBase> functionBase(new LuaCFunction<ReturnType, Args...>(function));
+
+		lua_pushlightuserdata(mLuaState, (void*)static_cast<LuaFunctionBase*>(functionBase.get()));
+		lua_pushcclosure(mLuaState, &LuaCallFunctionBase, 1);
+
+		mBoundFunctions.push_back(move(functionBase));
+	}
+
+	template <typename ReturnType, typename ClassName, typename... Args>
+	void PushClassMethod(ReturnType(ClassName::*function)(Args...))
+	{
+		std::unique_ptr<LuaFunctionBase> functionBase(new LuaMethodFunction<ReturnType, ClassName, Args...>(function));
+
+		lua_pushlightuserdata(mLuaState, (void*)static_cast<LuaFunctionBase*>(functionBase.get()));
+		lua_pushcclosure(mLuaState, &LuaCallFunctionBase, 1);
+
+		mBoundFunctions.push_back(move(functionBase));
+	}
+
+	template <typename ReturnType, typename ClassName, typename... Args>
+	void PushClassMethod(ReturnType(ClassName::*function)(Args...) const)
+	{
+		std::unique_ptr<LuaFunctionBase> functionBase(new LuaConstMethodFunction<ReturnType, ClassName, Args...>(function));
+
+		lua_pushlightuserdata(mLuaState, (void*)static_cast<LuaFunctionBase*>(functionBase.get()));
+		lua_pushcclosure(mLuaState, &LuaCallFunctionBase, 1);
+
+		mBoundFunctions.push_back(move(functionBase));
+	}
+
+	void ConnectDebugger(const char* host = "localhost", unsigned short port = 8172);
+	void PauseDebugger();
+	void ResumeDebugger();
 private:
 	void RemovePointerIndex(void* pointer);
 
@@ -135,7 +286,11 @@ private:
 	std::unordered_map<void*, size_t> mPointerIDMapping;
 	size_t mCurrentObjectID;
 
-	void AddFunctionToTable(const std::string& name, lua_CFunction method, lua_Integer table);
+	std::vector<std::unique_ptr<LuaFunctionBase> > mBoundFunctions;
+
+	static int LuaCallFunctionBase(lua_State* state);
+
+	void SetInTable(const std::string& name, lua_Integer table);
 	static void GetFunctionFromTable(lua_State* state, int keyIndex, lua_Integer table);
 
 	static int LuaObjectIndexMethod(lua_State* state);
@@ -144,6 +299,10 @@ private:
 	static const lua_Integer MethodTableIndex;
 	static const lua_Integer GetterTableIndex;
 	static const lua_Integer SetterTableIndex;
+
+	bool mDebuggerLoaded;
+	bool mDebuggerConnected;
+	bool mDebuggerEnabled;
 };
 
 #define OBJECT_REFERENCE_KEY	"_kge_obj"

@@ -10,6 +10,18 @@ using namespace krono;
 namespace kge
 {
 
+LuaErrorException::LuaErrorException(const std::string& message) :
+	Exception(message)
+{
+
+}
+
+LuaMethodNotFoundException::LuaMethodNotFoundException(const std::string& message) :
+	Exception(message)
+{
+
+}
+
 LuaWeakRefUserData::LuaWeakRefUserData(const Object::Ref& ref, void* ptr) :
 	ref(ref),
 	ptr(ptr)
@@ -23,19 +35,40 @@ LuaWeakRefUserData::~LuaWeakRefUserData()
 }
 
 LuaContext::LuaContext(void) :
-	mCurrentObjectID(0x100) // don't start at 1 to make lua tables use the hash index
+	mCurrentObjectID(0x100), // don't start at 1 to make lua tables use the hash index,
+	mDebuggerLoaded(false),
+	mDebuggerConnected(false),
+	mDebuggerEnabled(false)
 {
 	mLuaState = luaL_newstate();
 	luaL_openlibs(mLuaState);
-
+	
+	// save context
 	lua_pushlightuserdata(mLuaState, this);
 	lua_setglobal(mLuaState, CONTEXT_KEY);
 
+	// add engine lua pakcage path
 	lua_getglobal(mLuaState, "package");
 	lua_getfield(mLuaState, -1, "path");
 	lua_pushliteral(mLuaState, LUA_MODULE_ENGINE_PATH);
 	lua_concat(mLuaState, 2);
 	lua_setfield(mLuaState, -2, "path");
+
+	lua_pop(mLuaState, 1);
+
+	Require("jit");
+	
+	// import debugger
+	if (Require("mobdebug"))
+	{
+		lua_getfield(mLuaState, LUA_REGISTRYINDEX, "mobdebug");
+		lua_getfield(mLuaState, -1, "coro");
+		lua_call(mLuaState, 0, 0);
+		lua_pop(mLuaState, 1);
+
+		mDebuggerLoaded = true;
+		ConnectDebugger();
+	}
 
 	LuaFunctionBinding::BuildContext(*this);
 }
@@ -44,6 +77,27 @@ LuaContext::LuaContext(void) :
 LuaContext::~LuaContext(void)
 {
 	lua_close(mLuaState);
+}
+
+bool LuaContext::Require(const char* moduleName)
+{
+	// import debugger
+	lua_getglobal(mLuaState, "require");
+	lua_pushstring(mLuaState, moduleName);
+	int requireResult = lua_pcall(mLuaState, 1, 1, 0);
+
+	if (requireResult != 0)
+	{
+		// import failed
+		std::cerr << lua_tostring(mLuaState, -1) << std::endl;
+		lua_pop(mLuaState, 1);
+		return false;
+	}
+	else
+	{
+		lua_setfield(mLuaState, LUA_REGISTRYINDEX, moduleName);
+		return true;
+	}
 }
 
 lua_State* LuaContext::GetState()
@@ -104,6 +158,14 @@ void LuaContext::BeginClass(const std::string& name, const std::string& baseClas
 	// set base class
 	lua_rawset(mLuaState, -3);
 
+	// add bass class to method index
+	lua_pushinteger(mLuaState, MethodTableIndex);
+	lua_rawget(mLuaState, -2);
+	lua_pushliteral(mLuaState, "base");
+	lua_pushvalue(mLuaState, -4);
+	lua_rawset(mLuaState, -3);
+	lua_pop(mLuaState, 1);
+
 	// remove base class
 	lua_remove(mLuaState, -2);
 	
@@ -115,13 +177,38 @@ void LuaContext::BeginClass(const std::string& name, const std::string& baseClas
 
 void LuaContext::AddMethod(const std::string& name, lua_CFunction method)
 {
-	AddFunctionToTable(name, method, MethodTableIndex);
+	lua_pushcfunction(mLuaState, method);
+	SetMethod(name);
 }
 
 void LuaContext::AddProperty(const std::string& name, lua_CFunction getter, lua_CFunction setter)
 {
-	AddFunctionToTable(name, getter, GetterTableIndex);
-	AddFunctionToTable(name, setter, SetterTableIndex);
+	if (getter != NULL)
+	{
+		lua_pushcfunction(mLuaState, getter);
+		SetGetter(name);
+	}
+
+	if (setter != NULL)
+	{
+		lua_pushcfunction(mLuaState, setter);
+		SetSetter(name);
+	}
+}
+
+void LuaContext::SetMethod(const std::string& name)
+{
+	SetInTable(name, MethodTableIndex);
+}
+
+void LuaContext::SetGetter(const std::string& name)
+{
+	SetInTable(name, GetterTableIndex);
+}
+
+void LuaContext::SetSetter(const std::string& name)
+{
+	SetInTable(name, SetterTableIndex);
 }
 
 void LuaContext::AddMetaMethod(const std::string& name, lua_CFunction method)
@@ -131,22 +218,30 @@ void LuaContext::AddMetaMethod(const std::string& name, lua_CFunction method)
 	lua_rawset(mLuaState, -3);
 }
 
-void LuaContext::AddFunctionToTable(const std::string& name, lua_CFunction method, lua_Integer table)
+int LuaContext::LuaCallFunctionBase(lua_State* state)
 {
-	if (table != NULL)
-	{
-		assert(lua_istable(mLuaState, -1));
-		// put the table on the top of the stack
-		lua_pushinteger(mLuaState, table);
-		lua_rawget(mLuaState, -2);
-		// set the method in the table
-		lua_pushstring(mLuaState, name.c_str());
-		lua_pushcfunction(mLuaState, method);
-		lua_rawset(mLuaState, -3);
+	LuaFunctionBase* fn = (LuaFunctionBase*)lua_touserdata(state, lua_upvalueindex(1));
+	return fn->Apply(state);
+}
 
-		// restore the stack
-		lua_pop(mLuaState, 1);
-	}
+void LuaContext::SetInTable(const std::string& name, lua_Integer table)
+{
+	// stack = class | setter
+	// get the table
+	lua_pushnumber(mLuaState, table);
+	lua_rawget(mLuaState, -3);
+
+	// write the key
+	lua_pushstring(mLuaState, name.c_str());
+	
+	// stack = class | setter | setterTable | setterName
+
+	// copy the setter
+	lua_pushvalue(mLuaState, -3);
+	lua_rawset(mLuaState, -3);
+
+	// remove setterTable and setter
+	lua_pop(mLuaState, 2);
 }
 
 void LuaContext::GetFunctionFromTable(lua_State* state, int keyIndex, lua_Integer table)
@@ -356,6 +451,18 @@ void LuaContext::PushExistingPointer(size_t id)
 	lua_remove(mLuaState, -2);
 }
 
+bool LuaContext::IsWeakPointer(lua_State* state, int index)
+{
+	assert(lua_istable(state, index));
+	index = PositiveIndex(state, index);
+	lua_pushliteral(state, OBJECT_REFERENCE_KEY);
+	lua_gettable(state, index);
+	lua_getfield(state, -1, "isWeak");
+	bool result = lua_toboolean(state, -1) != 0;
+	lua_pop(state, 2);
+	return result;
+}
+
 krono::Object::Ptr LuaContext::GetPointer(lua_State* state, int index)
 {
 	assert(lua_istable(state, index));
@@ -391,6 +498,20 @@ krono::Object::Ptr LuaContext::ToPointer(lua_State* state, int index)
 	return *(Object::Ptr*)lua_touserdata(state, -1);
 }
 
+size_t LuaContext::PushReference(const krono::Object::Ref& value)
+{
+	// set the meta table
+	auto luaClassName = mTypeMapping.find(typeid(*value.lock().get()).hash_code());
+
+	if (luaClassName != mTypeMapping.end())
+	{
+		return PushReference(value, luaClassName->second);
+	}
+	else
+	{
+		return PushReference(value, "");
+	}
+}
 
 size_t LuaContext::PushReference(const Object::Ref& value, const std::string& luaClassName)
 {
@@ -524,6 +645,61 @@ void LuaContext::GetKGEField(lua_State* state, const char* fieldName)
 	lua_remove(state, -2);
 }
 
+void LuaContext::ConnectDebugger(const char* host, unsigned short port)
+{
+	if (mDebuggerLoaded)
+	{
+		lua_getfield(mLuaState, LUA_REGISTRYINDEX, "mobdebug");
+	
+		lua_getfield(mLuaState, -1, "start");
+		lua_pushstring(mLuaState, host);
+		lua_pushnumber(mLuaState, port);
+		int result = lua_pcall(mLuaState, 2, 0, 0);
+
+		if (result != 0)
+		{
+			std::cerr << lua_tostring(mLuaState, -1) << std::endl;
+			lua_pop(mLuaState, 1);
+		}
+		else
+		{
+			mDebuggerConnected = true;
+		}
+
+		lua_pop(mLuaState, 1);
+	}
+}
+
+void LuaContext::PauseDebugger()
+{
+	if (mDebuggerLoaded && mDebuggerConnected)
+	{
+		lua_getfield(mLuaState, LUA_REGISTRYINDEX, "mobdebug");
+	
+		lua_getfield(mLuaState, -1, "off");
+		lua_call(mLuaState, 0, 0);
+
+		lua_pop(mLuaState, 1);
+
+		mDebuggerConnected = true;
+	}
+}
+
+void LuaContext::ResumeDebugger()
+{
+	if (mDebuggerLoaded && mDebuggerConnected)
+	{
+		lua_getfield(mLuaState, LUA_REGISTRYINDEX, "mobdebug");
+	
+		lua_getfield(mLuaState, -1, "on");
+		lua_call(mLuaState, 0, 0);
+
+		lua_pop(mLuaState, 1);
+
+		mDebuggerConnected = true;
+	}
+}
+
 void LuaContext::RemovePointerIndex(void* pointer)
 {
 	mPointerIDMapping.erase(pointer);
@@ -540,11 +716,6 @@ int LuaContext::LuaObjectIndexMethod(lua_State* state)
 		// stack = table | key | metatable | function
 		if (!lua_isnil(state, -1))
 		{
-			// move function over the table
-			lua_copy(state, -1, -4);
-			// remove key, metatable, and function
-			lua_pop(state, 3);
-			// return function
 			return 1;
 		}
 
@@ -608,10 +779,12 @@ int LuaContext::LuaObjectNewIndexMethod(lua_State* state)
 		{
 			// move the setter into the top of the stack
 			lua_insert(state, -5);
-			// move value to be set into the second parameter
-			lua_copy(state, -2, -3);
-			// pop the second value, metatable
-			lua_pop(state, 2);
+			// remove the metatable
+			lua_pop(state, 1);
+			// remove the key
+			lua_remove(state, -2);
+
+			// stack = setter | table | value
 
 			lua_call(state, 2, 0);
 			return 0;

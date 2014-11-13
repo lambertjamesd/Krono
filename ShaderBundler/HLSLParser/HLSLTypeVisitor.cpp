@@ -177,7 +177,7 @@ bool HLSLTypeStorage::IsDefinedInScope(const std::string& name)
 
 HLSLTypeStorage::TypeSource HLSLTypeStorage::GetTypeSource(const std::string& name) const
 {
-	for (size_t i = mCurrentScope.size() - 1; i < mCurrentScope.size(); --i)
+	for (int i = (int)mCurrentScope.size() - 1; i >= 0; --i)
 	{
 		auto findResult = mCurrentScope[i].find(name);
 

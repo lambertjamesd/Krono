@@ -27,17 +27,14 @@ void LuaBehavior::Update(float deltaTime)
 	{
 		mContext.PushExistingReference(mObjectID);
 		lua_State* state = mContext.GetState();
-		lua_pushliteral(state, "Update");
-		lua_gettable(state, -2);
 
-		lua_pushvalue(state, -2);
-		lua_pushnumber(state, deltaTime);
-		int result = lua_pcall(state, 2, 0, 0);
-
-		if (result != 0)
+		try
 		{
-			std::cerr << "Error running script: " << lua_tostring(state, -1) << std::endl;
-			lua_pop(state, 1);
+			mContext.CallMethod<void>("Update", deltaTime);
+		}
+		catch (LuaErrorException& luaError)
+		{
+			std::cerr << luaError.what() << std::endl;
 		}
 
 		// pop the script object

@@ -8,6 +8,10 @@ local util = require("util")
 
 kge.Vector3 = require("kge.Vector3")
 
+kge.LuaBehavior[2]["transform"] = function (self)
+  return self.gameObject.transform
+end
+
 kge.behaviors = {}
 
 function kge.NewBehavior(className, baseClassName, methods)

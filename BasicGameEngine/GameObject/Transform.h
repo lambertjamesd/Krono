@@ -14,13 +14,13 @@ public:
 	Transform(GameObject& parentGameObject);
 	~Transform(void);
 
-	const krono::Quaternionf& GetLocalOrientation() const;
-	const krono::Vector3f& GetLocalPosition() const;
-	const krono::Vector3f& GetLocalScale() const;
+	krono::Quaternionf GetLocalOrientation() const;
+	krono::Vector3f GetLocalPosition() const;
+	krono::Vector3f GetLocalScale() const;
 
-	void SetLocalOrientation(const krono::Quaternionf& value);
-	void SetLocalPosition(const krono::Vector3f& value);
-	void SetLocalScale(const krono::Vector3f& value);
+	void SetLocalOrientation(krono::Quaternionf value);
+	void SetLocalPosition(krono::Vector3f value);
+	void SetLocalScale(krono::Vector3f value);
 
 	void ClearParent();
 	void SetParent(const Transform::Ref& value);

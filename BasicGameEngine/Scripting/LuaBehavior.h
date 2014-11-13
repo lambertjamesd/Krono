@@ -23,6 +23,7 @@ public:
 	virtual void Serialize(SceneSerializer& serializer);
 	virtual void Deserialize(SceneDeserializer& deserializer);
 private:
+
 	LuaContext& mContext;
 	std::string mLuaClassName;
 	size_t mObjectID;

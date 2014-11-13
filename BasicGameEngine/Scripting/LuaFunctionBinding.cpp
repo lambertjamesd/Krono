@@ -19,6 +19,8 @@ void LuaFunctionBinding::BuildContext(LuaContext& context)
 	lua_pushliteral(state, KGE_CPP_MODUlE_NAME);
 	lua_pushcfunction(state, BuildKGEModule);
 	lua_rawset(state, -3);
+
+	lua_pop(state, 2);
 }
 
 int LuaFunctionBinding::BuildKGEModule(lua_State* state)
@@ -53,26 +55,12 @@ int LuaFunctionBinding::BuildKGEModule(lua_State* state)
 void LuaFunctionBinding::BuildGameObjectClass(LuaContext& context)
 {
 	context.BeginUserDataClass<GameObject>(LUA_GAME_OBJECT_NAME, LuaContext::NoBaseClass);
-	context.AddProperty("transform", GameObjectTransformGetter, NULL);
-	context.AddMethod("Destroy", GameObjectDestroy);
+	context.PushClassMethod(&GameObject::GetComponent<Transform>);
+	context.SetGetter("transform");
+	context.PushClassMethod(&GameObject::Destroy);
+	context.SetMethod("Destroy");
+
 	context.EndClass();
-}
-
-int LuaFunctionBinding::GameObjectTransformGetter(lua_State* state)
-{
-	LuaContext* context = LuaContext::ContextFromState(state);
-	GameObject::Ptr gameObjectPointer = LuaContext::GetReferencePtr<GameObject>(state, -1);
-	Object::Ref transformRef = gameObjectPointer->GetTransform();
-	context->PushReference<Transform>(transformRef);
-	return 1;
-}
-
-int LuaFunctionBinding::GameObjectDestroy(lua_State* state)
-{
-	LuaContext* context = LuaContext::ContextFromState(state);
-	GameObject::Ptr gameObjectPointer = LuaContext::GetReferencePtr<GameObject>(state, -1);
-	gameObjectPointer->Destroy();
-	return 0;
 }
 
 void LuaFunctionBinding::BuildComponentClass(LuaContext& context)
@@ -95,24 +83,28 @@ int LuaFunctionBinding::ComponentGameObjectGetter(lua_State* state)
 void LuaFunctionBinding::BuildTransformClass(LuaContext& context)
 {
 	context.BeginUserDataClass<Transform>(LUA_TRANSFORM_NAME, LUA_COMPONENT_NAME);
-	context.AddProperty("localPosition", TransformLocalPositionGetter, TransformLocalPositionSetter);
+
+	context.PushClassMethod(&Transform::GetLocalPosition);
+	context.SetGetter("localPosition");
+	context.PushClassMethod(&Transform::SetLocalPosition);
+	context.SetSetter("localPosition");
+
+	context.PushClassMethod(&Transform::GetLocalOrientation);
+	context.SetGetter("localRotation");
+	context.PushClassMethod(&Transform::SetLocalOrientation);
+	context.SetSetter("localRotation");
+
+	context.PushClassMethod(&Transform::GetLocalScale);
+	context.SetGetter("localScale");
+	context.PushClassMethod(&Transform::SetLocalScale);
+	context.SetSetter("localScale");
+	
+	context.PushClassMethod(&Transform::GetParent);
+	context.SetGetter("parent");
+	context.PushClassMethod(&Transform::SetParent);
+	context.SetSetter("parent");
+
 	context.EndClass();
-}
-
-int LuaFunctionBinding::TransformLocalPositionGetter(lua_State* state)
-{
-	Transform::Ptr transformPointer = LuaContext::GetReferencePtr<Transform>(state, -1);
-	lua_pop(state, 1);
-	LuaContext::PushVector3(state, transformPointer->GetLocalPosition());
-	return 1;
-}
-
-int LuaFunctionBinding::TransformLocalPositionSetter(lua_State* state)
-{
-	Transform::Ptr transformPointer = LuaContext::GetReferencePtr<Transform>(state, -2);
-	transformPointer->SetLocalPosition(LuaContext::ToVector3(state, -1));
-	lua_pop(state, 2);
-	return 0;
 }
 
 void LuaFunctionBinding::BuildBehaviorClass(LuaContext& context)
@@ -128,6 +120,10 @@ void LuaFunctionBinding::BuildWeakReferenceClass(LuaContext& context)
 	context.BeginClass(LUA_WEAK_REF_NAME, LuaContext::NoBaseClass);
 	context.AddMetaMethod("__gc", LuaContext::WeakReferenceGC);
 	context.AddProperty("isExpired", WeakReferenceIsExpired, NULL);
+
+	lua_pushboolean(context.GetState(), true);
+	context.SetMethod("isWeak");
+
 	context.EndClass();
 }
 
@@ -146,6 +142,10 @@ void LuaFunctionBinding::BuildSharedPtrClass(LuaContext& context)
 	context.AddMetaMethod("__gc", LuaContext::SharedPtrGC);
 	context.AddProperty("isExpired", SharedPtrIsExpired, NULL);
 	context.AddProperty("isUnique", SharedPtrIsUnique, NULL);
+	
+	lua_pushboolean(context.GetState(), false);
+	context.SetMethod("isWeak");
+
 	context.EndClass();
 }
 
