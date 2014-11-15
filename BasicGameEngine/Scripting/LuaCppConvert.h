@@ -9,6 +9,14 @@ namespace kge
 
 namespace LuaCppConvert
 {
+	// when ReturnToStack is used a return type,
+	// the result of a function all is kept on the
+	// lua stack
+	struct ReturnToStack
+	{
+
+	};
+
 	struct Pass {
 		template<typename ...T> Pass(T...) {}
 	};
@@ -36,6 +44,9 @@ namespace LuaCppConvert
 	
 	template <>
 	krono::Quaternionf ConvertToCpp(lua_State* state, int index);
+	
+	template <>
+	ReturnToStack ConvertToCpp(lua_State* state, int index);
 
 	void ConvertToLua(lua_State* state, const float& value);
 	void ConvertToLua(lua_State* state, const double& value);
@@ -43,6 +54,7 @@ namespace LuaCppConvert
 	void ConvertToLua(lua_State* state, const krono::Quaternionf& value);
 	void ConvertToLua(lua_State* state, const krono::Vector3f& value);
 	void ConvertToLua(lua_State* state, const krono::Object::Ref& ptr);
+	void ConvertToLua(lua_State* state, const std::string& string);
 
 	template <typename T>
 	void ConvertToLua(lua_State* state, const std::shared_ptr<T>& ptr)

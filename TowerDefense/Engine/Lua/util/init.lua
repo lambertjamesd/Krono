@@ -36,11 +36,11 @@ function table.tostring( tbl )
 	return "{" .. table.concat( result, "," ) .. "}"
 end
 
-function util.DeepCopy(value)
+function util.ShallowCopy(value)
 	if type(value) == "table" then
 		local result = {}
 		for key, value in pairs(value) do
-			result[key] = util.DeepCopy(value)
+			result[key] = value
 		end
 		return result
 	else
@@ -48,13 +48,39 @@ function util.DeepCopy(value)
 	end
 end
 
-function util.Merge(targetTable, sourceTable)
+function util.DeepCopy(value, copyCache)
+  copyCache = copyCache or {}
+  
+  
+	if type(value) == "table" then
+    if copyCache[value] then
+      return copyCache[value]
+    end
+    
+		local result = {}
+    copyCache[result] = result
+		for key, value in pairs(value) do
+			result[key] = util.DeepCopy(value, copyCache)
+		end
+		return result
+	else
+		return value
+	end
+end
+
+function util.Merge(targetTable, sourceTable, alreadyMerged)
+  local copyCache = {}
+  alreadyMerged = alreadyMerged or {}
+  alreadyMerged[sourceTable] = true
+  
 	for key, value in pairs(sourceTable) do
 		if targetTable[key] == nil or type(targetTable[key]) ~= type(value) then
-			targetTable[key] = util.DeepCopy(value)
+			targetTable[key] = util.DeepCopy(value, copyCache)
 		else
 			if type(value) == "table" then
-				util.Merge(targetTable[key], value)
+        if not alreadyMerged[value] then
+          util.Merge(targetTable[key], value, alreadyMerged)
+        end
 			else
 				targetTable[key] = value
 			end

@@ -8,37 +8,157 @@ local util = require("util")
 
 kge.Vector3 = require("kge.Vector3")
 
-kge.LuaBehavior[2]["transform"] = function (self)
+kge.LuaBehavior.transform = {__kge_isprop = true}
+
+function kge.LuaBehavior.transform.get(self)
   return self.gameObject.transform
 end
 
-kge.behaviors = {}
+local classSources = {}
+local loadedClasses = {}
+local loadedEnvironments = {}
+local includeStack = {}
+local classDependencies = {}
 
-function kge.NewBehavior(className, baseClassName, methods)
-	local class = kge.behaviors[className] or {}
-	
-	for key in pairs(class) do
-		class[key] = nil
-	end
-	
-	local baseClass = kge.behaviors[baseClassName]
-	
-	if baseClass == nil then
-		baseClass = kge.LuaBehavior
-	end
+local function MapClass(className, chunkLoader)
+  classSources[className] = chunkLoader
+end
 
-	util.Merge(class, baseClass)
-	
-	for methodName, method in pairs(methods or {}) do
-		if type(method) == "table" and (method.get or method.set) then
-			class[2][methodName] = method.get
-			class[3][methodName] = method.set
-		else
-			class[1][methodName] = method
-		end
-	end
-	
-	kge.behaviors[className] = class
+function kge.MapClassToSource(className, source)
+  MapClass(className, function()
+      return loadstring(source, className)
+  end)
+end
+
+function kge.MapClassToPath(className, filename)
+  MapClass(className, function ()
+      return loadfile(filename)
+  end)
+end
+
+function kge.DefineClass(cleanedUpClass, className, classEnvironment)
+  loadedEnvironments[className] = classEnvironment
+  
+  -- copy over values that aren't in the global scope
+  for key, value in pairs(classEnvironment) do
+    if _G[key] ~= value then
+      cleanedUpClass[key] = value
+    end
+  end
+  
+  cleanedUpClass.className = className
+  
+  if cleanedUpClass.base then
+    cleanedUpClass.__index = cleanedUpClass.base.__index
+    cleanedUpClass.__newindex = cleanedUpClass.base.__newindex
+  end
+  
+  return cleanedUpClass
+end
+
+function kge.Extends(className, classEnvironment)
+  local baseClass = nil;
+  
+  if type(className) == "string" then
+    for _, includedClass in pairs(includeStack) do
+      if includedClass == className then
+        error("Circular class dependency detected: " .. table.concat(includeStack, " => ") .. " => " .. className)
+      end
+    end
+    -- setup class dependencies
+    classDependencies[includeStack[#includeStack]] = className
+    
+    baseClass = kge.RequireClass(className)
+  elseif type(className) == "table" then
+    baseClass = className
+  else
+    error("Invalid base class type")
+  end
+  
+  util.Merge(classEnvironment, baseClass)
+  classEnvironment.base = baseClass
+  
+  return baseClass
+end
+
+local sandboxWhitelist = {
+  "assert",
+  "collectgarbage",
+  "dofile",
+  "error",
+  "getfenv",
+  "getmetatable",
+  "ipairs",
+  "load",
+  "loadfile",
+  "loadstring",
+  "module",
+  "next",
+  "pairs",
+  "pcall",
+  "print",
+  "rawequal",
+  "rawget",
+  "rawset",
+  "require",
+  "select",
+  "setfenv",
+  "setmetatable",
+  "tonumber",
+  "tostring",
+  "type",
+  "unpack",
+  "xpcall",
+  "_VERSION"
+  }
+
+function kge.RequireClass(className)
+  table.insert(includeStack, className)
+  local result = kge.Using(className)
+  table.remove(includeStack)
+  return result;
+end
+
+function kge.Using(className)
+  if loadedClasses[className] then
+    return loadedClasses[className]
+  elseif classSources[className] then
+    -- keep a history of loaded files to prevent an include loop
+    
+    local classChunk = classSources[className]()
+    -- create a sandboxed environment for the class
+    local classEnviornment = {}
+    local cleanedUpClass = {}
+  
+    loadedClasses[className] = cleanedUpClass
+    
+    for _, key in ipairs(sandboxWhitelist) do
+      classEnviornment[key] = _G[key]
+    end
+    
+    classEnviornment._G = classEnviornment
+    
+    setfenv(classChunk, classEnviornment)
+    
+    classDependencies[className] = {}
+    
+    classChunk()
+    
+    
+    kge.DefineClass(cleanedUpClass, className, classEnviornment)
+    
+    return cleanedUpClass
+  else
+    error("No class named " .. className)
+  end
+end
+
+function kge.LoadClasses()
+  for className in classSources do
+    if not loadedClasses[className] then
+      kge.Using(className)
+    end
+  end
 end
 
 -- check any weak references into the c++ code

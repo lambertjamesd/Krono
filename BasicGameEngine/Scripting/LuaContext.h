@@ -68,6 +68,12 @@ private:
 
 	}
 
+	template <>
+	static LuaCppConvert::ReturnToStack Return(lua_State* state)
+	{
+		return LuaCppConvert::ReturnToStack();
+	}
+
 	static void Pass(lua_State* state)
 	{
 
@@ -83,7 +89,16 @@ private:
 	template <typename ReturnType, typename... Args>
 	static ReturnType Call(lua_State* state, const char* methodName, bool isStatic, Args&&... parameters)
 	{
-		lua_getfield(state, -1, methodName);
+		int startingTop = lua_gettop(state);
+
+		if (methodName != NULL)
+		{
+			lua_getfield(state, -1, methodName);
+		}
+		else
+		{
+			assert(isStatic && "Unamed function must be a static method");
+		}
 
 		int parameterCount = sizeof...(Args);
 		
@@ -100,10 +115,20 @@ private:
 		if (callResult != 0)
 		{
 			std::string message("Error running method ");
-			message += methodName;
+
+			if (methodName != NULL)
+			{
+				message += methodName;
+			}
+
 			message += ": ";
-			message += lua_tostring(state, -1);
-			lua_pop(state, 1);
+
+			if (lua_isstring(state, -1))
+			{
+				message += lua_tostring(state, -1);
+			}
+
+			lua_settop(state, startingTop);
 			
 			throw LuaErrorException(message);
 		}
@@ -155,6 +180,7 @@ public:
 
 	static int PositiveIndex(lua_State* state, int index);
 	void DeepCopy(int index);
+	void ShallowCopy(int index);
 
 	static void PushVector3(lua_State* state, const krono::Vector3f& vector);
 	static void PushQuaternion(lua_State* state, const krono::Quaternionf& quaternion);
@@ -230,7 +256,10 @@ public:
 	static LuaContext* ContextFromState(lua_State* state);
 	static const char* NoBaseClass;
 
-	void RunScript(LuaScript& script);
+	void AddBehaviorScript(const LuaScript::Ptr& script);
+	void AddBehaviorScript(const LuaScript::Ptr& script, const std::string& behaviorName);
+
+	bool LoadClassTable(const std::string& value);
 	
 	static int WeakReferenceGC(lua_State* state);
 	static int SharedPtrGC(lua_State* state);
@@ -276,6 +305,14 @@ public:
 private:
 	void RemovePointerIndex(void* pointer);
 
+	void CheckForProperties(int index);
+	bool MatchesProperty(int index);
+	static bool IsProperty(lua_State* state, int index);
+	static bool PushPropertyFunction(lua_State* state, int index, const char* functionName);
+	static bool PushSetter(lua_State* state, int index);
+
+	void SetPropertyField(const std::string& name, const char* fieldName);
+
 	// prevent copying of context
 	LuaContext(const LuaContext&);
 	void operator=(const LuaContext&);
@@ -290,16 +327,9 @@ private:
 
 	static int LuaCallFunctionBase(lua_State* state);
 
-	void SetInTable(const std::string& name, lua_Integer table);
-	static void GetFunctionFromTable(lua_State* state, int keyIndex, lua_Integer table);
-
 	static int LuaObjectIndexMethod(lua_State* state);
 	static int LuaObjectNewIndexMethod(lua_State* state);
 	
-	static const lua_Integer MethodTableIndex;
-	static const lua_Integer GetterTableIndex;
-	static const lua_Integer SetterTableIndex;
-
 	bool mDebuggerLoaded;
 	bool mDebuggerConnected;
 	bool mDebuggerEnabled;
@@ -318,5 +348,10 @@ private:
 #define KGE_CPP_MODUlE_NAME		"kgecpp"
 
 #define KGE_BEHAVIORS_NAME		"behaviors"
+
+#define KGE_IS_PROPERTY_KEY		"__kge_isprop"
+
+#define KGE_GETTER_KEY			"get"
+#define KGE_SETTER_KEY			"set"
 
 }

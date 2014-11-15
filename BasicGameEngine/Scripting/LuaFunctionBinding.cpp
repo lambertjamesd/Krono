@@ -11,7 +11,7 @@ using namespace std;
 namespace kge
 {
 
-void LuaFunctionBinding::BuildContext(LuaContext& context)
+void LuaFunctionBinding::AddKGEBinPreload(LuaContext& context)
 {
 	lua_State* state = context.GetState();
 	lua_getglobal(state, "package");
@@ -25,6 +25,8 @@ void LuaFunctionBinding::BuildContext(LuaContext& context)
 
 int LuaFunctionBinding::BuildKGEModule(lua_State* state)
 {
+	int top = lua_gettop(state);
+
 	lua_newtable(state);
 
 	lua_newtable(state);
@@ -48,6 +50,8 @@ int LuaFunctionBinding::BuildKGEModule(lua_State* state)
 
 	lua_pushcfunction(state, LuaCreateGCCanary);
 	lua_setfield(state, -2, LUA_CREATE_GC_Canary);
+
+	int endtop = lua_gettop(state);
 
 	return 1;
 }

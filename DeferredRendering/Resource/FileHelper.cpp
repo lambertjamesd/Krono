@@ -34,6 +34,21 @@ std::string FileHelper::RemoveLastPathElement(const std::string& filename)
 	}
 }
 
+std::string FileHelper::LastPathElement(const std::string& filename)
+{
+	size_t slashPos = LastSlash(filename);
+
+
+	if (slashPos != std::string::npos)
+	{
+		return filename.substr(slashPos + 1);
+	}
+	else
+	{
+		return filename;
+	}
+}
+
 std::string FileHelper::JoinPaths(const std::string& basePath, const std::string& path)
 {
 	std::string modifiedBase = basePath;
@@ -61,6 +76,34 @@ std::string FileHelper::JoinPaths(const std::string& basePath, const std::string
 	else
 	{
 		return modifedPath;
+	}
+}
+
+std::string FileHelper::Extension(const std::string& filename)
+{
+	size_t lastDot = filename.find_last_of('.');
+
+	if (lastDot == std::string::npos)
+	{
+		return "";
+	}
+	else
+	{
+		return filename.substr(lastDot);
+	}
+}
+
+std::string FileHelper::RemoveExtension(const std::string& filename)
+{
+	size_t lastDot = filename.find_last_of('.');
+
+	if (lastDot == std::string::npos)
+	{
+		return filename;
+	}
+	else
+	{
+		return filename.substr(0, lastDot);
 	}
 }
 

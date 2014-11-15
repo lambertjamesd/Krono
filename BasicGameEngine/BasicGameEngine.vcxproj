@@ -82,6 +82,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicGameEngine.h" />
+    <ClInclude Include="Font\FontGenerator.h" />
+    <ClInclude Include="Font\FontLoader.h" />
+    <ClInclude Include="Font\Font.h" />
+    <ClInclude Include="Font\GDIFontGenerator.h" />
     <ClInclude Include="Scripting\Lua.h" />
     <ClInclude Include="Scripting\LuaCppConvert.h" />
     <ClInclude Include="Scripting\LuaFunctionBase.h" />
@@ -115,6 +119,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Font\FontGenerator.cpp" />
+    <ClCompile Include="Font\FontLoader.cpp" />
+    <ClCompile Include="Font\Font.cpp" />
+    <ClCompile Include="Font\GDIFontGenerator.cpp" />
     <ClCompile Include="Scripting\LuaCppConvert.cpp" />
     <ClCompile Include="Scripting\LuaFunctionBase.cpp" />
     <ClCompile Include="Scripting\LuaFunctionBinding.cpp" />

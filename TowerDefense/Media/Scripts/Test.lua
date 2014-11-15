@@ -1,17 +1,9 @@
 
 local kge = require("kge")
 
-kge.NewBehavior("Test", nil, 
-	{
-		Start = function (self)
-			
-		end,
-	
-		Update = function (self, deltaTime)
-			local transform = self.transform
-			local position = transform.localPosition
-			position[2] = position[2] + deltaTime * 0.1
-			transform.localPosition = position
-		end
-	}
-);
+local BaseTest = kge.Extends("BaseTest", getfenv())
+local Test = kge.Using("BaseTest")
+
+function Update(self, deltaTime)
+  BaseTest.Update(self, deltaTime)
+end

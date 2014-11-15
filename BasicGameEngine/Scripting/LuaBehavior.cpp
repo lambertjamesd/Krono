@@ -15,7 +15,6 @@ LuaBehavior::LuaBehavior(GameObject& parentGameObject) :
 	
 }
 
-
 LuaBehavior::~LuaBehavior(void)
 {
 	std::cout << "Here I am" << std::endl;
@@ -37,7 +36,7 @@ void LuaBehavior::Update(float deltaTime)
 			std::cerr << luaError.what() << std::endl;
 		}
 
-		// pop the script object
+		// pop the script objectF
 		lua_pop(state, 1);
 	}
 }
@@ -61,21 +60,26 @@ void LuaBehavior::SetLuaClassName(const std::string& value)
 {
 	if (mLuaClassName != value)
 	{
+		lua_State* state = mContext.GetState();
+		int startStackSize = lua_gettop(state);
+
 		mLuaClassName = value;
 
 		mObjectID = mContext.PushReference<LuaBehavior>(GetWeakPointer());
-		lua_State* state = mContext.GetState();
-		LuaContext::GetKGEField(state, KGE_BEHAVIORS_NAME);
-		lua_getfield(state, -1, mLuaClassName.c_str());
-		lua_remove(state, -2);
-		lua_setmetatable(state, -2);
+		if (mContext.LoadClassTable(value))
+		{
+			if (!lua_isnil(state, -1))
+			{
+				lua_setmetatable(state, -2);
 
-		lua_pushliteral(state, "Update");
-		lua_gettable(state, -2);
+				lua_pushliteral(state, "Update");
+				lua_gettable(state, -2);
 
-		mHasUpdate = lua_isfunction(state, -1);
+				mHasUpdate = lua_isfunction(state, -1);
+			}
+		}
 
-		lua_pop(state, 2);
+		lua_settop(state, startStackSize);
 	}
 }
 

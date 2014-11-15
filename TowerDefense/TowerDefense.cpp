@@ -103,8 +103,8 @@ int main(int argc, char* argv[])
 	suzanne->GetTransform()->SetLocalScale(Vector3f(0.6f, 0.6f, 0.6f));
 	suzanne->GetTransform()->SetLocalPosition(Vector3f(0.0f, -1.0f, 0.0f));
 	suzanne->AddComponent<SpinBehavior>();
-	LuaScript::Ptr behavior = resourceManager->LoadResource<LuaScript>("Media/Scripts/Test.lua");
-	game.GetLuaContext().RunScript(*behavior);
+	game.GetLuaContext().AddBehaviorScript(resourceManager->LoadResource<LuaScript>("Media/Scripts/Test.lua"));
+	game.GetLuaContext().AddBehaviorScript(resourceManager->LoadResource<LuaScript>("Media/Scripts/BaseTest.lua"));
 	suzanne->AddComponent<LuaBehavior>().lock()->SetLuaClassName("Test");
 
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();

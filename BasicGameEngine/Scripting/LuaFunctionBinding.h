@@ -25,7 +25,7 @@ class LuaFunctionBinding
 {
 public:
 
-	static void BuildContext(LuaContext& context);
+	static void AddKGEBinPreload(LuaContext& context);
 
 private:
 	static int BuildKGEModule(lua_State* state);

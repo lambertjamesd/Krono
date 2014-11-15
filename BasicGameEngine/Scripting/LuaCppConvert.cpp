@@ -66,6 +66,12 @@ namespace LuaCppConvert
 
 		return Quaternionf(w, x, y, z);
 	}
+	
+	template <>
+	ReturnToStack ConvertToCpp(lua_State* state, int index)
+	{
+		return ReturnToStack();
+	}
 
 	void ConvertToLua(lua_State* state, const float& value)
 	{
@@ -130,6 +136,11 @@ namespace LuaCppConvert
 	{
 		LuaContext* context = LuaContext::ContextFromState(state);
 		context->PushReference(ptr);
+	}
+	
+	void ConvertToLua(lua_State* state, const std::string& string)
+	{
+		lua_pushstring(state, string.c_str());
 	}
 	
 	krono::Object* GetObjectPointer(lua_State* state, int index)
