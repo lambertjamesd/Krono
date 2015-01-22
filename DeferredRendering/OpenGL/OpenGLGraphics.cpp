@@ -2,7 +2,6 @@
 #include "OpenGLGraphics.h"
 #include "OpenGLShader.h"
 #include "OpenGLShaderProgram.h"
-#include "OpenGLVertexBuffer.h"
 #include "OpenGLConstantBuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLOffscreenRenderTarget.h"
@@ -14,6 +13,7 @@
 #include "OpenGLBlendState.h"
 #include "OpenGLDepthState.h"
 #include "OpenGLRasterizerState.h"
+#include "OpenGLDataBuffer.h"
 #include <iostream>
 
 using namespace std;
@@ -35,14 +35,14 @@ OpenGLGraphics::~OpenGLGraphics(void)
 {
 }
 
-Auto<IndexBuffer> OpenGLGraphics::CreateIndexBuffer(IndexBuffer::Format format)
+Auto<IndexBuffer> OpenGLGraphics::CreateIndexBuffer(IndexBuffer::Format format, BufferAccess::Type bufferAccess)
 {
-	return Auto<IndexBuffer>(new OpenGLIndexBuffer(format));
+	return Auto<IndexBuffer>(new IndexBuffer(format, std::unique_ptr<DataBuffer>(new OpenGLDataBuffer(DataBuffer::IndexBuffer, bufferAccess))));
 }
 
-Auto<VertexBuffer> OpenGLGraphics::CreateVertexBuffer(const InputLayout& inputLayout)
+Auto<VertexBuffer> OpenGLGraphics::CreateVertexBuffer(const InputLayout& inputLayout, BufferAccess::Type bufferAccess)
 {
-	return Auto<VertexBuffer>(new OpenGLVertexBuffer(inputLayout));
+	return Auto<VertexBuffer>(new VertexBuffer(inputLayout, std::unique_ptr<DataBuffer>(new OpenGLDataBuffer(DataBuffer::VertexBuffer, bufferAccess))));
 }
 
 Auto<ConstantBuffer> OpenGLGraphics::CreateConstantBuffer(const ConstantBufferLayout& layout)
@@ -202,7 +202,7 @@ void OpenGLGraphics::SetPixelShader(const Auto<PixelShader> &fragmentShader)
 
 void OpenGLGraphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 {
-	mCurrentIndexBuffer = std::dynamic_pointer_cast<OpenGLIndexBuffer>(indexBuffer);
+	mCurrentIndexBuffer = indexBuffer;
 
 	if (mCurrentIndexBuffer == NULL)
 	{
@@ -210,13 +210,13 @@ void OpenGLGraphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 	}
 	else
 	{
-		mCurrentIndexBuffer->Use();
+		static_cast<OpenGLDataBuffer&>(mCurrentIndexBuffer->GetBuffer()).Use();
 	}
 }
 
 void OpenGLGraphics::SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer)
 {
-	mCurrentVertexBuffer = std::dynamic_pointer_cast<OpenGLVertexBuffer>(vertexBuffer);
+	mCurrentVertexBuffer = vertexBuffer;
 	mNeedVertexRebind = true;
 }
 
@@ -306,7 +306,7 @@ void OpenGLGraphics::UpdatePendingChanges()
 		mCurrentShaderProgram != NULL &&
 		mCurrentVertexBuffer != NULL)
 	{
-		mCurrentVertexBuffer->Use();
+		static_cast<OpenGLDataBuffer&>(mCurrentVertexBuffer->GetBuffer()).Use();
 		mCurrentShaderProgram->BindVertexBuffer(*mCurrentVertexBuffer);
 	}
 

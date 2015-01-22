@@ -26,10 +26,14 @@ public:
 	void SetOrthoLens(float near, float far, float height);
 	void SetPerspectiveLens(float near, float far, const krono::Degreesf& vFov);
 	
+	void SetPostProjectionMatrix(const krono::Matrix4f& value);
+	const krono::Matrix4f& GetPostProjectionMatrix() const;
+	
 	virtual void Serialize(SceneSerializer& serializer);
 	virtual void Deserialize(SceneDeserializer& deserializer);
 private:
 	RenderStage::Ptr mRenderStage;
+	krono::Matrix4f mPostProjectionMatrix;
 
 	bool mIsPerspective;
 	float mNearPlane;

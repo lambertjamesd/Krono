@@ -1,6 +1,7 @@
 
 #include "Game.h"
 #include "Scripting/LuaScriptLoader.h"
+#include "Font/FontLoader.h"
 
 #include <thread>
 
@@ -29,6 +30,7 @@ void Game::Initialize(Graphics::API api, Vector2i windowSize)
 	mWindowRenderTarget = mGraphics->CreateWindowRenderTarget(*mWindow);
 
 	mResourceManager->AddLoader<LuaScript>(ResourceLoader::Ptr(new LuaScriptLoader()));
+	mResourceManager->AddLoader<Font>(ResourceLoader::Ptr(new FontLoader()));
 }
 
 void Game::MainLoop()

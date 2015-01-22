@@ -4,6 +4,7 @@
 
 #include "Resource/ResourceManager.h"
 #include "Resource/Mesh/Mesh.h"
+#include "Resource/FormatException.h"
 
 #include "Core/Exception.h"
 #include "Core/Hash.h"

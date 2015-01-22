@@ -19,11 +19,15 @@ private:
 };
 
 typedef Color<float> Colorf;
+typedef Color<unsigned char> ColorU8;
 
 template <typename T>
 Color<T> operator*(const Color<T>& color, const T& scalar)
 {
 	return Color<T>(color.r * scalar, color.g * scalar, color.b * scalar, color.a * scalar);
 }
+
+Colorf ColorU82F(const ColorU8& byteColor);
+ColorU8 ColorF2U8(const Colorf& byteColor);
 
 }

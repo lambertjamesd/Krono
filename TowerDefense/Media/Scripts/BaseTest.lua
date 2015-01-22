@@ -1,8 +1,11 @@
 
 local kge = require("kge")
+local base = extends(kge.LuaBehavior)
 
-local LuaBehavior = kge.Extends(kge.LuaBehavior, getfenv())
-local Test = kge.Using("Test")
+foo = {}
+function foo.get(self)
+  return "bar"
+end
 
 function Update(self, deltaTime)
   local transform = self.gameObject.transform

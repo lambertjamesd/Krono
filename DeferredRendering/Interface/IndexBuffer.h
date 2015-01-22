@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VertexBuffer.h"
+#include "DataBuffer.h"
 #include "Core/Memory.h"
 
 namespace krono
@@ -21,20 +21,23 @@ public:
 	~IndexBuffer(void);
 
 	Format GetFormat() const;
-	virtual DataIterator Lock(size_t indexCount) = 0;
-	virtual void Unlock() = 0;
+	DataIterator Map(size_t indexCount, BufferMapType::Type mappingType);
+	void Unmap();
+	void Set(const void* data, size_t indexCount);
 
-	virtual size_t GetIndexCount() const = 0;
+	size_t GetIndexCount() const;
 
 	size_t GetStrideSize() const;
 	static size_t GetFormatSize(Format format);
 
+	DataBuffer& GetBuffer();
+
 	static Auto<IndexBuffer> Null;
-protected:
-	IndexBuffer(Format format);
-	
-	Format mFormat;
+
+	IndexBuffer(Format format, std::unique_ptr<DataBuffer>& buffer);
 private:
+	Format mFormat;
+	std::unique_ptr<DataBuffer> mBuffer;
 
 	static size_t gFormatSize[IndexBuffer::FormatCount];
 };

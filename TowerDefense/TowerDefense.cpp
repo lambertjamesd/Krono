@@ -47,8 +47,13 @@ GameObject::Ptr AddObject(const kge::Scene::Ptr& scene, const std::string& mesh,
 	GameObject::Ptr result = scene->CreateGameObject().lock();
 	Renderer::Ptr renderer = result->AddComponent<Renderer>().lock();
 
+	Material::Ptr materialPtr = scene->GetResourceManager().LoadResource<Material>(material);
+	
+	//Font::Ptr fontTest = scene->GetResourceManager().LoadResource<Font>("#20px Helvetica");
+	//materialPtr->SetTexture(fontTest->GetTexture(), 0, ShaderStage::PixelShader);
+
 	renderer->SetMesh(scene->GetResourceManager().LoadResource<Mesh>(mesh));
-	renderer->SetMaterial(scene->GetResourceManager().LoadResource<Material>(material), 0);
+	renderer->SetMaterial(materialPtr, 0);
 
 	return result;
 }
@@ -79,7 +84,7 @@ Camera::Ptr AddCamera(kge::Scene& scene, const Rectf& viewport)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::DirectX11, Vector2i(1280, 800), 60.0f);
+	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -105,22 +110,22 @@ int main(int argc, char* argv[])
 	suzanne->AddComponent<SpinBehavior>();
 	game.GetLuaContext().AddBehaviorScript(resourceManager->LoadResource<LuaScript>("Media/Scripts/Test.lua"));
 	game.GetLuaContext().AddBehaviorScript(resourceManager->LoadResource<LuaScript>("Media/Scripts/BaseTest.lua"));
-	suzanne->AddComponent<LuaBehavior>().lock()->SetLuaClassName("Test");
+	//suzanne->AddComponent<LuaBehavior>().lock()->SetLuaClassName("Test");
 
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
 	scene->GetRenderManager().SetCompositor(RenderManager::DefaultCompositor, resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 	
-	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0, 0.5f, 1.0f));
-	Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.5f, 0.0, 0.5f, 1.0f));
+	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0f, 1.0f, 0.5f));
+	Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.0f, 0.5f, 1.0f, 0.5f));
 	
 	GameObject::Ptr cameraObject = scene->CreateGameObject().lock();
 	cameraObject->AddComponent<FlyCamera>();
 
 	leftEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
-	leftEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(-0.05f, 0.0f, 0.0f));
+	leftEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(-0.025f, 0.0f, 0.0f));
 	rightEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
-	rightEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(0.05f, 0.0f, 0.0f));
+	rightEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(0.025f, 0.0f, 0.0f));
 
 	GameObject::Ptr cubeTest = AddObject(scene, "Media/Meshes/Cube.obj#Cube", "Media/Materials/Cube.json");
 	cubeTest->GetTransform()->SetLocalScale(Vector3f(0.1f, 0.1f, 0.1f));
@@ -162,9 +167,11 @@ int main(int argc, char* argv[])
 
 		pointSampler = graphics->CreateSampler(samplerDesc);
 		
+		Material::Ptr suzanneMaterial = resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json");
+
 		Renderer::Ptr rendererPtr = renderer.lock();
 		rendererPtr->SetMesh(meshTest);
-		rendererPtr->SetMaterial(resourceManager->LoadResource<Material>("Media/Materials/Suzanne.json"), 0);
+		rendererPtr->SetMaterial(suzanneMaterial, 0);
 		
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);

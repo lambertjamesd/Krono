@@ -86,6 +86,7 @@
     <ClInclude Include="Font\FontLoader.h" />
     <ClInclude Include="Font\Font.h" />
     <ClInclude Include="Font\GDIFontGenerator.h" />
+    <ClInclude Include="GUI\Graphics2D.h" />
     <ClInclude Include="Scripting\Lua.h" />
     <ClInclude Include="Scripting\LuaCppConvert.h" />
     <ClInclude Include="Scripting\LuaFunctionBase.h" />
@@ -116,13 +117,16 @@
     <ClInclude Include="Scene\Game.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\UpdateManager.h" />
+    <ClInclude Include="GUI\SpriteBatch2D.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="GUI\Transform2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font\FontGenerator.cpp" />
     <ClCompile Include="Font\FontLoader.cpp" />
     <ClCompile Include="Font\Font.cpp" />
     <ClCompile Include="Font\GDIFontGenerator.cpp" />
+    <ClCompile Include="GUI\Graphics2D.cpp" />
     <ClCompile Include="Scripting\LuaCppConvert.cpp" />
     <ClCompile Include="Scripting\LuaFunctionBase.cpp" />
     <ClCompile Include="Scripting\LuaFunctionBinding.cpp" />
@@ -151,6 +155,8 @@
     <ClCompile Include="Scene\Game.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\UpdateManager.cpp" />
+    <ClCompile Include="GUI\SpriteBatch2D.cpp" />
+    <ClCompile Include="GUI\Transform2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

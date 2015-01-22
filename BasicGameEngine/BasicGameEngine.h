@@ -10,4 +10,6 @@
 #include "Scripting/LuaBehavior.h"
 #include "Scripting/LuaScript.h"
 
+#include "Font/Font.h"
+
 #include "Serialization/JsonSerialization.h"

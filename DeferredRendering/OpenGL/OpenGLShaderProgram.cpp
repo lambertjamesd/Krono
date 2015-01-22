@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "OpenGLVertexBuffer.h"
 #include <sstream>
 #include "OpenGLGraphics.h"
 #include <cassert>
@@ -213,7 +212,7 @@ void OpenGLShaderProgram::Use()
 	glUseProgram(mProgram);
 }
 
-void OpenGLShaderProgram::BindVertexBuffer(OpenGLVertexBuffer& buffer)
+void OpenGLShaderProgram::BindVertexBuffer(VertexBuffer& buffer)
 {
 	GetLayoutMapping(buffer.GetInputLayout()).Use();
 }

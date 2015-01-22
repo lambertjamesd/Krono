@@ -5,6 +5,7 @@
 #include "Core/Memory.h"
 #include "ResourceLoader.h"
 #include <fstream>
+#include <sstream>
 #include "LoadException.h"
 #include "FileHelper.h"
 #include "Mesh/Mesh.h"
@@ -42,6 +43,14 @@ public:
 		{
 			path = filename.substr(0, hashPosition);
 			internalName = filename.substr(hashPosition + 1);
+		}
+
+		if (path.length() == 0 && internalName.length() > 0)
+		{
+			std::istringstream emptyString(std::string(""));
+			Auto<T> result = LoadResource<T>(emptyString, internalName);
+			result->ResolveSource(internalName);
+			return result;
 		}
 
 		if (!FileHelper::DoesFileExist(path))

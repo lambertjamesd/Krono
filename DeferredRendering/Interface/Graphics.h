@@ -45,8 +45,8 @@ public:
 
 	virtual ~Graphics(void);
 
-	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format) = 0;
-	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout) = 0;
+	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format, BufferAccess::Type bufferAccess) = 0;
+	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout, BufferAccess::Type bufferAccess) = 0;
 	virtual Auto<ConstantBuffer> CreateConstantBuffer(const ConstantBufferLayout& layout) = 0;
 	virtual Auto<VertexShader> CreateVertexShader(const std::string& source) = 0;
 	virtual Auto<PixelShader> CreatePixelShader(const std::string& source) = 0;

@@ -14,8 +14,8 @@ class DX11Graphics : public Graphics
 public:
 	~DX11Graphics(void);
 	
-	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format);
-	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout);
+	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format, BufferAccess::Type bufferAccess);
+	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout, BufferAccess::Type bufferAccess);
 	virtual Auto<ConstantBuffer> CreateConstantBuffer(const ConstantBufferLayout& layout);
 	virtual Auto<VertexShader> CreateVertexShader(const std::string& source);
 	virtual Auto<PixelShader> CreatePixelShader(const std::string& source);
@@ -80,7 +80,7 @@ private:
 	D3D_FEATURE_LEVEL mFeatureLevel;
 
 	Auto<DX11VertexShader> mCurrentVertexShader;
-	Auto<DX11VertexBuffer> mCurrentVertexBuffer;
+	Auto<VertexBuffer> mCurrentVertexBuffer;
 
 	bool mNeedNewInputMapping;
 	bool mHasIndexBuffer;

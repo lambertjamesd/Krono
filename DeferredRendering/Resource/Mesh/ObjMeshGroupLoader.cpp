@@ -91,9 +91,7 @@ BoundingBoxf ObjMeshVertexData::CalculateBoundingBox() const
 
 void ObjMeshVertexData::PopulateVertexBuffer(VertexBuffer& vertexBuffer) const
 {	
-	DataIterator it = vertexBuffer.Lock(mVertexData.size());
-	it.Write<ObjMeshVertex>(&mVertexData.front(), mVertexData.size());
-	vertexBuffer.Unlock();
+	vertexBuffer.Set(&mVertexData.front(), mVertexData.size());
 }
 
 ObjMeshGroupLoader::ObjMeshGroupLoader()
@@ -115,8 +113,8 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 	inputLayout.AddAttribute(Attribute("NORMAL", DataFormat(DataFormat::Float, 3)));
 	inputLayout.AddAttribute(Attribute("TANGENT", DataFormat(DataFormat::Float, 4)));
 	inputLayout.AddAttribute(Attribute("TEXCOORD", DataFormat(DataFormat::Float, 2)));
-	Auto<VertexBuffer> vertexBuffer = Auto<VertexBuffer>(resourceManager.GetGraphics()->CreateVertexBuffer(inputLayout));
-	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16));
+	Auto<VertexBuffer> vertexBuffer = Auto<VertexBuffer>(resourceManager.GetGraphics()->CreateVertexBuffer(inputLayout, BufferAccess::Immutable));
+	Auto<IndexBuffer> currentIndexBuffer = Auto<IndexBuffer>(resourceManager.GetGraphics()->CreateIndexBuffer(IndexBuffer::UInt16, BufferAccess::Immutable));
 
 	size_t indexStart = 0;
 	vector<UInt16> indexData;
@@ -191,9 +189,7 @@ Auto<Resource> ObjMeshGroupLoader::LoadResource(ResourceManager& resourceManager
 	vertexData.NormalizeTangents();
 	vertexData.PopulateVertexBuffer(*vertexBuffer);
 	
-	DataIterator it = currentIndexBuffer->Lock(indexData.size());
-	it.Write<UInt16>(&indexData.front(), indexData.size());
-	currentIndexBuffer->Unlock();
+	currentIndexBuffer->Set(&indexData.front(), indexData.size());
 
 	return result;
 }

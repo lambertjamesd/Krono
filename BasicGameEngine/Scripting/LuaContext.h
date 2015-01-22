@@ -305,8 +305,6 @@ public:
 private:
 	void RemovePointerIndex(void* pointer);
 
-	void CheckForProperties(int index);
-	bool MatchesProperty(int index);
 	static bool IsProperty(lua_State* state, int index);
 	static bool PushPropertyFunction(lua_State* state, int index, const char* functionName);
 	static bool PushSetter(lua_State* state, int index);

@@ -21,8 +21,8 @@ class OpenGLGraphics : public Graphics
 public:
 	virtual ~OpenGLGraphics(void);
 	
-	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format);
-	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout);
+	virtual Auto<IndexBuffer> CreateIndexBuffer(IndexBuffer::Format format, BufferAccess::Type bufferAccess);
+	virtual Auto<VertexBuffer> CreateVertexBuffer(const InputLayout& inputLayout, BufferAccess::Type bufferAccess);
 	virtual Auto<ConstantBuffer> CreateConstantBuffer(const ConstantBufferLayout& layout);
 	virtual Auto<VertexShader> CreateVertexShader(const std::string& source);
 	virtual Auto<PixelShader> CreatePixelShader(const std::string& source);
@@ -88,8 +88,8 @@ private:
 	Auto<OpenGLPixelShader> mCurrentPixelShader;
 	Auto<OpenGLShaderProgram> mCurrentShaderProgram;
 
-	Auto<OpenGLVertexBuffer> mCurrentVertexBuffer;
-	Auto<OpenGLIndexBuffer> mCurrentIndexBuffer;
+	Auto<VertexBuffer> mCurrentVertexBuffer;
+	Auto<IndexBuffer> mCurrentIndexBuffer;
 
 	Vector2i mRenderBufferSize;
 	Rectf mViewport;

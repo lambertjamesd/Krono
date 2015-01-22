@@ -6,7 +6,6 @@
 #include "DX11OffscreenRenderTarget.h"
 #include "DX11DepthBuffer.h"
 #include "DX11IndexBuffer.h"
-#include "DX11VertexBuffer.h"
 #include "DX11Shader.h"
 #include "DX11ConstantBuffer.h"
 #include "DX11Texture2D.h"
@@ -14,6 +13,7 @@
 #include "DX11BlendState.h"
 #include "DX11DepthState.h"
 #include "DX11RasterizerState.h"
+#include "DX11DataBuffer.h"
 #include <vector>
 
 #pragma comment (lib, "d3dx11.lib")
@@ -72,14 +72,14 @@ DX11Graphics::~DX11Graphics(void)
 	mDeviceContext->Release();
 }
 
-Auto<IndexBuffer> DX11Graphics::CreateIndexBuffer(IndexBuffer::Format format)
+Auto<IndexBuffer> DX11Graphics::CreateIndexBuffer(IndexBuffer::Format format, BufferAccess::Type bufferAccess)
 {
-	return Auto<IndexBuffer>(new DX11IndexBuffer(mDevice, format));
+	return Auto<IndexBuffer>(new IndexBuffer(format, std::unique_ptr<DataBuffer>(new DX11DataBuffer(mDevice, DataBuffer::IndexBuffer, bufferAccess))));
 }
 
-Auto<VertexBuffer> DX11Graphics::CreateVertexBuffer(const InputLayout& inputLayout)
+Auto<VertexBuffer> DX11Graphics::CreateVertexBuffer(const InputLayout& inputLayout, BufferAccess::Type bufferAccess)
 {
-	return Auto<VertexBuffer>(new DX11VertexBuffer(mDevice, inputLayout));
+	return Auto<VertexBuffer>(new VertexBuffer(inputLayout, std::unique_ptr<DataBuffer>(new DX11DataBuffer(mDevice, DataBuffer::VertexBuffer, bufferAccess))));
 }
 
 Auto<ConstantBuffer> DX11Graphics::CreateConstantBuffer(const ConstantBufferLayout& layout)
@@ -279,20 +279,35 @@ void DX11Graphics::SetIndexBuffer(const Auto<IndexBuffer> &indexBuffer)
 	}
 	else
 	{
-		DX11IndexBuffer *dxIndexBuffer = dynamic_cast<DX11IndexBuffer*>(indexBuffer.get());
-		mDeviceContext->IASetIndexBuffer(dxIndexBuffer->GetBuffer(), dxIndexBuffer->GetDXFormat(), 0);
+		DX11DataBuffer &dxDataBuffer = dynamic_cast<DX11DataBuffer&>(indexBuffer->GetBuffer());
+		mDeviceContext->IASetIndexBuffer(dxDataBuffer.GetBuffer(), DX11IndexBuffer::GetDXFormat(indexBuffer->GetFormat()), 0);
 		mHasIndexBuffer = true;
 	}
 }
 
 void DX11Graphics::SetVertexBuffer(const Auto<VertexBuffer> &vertexBuffer)
 {
-	mNeedNewInputMapping = mNeedNewInputMapping || 
-		mCurrentVertexBuffer == NULL ||
-		mCurrentVertexBuffer->GetInputLayout().GetSignature() != vertexBuffer->GetInputLayout().GetSignature();
+	if (vertexBuffer == NULL)
+	{
+		ID3D11Buffer *nullBuffer = NULL;
+		UINT stride = 0;
+		UINT offset = 0;
+		mDeviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &stride, &offset);
+	}
+	else
+	{
+		mNeedNewInputMapping = mNeedNewInputMapping || 
+			mCurrentVertexBuffer == NULL ||
+			mCurrentVertexBuffer->GetInputLayout().GetSignature() != vertexBuffer->GetInputLayout().GetSignature();
 
-	mCurrentVertexBuffer = std::dynamic_pointer_cast<DX11VertexBuffer>(vertexBuffer);
-	mCurrentVertexBuffer->Use();
+		mCurrentVertexBuffer = vertexBuffer;
+
+		UINT stride = vertexBuffer->GetInputLayout().GetStride();
+		UINT offset = 0;
+		DX11DataBuffer &dxDataBuffer = dynamic_cast<DX11DataBuffer&>(vertexBuffer->GetBuffer());
+		ID3D11Buffer *buffer = dxDataBuffer.GetBuffer();
+		mDeviceContext->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+	}
 }
 
 void DX11Graphics::SetConstantBuffer(const Auto<ConstantBuffer>& constantBuffer, size_t slot, ShaderStage::Type stage)

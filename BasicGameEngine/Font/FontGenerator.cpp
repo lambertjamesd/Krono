@@ -18,10 +18,10 @@ FontGenerator::~FontGenerator(void)
 {
 }
 
-std::unique_ptr<FontGenerator> FontGenerator::CreateFontGenerator()
+std::unique_ptr<FontGenerator> FontGenerator::CreateFontGenerator(const std::string& fontName, size_t pixelHeight)
 {
 #ifdef WIN32
-	return move(unique_ptr<FontGenerator>());
+	return move(unique_ptr<FontGenerator>(new GDIFontGenerator(fontName, pixelHeight)));
 #else
 #error no font generator specified
 #endif

@@ -35,11 +35,11 @@ void Camera::PreRender()
 
 	if (mIsPerspective)
 	{
-		mRenderStage->SetProjectionMatrix(Matrix4f::PerspectiveProjection(mNearPlane, mFarPlane, Degreesf(mHeight), 1.0f));
+		mRenderStage->SetProjectionMatrix(mPostProjectionMatrix * Matrix4f::PerspectiveProjection(mNearPlane, mFarPlane, Degreesf(mHeight), 1.0f));
 	}
 	else
 	{
-		mRenderStage->SetProjectionMatrix(Matrix4f::OrthoProjection(mNearPlane, mFarPlane, mHeight, 1.0f));
+		mRenderStage->SetProjectionMatrix(mPostProjectionMatrix * Matrix4f::OrthoProjection(mNearPlane, mFarPlane, mHeight, 1.0f));
 	}
 }
 
@@ -67,6 +67,16 @@ void Camera::SetPerspectiveLens(float nearPlane, float farPlane, const krono::De
 	mNearPlane = nearPlane;
 	mFarPlane = farPlane;
 	mHeight = vFov;
+}
+
+void Camera::SetPostProjectionMatrix(const krono::Matrix4f& value)
+{
+	mPostProjectionMatrix = value;
+}
+
+const krono::Matrix4f& Camera::GetPostProjectionMatrix() const
+{
+	return mPostProjectionMatrix;
 }
 
 void Camera::Serialize(SceneSerializer& serializer)

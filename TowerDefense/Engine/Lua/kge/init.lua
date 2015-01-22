@@ -36,11 +36,16 @@ function kge.MapClassToPath(className, filename)
   end)
 end
 
-function kge.DefineClass(cleanedUpClass, className, classEnvironment)
+local function DefineClass(cleanedUpClass, className, classEnvironment)
   loadedEnvironments[className] = classEnvironment
   
   -- copy over values that aren't in the global scope
   for key, value in pairs(classEnvironment) do
+    
+    if type(value) == "table" and (type(value.get) == "function" or type(value.set) == "function") then
+      value.__kge_isprop = true
+    end
+    
     if _G[key] ~= value then
       cleanedUpClass[key] = value
     end
@@ -56,7 +61,7 @@ function kge.DefineClass(cleanedUpClass, className, classEnvironment)
   return cleanedUpClass
 end
 
-function kge.Extends(className, classEnvironment)
+local function Extends(className, classEnvironment)
   local baseClass = nil;
   
   if type(className) == "string" then
@@ -112,14 +117,7 @@ local sandboxWhitelist = {
   "_VERSION"
   }
 
-function kge.RequireClass(className)
-  table.insert(includeStack, className)
-  local result = kge.Using(className)
-  table.remove(includeStack)
-  return result;
-end
-
-function kge.Using(className)
+local function Using(className)
   if loadedClasses[className] then
     return loadedClasses[className]
   elseif classSources[className] then
@@ -138,14 +136,19 @@ function kge.Using(className)
     
     classEnviornment._G = classEnviornment
     
+    classEnviornment.extends = function(className)
+      return Extends(className, classEnviornment)
+    end
+    
+    classEnviornment[className] = cleanedUpClass
+    
     setfenv(classChunk, classEnviornment)
     
     classDependencies[className] = {}
     
     classChunk()
     
-    
-    kge.DefineClass(cleanedUpClass, className, classEnviornment)
+    DefineClass(cleanedUpClass, className, classEnviornment)
     
     return cleanedUpClass
   else
@@ -153,10 +156,27 @@ function kge.Using(className)
   end
 end
 
+function kge.RequireClass(className)
+  table.insert(includeStack, className)
+  local result = Using(className)
+  table.remove(includeStack)
+  return result;
+end
+
+table.insert(package.loaders, function (moduleName)
+  local success, result = pcall(Using, moduleName)
+  
+  if success then
+    return function () return result end
+  else
+    return result
+  end
+end)
+
 function kge.LoadClasses()
   for className in classSources do
     if not loadedClasses[className] then
-      kge.Using(className)
+      Using(className)
     end
   end
 end

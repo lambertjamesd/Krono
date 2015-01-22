@@ -3,9 +3,9 @@
 #include "OpenGLCommon.h"
 
 #include "Interface/InputLayout.h"
+#include "Interface/VertexBuffer.h"
 #include "OpenGLShader.h"
 #include <map>
-#include "OpenGLVertexBuffer.h"
 #include "OpenGLTextureStorage.h"
 #include "OpenGLConstantBufferStorage.h"
 
@@ -103,7 +103,7 @@ public:
 	const std::vector<ShaderVariable>& GetUniforms() const;
 	const std::vector<ShaderVariable>& GetOutputs() const;
 
-	void BindVertexBuffer(OpenGLVertexBuffer& buffer);
+	void BindVertexBuffer(VertexBuffer& buffer);
 	void MapTextures(OpenGLTextureStorage& texureStorage) const;
 	void MapConstantBuffers(OpenGLConstantBufferStorage& constantStorage) const;
 protected:

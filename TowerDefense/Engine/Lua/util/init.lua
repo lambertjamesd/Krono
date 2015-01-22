@@ -49,18 +49,17 @@ function util.ShallowCopy(value)
 end
 
 function util.DeepCopy(value, copyCache)
-  copyCache = copyCache or {}
-  
-  
 	if type(value) == "table" then
+    copyCache = copyCache or {}
+  
     if copyCache[value] then
       return copyCache[value]
     end
     
 		local result = {}
-    copyCache[result] = result
-		for key, value in pairs(value) do
-			result[key] = util.DeepCopy(value, copyCache)
+    copyCache[value] = result
+		for key, tableValue in pairs(value) do
+			result[key] = util.DeepCopy(tableValue, copyCache)
 		end
 		return result
 	else

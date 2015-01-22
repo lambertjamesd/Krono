@@ -92,7 +92,7 @@ LuaContext::~LuaContext(void)
 
 bool LuaContext::Require(const char* moduleName)
 {
-	// import debugger
+	// import module
 	lua_getglobal(mLuaState, "require");
 	lua_pushstring(mLuaState, moduleName);
 	int requireResult = lua_pcall(mLuaState, 1, 1, 0);
@@ -745,24 +745,6 @@ void LuaContext::ResumeDebugger()
 void LuaContext::RemovePointerIndex(void* pointer)
 {
 	mPointerIDMapping.erase(pointer);
-}
-
-void LuaContext::CheckForProperties(int index)
-{
-
-}
-
-bool LuaContext::MatchesProperty(int index)
-{
-	lua_getfield(mLuaState, index, KGE_GETTER_KEY);
-	bool hasGetter = lua_isfunction(mLuaState, -1) != 0;
-	lua_pop(mLuaState, 1);
-	
-	lua_getfield(mLuaState, index, KGE_SETTER_KEY);
-	bool hasSetter = lua_isfunction(mLuaState, -1) != 0;
-	lua_pop(mLuaState, 1);
-
-	return hasGetter || hasSetter;
 }
 
 bool LuaContext::IsProperty(lua_State* state, int index)

@@ -3,44 +3,10 @@
 #include <vector>
 #include "InputLayout.h"
 #include "Core/Memory.h"
+#include "DataBuffer.h"
 
 namespace krono
 {
-
-class DataIterator
-{
-public:
-	DataIterator(void* dataPointer, void* dataEnd);
-	~DataIterator();
-
-	template <typename T>
-	void Write(const T& value)
-	{
-		T* castPointer = (T*)mDataPointer;
-		*castPointer = value;
-		mDataPointer = (void*)(castPointer + 1);
-	}
-
-	template <typename T>
-	void Write(const T* data, size_t count)
-	{
-		memcpy(mDataPointer, data, sizeof(T) * count);
-		mDataPointer = (void*)((char*)mDataPointer + sizeof(T) * count);
-	}
-
-	template <typename T>
-	void Skip()
-	{
-		mDataPointer = (void*)((T*)mDataPointer + 1);
-	}
-
-	bool IsFull() const;
-
-private:
-	void* mDataStart;
-	void* mDataPointer;
-	void* mDataEnd;
-};
 
 namespace Topology
 {
@@ -63,15 +29,18 @@ public:
 
 	virtual ~VertexBuffer(void);
 
-	virtual DataIterator Lock(size_t vertexCount) = 0;
-	virtual void Unlock() = 0;
+	virtual DataIterator Map(size_t vertexCount, BufferMapType::Type mappingType);
+	virtual void Unmap();
+	virtual void Set(const void* data, size_t vertexCount);
+	size_t GetVertexCount() const;
 
 	const InputLayout& GetInputLayout();
+	DataBuffer& GetBuffer();
 	
-	virtual size_t GetVertexCount() const = 0;
+	VertexBuffer(const InputLayout& inputLayout, std::unique_ptr<DataBuffer>& buffer);
 protected:
-	VertexBuffer(const InputLayout& inputLayout);
 	InputLayout mInputLayout;
+	std::unique_ptr<DataBuffer> mBuffer;
 private:
 };
 

@@ -85,6 +85,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DX11\DX11DataBuffer.h" />
+    <ClInclude Include="Interface\DataBuffer.h" />
     <ClInclude Include="DX11\DX11DepthState.h" />
     <ClInclude Include="DX11\DX11RasterizerState.h" />
     <ClInclude Include="Input\InputState.h" />
@@ -94,6 +96,7 @@
     <ClInclude Include="Interface\RasterizerState.h" />
     <ClInclude Include="Compositor\LightingCompositeStage.h" />
     <ClInclude Include="Interface\MappedConstantBuffer.h" />
+    <ClInclude Include="OpenGL\OpenGLDataBuffer.h" />
     <ClInclude Include="Resource\Mesh\MeshMath.h" />
     <ClInclude Include="OpenGL\OpenGLException.h" />
     <ClInclude Include="OpenGL\OpenGLDepthState.h" />
@@ -158,7 +161,6 @@
     <ClInclude Include="DX11\DX11OffscreenRenderTarget.h" />
     <ClInclude Include="DX11\DX11Shader.h" />
     <ClInclude Include="DX11\DX11SmartPtr.h" />
-    <ClInclude Include="DX11\DX11VertexBuffer.h" />
     <ClInclude Include="Core\Hash.h" />
     <ClInclude Include="Interface\InputLayout.h" />
     <ClInclude Include="Interface\Color.h" />
@@ -191,7 +193,6 @@
     <ClInclude Include="OpenGL\OpenGLShader.h" />
     <ClInclude Include="OpenGL\OpenGLShaderProgram.h" />
     <ClInclude Include="OpenGL\OpenGLTexture2D.h" />
-    <ClInclude Include="OpenGL\OpenGLVertexBuffer.h" />
     <ClInclude Include="Interface\RenderTarget.h" />
     <ClInclude Include="Interface\Shader.h" />
     <ClInclude Include="Math\Range.h" />
@@ -212,9 +213,12 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DX11\DX11DataBuffer.cpp" />
+    <ClCompile Include="Interface\DataBuffer.cpp" />
     <ClCompile Include="DX11\DX11DepthState.cpp" />
     <ClCompile Include="DX11\DX11RasterizerState.cpp" />
     <ClCompile Include="Input\InputState.cpp" />
+    <ClCompile Include="Interface\Color.cpp" />
     <ClCompile Include="Interface\DepthState.cpp" />
     <ClCompile Include="DX11\DX11BlendState.cpp" />
     <ClCompile Include="Interface\BlendState.cpp" />
@@ -222,6 +226,7 @@
     <ClCompile Include="Interface\RasterizerState.cpp" />
     <ClCompile Include="Compositor\LightingCompositeStage.cpp" />
     <ClCompile Include="Interface\MappedConstantBuffer.cpp" />
+    <ClCompile Include="OpenGL\OpenGLDataBuffer.cpp" />
     <ClCompile Include="Resource\Mesh\MeshMath.cpp" />
     <ClCompile Include="OpenGL\OpenGLException.cpp" />
     <ClCompile Include="OpenGL\OpenGLDepthState.cpp" />
@@ -276,7 +281,6 @@
     <ClCompile Include="Interface\DataFormat.cpp" />
     <ClCompile Include="DX11\DX11OffscreenRenderTarget.cpp" />
     <ClCompile Include="DX11\DX11Shader.cpp" />
-    <ClCompile Include="DX11\DX11VertexBuffer.cpp" />
     <ClCompile Include="Core\Hash.cpp" />
     <ClCompile Include="Interface\InputLayout.cpp" />
     <ClCompile Include="Interface\DepthBuffer.cpp" />
@@ -305,7 +309,6 @@
     <ClCompile Include="OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="OpenGL\OpenGLShaderProgram.cpp" />
     <ClCompile Include="OpenGL\OpenGLTexture2D.cpp" />
-    <ClCompile Include="OpenGL\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="Interface\RenderTarget.cpp" />
     <ClCompile Include="Interface\Shader.cpp" />
     <ClCompile Include="Math\Range.cpp" />

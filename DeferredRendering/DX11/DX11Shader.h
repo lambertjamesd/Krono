@@ -3,8 +3,8 @@
 #include "DX11Common.h"
 
 #include "Interface/Shader.h"
+#include "Interface/VertexBuffer.h"
 #include <string>
-#include "DX11VertexBuffer.h"
 #include <map>
 #include "DX11SmartPtr.h"
 
