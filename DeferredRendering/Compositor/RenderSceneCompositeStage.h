@@ -24,6 +24,8 @@ public:
 	virtual ~RenderSceneCompositeStage(void);
 	
 	virtual void Render(RenderState& renderState);
+
+	static const size_t RENDER_GEOMETRY_TECHNIQUE = 0;
 private:
 	void RebuildBuffer(Graphics& graphics, const Matrix4f& viewMatrix, const Matrix4f& projectionMatrix);
 	Auto<ConstantBuffer> mConstantBuffer;

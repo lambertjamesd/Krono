@@ -2,6 +2,7 @@
 #include <cassert>
 #include "HLSLStatementNode.h"
 #include <iostream>
+#include <algorithm>
 
 HLSLFunctionInputSignature::HLSLFunctionInputSignature()
 {

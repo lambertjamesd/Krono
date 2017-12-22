@@ -1,4 +1,5 @@
 #include "ShaderInputLayout.h"
+#include <algorithm>
 
 namespace krono
 {

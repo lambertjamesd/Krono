@@ -3,7 +3,7 @@
 	
 	"type" : "sceneRender",
 	
-	"renderTechnique" : 0,
+	"technique" : 0,
 	
 	"renderStateParameters" : {
 		"blendState" : {

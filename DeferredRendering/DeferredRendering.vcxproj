@@ -14,18 +14,19 @@
     <ProjectGuid>{23BDB535-420C-426C-B5BF-160E9FC19F01}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DeferredRendering</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -85,6 +86,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compositor\DeferredCompositor.h" />
     <ClInclude Include="DX11\DX11DataBuffer.h" />
     <ClInclude Include="Interface\DataBuffer.h" />
     <ClInclude Include="DX11\DX11DepthState.h" />
@@ -213,6 +215,7 @@
     <ClInclude Include="Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Compositor\DeferredCompositor.cpp" />
     <ClCompile Include="DX11\DX11DataBuffer.cpp" />
     <ClCompile Include="Interface\DataBuffer.cpp" />
     <ClCompile Include="DX11\DX11DepthState.cpp" />

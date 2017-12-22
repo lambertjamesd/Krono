@@ -84,7 +84,7 @@ Camera::Ptr AddCamera(kge::Scene& scene, const Rectf& viewport)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::OpenGL, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -114,18 +114,22 @@ int main(int argc, char* argv[])
 
 	Renderer::Ref renderer = suzanne->AddComponent<Renderer>();
 
+	scene->GetRenderManager().SetCompositor(
+		RenderManager::DefaultCompositor, 
+		Auto<Compositor>(new DeferredCompositor(*graphics, *resourceManager))
+	);
 	scene->GetRenderManager().SetCompositor(RenderManager::DefaultCompositor, resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 	
-	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0f, 1.0f, 0.5f));
-	Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.0f, 0.5f, 1.0f, 0.5f));
+	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	//Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.0f, 0.5f, 1.0f, 0.5f));
 	
 	GameObject::Ptr cameraObject = scene->CreateGameObject().lock();
 	cameraObject->AddComponent<FlyCamera>();
 
 	leftEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
 	leftEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(-0.025f, 0.0f, 0.0f));
-	rightEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
-	rightEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(0.025f, 0.0f, 0.0f));
+	//rightEye->GetGameObject().GetTransform()->SetParent(cameraObject->GetTransform());
+	//rightEye->GetGameObject().GetTransform()->SetLocalPosition(Vector3f(0.025f, 0.0f, 0.0f));
 
 	GameObject::Ptr cubeTest = AddObject(scene, "Media/Meshes/Cube.obj#Cube", "Media/Materials/Cube.json");
 	cubeTest->GetTransform()->SetLocalScale(Vector3f(0.1f, 0.1f, 0.1f));
@@ -147,7 +151,9 @@ int main(int argc, char* argv[])
 
 	for (int i = 1; i <= 5; ++i)
 	{
-		AddEmmisiveSphere(scene, Vector3f(0.4f * i - 1.2f, -0.9f, -0.8f), Colorf(0.3f, 0.5f + i * 0.3f, 2.0f - i * 0.3f));
+		for (int j = 0; j < 5; ++j) {
+			AddEmmisiveSphere(scene, Vector3f(0.4f * i - 1.2f, -0.9f, -0.8f + j * 0.4f), Colorf(0.3f, 0.5f + i * 0.3f, 2.0f - j * 0.3f));
+		}
 	}
 
 	try
@@ -176,7 +182,7 @@ int main(int argc, char* argv[])
 		RenderTargetConfiguration renderTarget;
 		renderTarget.AddRenderTarget(windowRenderTarget);
 		leftEye->SetRenderTargets(renderTarget);
-		rightEye->SetRenderTargets(renderTarget);
+		//rightEye->SetRenderTargets(renderTarget);
 		cameraObject->GetTransform()->SetLocalPosition(Vector3f(0.0f, 0.0f, -2.0f));
 	}
 	catch (Exception& exception)

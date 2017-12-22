@@ -3,6 +3,8 @@
 	
 	"techniques" : [
 		{
+			"techniqueID": 0,
+		
 			"vertexShader" : "Media/Shaders/Bundle/VertexShaderTest.shader",
 			"pixelShader" : "Media/Shaders/Bundle/EmmisiveColor.shader",
 			

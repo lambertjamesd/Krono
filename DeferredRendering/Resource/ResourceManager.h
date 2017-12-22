@@ -13,6 +13,45 @@
 namespace krono
 {
 
+class WeakReference {
+public:
+	virtual ~WeakReference() {};
+
+	virtual bool HasRef() {
+		return false;
+	}
+private:
+};
+
+template <typename T>
+class TemplatedWeakReference : public WeakReference {
+public:
+	~TemplatedWeakReference() {}
+	TemplatedWeakReference(const Auto<T>& ptr) : mWeakRef(ptr) {
+
+	}
+
+	bool HasRef() {
+		return !mWeakRef.expired();
+	}
+
+	Auto<T> GetRef() {
+		return mWeakRef.lock();
+	}
+private:
+	std::weak_ptr<T> mWeakRef;
+};
+
+typedef std::tuple<size_t, std::string> CacheKey;
+
+struct CacheKeyHash : public std::unary_function<CacheKey, std::size_t>
+{
+	std::size_t operator()(const CacheKey& k) const
+	{
+		return std::get<0>(k) ^ std::hash<std::string>{}(std::get<1>(k));
+	}
+};
+
 class ResourceManager
 {
 public:
@@ -30,6 +69,18 @@ public:
 	template <typename T>
 	Auto<T> LoadResource(const std::string& filename)
 	{
+		auto cacheKey = std::make_tuple(typeid(T).hash_code(), filename);
+
+		auto cachedValue = mCache.find(cacheKey);
+
+		if (cachedValue != mCache.end() && cachedValue->second.HasRef()) {
+			Auto<T> result = ((TemplatedWeakReference<T>*)(&cachedValue->second))->GetRef();
+
+			if (result) {
+				return result;
+			}
+		}
+
 		std::string path;
 		std::string internalName;
 
@@ -78,6 +129,9 @@ public:
 				result->ResolveSource(path);
 			}
 			mPathStack.pop_back();
+
+			mCache.insert_or_assign(cacheKey, TemplatedWeakReference<T>(result));
+
 			return result;
 		}
 		catch (Exception& e)
@@ -109,10 +163,14 @@ public:
 private:
 	Graphics* mGraphics;
 	std::unordered_map<size_t, Auto<ResourceLoader> > mLoaders;
+	std::unordered_map<CacheKey, WeakReference, CacheKeyHash> mCache;
 
 	std::vector<std::string> mPathStack;
 
 	void AddDefaultLoaders();
+
+	Mesh::Ptr mPlaneCache;
+	Mesh::Ptr mSphereCache;
 };
 
 }

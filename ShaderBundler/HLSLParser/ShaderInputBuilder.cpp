@@ -1,6 +1,7 @@
 #include "ShaderInputBuilder.h"
 #include "HLSLParserException.h"
 #include <cassert>
+#include <algorithm>
 
 ShaderUniformDefinition::ShaderUniformDefinition(const std::string& name, size_t offset, size_t size) :
 	mName(name),

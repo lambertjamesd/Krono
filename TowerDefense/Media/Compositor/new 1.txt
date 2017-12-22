@@ -1,0 +1,12 @@
+
+void defferredShader() {
+	u8norm4 color;
+	f324 normal;
+	depthf32 depth;
+	u8norm4 specular;
+	u8norm1 ssao;
+	u8norm1 ssaoblur;
+	f324 combined;
+	
+	
+}

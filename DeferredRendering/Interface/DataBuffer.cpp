@@ -23,7 +23,7 @@ bool DataIterator::IsFull() const
 
 bool DataIterator::CanFit(size_t amount) const
 {
-	return ((char*)mDataEnd - (char*)mDataPointer) >= amount;
+	return (size_t)((char*)mDataEnd - (char*)mDataPointer) >= amount;
 }
 
 DataBuffer::DataBuffer(BufferType type, BufferAccess::Type bufferAccess) :

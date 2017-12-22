@@ -45,6 +45,8 @@
 			"depthBuffer" : "depth"
 		},
 		{
+			"disabled" : false,
+			
 			"stage" : "PositionalLights.json",
 			
 			"input" : ["color", "normal", "depth", "specular"],
@@ -58,6 +60,8 @@
 			"output" : ["ssao"]
 		},
 		{
+			"disabled" : false,
+			
 			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssao", "depth"],
 			"output" : ["ssaoblur"],
@@ -67,6 +71,8 @@
 			]
 		},
 		{
+			"disabled" : false,
+			
 			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssaoblur", "depth"],
 			"output" : ["ssao"],
@@ -77,6 +83,7 @@
 		},
 		{
 			"disabled" : false,
+			
 			"stage" : "Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
 			"input" : ["ssao", "normal", "color"],
 			"output" : ["combined"],

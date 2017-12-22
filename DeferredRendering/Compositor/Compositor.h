@@ -43,7 +43,7 @@ public:
 	void SetClearColor(const std::string& targetName, const Colorf& color);
 	void SetClearDepth(const std::string& targetName, float depth);
 
-	void Render(Graphics& graphics, const RenderTargetConfiguration& renderTargetConfig, SceneView& sceneView);
+	virtual void Render(Graphics& graphics, const RenderTargetConfiguration& renderTargetConfig, SceneView& sceneView);
 
 	void AddRenderTarget(const std::string& name, const DataFormat& dataFormat);
 	void SetRenderTargetScale(const std::string& name, const Vector2f& scale);
@@ -51,6 +51,8 @@ public:
 
 	static Ptr Null;
 
+protected:
+	RenderTargetDatabase mRenderTargetDatabase;
 private:
 	struct CompositeStageEntry
 	{
@@ -59,7 +61,6 @@ private:
 	};
 
 	std::vector<CompositeStageEntry> mCompositeStages;
-	RenderTargetDatabase mRenderTargetDatabase;
 
 	std::map<UInt32, Colorf> mClearColors;
 	std::map<UInt32, float> mClearDepths;

@@ -246,7 +246,9 @@ void ObjMeshGroupLoader::ParseLine(istream& inputStream, vector<string>& tokens)
 			++wordEnd;
 		}
 
-		tokens.push_back(string(wordStart, wordEnd));
+		if (wordStart != wordEnd) {
+			tokens.push_back(string(wordStart, wordEnd));
+		}
 
 		wordStart = wordEnd;
 	}

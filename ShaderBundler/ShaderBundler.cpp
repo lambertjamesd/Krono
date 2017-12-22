@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//ProccessFile("C:\\Users\\James\\Documents\\Visual Studio 2012\\Projects\\DeferredRendering\\TowerDefense\\Media\\Engine\\Compositor\\SSAO\\SSAO.json");
+	//ProccessFile("C:\\Users\\Lambert\\Documents\\Visual Studio 2015\\Projects\\Krono\\TowerDefense\\Engine\\Compositor\\Blur\\BasicBlur.json");
 
 	//ProccessFile("/home/lambertjamesd/Documents/Krono/TowerDefense/Media/Shaders/Bundle/PointLight.json");
 

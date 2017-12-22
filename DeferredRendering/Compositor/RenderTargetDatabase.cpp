@@ -29,10 +29,15 @@ RenderTargetDatabase::~RenderTargetDatabase(void)
 {
 }
 
+void RenderTargetDatabase::InitializeGraphics(Graphics& graphics, const Vector2i& size)
+{
+	Resize(size);
+	mGraphics = &graphics;
+}
+
 void RenderTargetDatabase::BeginCompositeRender(const RenderTargetConfiguration& output, Graphics& graphics)
 {
-	Resize(output.GetSize());
-	mGraphics = &graphics;
+	InitializeGraphics(graphics, output.GetSize());
 
 	for (size_t index = 0; index < output.GetRenderTargets().size(); ++index)
 	{
@@ -133,6 +138,11 @@ Texture2D::Ptr RenderTargetDatabase::GetRenderTexture(UInt32 targetID)
 	}
 
 	return Texture2D::Null;
+}
+
+void RenderTargetDatabase::SetCurrentTargetSize(const Vector2i& size)
+{
+	mCurrentTargetSize = size;
 }
 
 const Vector2i& RenderTargetDatabase::GetCurrentTargetSize() const

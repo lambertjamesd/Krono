@@ -33,12 +33,20 @@ Graphics* ResourceManager::GetGraphics()
 
 Mesh::Ptr ResourceManager::GetPlane()
 {
-	return LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Plane");
+	if (!mPlaneCache) {
+		mPlaneCache = LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Plane");
+	}
+
+	return mPlaneCache;
 }
 
 Mesh::Ptr ResourceManager::GetSphere()
 {
-	return LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Sphere");
+	if (!mSphereCache) {
+		mSphereCache = LoadResource<Mesh>("Engine/Meshes/BuiltInShapes.obj#Sphere");
+	}
+
+	return mSphereCache;
 }
 
 void ResourceManager::AddDefaultLoaders()

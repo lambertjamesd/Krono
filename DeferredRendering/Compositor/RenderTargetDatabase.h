@@ -35,6 +35,7 @@ public:
 	RenderTargetDatabase(void);
 	~RenderTargetDatabase(void);
 
+	void InitializeGraphics(Graphics& graphics, const Vector2i& size);
 	void BeginCompositeRender(const RenderTargetConfiguration& output, Graphics& graphics);
 
 	void ClearRenderTarget(UInt32 targetID, const Colorf& color);
@@ -44,6 +45,7 @@ public:
 	const DepthBuffer::Ptr& GetDepthBuffer(UInt32 targetID);
 	Texture2D::Ptr GetRenderTexture(UInt32 targetID);
 
+	void SetCurrentTargetSize(const Vector2i& size);
 	const Vector2i& GetCurrentTargetSize() const;
 	const Vector2i& GetRenderSize() const;
 	

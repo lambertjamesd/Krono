@@ -18,6 +18,7 @@
 #include "Scene/SceneView.h"
 
 #include "Compositor/Compositor.h"
+#include "Compositor/DeferredCompositor.h"
 #include "Compositor/RenderSceneCompositeStage.h"
 #include "Compositor/ScreenQuadCompositeStage.h"
 
