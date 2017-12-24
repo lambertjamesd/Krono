@@ -45,7 +45,7 @@
 			"depthBuffer" : "depth"
 		},
 		{
-			"disabled" : false,
+			"disabled" : true,
 			
 			"stage" : "PositionalLights.json",
 			
@@ -57,11 +57,11 @@
 			
 			"stage" : "Engine/Compositor/SSAO/SSAOStage.json",
 			"input" : ["depth", "normal"],
-			"output" : ["ssao"]
+			"output" : ["output0"]
 		},
 		{
-			"disabled" : false,
-			
+			"disabled" : true,
+			`
 			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssao", "depth"],
 			"output" : ["ssaoblur"],
@@ -71,7 +71,7 @@
 			]
 		},
 		{
-			"disabled" : false,
+			"disabled" : true,
 			
 			"stage" : "Engine/Compositor/Blur/SpacialBlurStage.json",
 			"input" : ["ssaoblur", "depth"],
@@ -82,7 +82,7 @@
 			]
 		},
 		{
-			"disabled" : false,
+			"disabled" : true,
 			
 			"stage" : "Engine/Compositor/HemisphericLighting/HemisphericLightingStage.json",
 			"input" : ["ssao", "normal", "color"],
@@ -95,7 +95,7 @@
 			]
 		},
 		{
-			"disabled" : false,
+			"disabled" : true,
 			
 			"stage" : "Engine/Compositor/ToneMapper/ToneMapperStage.json",
 			

@@ -30,6 +30,10 @@ namespace krono
 		RenderSceneCompositeStage mRenderScene;
 		LightingCompositeStage mRenderLighting;
 		ScreenQuadCompositeStage mToneMapper;
+
+		ScreenQuadCompositeStage mSSAO;
+		ScreenQuadCompositeStage mSSAOBlur;
+		ScreenQuadCompositeStage mAmbientLighting;
 	};
 }
 

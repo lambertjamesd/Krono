@@ -84,7 +84,7 @@ Camera::Ptr AddCamera(kge::Scene& scene, const Rectf& viewport)
 
 int main(int argc, char* argv[])
 {
-	Game game(Graphics::DirectX11, Vector2i(800, 600), 60.0f);
+	Game game(Graphics::DirectX11, Vector2i(1920, 1080), 60.0f);
 
 	Auto<Graphics> graphics = game.GetGraphics();
 	Auto<ResourceManager> resourceManager = game.GetResourceManager();
@@ -118,7 +118,6 @@ int main(int argc, char* argv[])
 		RenderManager::DefaultCompositor, 
 		Auto<Compositor>(new DeferredCompositor(*graphics, *resourceManager))
 	);
-	scene->GetRenderManager().SetCompositor(RenderManager::DefaultCompositor, resourceManager->LoadResource<Compositor>("Media/Compositor/DeferredRender.json"));
 	
 	Camera::Ptr leftEye = AddCamera(*scene, Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 	//Camera::Ptr rightEye = AddCamera(*scene, Rectf(0.0f, 0.5f, 1.0f, 0.5f));
